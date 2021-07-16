@@ -20,7 +20,7 @@
  */
 
 
-package org.opencastproject.api.index.theme;
+package org.opencastproject.api.index.objects.theme;
 
 import org.opencastproject.elasticsearch.api.SearchTerms;
 import org.opencastproject.elasticsearch.impl.AbstractSearchQuery;

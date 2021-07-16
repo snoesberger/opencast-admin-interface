@@ -19,9 +19,9 @@
  *
  */
 
-package org.opencastproject.api.index.event;
+package org.opencastproject.api.index.objects.event;
 
-import org.opencastproject.api.index.IndexObject;
+import org.opencastproject.api.index.objects.IndexObject;
 import org.opencastproject.mediapackage.Publication;
 import org.opencastproject.scheduler.api.RecordingState;
 import org.opencastproject.util.IoSupport;

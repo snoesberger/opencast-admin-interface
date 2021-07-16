@@ -18,7 +18,7 @@
  * the License.
  *
  */
-package org.opencastproject.api.index.series;
+package org.opencastproject.api.index.objects.series;
 
 import org.opencastproject.elasticsearch.api.SearchTerms;
 import org.opencastproject.elasticsearch.impl.AbstractSearchQuery;

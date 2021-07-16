@@ -19,7 +19,7 @@
  *
  */
 
-package org.opencastproject.api.index.event;
+package org.opencastproject.api.index.objects.event;
 
 import org.opencastproject.elasticsearch.impl.AbstractSearchQuery;
 import org.opencastproject.security.api.Permissions;

@@ -19,7 +19,7 @@
  *
  */
 
-package org.opencastproject.api.index;
+package org.opencastproject.api.index.objects;
 
 public interface IndexObject {
 

@@ -19,7 +19,7 @@
  *
  */
 
-package org.opencastproject.api.index.event;
+package org.opencastproject.api.index.objects.event;
 
 import static org.opencastproject.security.api.SecurityConstants.GLOBAL_ADMIN_ROLE;
 

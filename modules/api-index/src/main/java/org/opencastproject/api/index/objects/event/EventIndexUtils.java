@@ -19,11 +19,11 @@
  *
  */
 
-package org.opencastproject.api.index.event;
+package org.opencastproject.api.index.objects.event;
 
 import org.opencastproject.api.index.ApiIndex;
-import org.opencastproject.api.index.series.Series;
-import org.opencastproject.api.index.series.SeriesSearchQuery;
+import org.opencastproject.api.index.objects.series.Series;
+import org.opencastproject.api.index.objects.series.SeriesSearchQuery;
 import org.opencastproject.elasticsearch.api.SearchIndexException;
 import org.opencastproject.elasticsearch.api.SearchMetadata;
 import org.opencastproject.elasticsearch.api.SearchResult;

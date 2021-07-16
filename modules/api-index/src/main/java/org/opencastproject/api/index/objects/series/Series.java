@@ -19,9 +19,9 @@
  *
  */
 
-package org.opencastproject.api.index.series;
+package org.opencastproject.api.index.objects.series;
 
-import org.opencastproject.api.index.IndexObject;
+import org.opencastproject.api.index.objects.IndexObject;
 import org.opencastproject.util.DateTimeSupport.UtcTimestampAdapter;
 import org.opencastproject.util.EqualsUtil;
 import org.opencastproject.util.IoSupport;

@@ -19,9 +19,9 @@
  *
  */
 
-package org.opencastproject.api.index.theme;
+package org.opencastproject.api.index.objects.theme;
 
-import org.opencastproject.api.index.IndexObject;
+import org.opencastproject.api.index.objects.IndexObject;
 import org.opencastproject.elasticsearch.api.SearchMetadata;
 import org.opencastproject.elasticsearch.impl.SearchMetadataCollection;
 import org.opencastproject.util.DateTimeSupport;
