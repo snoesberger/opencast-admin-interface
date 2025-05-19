@@ -348,6 +348,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
  */
 const Schedule = <T extends {
 	location: string
+	locationHasInputs?: boolean
 	scheduleStartDate: string
 	scheduleEndDate: string
 	sourceMode: string
@@ -623,25 +624,23 @@ const Schedule = <T extends {
 										let inputDevice = inputDevices.find(
 											({ name }) => name === value,
 										);
-										if (inputDevice) {
-											if (inputDevice.inputs.length > 0) {
-												await formik.setFieldValue("locationHasInputs", true);
-											} else {
-												await formik.setFieldValue("locationHasInputs", false);
-											}
+										if (inputDevice && inputDevice.inputs) {
+											await formik.setFieldValue("locationHasInputs", inputDevice.inputs.length > 0);
 											await formik.setFieldValue("deviceInputs", inputDevice.inputs.map(input => input.id));
 										}
 										// Set location
 										await formik.setFieldValue("location", value);
 								}}
 							/>
-						<tr>
-							<td>{t("EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.INPUTS")}</td>
-							<td>
-								{/* Render checkbox for each input option of the selected input device*/}
-								{renderInputDeviceOptions()}
-							</td>
-						</tr>
+						 {formik.values.locationHasInputs &&
+							<tr>
+								<td>{t("EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.INPUTS")} <i className="required"> *</i></td>
+								<td>
+									{/* Render checkbox for each input option of the selected input device*/}
+									{renderInputDeviceOptions()}
+								</td>
+							</tr>
+						}
 					</tbody>
 				</table>
 			</div>
