@@ -658,6 +658,7 @@ const ResourceDetailsAccessPolicyTab = ({
 											hint: "EVENTS.SERIES.DETAILS.ACCESS.ACCESS_POLICY.REPLACE_EVENT_ACLS_HINT",
 											onClick: () => saveAccess(formik.values, true)
 										} : undefined}
+										customSaveButtonText={withOverrideButton ? "EVENTS.SERIES.DETAILS.ACCESS.ACCESS_POLICY.SAVE_SERIES_ACL_ONLY" : undefined}
 									/>}
 								</div>
 							)}

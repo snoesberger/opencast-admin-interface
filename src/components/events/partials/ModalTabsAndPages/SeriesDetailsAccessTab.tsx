@@ -9,6 +9,9 @@ import {
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { ParseKeys } from "i18next";
+import {
+	getOrgProperties,
+} from "../../../../selectors/userInfoSelectors";
 
 /**
  * This component manages the access policy tab of the series details modal
@@ -29,6 +32,10 @@ const SeriesDetailsAccessTab = ({
 
 	const policies = useAppSelector(state => getSeriesDetailsAcl(state));
 
+	const orgProperties = useAppSelector(state => getOrgProperties(state));
+
+	const overrideEnabled = (orgProperties['admin.series.acl.event.update.mode'] || 'optional').toLowerCase() === 'optional';
+
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,7 +53,7 @@ const SeriesDetailsAccessTab = ({
 			editAccessRole={"ROLE_UI_SERIES_DETAILS_ACL_EDIT"}
 			policyChanged={policyChanged}
 			setPolicyChanged={setPolicyChanged}
-			withOverrideButton={true}
+			withOverrideButton={overrideEnabled}
 		/>
 	);
 };
