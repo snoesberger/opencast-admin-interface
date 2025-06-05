@@ -114,7 +114,6 @@ const DropDown = <T, >({
 		return unformattedOptions;
 	};
 
-
   let commonProps: Props = {
 	  	menuPlacement: menuPlacement ?? 'auto',
 		tabIndex: tabIndex,
