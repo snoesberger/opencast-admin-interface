@@ -39,6 +39,7 @@ const NavigationButtons = ({
 					type="submit"
 					className={cn(submitClassName, submitActiveClassName)}
 					disabled={disabled}
+					aria-disabled={disabled}
 					onClick={() => {
 						!!nextPage && nextPage()
 					}}
@@ -51,6 +52,7 @@ const NavigationButtons = ({
 					type="submit"
 					className={cn(submitClassName, submitActiveClassName)}
 					disabled={disabled}
+					aria-disabled={disabled}
 					onClick={() => {
 						!!nextPage && nextPage();
 					}}
