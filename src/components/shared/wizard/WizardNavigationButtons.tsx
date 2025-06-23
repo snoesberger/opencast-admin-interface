@@ -41,7 +41,7 @@ const WizardNavigationButtons = <T, >({
 				isLast
 				? () => {
 					if (submitPage) {
-						submitPage()
+						submitPage();
 					 } else {
 						formik.handleSubmit();
 					 }
@@ -55,7 +55,7 @@ const WizardNavigationButtons = <T, >({
 			previousPage={
 				() => {
 					if (previousPage) {
-						previousPage(formik.values)
+						previousPage(formik.values);
 					}
 				}
 			}

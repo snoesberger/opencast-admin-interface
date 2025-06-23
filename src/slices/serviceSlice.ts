@@ -67,7 +67,7 @@ export const restartService = createAppAsyncThunk("services/fetchServices", asyn
 	host: Service["hostname"],
 	serviceType: string
 }) => {
-	const { host, serviceType } = params
+	const { host, serviceType } = params;
 	const data = new URLSearchParams();
 	data.append("host", host);
 	data.append("serviceType", serviceType);

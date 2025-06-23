@@ -167,7 +167,7 @@ const MainNav = ({
 		const arrToSort = linkMap[firstPathFragment as keyof typeof linkMap].links;
 		if (arrToSort != undefined && arrToSort.length > 1) {
 			arrToSort.forEach((item : any) => {
-				if (item.path === pathname) { item.tmpIndex = 0 } else { item.tmpIndex = 1 }
+				if (item.path === pathname) { item.tmpIndex = 0; } else { item.tmpIndex = 1; }
 			});
 			arrToSort.sort((a: any, b: any) => a.tmpIndex - b.tmpIndex);
 		}

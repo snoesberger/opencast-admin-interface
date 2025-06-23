@@ -737,7 +737,7 @@ const formatUploadAssetOptions = (optionsData: { [key: string]: string }) => {
 	return optionsResult;
 };
 
-export const fetchAssetAttachments = createAppAsyncThunk('eventDetails/fetchAssetAttachments', async (eventId: Event["id"]) => {
+export const fetchAssetAttachments = createAppAsyncThunk("eventDetails/fetchAssetAttachments", async (eventId: Event["id"]) => {
 	const params = new URLSearchParams();
 	params.append("id1", "attachment");
 
@@ -763,7 +763,7 @@ export const fetchAssetAttachmentDetails = createAppAsyncThunk("eventDetails/fet
 	return await attachmentDetailsRequest.data;
 });
 
-export const fetchAssetCatalogs = createAppAsyncThunk('eventDetails/fetchAssetCatalogs', async (eventId: Event["id"]) => {
+export const fetchAssetCatalogs = createAppAsyncThunk("eventDetails/fetchAssetCatalogs", async (eventId: Event["id"]) => {
 	const params = new URLSearchParams();
 	params.append("id1", "catalog");
 
@@ -789,7 +789,7 @@ export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchA
 	return await catalogDetailsRequest.data;
 });
 
-export const fetchAssetMedia = createAppAsyncThunk('eventDetails/fetchAssetMedia', async (eventId: Event["id"]) => {
+export const fetchAssetMedia = createAppAsyncThunk("eventDetails/fetchAssetMedia", async (eventId: Event["id"]) => {
 	const params = new URLSearchParams();
 	params.append("id1", "media");
 
@@ -846,7 +846,7 @@ export const fetchAssetMediaDetails = createAppAsyncThunk("eventDetails/fetchAss
 	return mediaDetails;
 });
 
-export const fetchAssetPublications = createAppAsyncThunk('eventDetails/fetchAssetPublications', async (eventId: Event["id"]) => {
+export const fetchAssetPublications = createAppAsyncThunk("eventDetails/fetchAssetPublications", async (eventId: Event["id"]) => {
 	const params = new URLSearchParams();
 	params.append("id1", "publication");
 
@@ -901,7 +901,7 @@ export const fetchComments = createAppAsyncThunk("eventDetails/fetchComments", a
 	return { comments, commentReasons };
 });
 
-export const fetchEventPublications = createAppAsyncThunk('eventDetails/fetchEventPublications', async (eventId: Event["id"], { dispatch }) => {
+export const fetchEventPublications = createAppAsyncThunk("eventDetails/fetchEventPublications", async (eventId: Event["id"], { dispatch }) => {
 	const data = await axios.get(`/admin-ng/event/${eventId}/publications.json`);
 
 	const publications: {
@@ -1311,7 +1311,7 @@ export const performWorkflowAction = createAppAsyncThunk("eventDetails/performWo
 	action: string,
 	close?: () => void,
 }, { dispatch }) => {
-	const { eventId, workflowId, action, close} = params;
+	const { eventId, workflowId, action, close } = params;
 	const headers = {
 		headers: {
 			"Content-Type": "application/json;charset=utf-8",
