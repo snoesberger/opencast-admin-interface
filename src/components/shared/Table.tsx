@@ -195,7 +195,7 @@ const Table = ({
 						{/* Only show if multiple selection is possible */}
 						{multiSelect ? (
 							<th className="small">
-								{/*Checkbox to select all rows*/}
+								{/* Checkbox to select all rows*/}
 								<input
 									ref={selectAllCheckboxRef}
 									type="checkbox"
@@ -249,13 +249,13 @@ const Table = ({
 							</td>
 						</tr>
 					) : !(table.status === "loading") && rows.length === 0 ? (
-						//Show if no results and table is not loading
+						// Show if no results and table is not loading
 						<tr>
 							<td colSpan={table.columns.length}>{t("TABLE_NO_RESULT")}</td>
 						</tr>
 					) : (
 						!(table.status === "loading") &&
-						//Repeat for each row in table.rows
+						// Repeat for each row in table.rows
 						rows.map((row, key) => (
 							<tr key={key}>
 								{/* Show if multi selection is possible */}
@@ -279,7 +279,7 @@ const Table = ({
 									) : !column.template &&
 									  column.translate &&
 									  !column.deactivated ? (
-										//Show only if column not template, translate, not deactivated
+										// Show only if column not template, translate, not deactivated
 										<td key={key}>{t(tryToGetValueForKeyFromRowAsString(row, column.name) as ParseKeys)}</td>
 									) : !!column.template &&
 									  !column.deactivated &&

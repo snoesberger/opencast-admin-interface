@@ -346,12 +346,12 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 		.post("/admin-ng/series/deleteSeries", data)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "SERIES_DELETED" }));
 		})
 		.catch((error: AxiosError) => {
 			console.error(error);
-			//add error notification
+			// add error notification
 			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});
 });

@@ -138,7 +138,7 @@ const SelectContainer = ({
 		setMarkedForAddition([]);
 		// update items considered for search bar
 		setDefaultItems(editableDefaultItems);
-		//update formik field
+		// update formik field
 		helpers.setValue(editableSelectedItems);
 	};
 
@@ -201,7 +201,7 @@ const SelectContainer = ({
 							{t(`${resource.label}.LEFT` as ParseKeys)}
 							<i className="required" />
 						</label>
-						{/*Search*/}
+						{/* Search*/}
 						{resource.searchable && (
 							<SearchContainer
 								value={searchField}
@@ -211,7 +211,7 @@ const SelectContainer = ({
 								style={{ marginTop: "10px" }}
 							/>
 						)}
-						{/*Select with options provided by backend*/}
+						{/* Select with options provided by backend*/}
 						<select
 							multiple
 							className="available"
@@ -244,7 +244,7 @@ const SelectContainer = ({
 
 				<div className="exchange-icon" />
 
-				{/*Select with options chosen by user*/}
+				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">
 					<div className="row">
 						<label>{t(`${resource.label}.RIGHT` as ParseKeys)}</label>
