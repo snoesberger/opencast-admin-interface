@@ -172,7 +172,7 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		.delete(`/admin-ng/acl/${id}`)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "ACL_DELETED" }));
 		})
 		.catch(res => {

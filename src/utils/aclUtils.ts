@@ -1,4 +1,4 @@
-/*This File contains functions that are needed in several access right views*/
+/* This File contains functions that are needed in several access right views*/
 
 import { FormikProps } from "formik";
 import { TransformedAcl } from "../slices/aclDetailsSlice";

@@ -252,7 +252,7 @@ const TableFilters = ({
 				/>
 
 				{/* Selection of filters and management of filter profiles*/}
-				{/*show only if filters.filters contains filters*/}
+				{/* show only if filters.filters contains filters*/}
 				{!!filterMap && (
 					<div className="table-filter">
 						<div className="filters">
@@ -263,9 +263,9 @@ const TableFilters = ({
 								<i className="fa fa-filter" />
 							</ButtonLikeAnchor>
 
-							{/*show if icon is clicked*/}
+							{/* show if icon is clicked*/}
 							{showFilterSelector && (
-								/*Show all filtersMap as selectable options*/
+								/* Show all filtersMap as selectable options*/
 								<DropDown
 									value={selectedFilter}
 									text={getSelectedFilterText()}
@@ -301,10 +301,10 @@ const TableFilters = ({
 								/>
 							)}
 
-							{/*Show selection of secondary filter if a main filter is chosen*/}
+							{/* Show selection of secondary filter if a main filter is chosen*/}
 							{!!selectedFilter && (
 								<div>
-									{/*Show the secondary filter depending on the type of main filter chosen (select or period)*/}
+									{/* Show the secondary filter depending on the type of main filter chosen (select or period)*/}
 									<FilterSwitch
 										filter={filter}
 										secondFilter={secondFilter}

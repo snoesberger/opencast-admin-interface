@@ -75,8 +75,8 @@ type CommentAuthor = {
 
 type WorkflowEntry = {
 			id: string,
-		status: string,  //translation key
-		submitted: string,  //date
+		status: string,  // translation key
+		submitted: string,  // date
 		submitter: string,
 		submitterEmail: string,
 		submitterName: string,
@@ -817,7 +817,7 @@ export const fetchAssetMedia = createAppAsyncThunk("eventDetails/fetchAssetMedia
 
 	const media: EventDetailsState["assetMedia"] = [];
 
-	//for every media file item we define the filename
+	// for every media file item we define the filename
 	for (let i = 0; i < mediaResponse.length; i++) {
 		const url = mediaResponse[i].url;
 		const mediaFileName = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
@@ -1235,7 +1235,7 @@ if (endDate < now) {
 		.then(response => {
 			const responseStatus = response.status;
 			if (responseStatus === 409) {
-				//conflict detected, add notification and get conflict specifics
+				// conflict detected, add notification and get conflict specifics
 				dispatch(
 					addNotification({
 						type: "error",
@@ -1256,7 +1256,7 @@ if (endDate < now) {
 
 				hasSchedulingConflicts = true;
 			} else if (responseStatus === 204) {
-				//no conflicts detected
+				// no conflicts detected
 				hasSchedulingConflicts = false;
 			} else {
 				hasSchedulingConflicts = true;
@@ -1266,7 +1266,7 @@ if (endDate < now) {
 			if (axios.isAxiosError<{ title: string, start: string, end: string }[]>(error) && error.response) {
 				const responseStatus = error.response.status;
 				if (responseStatus === 409) {
-					//conflict detected, add notification and get conflict specifics
+					// conflict detected, add notification and get conflict specifics
 					dispatch(
 						addNotification({
 							type: "error",
@@ -2504,7 +2504,7 @@ const eventDetailsSlice = createSlice({
 				state.errorStatistics = action.error;
 				console.error(action.error);
 			})
-			//fetchEventStatisticsValueUpdate
+			// fetchEventStatisticsValueUpdate
 			.addCase(fetchEventStatisticsValueUpdate.pending, state => {
 				state.statusStatisticsValue = "loading";
 			})

@@ -189,7 +189,7 @@ const DropDown = <T, >({
 		openMenuOnFocus: openMenuOnFocus,
 		menuPlacement: menuPlacement ?? "auto",
 
-		//@ts-expect-error: React-Select typing does not account for the typing of option it itself requires
+		// @ts-expect-error: React-Select typing does not account for the typing of option it itself requires
 		components: { MenuList },
 		filterOption: createFilter({ ignoreAccents: false }), // To improve performance on filtering
 	};

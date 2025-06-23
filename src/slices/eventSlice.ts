@@ -508,12 +508,12 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 		values.sourceMode === "SCHEDULE_MULTIPLE"
 	) {
 		// Get timezone offset
-		//let offset = getTimezoneOffset();
+		// let offset = getTimezoneOffset();
 
 		// Prepare start date of event for post
 		const startDate = new Date(values.scheduleStartDate);
 		// NOTE: if time zone issues still occur during further testing, try to set times to UTC (-offset)
-		//startDate.setHours((values.scheduleStartHour - offset), values.scheduleStartMinute, 0, 0);
+		// startDate.setHours((values.scheduleStartHour - offset), values.scheduleStartMinute, 0, 0);
 		startDate.setHours(
 			parseInt(values.scheduleStartHour),
 			parseInt(values.scheduleStartMinute),
@@ -530,7 +530,7 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 			endDate = new Date(values.scheduleEndDate);
 		}
 		// NOTE: if time zone issues still occur during further testing, try to set times to UTC (-offset)
-		//endDate.setHours((values.scheduleEndHour - offset), values.scheduleEndMinute, 0, 0);
+		// endDate.setHours((values.scheduleEndHour - offset), values.scheduleEndMinute, 0, 0);
 		endDate.setHours(parseInt(values.scheduleEndHour), parseInt(values.scheduleEndMinute), 0, 0);
 
 		// transform duration into milliseconds
@@ -706,12 +706,12 @@ export const deleteMultipleEvent = createAppAsyncThunk("events/deleteMultipleEve
 		.post("/admin-ng/event/deleteEvents", data)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "EVENTS_DELETED" }));
 		})
 		.catch(res => {
 			console.error(res);
-			//add error notification
+			// add error notification
 			dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
 		});
 });
@@ -871,8 +871,8 @@ export const updateScheduledEventsBulk = createAppAsyncThunk("events/updateSched
 				weekday: eventChanges.changedWeekday,
 				agentId: eventChanges.changedLocation,
 				// the following two lines can be commented in, when the possibility of a selection of individual inputs is desired and the backend has been adapted to support it (the word inputs may have to be replaced accordingly)
-				//,
-				//inputs: eventChanges.changedDeviceInputs.join(',')
+				// ,
+				// inputs: eventChanges.changedDeviceInputs.join(',')
 			},
 		});
 	}
