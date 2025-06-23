@@ -78,7 +78,7 @@ const RegistrationModalContent = () => {
 	const onClickContinue = async () => {
 		// if state is deleteSubmit then delete infos about adaptor else show next state
 		if (state === "deleteSubmit") {
-			await resetRegistrationData();
+			resetRegistrationData();
 		} else {
 			setState(states[state].nextState[1] as keyof typeof states);
 		}
