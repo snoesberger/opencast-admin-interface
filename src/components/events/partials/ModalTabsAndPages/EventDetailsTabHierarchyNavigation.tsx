@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import {
-	style_nav,
-	style_nav_hierarchy,
-	style_nav_hierarchy_inactive,
+	styleNav,
+	styleNavHierarchy,
+	styleNavHierarchyInactive,
 } from "../../../../utils/eventDetailsUtils";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
@@ -33,19 +33,19 @@ const EventDetailsTabHierarchyNavigation = <T, >({
 
 	/* Hierarchy navigation */
 	return (
-		<nav className="scope" style={style_nav}>
+		<nav className="scope" style={styleNav}>
 			<ButtonLikeAnchor
 				extraClassName="breadcrumb-link scope"
 				style={
 					hierarchyDepth === 0
-						? style_nav_hierarchy
-						: style_nav_hierarchy_inactive
+						? styleNavHierarchy
+						: styleNavHierarchyInactive
 				}
 				onClick={() => openSubTab(subTabArgument0)}
 			>
 				{t(translationKey0)}
 				{hierarchyDepth > 0 && (
-					<span style={style_nav_hierarchy_inactive}> </span>
+					<span style={styleNavHierarchyInactive}> </span>
 				)}
 			</ButtonLikeAnchor>
 			{hierarchyDepth > 0 && subTabArgument1 && (
@@ -53,21 +53,21 @@ const EventDetailsTabHierarchyNavigation = <T, >({
 					extraClassName="breadcrumb-link scope"
 					style={
 						hierarchyDepth === 1
-							? style_nav_hierarchy
-							: style_nav_hierarchy_inactive
+							? styleNavHierarchy
+							: styleNavHierarchyInactive
 					}
 					onClick={() => openSubTab(subTabArgument1)}
 				>
 					{translationKey1 && t(translationKey1)}
 					{hierarchyDepth > 1 && (
-						<span style={style_nav_hierarchy_inactive}> </span>
+						<span style={styleNavHierarchyInactive}> </span>
 					)}
 				</ButtonLikeAnchor>
 			)}
 			{hierarchyDepth > 1 && subTabArgument2 && (
 				<ButtonLikeAnchor
 					extraClassName="breadcrumb-link scope"
-					style={style_nav_hierarchy}
+					style={styleNavHierarchy}
 					onClick={() => openSubTab(subTabArgument2)}
 				>
 					{translationKey2 && t(translationKey2)}

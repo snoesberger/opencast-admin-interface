@@ -137,7 +137,7 @@ export const fetchSeriesDetailsAcls = createAppAsyncThunk("seriesDetails/fetchSe
 		);
 	}
 
-	return { acl: response.series_access.acl, current_acl: response.series_access.current_acl };
+	return { acl: response.series_access.acl, currentAcl: response.series_access.current_acl };
 });
 
 // fetch theme of certain series from server
@@ -529,12 +529,12 @@ const seriesDetailsSlice = createSlice({
 			})
 			.addCase(fetchSeriesDetailsAcls.fulfilled, (state, action: PayloadAction<{
 				acl: SeriesDetailsState["acl"],
-				current_acl: SeriesDetailsState["policyTemplateId"]
+				currentAcl: SeriesDetailsState["policyTemplateId"]
 			}>) => {
 				state.statusAcl = "succeeded";
 				const seriesDetailsAcls = action.payload;
 				state.acl = seriesDetailsAcls.acl;
-				state.policyTemplateId = seriesDetailsAcls.current_acl;
+				state.policyTemplateId = seriesDetailsAcls.currentAcl;
 			})
 			.addCase(fetchSeriesDetailsAcls.rejected, (state, action) => {
 				state.statusAcl = "failed";
