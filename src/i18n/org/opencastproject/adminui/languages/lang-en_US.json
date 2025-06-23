@@ -1992,7 +1992,8 @@
 		"FAILED": "Failed",
 		"FINISHED_WITH_COMMENTS": "Todo",
 		"SCHEDULED": "Scheduled",
-		"RECORDING": "Recording"
+		"RECORDING": "Recording",
+		"BUTTON_TOOLTIP": "Apply filter {{filterName}} to the table"
 	},
 	"HOTKEYS": {
 		"CHEAT_SHEET": {
