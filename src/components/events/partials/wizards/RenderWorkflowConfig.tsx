@@ -29,8 +29,8 @@ const RenderWorkflowConfig = <T extends RequiredFormProps>({
 	const workflowDef = useAppSelector(state => getWorkflowDefById(state, workflowId));
 
 	// Get html for configuration panel
-	const configPanel = !!workflowDef && workflowDef.configuration_panel_json
-		? workflowDef.configuration_panel_json
+	const configPanel = !!workflowDef && workflowDef.configurationPanelJson
+		? workflowDef.configurationPanelJson
 		: [];
 	const description = !!workflowDef && workflowDef.description
 		? workflowDef.description

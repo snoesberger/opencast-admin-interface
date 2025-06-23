@@ -37,6 +37,7 @@ import { AppDispatch } from "../store";
 import { Ace } from "./aclSlice";
 import { setTobiraTabHierarchy, TobiraData } from "./seriesDetailsSlice";
 import { handleTobiraError } from "./shared/tobiraErrors";
+import camelcaseKeys from "camelcase-keys";
 
 // Contains the navigation logic for the modal
 type EventDetailsModal = {
@@ -234,9 +235,9 @@ type EventDetailsState = {
 	}>,
 	assetMediaDetails: AssetDetails & {
 		duration: number,
-		has_audio: boolean,
-		has_subtitle: boolean,
-		has_video: boolean,
+		hasAudio: boolean,
+		hasSubtitle: boolean,
+		hasVideo: boolean,
 		streams: {
 			audio: {
 				bitdepth: string,
@@ -329,17 +330,17 @@ type EventDetailsState = {
 	workflowOperationDetails: {
 		completed: string,  // date
 		description: string,
-		exception_handler_workflow: string,
-		execution_host: string,
-		fail_on_error: boolean,
-		failed_attempts: number,
+		exceptionHandlerWorkflow: string,
+		executionHost: string,
+		failOnError: boolean,
+		failedAttempts: number,
 		job: number,
-		max_attempts: number,
+		maxAttempts: number,
 		name: string,
-		retry_strategy: string,
+		retryStrategy: string,
 		started: string,  // date
 		state: string,  // translation key
-		time_in_queue: number,
+		timeInQueue: number,
 	},
 	workflowErrors: {
 		entries: {
@@ -357,11 +358,11 @@ type EventDetailsState = {
 			value: string,
 		}[],
 		id: number,
-		job_id: number,
-		processing_host: string,
-		service_type: string,
+		jobId: number,
+		processingHost: string,
+		serviceType: string,
 		severity: string,
-		technical_details: string,
+		technicalDetails: string,
 		timestamp: string,  // date
 		title: string,
 	},
@@ -489,9 +490,9 @@ const initialState: EventDetailsState = {
 		size: 0,
 		checksum: undefined,
 		reference: "",
-		has_audio: false,
-		has_subtitle: false,
-		has_video: false,
+		hasAudio: false,
+		hasSubtitle: false,
+		hasVideo: false,
 		url: "",
 		streams: {
 			audio: [],
@@ -566,17 +567,17 @@ const initialState: EventDetailsState = {
 	workflowOperationDetails: {
 		completed: "",
 		description: "",
-		exception_handler_workflow: "",
-		execution_host: "",
-		fail_on_error: false,
-		failed_attempts: 0,
+		exceptionHandlerWorkflow: "",
+		executionHost: "",
+		failOnError: false,
+		failedAttempts: 0,
 		job: 0,
-		max_attempts: 0,
+		maxAttempts: 0,
 		name: "",
-		retry_strategy: "",
+		retryStrategy: "",
 		started: "",
 		state: "",
-		time_in_queue: 0,
+		timeInQueue: 0,
 	},
 	workflowErrors: {
 		entries: [],
@@ -585,11 +586,11 @@ const initialState: EventDetailsState = {
 		description: "",
 		details: [],
 		id: 0,
-		job_id: 0,
-		processing_host: "",
-		service_type: "",
+		jobId: 0,
+		processingHost: "",
+		serviceType: "",
 		severity: "",
-		technical_details: "",
+		technicalDetails: "",
 		timestamp: "",
 		title: "",
 	},
@@ -2030,7 +2031,7 @@ const eventDetailsSlice = createSlice({
 				EventDetailsState["assetMediaDetails"]
 			>) => {
 				state.statusAssetMediaDetails = "succeeded";
-				state.assetMediaDetails = action.payload;
+				state.assetMediaDetails = camelcaseKeys(action.payload);
 			})
 			.addCase(fetchAssetMediaDetails.rejected, (state, action) => {
 				state.statusAssetMediaDetails = "failed";
@@ -2043,9 +2044,9 @@ const eventDetailsSlice = createSlice({
 					size: 0,
 					checksum: undefined,
 					reference: "",
-					has_audio: false,
-					has_subtitle: false,
-					has_video: false,
+					hasAudio: false,
+					hasSubtitle: false,
+					hasVideo: false,
 					url: "",
 					streams: {
 						audio: [],
@@ -2366,24 +2367,24 @@ const eventDetailsSlice = createSlice({
 				EventDetailsState["workflowOperationDetails"]
 			>) => {
 				state.statusWorkflowOperationDetails = "succeeded";
-				state.workflowOperationDetails = action.payload;
+				state.workflowOperationDetails = camelcaseKeys(action.payload);
 			})
 			.addCase(fetchWorkflowOperationDetails.rejected, (state, action) => {
 				state.statusWorkflowOperationDetails = "failed";
 				const emptyOperationDetails = {
 					completed: "",
 					description: "",
-					exception_handler_workflow: "",
-					execution_host: "",
-					fail_on_error: false,
-					failed_attempts: 0,
+					exceptionHandlerWorkflow: "",
+					executionHost: "",
+					failOnError: false,
+					failedAttempts: 0,
 					job: 0,
-					max_attempts: 0,
+					maxAttempts: 0,
 					name: "",
-					retry_strategy: "",
+					retryStrategy: "",
 					started: "",
 					state: "",
-					time_in_queue: 0,
+					timeInQueue: 0,
 				};
 				state.workflowOperationDetails = emptyOperationDetails;
 				state.errorWorkflowOperationDetails = action.error;
@@ -2411,7 +2412,7 @@ const eventDetailsSlice = createSlice({
 				EventDetailsState["workflowErrorDetails"]
 			>) => {
 				state.statusWorkflowErrorDetails = "succeeded";
-				state.workflowErrorDetails = action.payload;
+				state.workflowErrorDetails = camelcaseKeys(action.payload);
 			})
 			.addCase(fetchWorkflowErrorDetails.rejected, (state, action) => {
 				state.statusWorkflowErrorDetails = "failed";
@@ -2419,11 +2420,11 @@ const eventDetailsSlice = createSlice({
 					description: "",
 					details: [],
 					id: 0,
-					job_id: 0,
-					processing_host: "",
-					service_type: "",
+					jobId: 0,
+					processingHost: "",
+					serviceType: "",
 					severity: "",
-					technical_details: "",
+					technicalDetails: "",
 					timestamp: "",
 					title: "",
 				};

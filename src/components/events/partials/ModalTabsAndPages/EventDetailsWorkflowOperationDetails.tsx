@@ -96,7 +96,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Execution Host */
 										}
 									</td>
-									<td>{operationDetails.execution_host}</td>
+									<td>{operationDetails.executionHost}</td>
 								</tr>
 								<tr>
 									<td>
@@ -116,7 +116,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Time in Queue */
 										}
 									</td>
-									<td>{operationDetails.time_in_queue}ms</td>
+									<td>{operationDetails.timeInQueue}ms</td>
 								</tr>
 								<tr>
 									<td>
@@ -154,7 +154,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Retry Strategy */
 										}
 									</td>
-									<td>{operationDetails.retry_strategy}</td>
+									<td>{operationDetails.retryStrategy}</td>
 								</tr>
 								<tr>
 									<td>
@@ -164,7 +164,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Failed Attempts */
 										}
 									</td>
-									<td>{operationDetails.failed_attempts}</td>
+									<td>{operationDetails.failedAttempts}</td>
 								</tr>
 								<tr>
 									<td>
@@ -174,7 +174,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Max */
 										}
 									</td>
-									<td>{operationDetails.max_attempts}</td>
+									<td>{operationDetails.maxAttempts}</td>
 								</tr>
 								<tr>
 									<td>
@@ -184,7 +184,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Exception Handler Workflow */
 										}
 									</td>
-									<td>{operationDetails.exception_handler_workflow}</td>
+									<td>{operationDetails.exceptionHandlerWorkflow}</td>
 								</tr>
 								<tr>
 									<td>
@@ -194,7 +194,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 											) /* Fail on Error */
 										}
 									</td>
-									<td>{operationDetails.fail_on_error}</td>
+									<td>{operationDetails.failOnError}</td>
 								</tr>
 							</tbody>
 						)}
