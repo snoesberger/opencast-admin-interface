@@ -1,4 +1,6 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { Resource } from "../slices/tableSlice";
 
 /**
  * This file contains selectors regarding table filters
@@ -12,7 +14,10 @@ export const getSecondFilter = (state: RootState) => state.tableFilters.secondFi
 export const getCurrentFilterResource = (state: RootState) => state.tableFilters.currentResource;
 export const getFilters = (state: RootState, resource: string) =>
 	state.tableFilters.data.filter(obj => obj.resource === resource);
-export const getTextFilter = (state: RootState, resource: string) => {
-	const textFilter = state.tableFilters.textFilter.find(obj => obj.resource === resource);
-	return textFilter?.text ?? "";
-};
+export const getTextFilter = createSelector(
+	[getAllTextFilter, (state, resource: Resource) => resource],
+	(textFilter, resource) => {
+		const textFilte = textFilter.find(obj => obj.resource === resource);
+		return textFilte?.text ?? "";
+	},
+);
