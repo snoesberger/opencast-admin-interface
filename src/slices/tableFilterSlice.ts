@@ -1,9 +1,9 @@
-import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios';
-import { relativeDateSpanToFilterValue } from '../utils/dateUtils';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
-import { FilterProfile } from './tableFilterProfilesSlice';
-import { Resource } from './tableSlice';
+import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { relativeDateSpanToFilterValue } from "../utils/dateUtils";
+import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
+import { FilterProfile } from "./tableFilterProfilesSlice";
+import { Resource } from "./tableSlice";
 
 /**
  * This file contains redux reducer for actions affecting the state of table filters

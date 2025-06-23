@@ -29,14 +29,14 @@ const SearchContainer = ({
 	}
 	let inputClassName = "search";
 		if (isDisabled) {
-		inputClassName = inputClassName + " disabled"
+		inputClassName = inputClassName + " disabled";
 	}
 	if (!value) {
 		inputClassName = inputClassName + " fullwidth";
 	}
 	let buttonClassName = "clear";
 	if (isDisabled) {
-		buttonClassName = buttonClassName + " disabled"
+		buttonClassName = buttonClassName + " disabled";
 	}
 
 	return (

@@ -93,7 +93,7 @@ const TableFilters = ({
 			setEndDate(undefined);
 		}
 
-		dispatch(editFilterValue({filterName: filter.name, value: "", resource}));
+		dispatch(editFilterValue({ filterName: filter.name, value: "", resource }));
 
 		// Reload resources when filter is removed
 		await dispatch(loadResource());
@@ -102,7 +102,7 @@ const TableFilters = ({
 
 	const handleSearchChange = (value: string) => {
 		handleChange("textFilter", value);
-	}
+	};
 
 	const clearSearchField = () => {
 		dispatch(removeTextFilter(resource));
@@ -126,7 +126,7 @@ const TableFilters = ({
 		if (name === "secondFilter") {
 			const filter = filterMap.find(({ name }) => name === selectedFilter);
 			if (filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: value, resource}));
+				dispatch(editFilterValue({ filterName: filter.name, value: value, resource }));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				dispatch(removeSecondFilter());

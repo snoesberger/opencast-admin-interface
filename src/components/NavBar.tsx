@@ -55,14 +55,14 @@ const NavBar = ({
 		if (create && create.onShowModal) {
 			await create.onShowModal();
 		}
-		newResourceModalRef.current?.open()
+		newResourceModalRef.current?.open();
 	};
 
 	const hideNewResourceModal = () => {
 		if (create && create.onHideModal) {
 			create.onHideModal();
 		}
-		newResourceModalRef.current?.close?.()
+		newResourceModalRef.current?.close?.();
 	};
 
 	const toggleNavigation = () => {

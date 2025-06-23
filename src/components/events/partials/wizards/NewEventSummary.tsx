@@ -75,7 +75,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 		for (let i = 0; uploadAssetOptions.length > i; i++) {
 			const fieldValue = formik.values[uploadAssetOptions[i].id];
 			if (fieldValue) {
-				const displayOverride = uploadAssetOptions[i].displayOverride as ParseKeys
+				const displayOverride = uploadAssetOptions[i].displayOverride as ParseKeys;
 				setUploadAssetsNonTrack(uploadAssetsNonTrack.concat({
 					name: uploadAssetOptions[i].id,
 					translate: displayOverride

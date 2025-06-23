@@ -130,7 +130,7 @@ export const fetchRolesWithTarget = async (target: string) => {
 	};
 
 	const response = await axios.get("/admin-ng/acl/roles.json", { params: params });
-	const data : Role[] = response.data
+	const data : Role[] = response.data;
 
 	return data;
 };
