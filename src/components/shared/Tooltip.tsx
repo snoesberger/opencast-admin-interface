@@ -39,8 +39,14 @@ export const Tooltip = (
 					 areaRef.current?.getBoundingClientRect().width,
 					 0,
 				 );
-			 default:
-				 return areaRef.current?.getBoundingClientRect()!;
+			default: {
+				const rect = areaRef.current?.getBoundingClientRect();
+				if (!rect) {
+					return new DOMRect();
+				} else {
+					return rect;
+				}
+			}
 		}
 	};
 
