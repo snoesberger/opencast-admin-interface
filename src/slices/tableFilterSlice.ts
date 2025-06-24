@@ -1,9 +1,10 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { relativeDateSpanToFilterValue } from "../utils/dateUtils";
+import { isRelativeDateSpanValue, relativeDateSpanToFilterValue } from "../utils/dateUtils";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { FilterProfile } from "./tableFilterProfilesSlice";
 import { Resource } from "./tableSlice";
+import { FetchEvents } from "./eventSlice";
 
 /**
  * This file contains redux reducer for actions affecting the state of table filters
@@ -17,7 +18,7 @@ export type FilterData = {
 		label: string,
 		value: string,
 	}[],
-	translatable: boolean,
+	translatable?: boolean,
 	type: string,
 	resource: string, // Not from the backend. We set this to keep track of which table this filter belongs to
 	value: string,
@@ -71,17 +72,27 @@ const initialState: TableFilterState = {
 
 // Fetch table filters from opencast instance and transform them for further use
 export const fetchFilters = createAppAsyncThunk("tableFilters/fetchFilters", async (resource: TableFilterState["currentResource"], { getState }) => {
-	const data = await axios.get(
+	type FetchFilters = {
+		[key: string]: {
+			label: string,
+			type: string,
+			translatable?: boolean,
+			options?: { [key: string]: string },
+		}
+	};
+	const data = await axios.get<FetchFilters>(
 		`/admin-ng/resources/${resource}/filters.json`,
 	);
 	const resourceData = await data.data;
 
 	const filters = transformResponse(resourceData);
-	const filtersList = Object.keys(filters.filters).map(key => {
+	const filtersList: TableFilterState["data"] = Object.keys(filters.filters).map(key => {
 		const filter = filters.filters[key];
-		filter.name = key;
-		filter.resource = resource;
-		return filter;
+		return {
+			...filter,
+			name: key,
+			resource: resource,
+		};
 	});
 
 	if (resource === "events") {
@@ -112,27 +123,42 @@ export const fetchFilters = createAppAsyncThunk("tableFilters/fetchFilters", asy
 });
 
 export const fetchStats = createAppAsyncThunk("tableFilters/fetchStats", async () => {
+	type FetchStats = { [key: string]: string }
+	type Stat = {
+		filters: {
+			filter: string,
+			name: string,
+			value: string,
+		}[],
+		description: string,
+		order: number,
+}
 	// fetch information about possible status an event can have
-	const data = await axios.get("/admin-ng/resources/STATS.json");
+	const data = await axios.get<FetchStats>("/admin-ng/resources/STATS.json");
 	const response = await data.data;
 
 	// transform response
 	const statsResponse = Object.keys(response).map(key => {
-		const stat = JSON.parse(response[key]);
-		stat.name = key;
-		return stat;
+		// TODO: Handle JSON parsing errors
+		const stat = JSON.parse(response[key]) as Stat;
+		return {
+			...stat,
+			name: key,
+			count: 0,
+		};
 	});
 
-	const stats = [];
+	const stats: TableFilterState["stats"] = [];
 
 	// fetch for each status the corresponding count of events having this status
 	for (const [i, _] of statsResponse.entries()) {
-		const filter = [];
-		for (const j in statsResponse[i].filters) {
+		const filter: string[] = [];
+		statsResponse[i].filters.forEach((_, j) => {
 			let value = statsResponse[i].filters[j].value;
 			const name = statsResponse[i].filters[j].name;
 
-			if (Object.prototype.hasOwnProperty.call(value, "relativeDateSpan")) {
+			// If not string
+			if (isRelativeDateSpanValue(value)) {
 				value = relativeDateSpanToFilterValue(
 					value.relativeDateSpan.from,
 					value.relativeDateSpan.to,
@@ -142,8 +168,8 @@ export const fetchStats = createAppAsyncThunk("tableFilters/fetchStats", async (
 				statsResponse[i].filters[j].value = value;
 			}
 			filter.push(name + ":" + value);
-		}
-		const data = await axios.get("/admin-ng/event/events.json", {
+		});
+		const data = await axios.get<FetchEvents>("/admin-ng/event/events.json", {
 			params: {
 				filter: filter.join(","),
 				limit: 1,
@@ -211,13 +237,10 @@ export const setSpecificServiceFilter = createAppAsyncThunk("tableFilters/setSpe
 // Transform received filter.json to a structure that can be used for filtering
 function transformResponse(data: {
 	[key: string]: {
-		value: string,
 		label: string,
 		options?: { [key: string]: string },
-		name: string
-		translatable: boolean,
+		translatable?: boolean,
 		type: string,
-		resource: string,
 	}
 }) {
 	type ParsedFilters = {
@@ -225,10 +248,8 @@ function transformResponse(data: {
 			value: string
 			label: string
 			options?: { value: string, label: string }[]
-			name: string
-			translatable: boolean,
+			translatable?: boolean,
 			type: string,
-			resource: string,
 		}
 	}
 
@@ -239,6 +260,7 @@ function transformResponse(data: {
 		}[] = [];
 		acc[key] = {
 			...data[key],
+			value: "",
 			options: newOptions,
 		};
 		return acc;
@@ -246,7 +268,6 @@ function transformResponse(data: {
 
 	try {
 		for (const key in data) {
-			filters[key].value = "";
 			if (!data[key].options) {
 				continue;
 			}

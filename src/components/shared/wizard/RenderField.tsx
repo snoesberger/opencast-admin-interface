@@ -146,7 +146,7 @@ const EditableBooleanValue = ({
 			{...field}
 			ref={ref}
 			type="checkbox"
-			checked={field.value}
+			checked={field.value as boolean}
 			autoFocus={isFirstField}
 		/>
 	);
@@ -214,7 +214,7 @@ const EditableSingleSelect = ({
 	return (
 		<DropDown
 			ref={ref}
-			value={field.value}
+			value={field.value as string}
 			text={text}
 			options={metadataField.collection
 				? metadataField.collection.map(item => ({ label: item.label ?? item.name, value: item.value, order: item.order }))
@@ -299,7 +299,7 @@ const EditableSingleValueTime = ({
 		<div onClick={e => { e.stopPropagation(); }}>
 			<DatePicker
 				ref={ref}
-				selected={typeof field.value === "string" ? parseISO(field.value) : field.value}
+				selected={typeof field.value === "string" ? parseISO(field.value) : field.value as Date}
 				onChange={value => setFieldValue(field.name, value)}
 				showTimeSelect
 				showTimeSelectOnly

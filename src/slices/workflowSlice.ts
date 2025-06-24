@@ -13,6 +13,8 @@ export type FieldSetField = {
 	checked: boolean,
 	fieldset?: FieldSetField[]
 	defaultValue?: unknown
+	max?: number // number field
+	min?: number // number field
 	[key: string]: unknown
 }
 
@@ -25,7 +27,7 @@ type ConfigurationPanelField = {
 }
 
 export type Workflow = {
-	configuration_panel: string,  //XML
+	configurationPanel: string,  //XML
 	configurationPanelJson: string | ConfigurationPanelField[],  // 'string' will always be the empty string
 	description: string,
 	displayOrder: number,
@@ -51,6 +53,10 @@ const initialState: WorkflowState = {
 
 // fetch workflow definitions from server
 export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef", async (type: string) => {
+	type NewProcessing = {
+		default_workflow_id: string,
+		workflows: Workflow[],
+	}
 	let urlParams;
 
 	switch (type) {
@@ -81,13 +87,16 @@ export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef",
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/event/new/processing?", { params: urlParams });
+	const res = await axios.get<NewProcessing>("/admin-ng/event/new/processing?", { params: urlParams });
+
 	let workflows = camelcaseKeys(res.data.workflows);
 
 	workflows = workflows.map((workflow: Workflow) => {
 		if (workflow.configurationPanelJson.length > 0) {
 			return {
 				...workflow,
+				// TODO: Handle JSON parsing errors
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				configurationPanelJson: JSON.parse(
 					workflow.configurationPanelJson as string,
 				),

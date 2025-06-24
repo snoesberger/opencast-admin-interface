@@ -9,7 +9,7 @@ import { MetadataCatalog } from "../slices/eventSlice";
  * Dynamically create a schema for a required metadata field
  */
 export function createMetadataSchema(
-	schema: { [key: string]: any; },
+	schema: { [key: string]: unknown; },
 	config: { id: string; required: boolean; type: string; },
 ) {
 	const { id, required, type } = config;
@@ -51,6 +51,7 @@ export function createMetadataSchema(
 			return;
 		}
 		// @ts-expect-error: Yup needs to fix their typing?
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		validator = validator[type](...params);
 	});
 	schema[id] = validator;

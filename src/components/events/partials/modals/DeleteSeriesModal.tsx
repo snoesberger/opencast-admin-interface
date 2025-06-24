@@ -194,6 +194,7 @@ const DeleteSeriesModal = ({
 												{/*Repeat for each creator*/}
 {/* @ts-expect-error TS(7006): Parameter 'organizer' implicitly has an 'any' type */}
 												{series.organizers.map((organizer, key) => (
+													// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 													<span className="metadata-entry" key={key}>
 														{organizer}
 													</span>

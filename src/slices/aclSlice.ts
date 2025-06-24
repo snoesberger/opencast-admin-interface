@@ -86,7 +86,7 @@ export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getSt
 // todo: unite following in one fetch method (maybe also move to own file containing all fetches regarding resources endpoint)
 // get acl templates
 export const fetchAclTemplates = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.json");
 
 	const response = await data.data;
 
@@ -95,7 +95,7 @@ export const fetchAclTemplates = async () => {
 
 // fetch additional actions that a policy allows user to perform on an event
 export const fetchAclActions = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.ACTIONS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.ACTIONS.json");
 
 	const response = await data.data;
 
@@ -106,7 +106,7 @@ export const fetchAclActions = async () => {
 
 // fetch defaults for the access policy tab in the details views
 export const fetchAclDefaults = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.DEFAULTS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
 	const response = await data.data;
 
@@ -115,7 +115,7 @@ export const fetchAclDefaults = async () => {
 
 // fetch all policies of an certain acl template
 export const fetchAclTemplateById = async (id: string) => {
-	const response = await axios.get(`/acl-manager/acl/${id}`);
+	const response = await axios.get<AclResult>(`/acl-manager/acl/${id}`);
 
 	const acl = response.data.acl;
 
@@ -129,8 +129,8 @@ export const fetchRolesWithTarget = async (target: string) => {
 		target: target,
 	};
 
-	const response = await axios.get("/admin-ng/acl/roles.json", { params: params });
-	const data : Role[] = response.data;
+	const response = await axios.get<Role[]>("/admin-ng/acl/roles.json", { params: params });
+	const data = response.data;
 
 	return data;
 };

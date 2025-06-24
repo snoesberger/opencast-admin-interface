@@ -121,7 +121,7 @@ export const deleteUser = createAppAsyncThunk("users/deleteUser", async (id: str
 
 // get users and their user names
 export const fetchUsersAndUsernames = async () => {
-	const data = await axios.get(
+	const data = await axios.get<{ [key: string]: string }>(
 		"/admin-ng/resources/USERS.NAME.AND.USERNAME.json",
 	);
 

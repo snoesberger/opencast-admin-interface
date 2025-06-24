@@ -155,8 +155,11 @@ export const transformMetadataFields = (metadata: MetadataField[]) => {
 			field.collection = Object.entries(field.collection)
 				.map(([key, value]) => {
 					if (isJson(key)) {
+						// TODO: Handle JSON parsing errors
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 						const collectionParsed = JSON.parse(key);
 						return {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 							name: collectionParsed.label || key,
 							value,
 							...collectionParsed,
@@ -255,7 +258,7 @@ export const prepareMetadataFieldsForPost = (
 };
 
 // returns the name for a field value from the collection
-export const getMetadataCollectionFieldName = (metadataField: { collection?: { [key: string]: unknown }[] }, field: { value: unknown }, t: TFunction) => {
+export const getMetadataCollectionFieldName = (metadataField: { collection?: { [key: string]: unknown }[] }, field: { value: unknown }, t: TFunction): string => {
 	try {
 		if (metadataField.collection) {
 			const collectionField = metadataField.collection.find(
