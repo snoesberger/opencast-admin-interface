@@ -27,6 +27,27 @@ export const relativeToAbsoluteDate = (relative: string, type: string, from: boo
 	return absolute.toDate();
 };
 
+type RelativeDateSpanValue = {
+	relativeDateSpan: {
+		from: string;
+		to: string;
+		unit: string;
+	};
+};
+
+export function isRelativeDateSpanValue(
+	value: unknown,
+): value is RelativeDateSpanValue {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"relativeDateSpan" in value &&
+		typeof (value as any).relativeDateSpan?.from === "string" &&
+		typeof (value as any).relativeDateSpan?.to === "string" &&
+		typeof (value as any).relativeDateSpan?.unit === "string"
+	);
+}
+
 // transform from relative date span to filter value containing absolute dates
 export const relativeDateSpanToFilterValue = (
 	fromRelativeDate: string,

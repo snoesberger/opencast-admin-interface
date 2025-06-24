@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import type { ChartOptions } from "chart.js";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../store";
-import { DataResolution, TimeMode } from "../../slices/statisticsSlice";
+import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSlice";
 import { ParseKeys } from "i18next";
 
 
@@ -48,7 +48,7 @@ const TimeSeriesStatistics = ({
 	timeMode: TimeMode,
 	dataResolution: DataResolution,
 	statDescription: string,
-	onChange: AsyncThunk<undefined, { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
+	onChange: AsyncThunk<Statistics[], { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
 	exportUrl: string,
 	exportFileName: (statsTitle: string) => string,
 	totalValue: number,

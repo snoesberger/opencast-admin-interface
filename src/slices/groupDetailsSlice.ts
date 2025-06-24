@@ -36,12 +36,13 @@ const initialState: GroupDetailsState = {
 
 // fetch details about certain group from server
 export const fetchGroupDetails = createAppAsyncThunk("groupDetails/fetchGroupDetails", async (groupId: GroupDetails["id"]) => {
-	const res = await axios.get(`/admin-ng/groups/${groupId}`);
+	type FetchGroupDetails = Omit<GroupDetails, "users"> & { users: { username: string, name: string }[] };
+	const res = await axios.get<FetchGroupDetails>(`/admin-ng/groups/${groupId}`);
 	const response = await res.data;
 
 	let users: GroupDetailsState["users"] = [];
 	if (response.users.length > 0) {
-		users = response.users.map((user: { username: string, name: string }) => {
+		users = response.users.map(user => {
 			return {
 				id: user.username,
 				name: user.name,

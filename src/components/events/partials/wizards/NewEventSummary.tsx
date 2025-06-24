@@ -158,6 +158,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 {/* @ts-expect-error TS(7006): Parameter 'asset' implicitly has an 'any' type. */}
 									{formik.values.uploadAssetsTrack.map((asset, key) =>
 										asset.file ? (
+											// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 											<tr key={key}>
 												<td>
 													{translateOverrideFallback(asset, t, "SHORT")}

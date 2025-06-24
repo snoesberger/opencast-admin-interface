@@ -3,7 +3,7 @@ import axios from "axios";
 export const getSourceURL = async () => {
 	try {
 		// get source url
-		const response = await axios.get(
+		const response = await axios.get<{ "org.opencastproject.engage.ui.url": string }>(
 			"/api/info/organization/properties/engageuiurl",
 		);
 

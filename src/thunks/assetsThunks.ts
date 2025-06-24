@@ -24,7 +24,7 @@ export const fetchAssetUploadOptions = createAppAsyncThunk("assets/fetchAssetUpl
 
 		// request asset upload options from API
 		await axios
-			.get("/admin-ng/resources/eventUploadAssetOptions.json")
+			.get<{ [key: string]: string }>("/admin-ng/resources/eventUploadAssetOptions.json")
 			.then(dataResponse => {
 				// iterate over response and only use non-comment lines
 				for (const [optionKey, optionJson] of Object.entries(
@@ -37,11 +37,23 @@ export const fetchAssetUploadOptions = createAppAsyncThunk("assets/fetchAssetUpl
 						// if the line is a source upload option or additional asset upload option,
 						// format it and add to upload options list
 						if (isSourceOption || isAssetOption) {
-							let option = JSON.parse(optionJson as string);
+							// TODO: Handle JSON parsing errors
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+							const parsedOption: {
+								accept: string,
+								displayOrder: number,
+								flavorSubType: string,
+								flavorType: string,
+								id: string,
+								multiple: boolean,
+								type: string,
+								title?: string,
+								showForNewEvents?: boolean,
+							} = JSON.parse(optionJson);
 
-							option = {
-								...option,
-								title: !option.title ? optionKey : option.title,
+							const option = {
+								...parsedOption,
+								title: !parsedOption.title ? optionKey : parsedOption.title,
 								showAs: isSourceOption ? "source" : "uploadAsset",
 							};
 
@@ -55,7 +67,7 @@ export const fetchAssetUploadOptions = createAppAsyncThunk("assets/fetchAssetUpl
 							}
 						} else if (optionKey.indexOf(workflowPrefix) >= 0) {
 							// if the line is the upload asset workflow id, set the asset upload workflow
-							workflow = optionJson as string;
+							workflow = optionJson;
 						}
 					}
 				}
@@ -81,9 +93,9 @@ export const enrichPublications = createAppAsyncThunk("assets/enrichPublications
 	},
 ) => {
 	// get information about possible publication channels
-	const data = await axios.get("/admin-ng/resources/PUBLICATION.CHANNELS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/PUBLICATION.CHANNELS.json");
 
-	const publicationChannels: { [key: string]: string } = await data.data;
+	const publicationChannels = await data.data;
 
 	const now = new Date();
 	let combinedPublications: Publication[] = [];
@@ -107,7 +119,9 @@ export const enrichPublications = createAppAsyncThunk("assets/enrichPublications
 		true;
 
 		if (publicationChannels[publication.id]) {
-			const channel = JSON.parse(publicationChannels[publication.id]);
+			// TODO: Handle JSON parsing errors
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			const channel: Publication = JSON.parse(publicationChannels[publication.id]);
 
 			if (channel.label) {
 				newPublication.label = channel.label;
