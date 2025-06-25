@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { buildGroupBody } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
@@ -79,9 +79,9 @@ export const updateGroupDetails = createAppAsyncThunk("groupDetails/updateGroupD
 			console.info(response);
 			dispatch(addNotification({ type: "success", key: "GROUP_UPDATED" }));
 		})
-		.catch(response => {
-			console.error(response);
-			if (response.status === 409) {
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
 				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));

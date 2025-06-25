@@ -221,6 +221,7 @@ const ShowValue = ({
 				{showCheck && (
 					<i
 						className={cn("saved fa fa-check", {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: JSON.stringify(initialValues[field.name] ?? []) !== JSON.stringify(field.value ?? []),
 						})}
 					/>

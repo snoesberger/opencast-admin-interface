@@ -159,7 +159,7 @@ export const transformMetadataFields = (metadata: MetadataField[]) => {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 						const collectionParsed = JSON.parse(key);
 						return {
-							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 							name: collectionParsed.label || key,
 							value,
 							...collectionParsed,

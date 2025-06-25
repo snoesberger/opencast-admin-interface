@@ -59,7 +59,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 	const [uploadAssetsNonTrack, setUploadAssetsNonTrack] = useState<{
 		name: string,
 		translate?: string,
-		value: any,
+		value: File,
 	}[]>([]);
 
 	const uploadAssetOptions = useAppSelector(state => getAssetUploadOptions(state));
@@ -72,10 +72,10 @@ const NewEventSummary = <T extends RequiredFormProps>({
 		const uploadAssetsNonTrack: {
 			name: string,
 			translate?: string,
-			value: any,
+			value: File,
 		}[] = [];
 		for (let i = 0; uploadAssetOptions.length > i; i++) {
-			const fieldValue = formik.values[uploadAssetOptions[i].id];
+			const fieldValue = formik.values[uploadAssetOptions[i].id] as File;
 			if (fieldValue) {
 				const displayOverride = uploadAssetOptions[i].displayOverride as ParseKeys;
 				setUploadAssetsNonTrack(uploadAssetsNonTrack.concat({

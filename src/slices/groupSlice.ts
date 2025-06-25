@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { groupsTableConfig } from "../configs/tableConfigs/groupsTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { buildGroupBody, getURLParams } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -73,9 +73,9 @@ export const postNewGroup = createAppAsyncThunk("groups/postNewGroup", async (va
 		.then(() => {
 			dispatch(addNotification({ type: "success", key: "GROUP_ADDED" }));
 		})
-		.catch(response => {
-			console.error(response);
-			if (response.status === 409) {
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
 				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));
