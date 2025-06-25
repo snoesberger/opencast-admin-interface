@@ -39,12 +39,14 @@ const RenderField = ({
 		<div
 			onClick={() => {
 				if (editableRef.current) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 					if (editableRef.current.focus) {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 						editableRef.current.focus();
 					}
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 					if (editableRef.current.setFocus) {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 						editableRef.current.setFocus(); // For DatePicker
 					}
 				}
@@ -123,6 +125,7 @@ const RenderField = ({
 				{!focused && showCheck && (
 					<i
 						className={cn("saved fa fa-check", {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: form.initialValues[field.name] !== field.value,
 						})}
 					/>

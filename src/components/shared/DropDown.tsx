@@ -111,11 +111,19 @@ const DropDown = <T, >({
 		 * contains an `order` field, indicating that a custom ordering for that list
 		 * exists and the list therefore should not be ordered alphabetically.
 		 */
-		const hasCustomOrder = unformattedOptions.every(item =>
-			isJson(item.label) && JSON.parse(item.label).order !== undefined);
+		const hasCustomOrder = unformattedOptions.every(item => {
+			if (!isJson(item.label)) {
+				return false;
+			}
+			// TODO: Handle JSON parsing errors
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			const parsed = JSON.parse(item.label);
+			return parsed && typeof parsed === "object" && "order" in parsed;
+		});
 
 		if (hasCustomOrder) {
 			// Apply custom ordering.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			unformattedOptions.sort((a, b) => JSON.parse(a.label).order - JSON.parse(b.label).order);
 		} else {
 			// Apply alphabetical ordering.

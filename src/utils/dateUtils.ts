@@ -35,17 +35,30 @@ type RelativeDateSpanValue = {
 	};
 };
 
+type UnknownWithRelativeDateSpan = {
+	relativeDateSpan: {
+		from: unknown;
+		to: unknown;
+		unit: unknown;
+	};
+};
+
 export function isRelativeDateSpanValue(
 	value: unknown,
 ): value is RelativeDateSpanValue {
-	return (
+	if (
 		typeof value === "object" &&
 		value !== null &&
-		"relativeDateSpan" in value &&
-		typeof (value as any).relativeDateSpan?.from === "string" &&
-		typeof (value as any).relativeDateSpan?.to === "string" &&
-		typeof (value as any).relativeDateSpan?.unit === "string"
-	);
+		"relativeDateSpan" in value
+	) {
+		const { relativeDateSpan } = value as UnknownWithRelativeDateSpan;
+		return (
+			typeof relativeDateSpan?.from === "string" &&
+			typeof relativeDateSpan?.to === "string" &&
+			typeof relativeDateSpan?.unit === "string"
+		);
+	}
+	return false;
 }
 
 // transform from relative date span to filter value containing absolute dates

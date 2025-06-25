@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { recordingsTableConfig } from "../configs/tableConfigs/recordingsTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getURLParams } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -115,10 +115,10 @@ export const deleteRecording = createAppAsyncThunk("recordings/deleteRecording",
 			// add success notification
 			dispatch(addNotification({ type: "success", key: "LOCATION_DELETED" }));
 		})
-		.catch(res => {
-			console.error(res);
+		.catch((error: AxiosError) => {
+			console.error(error);
 			// add error notification depending on status code
-			if (res.status === 401) {
+			if (error.status === 401) {
 				dispatch(
 					addNotification({ type: "error", key: "LOCATION_NOT_DELETED_NOT_AUTHORIZED" }),
 				);

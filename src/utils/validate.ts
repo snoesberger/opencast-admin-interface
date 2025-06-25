@@ -1,3 +1,4 @@
+import { UploadAssetsTrack } from './../slices/eventSlice';
 import * as Yup from "yup";
 import { MetadataCatalog } from "../slices/eventSlice";
 
@@ -85,7 +86,7 @@ export const NewEventSchema = {
 			then: () => Yup.array().test(
 				"at-least-one-uploaded",
 				"at least one uploaded",
-				uploadAssetsTrack => {
+				(uploadAssetsTrack: UploadAssetsTrack[] | undefined) => {
 					return uploadAssetsTrack && uploadAssetsTrack.some(asset => !!asset.file);
 				},
 			),

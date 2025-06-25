@@ -228,8 +228,9 @@ export const postNewSeries = createAppAsyncThunk("series/postNewSeries", async (
 			}
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		tobira["parentPagePath"] = existingPages.pop().path;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		tobira["newPages"] = newPages;
 	}
 
@@ -340,8 +341,8 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 			//add success notification
 			dispatch(addNotification({ type: "success", key: "SERIES_DELETED" }));
 		})
-		.catch(res => {
-			console.error(res);
+		.catch((error: AxiosError) => {
+			console.error(error);
 			//add error notification
 			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});

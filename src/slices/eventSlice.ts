@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { eventsTableConfig } from "../configs/tableConfigs/eventsTableConfig";
-import axios, { AxiosProgressEvent } from "axios";
+import axios, { AxiosError, AxiosProgressEvent } from "axios";
 import moment from "moment-timezone";
 import {
 	getURLParams,
@@ -391,41 +391,44 @@ export const updateBulkMetadata = createAppAsyncThunk("events/updateBulkMetadata
 		})
 		.catch(err => {
 			console.error(err);
-			// if an internal server error occurred, then backend sends further information
-			if (err.status === 500) {
-				// backend should send data containing further information about occurred internal error
-				// if this error data is undefined then an unexpected error occurred
-				if (!err.data) {
+			if (axios.isAxiosError<{ updated: string[], updateFailures: string[], notFound: string[] }>(err) && err.response) {
+				// if an internal server error occurred, then backend sends further information
+				if (err.status === 500) {
+					// backend should send data containing further information about occurred internal error
+					// if this error data is undefined then an unexpected error occurred
+					const data = err.response.data;
+					if (!data) {
+						dispatch(
+							addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
+						);
+					} else {
+						if (data.updated && data.updated.length === 0) {
+							dispatch(
+								addNotification({ type: "error", key: "BULK_METADATA_UPDATE.NO_EVENTS_UPDATED" }),
+							);
+						}
+						if (data.updateFailures && data.updateFailures.length > 0) {
+							dispatch(
+								addNotification({
+									type: "warning",
+									key: "BULK_METADATA_UPDATE.SOME_EVENTS_NOT_UPDATED",
+								}),
+							);
+						}
+						if (data.notFound && data.notFound.length > 0) {
+							dispatch(
+								addNotification({
+									type: "warning",
+									key: "BULK_ACTIONS.EDIT_EVENTS_METADATA.REQUEST_ERRORS.NOT_FOUND",
+								}),
+							);
+						}
+					}
+				} else {
 					dispatch(
 						addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
 					);
-				} else {
-					if (err.data.updated && err.data.updated.length === 0) {
-						dispatch(
-							addNotification({ type: "error", key: "BULK_METADATA_UPDATE.NO_EVENTS_UPDATED" }),
-						);
-					}
-					if (err.data.updateFailures && err.data.updateFailures.length > 0) {
-						dispatch(
-							addNotification({
-								type: "warning",
-								key: "BULK_METADATA_UPDATE.SOME_EVENTS_NOT_UPDATED",
-							}),
-						);
-					}
-					if (err.data.notFound && err.data.notFound.length > 0) {
-						dispatch(
-							addNotification({
-								type: "warning",
-								key: "BULK_ACTIONS.EDIT_EVENTS_METADATA.REQUEST_ERRORS.NOT_FOUND",
-							}),
-						);
-					}
 				}
-			} else {
-				dispatch(
-					addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
-				);
 			}
 		});
 });
@@ -680,9 +683,9 @@ export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: 
 				dispatch(addNotification({ type: "success", key: "EVENT_WILL_BE_DELETED" }));
 			}
 		})
-		.catch(res => {
+		.catch((error: AxiosError) => {
 			// add error notification depending on status code
-			if (res.status === 401) {
+			if (error.status === 401) {
 				dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED_NOT_AUTHORIZED" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
