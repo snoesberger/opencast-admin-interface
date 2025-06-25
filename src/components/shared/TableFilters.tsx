@@ -92,7 +92,7 @@ const TableFilters = ({
 			setEndDate(undefined);
 		}
 
-		dispatch(editFilterValue({filterName: filter.name, value: ""}));
+		dispatch(editFilterValue({filterName: filter.name, value: "", resource}));
 
 		// Reload resources when filter is removed
 		await dispatch(loadResource());
@@ -117,7 +117,7 @@ const TableFilters = ({
 		if (name === "secondFilter") {
 			let filter = filterMap.find(({ name }) => name === selectedFilter);
 			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: value}));
+				dispatch(editFilterValue({filterName: filter.name, value: value, resource}));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				dispatch(removeSecondFilter());
@@ -196,7 +196,8 @@ const TableFilters = ({
 			if (filter) {
 				dispatch(editFilterValue({
 					filterName: filter.name,
-					value: start.toISOString() + "/" + end.toISOString()
+					value: start.toISOString() + "/" + end.toISOString(),
+					resource
 				}));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
