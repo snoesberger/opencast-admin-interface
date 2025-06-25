@@ -172,7 +172,7 @@ const EditableDateValue = ({
 		<div onClick={e => { e.stopPropagation(); }}>
 			<DatePicker
 				ref={ref}
-				selected={!isNaN(Date.parse(field.value)) ? new Date(field.value) : null}
+				selected={!isNaN(Date.parse(field.value as string)) ? new Date(field.value as string) : null}
 				onChange={value => setFieldValue(field.name, value)}
 				showTimeInput
 				showYearDropdown

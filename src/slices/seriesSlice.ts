@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { seriesTableConfig } from "../configs/tableConfigs/seriesTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
 	getURLParams,
 	prepareAccessPolicyRulesForPost,
@@ -350,7 +350,7 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 // fetch metadata of certain series from server
 export const fetchSeriesDetailsTobiraNew = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsTobiraNew", async (path: TobiraPage["path"], { dispatch }) => {
 	const res = await axios.get<TobiraPage>("/admin-ng/series/new/tobira/page?path=" + path)
-		.catch(response => handleTobiraError(response, dispatch));
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
 
 	if (!res) {
 		throw new Error();

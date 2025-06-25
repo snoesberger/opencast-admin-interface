@@ -32,7 +32,7 @@ const SelectContainer = ({
 
 	// Formik hook for getting data of specific form field
 	// DON'T delete field and meta, hook works with indices not variable names
-	const [field, , helpers] = useField(formikField);
+	const [field, , helpers] = useField<Item[]>(formikField);
 
 	// Search field for filter options/items
 	const [searchField, setSearchField] = useState("");

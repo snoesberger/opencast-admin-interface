@@ -37,7 +37,7 @@ function createXAxisTickCallback(
 
 	return function (tickValue: number | string) {
 		// @ts-expect-error: Typescript does not like "this", but the chart.js documentation insists we should do it this way
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
 		return moment(this.getLabelForValue(tickValue)).locale(language).format(formatString);
 	};
 };

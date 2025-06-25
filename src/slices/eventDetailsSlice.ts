@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice, unwrapResult } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { addNotification, removeNotificationWizardForm } from "./notificationSlice";
 import {
 	getHttpHeaders,
@@ -953,7 +953,7 @@ export const fetchEventDetailsTobira = createAppAsyncThunk("eventDetails/fetchEv
 	{ dispatch },
 ) => {
 	const res = await axios.get<EventDetailsState["tobiraData"]>(`/admin-ng/event/${id}/tobira/pages`)
-		.catch(response => handleTobiraError(response, dispatch));
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
 
 	if (!res) {
 		throw new Error();

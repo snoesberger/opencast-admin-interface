@@ -265,8 +265,11 @@ export const getMetadataCollectionFieldName = (metadataField: { collection?: { [
 				element => element.value === field.value,
 			);
 
-			if (collectionField && isJson(collectionField.name as string)) {
-				return t(JSON.parse(collectionField.name as string).label);
+			if (collectionField && collectionField.name && isJson(collectionField.name as string)) {
+				// TODO: Handle JSON parsing errors
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				const name: { label?: ParseKeys } = JSON.parse(collectionField.name as string);
+				return name.label ? t(name.label) : "";
 			}
 
 			return collectionField ? t(collectionField.name as ParseKeys) : "";
