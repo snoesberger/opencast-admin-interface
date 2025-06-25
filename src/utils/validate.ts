@@ -51,7 +51,7 @@ export function createMetadataSchema(
 			return;
 		}
 		// @ts-expect-error: Yup needs to fix their typing?
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 		validator = validator[type](...params);
 	});
 	schema[id] = validator;

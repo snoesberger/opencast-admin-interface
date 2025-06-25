@@ -16,6 +16,7 @@ import { TransformedAcl } from "../../../../slices/aclDetailsSlice";
 import { renderValidDate } from "../../../../utils/dateUtils";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { UploadAssetsTrack } from "../../../../slices/eventSlice";
 
 /**
  * This component renders the summary page for new events in the new event wizard.
@@ -37,6 +38,7 @@ interface RequiredFormProps {
 	deviceInputs?: string[]
 	configuration: { [key: string]: string }
 	policies: TransformedAcl[]
+	uploadAssetsTrack?: UploadAssetsTrack[]
 	[key: string]: unknown,  // Metadata fields
 }
 
@@ -155,10 +157,8 @@ const NewEventSummary = <T extends RequiredFormProps>({
 							<table className="main-tbl">
 								<tbody>
 									{/*Insert row for each upload asset of type track user has provided*/}
-{/* @ts-expect-error TS(7006): Parameter 'asset' implicitly has an 'any' type. */}
-									{formik.values.uploadAssetsTrack.map((asset, key) =>
+									{formik.values.uploadAssetsTrack && formik.values.uploadAssetsTrack.map((asset, key) =>
 										asset.file ? (
-											// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 											<tr key={key}>
 												<td>
 													{translateOverrideFallback(asset, t, "SHORT")}
