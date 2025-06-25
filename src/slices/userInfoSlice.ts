@@ -103,7 +103,7 @@ export const fetchUserInfo = createAppAsyncThunk("UserInfo/fetchUserInfo", async
 });
 
 export const fetchOcVersion = createAppAsyncThunk("UserInfo/fetchOcVersion", async () => {
-	const res = await axios.get("/sysinfo/bundles/version?prefix=opencast");
+	const res = await axios.get<OcVersion>("/sysinfo/bundles/version?prefix=opencast");
 	return res.data;
 });
 
@@ -156,7 +156,7 @@ const userInfoSlice = createSlice({
 				state.statusOcVersion = "loading";
 			})
 			.addCase(fetchOcVersion.fulfilled, (state, action: PayloadAction<
-        OcVersion
+				OcVersion
 			>) => {
 				state.statusOcVersion = "succeeded";
 				const ocVersion = action.payload;

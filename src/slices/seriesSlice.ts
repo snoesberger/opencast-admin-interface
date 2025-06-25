@@ -20,6 +20,14 @@ import { handleTobiraError } from "./shared/tobiraErrors";
 /**
  * This file contains redux reducer for actions affecting the state of series
  */
+type FetchSeries = {
+	total: SeriesState["total"],
+	count: SeriesState["count"],
+	limit: SeriesState["limit"],
+	offset: SeriesState["offset"],
+	results: SeriesState["results"],
+};
+
 export type Series = {
 	contributors: string[],
 	createdBy?: string,
@@ -127,7 +135,7 @@ export const fetchSeries = createAppAsyncThunk("series/fetchSeries", async (_, {
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	// /series.json?sortorganizer={sortorganizer}&sort={sort}&filter={filter}&offset=0&limit=100
-	const res = await axios.get("/admin-ng/series/series.json", { params: params });
+	const res = await axios.get<FetchSeries>("/admin-ng/series/series.json", { params: params });
 	return res.data;
 });
 
@@ -429,13 +437,7 @@ const seriesSlice = createSlice({
 			.addCase(fetchSeries.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchSeries.fulfilled, (state, action: PayloadAction<{
-				total: SeriesState["total"],
-				count: SeriesState["count"],
-				limit: SeriesState["limit"],
-				offset: SeriesState["offset"],
-				results: SeriesState["results"],
-			}>) => {
+			.addCase(fetchSeries.fulfilled, (state, action: PayloadAction<FetchSeries>) => {
 				state.status = "succeeded";
 				const series = action.payload;
 				state.total = series.total;

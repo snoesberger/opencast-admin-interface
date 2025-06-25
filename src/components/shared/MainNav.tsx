@@ -166,10 +166,12 @@ const MainNav = ({
 	if (firstPathFragment.length > 0) {
 		const arrToSort = linkMap[firstPathFragment as keyof typeof linkMap].links;
 		if (arrToSort != undefined && arrToSort.length > 1) {
-			arrToSort.forEach((item : any) => {
+			arrToSort.forEach(item => {
+				// @ts-expect-error: TODO: Someone else can fix this
 				if (item.path === pathname) { item.tmpIndex = 0; } else { item.tmpIndex = 1; }
 			});
-			arrToSort.sort((a: any, b: any) => a.tmpIndex - b.tmpIndex);
+			// @ts-expect-error: TODO: Someone else can fix this
+			arrToSort.sort((a, b) => a.tmpIndex - b.tmpIndex);
 		}
 	}
 
