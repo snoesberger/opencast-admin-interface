@@ -142,7 +142,7 @@ const EditScheduledEventsModal = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
+								isValid={formik.isValid}
 							/>
 							<div>
 								{steps[page].name === "general" && (

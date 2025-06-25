@@ -22,9 +22,9 @@ import { HotkeysProvider } from "react-hotkeys-hook";
 // Commenting persistent stuff out can help with debugging
 const persistor = persistStore(store);
 
-if (import.meta.env.DEV && import.meta.env.VITE_TEST_SERVER_URL && typeof import.meta.env.VITE_TEST_SERVER_URL === "string") {
+if (import.meta.env.DEV && import.meta.env.VITE_TEST_SERVER_URL) {
 	axios.defaults.baseURL = import.meta.env.VITE_TEST_SERVER_URL || "";
-	if (import.meta.env.VITE_TEST_SERVER_AUTH && import.meta.env.VITE_TEST_SERVER_AUTH === "string") {
+	if (import.meta.env.VITE_TEST_SERVER_AUTH) {
 		axios.defaults.headers.common["Authorization"] = "Basic " + window.btoa(import.meta.env.VITE_TEST_SERVER_AUTH);
 	}
 }

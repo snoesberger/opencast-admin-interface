@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import _ from "lodash";
 import {
 	getSeriesDetailsExtendedMetadata,
@@ -344,7 +344,7 @@ export const fetchSeriesDetailsTobira = createAppAsyncThunk("seriesDetails/fetch
 	{ dispatch },
 ) => {
 	const res = await axios.get<SeriesDetailsState["tobiraData"]>(`/admin-ng/series/${id}/tobira/pages`)
-		.catch(response => handleTobiraError(response, dispatch));
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
 
 	if (!res) {
 		throw new Error();

@@ -171,8 +171,8 @@ const NewSeriesWizard = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
-								hasAccessPage
+								acls={formik.values.policies}
+								isValid={formik.isValid}
 							/>
 							<div>
 								{steps[page].name === "metadata" && (

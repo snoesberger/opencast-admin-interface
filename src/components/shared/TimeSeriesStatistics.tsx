@@ -221,10 +221,9 @@ const TimeSeriesStatistics = ({
 									name="timeMode"
 									value={mode.value}
 									id={providerId + "-mode-" + key}
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-									onChange={event =>
+									onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
 										changeTimeMode(
-											event.target.value,
+											event.target.value as TimeMode, // see type of "mode.value"
 											formik.setFieldValue,
 											formik.values.fromDate,
 											formik.values.toDate,
@@ -328,10 +327,9 @@ const TimeSeriesStatistics = ({
 										name="dataResolution"
 										as="select"
 										data-width="'100px'"
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-										onChange={event =>
+										onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
 											changeGranularity(
-												event.target.value,
+												event.target.value as DataResolution,
 												formik.setFieldValue,
 												formik.values.timeMode,
 												formik.values.fromDate,
