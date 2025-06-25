@@ -273,9 +273,11 @@ type EventDetailsState = {
 			}[],
 		},
 		video: {
-			previews: {
-				uri: string,
-			}[]
+			video: {
+				previews: {
+					uri: string,
+				}[]
+			},
 			url: string,
 		} | undefined,
 	},
@@ -838,28 +840,29 @@ export const fetchAssetMediaDetails = createAppAsyncThunk("eventDetails/fetchAss
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "media");
 
-	const mediaDetailsRequest = await axios.get<EventDetailsState["assetMediaDetails"]>(
+	const mediaDetailsRequest = await axios.get<Omit<EventDetailsState["assetMediaDetails"], "video">>(
 		`/admin-ng/event/${eventId}/asset/media/${mediaId}.json`,
 		{ params },
 	);
 	const mediaDetailsResponse = await mediaDetailsRequest.data;
 
-	let mediaDetails;
+	let mediaDetails: EventDetailsState["assetMediaDetails"];
 
 	if (typeof mediaDetailsResponse === "string") {
 		// TODO: Handle JSON parsing errors
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		mediaDetails = JSON.parse(mediaDetailsResponse);
 	} else {
-		mediaDetails = mediaDetailsResponse;
+		mediaDetails = {
+			...mediaDetailsResponse,
+			video: undefined,
+		};
 	}
 
 	mediaDetails.video = {
 		video: {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			previews: [{ uri: mediaDetails.url }],
 		},
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		url: mediaDetails.url.split("?")[0],
 	};
 

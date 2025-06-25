@@ -40,9 +40,11 @@ const RenderField = ({
 			onClick={() => {
 				if (editableRef.current) {
 					if (editableRef.current.focus) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 						editableRef.current.focus();
 					}
 					if (editableRef.current.setFocus) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 						editableRef.current.setFocus(); // For DatePicker
 					}
 				}

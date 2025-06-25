@@ -6,7 +6,7 @@ import { transformToIdValueArray } from "../utils/utils";
 import { NOTIFICATION_CONTEXT_ACCESS } from "../configs/modalConfig";
 import { addNotification, removeNotificationWizardAccess } from "./notificationSlice";
 import { getUserInformation } from "../selectors/userInfoSelectors";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { initialFormValuesNewAcl } from "../configs/modalConfig";
 import { TransformedAcl } from "./aclDetailsSlice";
@@ -174,8 +174,8 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		});
 };
 
-// @ts-expect-error TS(7006):
-export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState) => {
+
+export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	// Remove old notifications of context event-access
 	// Helps to prevent multiple notifications for same problem
 	dispatch(removeNotificationWizardAccess());
