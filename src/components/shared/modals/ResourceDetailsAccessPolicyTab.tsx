@@ -525,8 +525,9 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 
 							<tbody>
 								{/* list of policies */}
-								<FieldArray name={"policies"}>
-									{({ replace, remove, push }) => (
+								<FieldArray
+									name={"policies"}
+									render={arrayHelpers => (
 										<>
 											{formik.values.policies.length > 0 &&
 												policiesFiltered.map(
@@ -548,7 +549,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																		handleChange={element => {
 																			if (element) {
 																				const matchingRole = roles.find(role => role.name === element.value);
-																				replace(formik.values.policies.findIndex(p => p === policy), {
+																				arrayHelpers.replace(formik.values.policies.findIndex(p => p === policy), {
 																					...policy,
 																					role: element.value,
 																					user: matchingRole ? matchingRole.user : undefined,
@@ -589,7 +590,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																			: "false"
 																	}`}
 																	onChange={(read: React.ChangeEvent<HTMLInputElement>) =>
-																		replace(formik.values.policies.findIndex(p => p === policy), {
+																		arrayHelpers.replace(formik.values.policies.findIndex(p => p === policy), {
 																			...policy,
 																			read: read.target.checked,
 																		})
@@ -616,7 +617,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																			: "false"
 																	}`}
 																	onChange={(write: React.ChangeEvent<HTMLInputElement>) =>
-																		replace(formik.values.policies.findIndex(p => p === policy), {
+																		arrayHelpers.replace(formik.values.policies.findIndex(p => p === policy), {
 																			...policy,
 																			write:
 																				write.target.checked,
@@ -675,7 +676,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																	{!transactions.read_only && (
 																		<ButtonLikeAnchor
 																			onClick={() =>
-																				remove(formik.values.policies.findIndex(p => p === policy))
+																				arrayHelpers.remove(formik.values.policies.findIndex(p => p === policy))
 																			}
 																			extraClassName="remove"
 																		/>
@@ -693,7 +694,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 														<td colSpan={5}>
 															<ButtonLikeAnchor
 																onClick={() =>
-																	push(createPolicy("", isUserTable))
+																	arrayHelpers.push(createPolicy("", isUserTable))
 																}
 															>
 																+{" "}
@@ -704,7 +705,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 												)}
 										</>
 									)}
-								</FieldArray>
+								/>
 							</tbody>
 						</table>
 					</div>
