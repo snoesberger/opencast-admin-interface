@@ -5,6 +5,16 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of a recording/capture agent
  */
+type FetchRecordingDetails = {
+	Name: RecordingDetailsState["name"],
+	Status: RecordingDetailsState["status"],
+	Update: RecordingDetailsState["update"],
+	URL: RecordingDetailsState["url"],
+	capabilities: RecordingDetailsState["capabilities"],
+	configuration: RecordingDetailsState["configuration"],
+	inputs: RecordingDetailsState["inputs"],
+}
+
 export interface RecordingDetails {
 	name: string,
 	status: string,
@@ -38,7 +48,7 @@ export const fetchRecordingDetails = createAppAsyncThunk("recordingDetails/fetch
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get(`/admin-ng/capture-agents/${name}`);
+	const res = await axios.get<FetchRecordingDetails>(`/admin-ng/capture-agents/${name}`);
 	return res.data;
 });
 
@@ -52,15 +62,7 @@ const recordingDetailsSlice = createSlice({
 			.addCase(fetchRecordingDetails.pending, state => {
 				state.statusRecordingDetails = "loading";
 			})
-			.addCase(fetchRecordingDetails.fulfilled, (state, action: PayloadAction<{
-				Name: RecordingDetailsState["name"],
-				Status: RecordingDetailsState["status"],
-				Update: RecordingDetailsState["update"],
-				URL: RecordingDetailsState["url"],
-				capabilities: RecordingDetailsState["capabilities"],
-				configuration: RecordingDetailsState["configuration"],
-				inputs: RecordingDetailsState["inputs"],
-			}>) => {
+			.addCase(fetchRecordingDetails.fulfilled, (state, action: PayloadAction<FetchRecordingDetails>) => {
 				state.statusRecordingDetails = "succeeded";
 				const recordingDetails = action.payload;
 				state.name = recordingDetails.Name;

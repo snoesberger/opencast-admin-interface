@@ -8,6 +8,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of servers
  */
+type FetchServers = {
+	total: ServerState["total"],
+	count: ServerState["count"],
+	limit: ServerState["limit"],
+	offset: ServerState["offset"],
+	results: ServerState["results"],
+};
+
 export type Server = {
 	cores: number,
 	hostname: string,
@@ -55,7 +63,7 @@ export const fetchServers = createAppAsyncThunk("servers/fetchServers", async (_
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
   // /servers.json?limit=0&offset=0&filter={filter}&sort={sort}
-	const res = await axios.get("/admin-ng/server/servers.json", { params: params });
+	const res = await axios.get<FetchServers>("/admin-ng/server/servers.json", { params: params });
 	return res.data;
 });
 
@@ -95,13 +103,7 @@ const serverSlice = createSlice({
 			.addCase(fetchServers.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchServers.fulfilled, (state, action: PayloadAction<{
-				total: ServerState["total"],
-				count: ServerState["count"],
-				limit: ServerState["limit"],
-				offset: ServerState["offset"],
-				results: ServerState["results"],
-			}>) => {
+			.addCase(fetchServers.fulfilled, (state, action: PayloadAction<FetchServers>) => {
 				state.status = "succeeded";
 				const servers = action.payload;
 				state.total = servers.total;

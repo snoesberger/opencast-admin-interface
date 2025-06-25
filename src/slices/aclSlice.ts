@@ -14,6 +14,14 @@ import { TransformedAcl } from "./aclDetailsSlice";
 /**
  * This file contains redux reducer for actions affecting the state of acls
  */
+type FetchAcls = {
+	total: AclsState["total"],
+	count: AclsState["count"],
+	limit: AclsState["limit"],
+	offset: AclsState["offset"],
+	results: AclsState["results"],
+};
+
 export type Ace = {
 	action: string,
 	allow: boolean,
@@ -79,7 +87,7 @@ export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getSt
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/acl/acls.json", { params: params });
+	const res = await axios.get<FetchAcls>("/admin-ng/acl/acls.json", { params: params });
 	return res.data;
 });
 
@@ -245,13 +253,7 @@ const aclsSlice = createSlice({
 				state.status = "loading";
 			})
 			// Pass the generated action creators to `.addCase()`
-			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<{
-				total: AclsState["total"],
-				count: AclsState["count"],
-				limit: AclsState["limit"],
-				offset: AclsState["offset"],
-				results: AclsState["results"],
-			}>) => {
+			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<FetchAcls>) => {
 				// Same "mutating" update syntax thanks to Immer
 				state.status = "succeeded";
 				const acls = action.payload;

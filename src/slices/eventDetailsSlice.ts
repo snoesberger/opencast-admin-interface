@@ -750,7 +750,7 @@ export const fetchAssetAttachments = createAppAsyncThunk("eventDetails/fetchAsse
 	const params = new URLSearchParams();
 	params.append("id1", "attachment");
 
-	const attachmentsRequest = await axios.get(
+	const attachmentsRequest = await axios.get<EventDetailsState["assetAttachments"]>(
 		`/admin-ng/event/${eventId}/asset/attachment/attachments.json`,
 		{ params },
 	);
@@ -765,7 +765,7 @@ export const fetchAssetAttachmentDetails = createAppAsyncThunk("eventDetails/fet
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "attachment");
 
-	const attachmentDetailsRequest = await axios.get(
+	const attachmentDetailsRequest = await axios.get<EventDetailsState["assetAttachmentDetails"]>(
 		`/admin-ng/event/${eventId}/asset/attachment/${attachmentId}.json`,
 		{ params },
 	);
@@ -776,7 +776,7 @@ export const fetchAssetCatalogs = createAppAsyncThunk("eventDetails/fetchAssetCa
 	const params = new URLSearchParams();
 	params.append("id1", "catalog");
 
-	const catalogsRequest = await axios.get(
+	const catalogsRequest = await axios.get<EventDetailsState["assetCatalogs"]>(
 		`/admin-ng/event/${eventId}/asset/catalog/catalogs.json`,
 		{ params },
 	);
@@ -791,7 +791,7 @@ export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchA
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "catalog");
 
-	const catalogDetailsRequest = await axios.get(
+	const catalogDetailsRequest = await axios.get<EventDetailsState["assetCatalogDetails"]>(
 		`/admin-ng/event/${eventId}/asset/catalog/${catalogId}.json`,
 		{ params },
 	);
@@ -873,7 +873,7 @@ export const fetchAssetPublications = createAppAsyncThunk("eventDetails/fetchAss
 	const params = new URLSearchParams();
 	params.append("id1", "publication");
 
-	const publicationsRequest = await axios.get(
+	const publicationsRequest = await axios.get<EventDetailsState["assetPublications"]>(
 		`/admin-ng/event/${eventId}/asset/publication/publications.json`,
 		{ params },
 	);
@@ -888,7 +888,7 @@ export const fetchAssetPublicationDetails = createAppAsyncThunk("eventDetails/fe
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "publication");
 
-	const publicationDetailsRequest = await axios.get(
+	const publicationDetailsRequest = await axios.get<EventDetailsState["assetPublicationDetails"]>(
 		`/admin-ng/event/${eventId}/asset/publication/${publicationId}.json`,
 		{ params },
 	);
@@ -1351,7 +1351,7 @@ export const fetchWorkflowDetails = createAppAsyncThunk("eventDetails/fetchWorkf
 	workflowId: string
 }) => {
 	const { eventId, workflowId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflows"]["workflow"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}.json`,
 	);
 	return await data.data;
@@ -1501,7 +1501,7 @@ export const fetchWorkflowOperationDetails = createAppAsyncThunk("eventDetails/f
 	operationId?: number
 }) => {
 	const { eventId, workflowId, operationId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowOperationDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/operations/${operationId}`,
 	);
 	return await data.data;
@@ -1525,7 +1525,7 @@ export const fetchWorkflowErrorDetails = createAppAsyncThunk("eventDetails/fetch
 	errorId?: number
 }) => {
 	const { eventId, workflowId, errorId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowErrorDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/errors/${errorId}.json`,
 	);
 	return await data.data;
@@ -1831,6 +1831,7 @@ export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflow
 	const header = getHttpHeaders();
 	const data = new URLSearchParams();
 	// Scheduler service in Opencast expects values to be strings, so we convert them here
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	data.append("configuration", JSON.stringify(jsonData, (_k, v) => v && typeof v === "object" ? v : "" + v));
 
 	axios

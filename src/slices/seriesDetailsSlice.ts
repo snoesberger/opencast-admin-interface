@@ -380,7 +380,7 @@ export const updateSeriesTobiraPath = createAppAsyncThunk("series/updateSeriesTo
 	}
 
 	try {
-		const response = await axios.post(`/admin-ng/series/${params.seriesId}/tobira/path`, tobiraParams.toString(), {
+		const response = await axios.post<unknown>(`/admin-ng/series/${params.seriesId}/tobira/path`, tobiraParams.toString(), {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
@@ -412,7 +412,7 @@ export const removeSeriesTobiraPath = createAppAsyncThunk("series/removeSeriesTo
 	const path = encodeURIComponent(params.currentPath);
 
 	try {
-		const response = await axios.delete(
+		const response = await axios.delete<unknown>(
 			`/admin-ng/series/${params.seriesId}/tobira/${path}`,
 		);
 

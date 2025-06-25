@@ -1,4 +1,4 @@
-import { UploadAssetsTrack } from './../slices/eventSlice';
+import { UploadAssetsTrack } from "./../slices/eventSlice";
 import * as Yup from "yup";
 import { MetadataCatalog } from "../slices/eventSlice";
 

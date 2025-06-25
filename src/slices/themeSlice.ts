@@ -9,6 +9,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of themes
  */
+type FetchThemes = {
+	total: ThemeState["total"],
+	count: ThemeState["count"],
+	limit: ThemeState["limit"],
+	offset: ThemeState["offset"],
+	results: ThemeState["results"],
+};
+
 export type ThemeDetailsType = {
 	bumperActive: boolean,
 	bumperFile: string,
@@ -70,7 +78,7 @@ export const fetchThemes = createAppAsyncThunk("theme/fetchThemes", async (_, { 
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
   // /themes.json?limit=0&offset=0&filter={filter}&sort={sort}
-	const res = await axios.get("/admin-ng/themes/themes.json", { params: params });
+	const res = await axios.get<FetchThemes>("/admin-ng/themes/themes.json", { params: params });
 	return res.data;
 });
 
@@ -150,13 +158,7 @@ const themeSlice = createSlice({
 			.addCase(fetchThemes.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchThemes.fulfilled, (state, action: PayloadAction<{
-				total: ThemeState["total"],
-				count: ThemeState["count"],
-				limit: ThemeState["limit"],
-				offset: ThemeState["offset"],
-				results: ThemeState["results"],
-			}>) => {
+			.addCase(fetchThemes.fulfilled, (state, action: PayloadAction<FetchThemes>) => {
 				state.status = "succeeded";
 				const acls = action.payload;
 				state.total = acls.total;

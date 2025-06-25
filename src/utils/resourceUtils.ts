@@ -158,6 +158,7 @@ export const transformMetadataFields = (metadata: MetadataField[]) => {
 						// TODO: Handle JSON parsing errors
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 						const collectionParsed = JSON.parse(key);
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 						return {
 							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 							name: collectionParsed.label || key,
