@@ -156,9 +156,9 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 
 				{/* Repeat table for each selected event */}
 				{!loading && (
-					<FieldArray name="editedEvents">
-						{ }
-						{({ insert, remove, push }) => (
+					<FieldArray
+						name="editedEvents"
+						render={arrayHelpers => (
 							<>
 							{hasAccess(
 								"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",
@@ -391,7 +391,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 								}
 							</>
 						)}
-					</FieldArray>
+					/>
 				)}
 			</ModalContentTable>
 
