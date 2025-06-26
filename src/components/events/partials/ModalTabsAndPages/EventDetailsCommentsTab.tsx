@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import BaseButton from "../../../shared/BaseButton";
 
 /**
  * This component manages the comment tab of the event details modal
@@ -262,7 +263,7 @@ const EventDetailsCommentsTab = ({
 								</div>
 
 								{/* submit button for comment (only active, if text has been written and a reason has been selected) */}
-								<button
+								<BaseButton
 									disabled={
 										!!(
 											!newCommentText.length ||
@@ -293,7 +294,7 @@ const EventDetailsCommentsTab = ({
 									onClick={() => saveComment(newCommentText, commentReason)}
 								>
 									{t("SUBMIT") /* Submit */}
-								</button>
+								</BaseButton>
 							</form>
 						))
 				}
@@ -342,16 +343,16 @@ const EventDetailsCommentsTab = ({
 							)}
 
 							{/* cancel button (exits reply mode) */}
-							<button className="cancel" onClick={() => exitReplyMode()}>
+							<BaseButton className="cancel" onClick={() => exitReplyMode()}>
 								{
 									t(
 										"EVENTS.EVENTS.DETAILS.COMMENTS.CANCEL_REPLY"
 									) /* Cancel */
 								}
-							</button>
+							</BaseButton>
 
 							{/* submit button for comment reply (only active, if text has been written) */}
-							<button
+							<BaseButton
 								disabled={
 									!!(
 										!commentReplyText.length ||
@@ -377,7 +378,7 @@ const EventDetailsCommentsTab = ({
 								}}
 							>
 								{t("EVENTS.EVENTS.DETAILS.COMMENTS.REPLY") /* Reply */}
-							</button>
+							</BaseButton>
 						</form>
 					)
 				}

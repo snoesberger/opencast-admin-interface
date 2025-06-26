@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import { ParseKeys } from "i18next";
+import BaseButton from "../../../shared/BaseButton";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -435,7 +436,7 @@ const EventDetailsWorkflowTab = ({
 													formik.dirty && (
 														<footer style={{ padding: "0 15px" }}>
 															<div className="pull-left">
-																<button
+																<BaseButton
 																	type="reset"
 																	onClick={() => {
 																		formik.resetForm();
@@ -447,10 +448,10 @@ const EventDetailsWorkflowTab = ({
 																	}`}
 																>
 																	{t("CANCEL") /* Cancel */}
-																</button>
+																</BaseButton>
 															</div>
 															<div className="pull-right">
-																<button
+																<BaseButton
 																	onClick={() => formik.handleSubmit()}
 																	disabled={!(formik.dirty && formik.isValid)}
 																	aria-disabled={!(formik.dirty && formik.isValid)}
@@ -461,7 +462,7 @@ const EventDetailsWorkflowTab = ({
 																	}`}
 																>
 																	{t("SAVE") /* Save */}
-																</button>
+																</BaseButton>
 															</div>
 														</footer>
 													)}

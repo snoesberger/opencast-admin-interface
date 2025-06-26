@@ -15,6 +15,7 @@ import ConfirmModal from "../../../shared/ConfirmModal";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ModalHandle } from "../../../shared/modals/Modal";
 import { fetchEventDetailsTobira } from "../../../../slices/eventDetailsSlice";
+import BaseButton from "../../../shared/BaseButton";
 
 
 export type TobiraTabHierarchy = "main" | "edit-path";
@@ -149,7 +150,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 						<a href={directTobiraLink}>
 							{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.DIRECT_LINK`)}
 						</a>
-						<button
+						<BaseButton
 							className="tobira-copy-direct-link"
 							onClick={() => copyTobiraDirectLink()}
 							aria-label={t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.COPY_DIRECT_LINK`)}
@@ -159,7 +160,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 								className="fa fa-copy"
 								title={t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.COPY_DIRECT_LINK`)}
 							/>
-						</button>
+						</BaseButton>
 					</div>
 					{kind === "series" && <p className="tab-description">
 						{t("EVENTS.SERIES.DETAILS.TOBIRA.DESCRIPTION")}

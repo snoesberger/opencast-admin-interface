@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getSourceURL } from "../../../../utils/embeddedCodeUtils";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import BaseButton from "../../../shared/BaseButton";
 
 /**
  * This component renders the embedding code modal
@@ -146,13 +147,13 @@ const EmbeddingCodeModal = ({
 			{/* copy button */}
 			<div className="embedded-code-copy-to-clipboard">
 				<div className="btn-container" style={{ marginBottom: "20px" }}>
-					<button
+					<BaseButton
 						className="cancel-btn"
 						style={{ fontSize: "14px" }}
 						onClick={() => copy()}
 					>
 						{t("COPY")}
-					</button>
+					</BaseButton>
 				</div>
 			</div>
 		</>
