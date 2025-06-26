@@ -24,6 +24,7 @@ import { Modal, ModalHandle } from "./modals/Modal";
 import { Resource } from "../../slices/tableSlice";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "./modals/ModalContentTable";
+import BaseButton from "./BaseButton";
 
 /**
  * This component renders the modal for editing which columns are shown in the table
@@ -280,15 +281,15 @@ const EditTableViewModalContent = ({
 
 			<footer>
 				{/* Render buttons for updating table data */}
-					<button onClick={() => clearData()} className="cancel active">
+					<BaseButton onClick={() => clearData()} className="cancel active">
 						{t("CANCEL") /*Cancel*/}
-					</button>
-					<button onClick={() => save()} className="submit active">
+					</BaseButton>
+					<BaseButton onClick={() => save()} className="submit active">
 						{t("SAVE") /* Save As Default */}
-					</button>
-					<button onClick={() => resetToInitialConfig()} className="cancel active">
+					</BaseButton>
+					<BaseButton onClick={() => resetToInitialConfig()} className="cancel active">
 						{t("RESET") /* Reset saved setting */}
-					</button>
+					</BaseButton>
 			</footer>
 		</>
 	);
