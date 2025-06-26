@@ -155,7 +155,7 @@ const EventDetailsCommentsTab = ({
 									) && (
 										<ButtonLikeAnchor
 											onClick={() => deleteComment(comment)}
-											extraClassName="delete"
+											className="delete"
 										>
 											{t("EVENTS.EVENTS.DETAILS.COMMENTS.DELETE")}
 										</ButtonLikeAnchor>
@@ -168,7 +168,7 @@ const EventDetailsCommentsTab = ({
 											onClick={
 												() => replyTo(comment, key) /* enters reply mode */
 											}
-											extraClassName="reply"
+											className="reply"
 										>
 											{t("EVENTS.EVENTS.DETAILS.COMMENTS.REPLY")}
 										</ButtonLikeAnchor>
@@ -211,7 +211,7 @@ const EventDetailsCommentsTab = ({
 														onClick={() =>
 															deleteReply(comment, reply)
 														}
-														extraClassName="delete"
+														className="delete"
 													>
 														<i className="fa fa-times-circle" />
 														{t("EVENTS.EVENTS.DETAILS.COMMENTS.DELETE")}

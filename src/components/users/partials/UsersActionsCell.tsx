@@ -6,7 +6,7 @@ import { fetchUserDetails } from "../../../slices/userDetailsSlice";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
 import UserDetails from "./modal/UserDetails";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
-import { IconButton } from "../../shared/IconButton";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the action cells of users in the table view
@@ -38,9 +38,9 @@ const UsersActionCell = ({
 	return (
 		<>
 			{/* edit/show user details */}
-			<IconButton
-				callback={() => showUserDetails()}
-				iconClassname={"more"}
+			<ButtonLikeAnchor
+				onClick={() => showUserDetails()}
+				className={"more"}
 				editAccessRole={"ROLE_UI_USERS_EDIT"}
 				tooltipText={"USERS.USERS.TABLE.TOOLTIP.DETAILS"}
 			/>

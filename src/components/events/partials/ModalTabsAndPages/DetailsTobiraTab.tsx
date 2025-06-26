@@ -215,7 +215,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 						{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.NOT_MOUNTED`)}
 						{i18nKey === "SERIES" && <ButtonLikeAnchor
 							style={{ margin: 5 }}
-							extraClassName="edit fa fa-pencil-square pull-right"
+							className="edit fa fa-pencil-square pull-right"
 							onClick={() => openSubTab("edit-path")}
 							tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.MOUNT_SERIES"
 						/>}
@@ -247,12 +247,12 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
 								onClick={() => deleteConfirmationModalRef.current?.open()}
-								extraClassName="remove pull-right"
+								className="remove pull-right"
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.REMOVE_PATH"
 							/>
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
-								extraClassName="edit fa fa-pencil-square pull-right"
+								className="edit fa fa-pencil-square pull-right"
 								onClick={() => openSubTab("edit-path", hostPage)}
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.EDIT_PATH"
 							/>

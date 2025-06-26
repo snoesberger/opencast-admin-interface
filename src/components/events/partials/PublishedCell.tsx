@@ -88,7 +88,7 @@ const PublishCell = ({
 			)}
 			{!onlyEngage && publications.length > 0 && (
 				<>
-					<ButtonLikeAnchor extraClassName="popover-wrapper__trigger">
+					<ButtonLikeAnchor className="popover-wrapper__trigger">
 						<span onClick={() => setShowPopup(!showPopup)}>{t("YES")}</span>
 					</ButtonLikeAnchor>
 					{showPopup && (
@@ -110,7 +110,7 @@ const PublishCell = ({
 												<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
 											</a>
 										) : (
-											<ButtonLikeAnchor key={key} extraClassName="popover__list-item">
+											<ButtonLikeAnchor key={key} className="popover__list-item">
 												<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
 											</ButtonLikeAnchor>
 										)
