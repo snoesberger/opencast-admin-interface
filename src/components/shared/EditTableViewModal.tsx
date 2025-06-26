@@ -194,7 +194,7 @@ const EditTableViewModalContent = ({
 										<li className="drag-item" key={key}>
 											<div className="title">{t(column.label)}</div>
 											<ButtonLikeAnchor
-												extraClassName="move-item add"
+												className="move-item add"
 												onClick={() => changeColumn(column, false)}
 											>
 												<span className="sr-only">{t("PREFERENCES.TABLE.ADD_COLUMN")}</span>
@@ -245,7 +245,7 @@ const EditTableViewModalContent = ({
 																			{t(column.label)}
 																		</div>
 																		<ButtonLikeAnchor
-																			extraClassName="move-item remove"
+																			className="move-item remove"
 																			onClick={() => changeColumn(column, true)}
 																		>
 																			<span className="sr-only">{t("PREFERENCES.TABLE.REMOVE_COLUMN")}</span>

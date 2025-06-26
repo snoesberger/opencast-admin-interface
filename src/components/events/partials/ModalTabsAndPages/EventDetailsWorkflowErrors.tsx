@@ -137,7 +137,7 @@ const EventDetailsWorkflowErrors = ({
 												{/* link to 'Error Details'  sub-Tab */}
 												<td>
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("workflow-error-details", item.id)
 														}

@@ -1,7 +1,6 @@
 import { FormikProps } from "formik";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import ModalContent from "../../../shared/modals/ModalContent";
 import SearchContainer from "../../../shared/SearchContainer";
 

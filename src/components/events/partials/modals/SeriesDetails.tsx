@@ -120,7 +120,7 @@ const SeriesDetails = ({
 				{tabs.map((tab, index) => !tab.hidden && hasAccess(tab.accessRole, user) && (
 					<ButtonLikeAnchor
 						key={tab.name}
-						extraClassName={cn({ active: page === index })}
+						className={cn({ active: page === index })}
 						onClick={() => openTab(index)}
 					>
 						{t(tab.tabNameTranslation)}

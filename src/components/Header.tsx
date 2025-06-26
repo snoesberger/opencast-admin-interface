@@ -281,7 +281,7 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 			{languages.map((language, key) => (
 				<li key={key}>
 					<ButtonLikeAnchor
-						extraClassName={(i18n.language === language.code ? "selected" : "")}
+						className={(i18n.language === language.code ? "selected" : "")}
 						onClick={() => handleChangeLanguage(language.code)}
 					>
 						{language.long}

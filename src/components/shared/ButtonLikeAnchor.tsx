@@ -8,14 +8,12 @@ import cn from "classnames";
 import { ParseKeys } from "i18next";
 
 type ButtonLikeAnchorProps = JSX.IntrinsicElements["button"] & {
-	extraClassName?: string
 	editAccessRole?: string
 	tooltipText?: ParseKeys
 }
 
 const ButtonLikeAnchor = React.forwardRef<HTMLButtonElement, ButtonLikeAnchorProps>(({
 	editAccessRole,
-	extraClassName,
 	tooltipText,
 	children,
 	...rest
@@ -33,8 +31,8 @@ const ButtonLikeAnchor = React.forwardRef<HTMLButtonElement, ButtonLikeAnchorPro
 		<button
 			ref={ref}
 			type="button"
-			className={cn("button-like-anchor", extraClassName)}
 			{...rest}
+			className={cn("button-like-anchor", rest.className)}
 		>
 			{children}
 		</button>

@@ -611,7 +611,7 @@ const ResourceDetailsAccessPolicyTab = ({
 																									onClick={() =>
 																										remove(index)
 																									}
-																									extraClassName="remove"
+																									className="remove"
 																								/>
 																							)}
 																						</td>
