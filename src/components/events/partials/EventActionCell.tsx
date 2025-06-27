@@ -18,6 +18,7 @@ import { openModal } from "../../../slices/eventDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuFolderOpen, LuLink, LuMessageCircle, LuScissors, LuTriangleAlert } from "react-icons/lu";
 
 /**
  * This component renders the action cells of events in the table view
@@ -127,7 +128,12 @@ const EventActionCell = ({
 						href={`/editor-ui/index.html?id=${row.id}`}
 						className="cut"
 						target="_blank" rel="noreferrer"
+						style={{ height: "17px", width: "17px" }}
 					>
+						<LuScissors style={{
+							height: "100%",
+							width: "100%",
+						}}/>
 						{row.needs_cutting && <span id="badge" className="badge" />}
 					</a>
 				</Tooltip>
@@ -137,18 +143,30 @@ const EventActionCell = ({
 			{row.has_comments && !row.has_open_comments && (
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
-					className={"comments"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
-				/>
+					style={{ height: "17px", width: "17px" }}
+				>
+					<LuMessageCircle style={{
+						height: "100%",
+						width: "100%",
+						color: "#1d5888",
+					}}/>
+				</ButtonLikeAnchor>
 			)}
 
 			{/* If the event has comments and open comments then the comment tab of event details can be opened directly */}
 			{row.has_comments && row.has_open_comments && (
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
-					className={"comments-open"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
-				/>
+					style={{ height: "17px", width: "17px" }}
+				>
+					<LuMessageCircle style={{
+						height: "100%",
+						width: "100%",
+						color: "#1d5888",
+					}}/>
+				</ButtonLikeAnchor>
 			)}
 
 			{/* If the event is in in a paused workflow state then a warning icon is shown and workflow tab of event
@@ -156,27 +174,45 @@ const EventActionCell = ({
 			{row.workflow_state === "PAUSED" &&
 				<ButtonLikeAnchor
 					onClick={() => onClickWorkflow()}
-					className={"fa fa-warning"}
 					editAccessRole={"ROLE_UI_EVENTS_DETAILS_WORKFLOWS_EDIT"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.PAUSED_WORKFLOW"}
-				/>
+					style={{ height: "17px", width: "17px" }}
+				>
+					<LuTriangleAlert style={{
+						height: "100%",
+						width: "100%",
+						color: "#444",
+					}}/>
+				</ButtonLikeAnchor>
 			}
 
 			{/* Open assets tab of event details directly*/}
 			<ButtonLikeAnchor
 				onClick={() => onClickAssets()}
-				className={"fa fa-folder-open"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_ASSETS_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.ASSETS"}
-			/>
+				style={{ height: "17px", width: "17px" }}
+				>
+					<LuFolderOpen style={{
+						height: "100%",
+						width: "100%",
+						color: "#444"
+					}}/>
+				</ButtonLikeAnchor>
 
 			{/* Open dialog for embedded code*/}
 			<ButtonLikeAnchor
 				onClick={() => showEmbeddingCodeModal()}
-				className={"fa fa-link"}
 				editAccessRole={"ROLE_UI_EVENTS_EMBEDDING_CODE_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.EMBEDDING_CODE"}
-			/>
+				style={{ height: "17px", width: "17px" }}
+				>
+					<LuLink style={{
+						height: "100%",
+						width: "100%",
+						color: "#444"
+					}}/>
+				</ButtonLikeAnchor>
 
 			{/* Embedding Code Modal */}
 			<Modal

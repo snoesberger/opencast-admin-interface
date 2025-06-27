@@ -39,6 +39,7 @@ import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
@@ -245,7 +246,7 @@ const Table = ({
 					{table.status === "loading" && rows.length === 0 ? (
 						<tr>
 							<td colSpan={table.columns.length} style={loadingTdStyle}>
-								<i className="fa fa-spinner fa-spin fa-2x fa-fw" />
+								<LuLoaderCircle className="fa-spin" style={{ fontSize: "30px" }}/>
 							</td>
 						</tr>
 					) : !(table.status === "loading") && rows.length === 0 ? (

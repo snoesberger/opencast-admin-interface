@@ -7,6 +7,7 @@ import { humanReadableBytesFilter } from "../../../../utils/eventDetailsUtils";
 import { useAppSelector } from "../../../../store";
 import { useTranslation } from "react-i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { LuExternalLink } from "react-icons/lu";
 
 /**
  * This component manages the publication details sub-tab for assets tab of event details modal
@@ -120,10 +121,11 @@ const EventDetailsAssetPublicationDetails = () => {
 									</td>
 									<td>
 										<a
-											className="fa fa-external-link"
 											href={publication.url}
 											target="_blank" rel="noreferrer"
-										/>
+										>
+											<LuExternalLink style={{ fontSize: "20px", verticalAlign: "middle" }}/>
+										</a>
 									</td>
 								</tr>
 							</tbody>
