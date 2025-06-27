@@ -33,6 +33,8 @@ import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import { ParseKeys } from "i18next";
 import ModalContent from "../../../shared/modals/ModalContent";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
+import { HiHandRaised } from "react-icons/hi2";
+import { LuChevronRight, LuCircleStop, LuRefreshCw } from "react-icons/lu";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -215,10 +217,11 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "STOP")
 																	}
-																	className="stop fa-fw"
+																	style={{ color: "stop" }}
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.STOP"
 																>
 																	{/* STOP */}
+																	<LuCircleStop style={{ fontSize: "20px", verticalAlign: "middle" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{item.status ===
@@ -227,11 +230,11 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "NONE")
 																	}
-																	className="fa fa-hand-stop-o fa-fw"
 																	style={{ color: "red" }}
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.ABORT"
 																>
 																	{/* Abort */}
+																	<HiHandRaised style={{ fontSize: "20px", verticalAlign: "middle" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{item.status ===
@@ -240,10 +243,10 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "RETRY")
 																	}
-																	className="fa fa-refresh fa-fw"
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.RETRY"
 																>
 																	{/* Retry */}
+																	<LuRefreshCw style={{ fontSize: "20px", verticalAlign: "middle", color: "#444" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{(item.status ===
@@ -256,7 +259,7 @@ const EventDetailsWorkflowTab = ({
 																isRoleWorkflowDelete && (
 																	<ButtonLikeAnchor
 																		onClick={() => deleteWorkflow(item.id)}
-																		className="remove fa-fw"
+																		className="remove"
 																		tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.DELETE"
 																	>
 																		{/* DELETE */}
@@ -276,6 +279,7 @@ const EventDetailsWorkflowTab = ({
 																	"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
 																) /* Details */
 															}
+															<LuChevronRight className="details-link-icon"/>
 														</ButtonLikeAnchor>
 													</td>
 												</tr>
@@ -431,7 +435,7 @@ const EventDetailsWorkflowTab = ({
 															{t("CANCEL") /* Cancel */}
 														</button>
 													</div>
-													<div className="pull-right">
+													<div>
 														<button
 															onClick={() => formik.handleSubmit()}
 															disabled={!(formik.dirty && formik.isValid)}

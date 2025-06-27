@@ -20,12 +20,13 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
-import { HiTranslate } from "react-icons/hi";
+import { HiOutlineTranslate, HiTranslate } from "react-icons/hi";
 import { IconContext } from "react-icons";
 import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
 import { ModalHandle } from "./shared/modals/Modal";
 import { broadcastLogout } from "../utils/broadcastSync";
 import BaseButton from "./shared/BaseButton";
+import { LuBell, LuCirclePlay, LuMessageCircleQuestion, LuVideo } from "react-icons/lu";
 
 // References for detecting a click outside of the container of the dropdown menus
 const containerLang = React.createRef<HTMLDivElement>();
@@ -145,9 +146,9 @@ const Header = () => {
 					{/* Select language */}
 					<div className="nav-dd lang-dd" id="lang-dd" ref={containerLang}>
 						<Tooltip active={!displayMenuLang} title={t("LANGUAGE")}>
-							<BaseButton className="lang" onClick={() => setMenuLang(!displayMenuLang)}>
+							<BaseButton className="lang nav-dd-element" onClick={() => setMenuLang(!displayMenuLang)}>
 								<IconContext.Provider value={{ style: { fontSize: "20px" } }}>
-									<HiTranslate />
+									<HiOutlineTranslate />
 								</IconContext.Provider>
 							</BaseButton>
 						</Tooltip>
@@ -167,8 +168,12 @@ const Header = () => {
 											orgProperties["org.opencastproject.admin.mediamodule.url"]
 										}
 										target="_blank" rel="noreferrer"
+										className="nav-dd-element"
 									>
-										<i className="fa fa-play-circle" />
+										<LuCirclePlay style={{
+											fontSize: "20px",
+											color: "#fff",
+										}}/>
 									</a>
 								</Tooltip>
 							</div>
@@ -178,8 +183,11 @@ const Header = () => {
 					{hasAccess("ROLE_STUDIO", user) && (
 						<div className="nav-dd">
 							<Tooltip title={t("STUDIO")}>
-								<a href={studioURL} target="_blank" rel="noreferrer">
-									<i className="fa fa-video-camera" />
+								<a href={studioURL} target="_blank" rel="noreferrer" className="nav-dd-element">
+									<LuVideo style={{
+										fontSize: "20px",
+										color: "#fff",
+									}}/>
 								</a>
 							</Tooltip>
 						</div>
@@ -193,8 +201,10 @@ const Header = () => {
 							ref={containerNotify}
 						>
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
-								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)}>
-									<i className="fa fa-bell" aria-hidden="true" />
+								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
+									<LuBell style={{
+										fontSize: "20px",
+									}}/>
 									{errorCounter !== 0 && (
 										<span id="error-count" className="badge">
 											{errorCounter}
@@ -230,8 +240,11 @@ const Header = () => {
 								<Tooltip active={!displayMenuHelp} title={t("HELP.HELP")}>
 									<BaseButton
 										onClick={() => setMenuHelp(!displayMenuHelp)}
+										className="nav-dd-element"
 									>
-										<span className="fa fa-question-circle"></span>
+										<LuMessageCircleQuestion style={{
+											fontSize: "20px",
+										}}/>
 									</BaseButton>
 								</Tooltip>
 								{/* Click on the help icon, a dropdown menu with documentation, REST-docs and shortcuts (if available) opens */}
@@ -248,7 +261,7 @@ const Header = () => {
 						)}
 
 					{/* Username */}
-					<div className="nav-dd user-dd" id="user-dd" ref={containerUser}>
+					<div className="user-dd" id="user-dd" ref={containerUser}>
 						<BaseButton
 							className="h-nav"
 							onClick={() => setMenuUser(!displayMenuUser)}

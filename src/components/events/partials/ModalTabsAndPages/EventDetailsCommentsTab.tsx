@@ -25,6 +25,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import BaseButton from "../../../shared/BaseButton";
+import { LuClock9 } from "react-icons/lu";
 
 /**
  * This component manages the comment tab of the event details modal
@@ -214,7 +215,7 @@ const EventDetailsCommentsTab = ({
 														}
 														className="delete"
 													>
-														<i className="fa fa-times-circle" />
+														<LuClock9 />
 														{t("EVENTS.EVENTS.DETAILS.COMMENTS.DELETE")}
 													</ButtonLikeAnchor>
 												)}

@@ -2,6 +2,7 @@ import { loadServicesIntoTable } from "../../../thunks/tableThunks";
 import { useAppDispatch } from "../../../store";
 import { Service, fetchServices, restartService } from "../../../slices/serviceSlice";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuRotateCcw, LuUndo } from "react-icons/lu";
 
 /**
  * This component renders the action cells of services in the table view
@@ -20,13 +21,15 @@ const ServicesActionCell = ({
 	};
 
 	return (
-		row.status !== "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
+		row.status === "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
 			<ButtonLikeAnchor
 				onClick={() => onClickRestart()}
-				className={"sanitize fa fa-undo"}
+				className={"sanitize"}
 				editAccessRole={"ROLE_UI_SERVICES_STATUS_EDIT"}
 				tooltipText={"SYSTEMS.SERVICES.TABLE.SANITIZE"}
-			/>
+			>
+				<LuRotateCcw style={{ fontSize: "18px", color: "#444" }}/>
+			</ButtonLikeAnchor>
 		) : <></>
 	);
 };

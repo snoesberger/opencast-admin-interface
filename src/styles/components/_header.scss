@@ -66,31 +66,34 @@
     right: variables.$side-margin;
     top: 5px;
 
+    display: flex;
+    align-items: center;
+
     // Nav items
     .nav-dd {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 37px;
+        height: 39px;
         color: #fff;
-        display: inline-block;
-        vertical-align: middle;
-        font-size: 12px;
-        position: relative;
-        margin-left: -10px;
-        min-width: 50px;
-        text-align: center;
         cursor: pointer;
+
+        // For dropdowns
+        position: relative;
+        font-size: 12px;
 
         &.active .dropdown-ul {
             opacity: 1;
             visibility: visible;
         }
 
-        // Make anchor elements look like buttons when tab targeted
-        > a {
+        .nav-dd-element {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 39px;
             width: 28px;
-            margin-left: 12px;
+            height: 39px;
         }
     }
 

@@ -12,6 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store";
 import { OurNotification, setHidden } from "../../slices/notificationSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { LuX } from "react-icons/lu";
 
 type Context = "not_corner" | "tobira" | "above_table" | "other"
 
@@ -105,8 +106,10 @@ export const NotificationComponent = ({
 			{closeNotification &&
 				<ButtonLikeAnchor
 					onClick={() => closeNotification(notification.id)}
-					className="fa fa-times close"
-				/>
+					className="close"
+				>
+					<LuX />
+				</ButtonLikeAnchor>
 			}
 			<p>{t(notification.message, notification.parameter)}</p>
 		</div>

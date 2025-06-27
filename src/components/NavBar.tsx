@@ -11,6 +11,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { ModalHandle } from "./shared/modals/Modal";
 import { ParseKeys } from "i18next";
 import BaseButton from "./shared/BaseButton";
+import { LuPlus } from "react-icons/lu";
 
 /**
  * Component that renders the nav bar
@@ -114,7 +115,9 @@ const NavBar = ({
 							className="add"
 							onClick={showNewResourceModal}
 						>
-							<i className="fa fa-plus" />
+							<LuPlus style={{
+								marginRight: "10px",
+							}}/>
 							<span>{t(create.text)}</span>
 						</BaseButton>
 					)}
