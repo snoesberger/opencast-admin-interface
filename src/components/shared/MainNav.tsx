@@ -74,15 +74,15 @@ const MainNav = ({
 					path: "/events/events",
 					accessRole: "ROLE_UI_EVENTS_VIEW",
 					tooltipTitle: "NAV.EVENTS.TITLE",
-					className: "events"
+					className: "events",
 				},
 				{
 					path: "/events/series",
 					accessRole: "ROLE_UI_SERIES_VIEW",
 					tooltipTitle: "NAV.EVENTS.TITLE",
 					className: "events",
-				}
-			]
+				},
+			],
 		},
 		"recordings": {
 			links: [
@@ -91,8 +91,8 @@ const MainNav = ({
 					accessRole: "ROLE_UI_LOCATIONS_VIEW",
 					tooltipTitle: "NAV.CAPTUREAGENTS.TITLE",
 					className: "recordings",
-				}
-			]
+				},
+			],
 		},
 		"systems": {
 			links: [
@@ -100,21 +100,21 @@ const MainNav = ({
 					path: "/systems/jobs",
 					accessRole: "ROLE_UI_JOBS_VIEW",
 					tooltipTitle: "NAV.SYSTEMS.TITLE",
-					className: "systems"
+					className: "systems",
 				},
 				{
 					path: "/systems/servers",
 					accessRole: "ROLE_UI_SERVERS_VIEW",
 					tooltipTitle: "NAV.SYSTEMS.TITLE",
-					className: "systems"
+					className: "systems",
 				},
 				{
 					path: "/systems/services",
 					accessRole: "ROLE_UI_SERVICES_VIEW",
 					tooltipTitle: "NAV.SYSTEMS.TITLE",
-					className: "systems"
-				}
-			]
+					className: "systems",
+				},
+			],
 		},
 		"users": {
 			links: [
@@ -122,21 +122,21 @@ const MainNav = ({
 					path: "/users/users",
 					accessRole: "ROLE_UI_USERS_VIEW",
 					tooltipTitle: "NAV.USERS.TITLE",
-					className: "users"
+					className: "users",
 				},
 				{
 					path: "/users/groups",
 					accessRole: "ROLE_UI_GROUPS_VIEW",
 					tooltipTitle: "NAV.USERS.TITLE",
-					className: "users"
+					className: "users",
 				},
 				{
 					path: "/users/acls",
 					accessRole: "ROLE_UI_ACLS_VIEW",
 					tooltipTitle: "NAV.USERS.TITLE",
-					className: "users"
-				}
-			]
+					className: "users",
+				},
+			],
 		},
 		"configuration": {
 			links: [
@@ -144,9 +144,9 @@ const MainNav = ({
 					path: "/configuration/themes",
 					accessRole: "ROLE_UI_THEMES_VIEW",
 					tooltipTitle: "NAV.CONFIGURATION.TITLE",
-					className: "configuration"
-				}
-			]
+					className: "configuration",
+				},
+			],
 		},
 		"statistics": {
 			links: [
@@ -154,17 +154,17 @@ const MainNav = ({
 					path: "/statistics/organization",
 					accessRole: "ROLE_UI_STATISTICS_ORGANIZATION_VIEW",
 					tooltipTitle: "NAV.STATISTICS.TITLE",
-					className: "statistics"
-				}
-			]
-		}
+					className: "statistics",
+				},
+			],
+		},
 	};
 
 	// Link arrays containing more than one link must be sorted so that the
 	// current view is always the first element. Otherwise, NavLink will not
 	// recognize the current view as active.
 	if (firstPathFragment.length > 0) {
-		let arrToSort = linkMap[firstPathFragment as keyof typeof linkMap].links;
+		const arrToSort = linkMap[firstPathFragment as keyof typeof linkMap].links;
 		if (arrToSort != undefined && arrToSort.length > 1) {
 			arrToSort.forEach((item : any) => {
 				if (item.path === pathname) { item.tmpIndex = 0 } else { item.tmpIndex = 1 }
@@ -243,7 +243,7 @@ const MainNavButton = ({
 const MainNavLink = ({
 	path,
 	tooltipTitle,
-	className
+	className,
 }: {
 	path: string
 	tooltipTitle: ParseKeys
