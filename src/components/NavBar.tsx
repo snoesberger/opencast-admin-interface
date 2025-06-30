@@ -52,12 +52,10 @@ const NavBar = ({
 	const newResourceModalRef = useRef<ModalHandle>(null);
 
 	const showNewResourceModal = async () => {
-		create && create.onShowModal && await create.onShowModal()
 		newResourceModalRef.current?.open()
 	};
 
 	const hideNewResourceModal = () => {
-		create && create.onHideModal && create.onHideModal()
 		newResourceModalRef.current?.close?.()
 	};
 
@@ -69,7 +67,7 @@ const NavBar = ({
 		(create && create.hotkeySequence) ?? [],
 		() => showNewResourceModal(),
 		{ description: create && create.hotkeyDescription ? t(create.hotkeyDescription) : undefined },
-		[showNewResourceModal]
+		[showNewResourceModal],
 	);
 
 	return (
@@ -96,7 +94,7 @@ const NavBar = ({
 						>
 							{t(link.text)}
 						</Link>
-					))
+					));
 				})}
 			</nav>
 
