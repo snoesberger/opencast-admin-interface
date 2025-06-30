@@ -27,6 +27,7 @@ import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import EventDetailsWorkflowErrors from "./EventDetailsWorkflowErrors";
 import { WorfklowOperationsTableBody } from "./EventDetailsWorkflowOperations";
+import { LuChevronRight } from "react-icons/lu";
 
 /**
  * This component manages the workflow details for the workflows tab of the event details modal
@@ -390,6 +391,7 @@ const OperationsPreview = ({
 							onClick={() => openSubTab("workflow-operations")}
 						>
 							{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS") /* Details */}
+							<LuChevronRight className="details-link-icon"/>
 						</ButtonLikeAnchor>
 					</li>
 				</ul>

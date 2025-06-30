@@ -197,9 +197,9 @@ const EditTableViewModalContent = ({
 											<ButtonLikeAnchor
 												className="move-item add"
 												onClick={() => changeColumn(column, false)}
-											>
-												<span className="sr-only">{t("PREFERENCES.TABLE.ADD_COLUMN")}</span>
-											</ButtonLikeAnchor>
+												tooltipText={"PREFERENCES.TABLE.ADD_COLUMN"}
+												aria-label={t("PREFERENCES.TABLE.ADD_COLUMN")}
+											/>
 										</li>
 									) : null,
 								)}
@@ -248,9 +248,9 @@ const EditTableViewModalContent = ({
 																		<ButtonLikeAnchor
 																			className="move-item remove"
 																			onClick={() => changeColumn(column, true)}
-																		>
-																			<span className="sr-only">{t("PREFERENCES.TABLE.REMOVE_COLUMN")}</span>
-																		</ButtonLikeAnchor>
+																			tooltipText="PREFERENCES.TABLE.REMOVE_COLUMN"
+																			aria-label={t("PREFERENCES.TABLE.REMOVE_COLUMN")}
+																		/>
 																	</div>
 																)}
 															</Draggablee>

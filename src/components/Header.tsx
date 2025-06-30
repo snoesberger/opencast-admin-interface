@@ -26,7 +26,7 @@ import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
 import { ModalHandle } from "./shared/modals/Modal";
 import { broadcastLogout } from "../utils/broadcastSync";
 import BaseButton from "./shared/BaseButton";
-import { LuBell, LuCirclePlay, LuMessageCircleQuestion, LuVideo } from "react-icons/lu";
+import { LuBell, LuCheck, LuChevronDown, LuCirclePlay, LuMessageCircleQuestion, LuVideo } from "react-icons/lu";
 
 // References for detecting a click outside of the container of the dropdown menus
 const containerLang = React.createRef<HTMLDivElement>();
@@ -267,7 +267,7 @@ const Header = () => {
 							onClick={() => setMenuUser(!displayMenuUser)}
 						>
 							{user.user.name || user.user.username}
-							<span className="dropdown-icon" />
+							<LuChevronDown className="dropdown-icon" />
 						</BaseButton>
 						{/* Click on username, a dropdown menu with the option to logout opens */}
 						{displayMenuUser && <MenuUser />}
@@ -298,6 +298,7 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 						className={(i18n.language === language.code ? "selected" : "")}
 						onClick={() => handleChangeLanguage(language.code)}
 					>
+						{i18n.language === language.code && <LuCheck className="selected-icon" />}
 						{language.long}
 					</ButtonLikeAnchor>
 				</li>

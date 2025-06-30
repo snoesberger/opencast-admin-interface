@@ -135,6 +135,7 @@ const EventDetailsCommentsTab = ({
 
 									{/* details about the comment */}
 									<div className="date">
+										<LuClock9 className="dateIcon"/>
 										{t("dateFormats.dateTime.short", {
 											dateTime: renderValidDate(comment.creationDate),
 										}) || ""}

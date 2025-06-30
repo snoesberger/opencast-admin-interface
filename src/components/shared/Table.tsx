@@ -39,7 +39,7 @@ import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
-import { LuLoaderCircle } from "react-icons/lu";
+import { LuChevronDown, LuChevronLeft, LuChevronRight, LuLoaderCircle } from "react-icons/lu";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
@@ -313,6 +313,7 @@ const Table = ({
 					tabIndex={0}
 				>
 					<span>{pagination.limit}</span>
+					<LuChevronDown className="chevron-down" style={{ top: "7px" }}/>
 					{/* Drop down menu for selection of page size */}
 					{showPageSizes && (
 						<ul className="dropdown-ul">
@@ -338,8 +339,10 @@ const Table = ({
 							dispatch(goToPage(pageOffset - 1));
 							forceDeselectAll();
 						}}
+						tooltipText="TABLE_PREVIOUS"
+						aria-label={t("TABLE_PREVIOUS")}
 					>
-						<span className="sr-only">{t("TABLE_PREVIOUS")}</span>
+						<LuChevronLeft />
 					</ButtonLikeAnchor>
 					{directAccessible.map((page, key) =>
 						page.active ? (
@@ -369,8 +372,10 @@ const Table = ({
 							dispatch(goToPage(pageOffset + 1));
 							forceDeselectAll();
 						}}
+						tooltipText="TABLE_NEXT"
+						aria-label={t("TABLE_NEXT")}
 					>
-						<span className="sr-only">{t("TABLE_NEXT")}</span>
+						<LuChevronRight />
 					</ButtonLikeAnchor>
 				</div>
 			</div>

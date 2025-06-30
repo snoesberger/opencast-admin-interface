@@ -1,5 +1,6 @@
 import { t } from "i18next";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { LuSearch } from "react-icons/lu";
 
 
 const SearchContainer = ({
@@ -41,6 +42,7 @@ const SearchContainer = ({
 
 	return (
 		<div className={containerClassName} style={style}>
+			<LuSearch className="search-icon"/>
 			{value && <ButtonLikeAnchor
 				className={buttonClassName}
 				onClick={() => clearSearchField()}
