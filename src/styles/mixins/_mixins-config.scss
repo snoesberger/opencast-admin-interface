@@ -23,8 +23,6 @@
 @use "sass:color";
 @use "button";
 @use "triangle-point";
-@use "../base/fontawesome/fa-mixins";
-@use "../base/fontawesome/variables" as variables2;
 @use "../base/variables";
 
 // Temporary Inline Files
@@ -69,7 +67,7 @@
 
     @if $expand == true {
         cursor: pointer;
-        @include fa-mixins.fa-icon(variables2.$fa-var-chevron-down, after, inline-block, 10px 0);
+        // @include fa-mixins.fa-icon(variables2.$fa-var-chevron-down, after, inline-block, 10px 0);
 
         &:hover {
             background: linear-gradient(to bottom, #fff, color.adjust(#f3f5f6, $lightness: -2%));

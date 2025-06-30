@@ -1,5 +1,3 @@
-@use "../base/fontawesome/fa-mixins";
-@use "../base/fontawesome/variables" as variables2;
 @use "../base/variables";
 
 /**
@@ -28,8 +26,4 @@
 .a-info-circle {
     color: variables.$l-blue;
     font-size: 14px;
-}
-
-.plus-icon-circle {
-    @include fa-mixins.fa-icon(variables2.$fa-var-plus, before, inline-block, 0, 0, variables.$l-blue, 17px);
 }

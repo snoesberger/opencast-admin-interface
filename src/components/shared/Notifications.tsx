@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store";
 import { OurNotification, setHidden } from "../../slices/notificationSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
-import { LuX } from "react-icons/lu";
+import { LuTriangleAlert, LuX } from "react-icons/lu";
 
 type Context = "not_corner" | "tobira" | "above_table" | "other"
 
@@ -103,6 +103,12 @@ export const NotificationComponent = ({
 
 	return (
 		<div className={cn(notification.type, "alert sticky")}>
+			{notification.type === "warning" &&
+				<LuTriangleAlert className="warning-symbol-warning" />
+			}
+			{notification.type === "error" &&
+				<LuTriangleAlert className="warning-symbol-error" />
+			}
 			{closeNotification &&
 				<ButtonLikeAnchor
 					onClick={() => closeNotification(notification.id)}

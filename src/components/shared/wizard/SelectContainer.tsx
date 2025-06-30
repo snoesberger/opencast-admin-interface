@@ -5,6 +5,7 @@ import { useField } from "formik";
 import { ParseKeys } from "i18next";
 import SearchContainer from "../SearchContainer";
 import BaseButton from "../BaseButton";
+import { LuArrowRightLeft, LuSearch } from "react-icons/lu";
 
 type Item = {
 	name: string
@@ -242,7 +243,7 @@ const SelectContainer = ({
 					</div>
 				</div>
 
-				<div className="exchange-icon" />
+				<LuArrowRightLeft className="exchange-icon"/>
 
 				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">

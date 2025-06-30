@@ -18,6 +18,7 @@ import { AsyncThunk } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../store";
 import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSlice";
 import { ParseKeys } from "i18next";
+import { LuChevronLeft, LuChevronRight, LuDownload } from "react-icons/lu";
 
 
 /**
@@ -191,10 +192,11 @@ const TimeSeriesStatistics = ({
 					{/* download link for a statistic file */}
 					<div className="download">
 						<a
-							className="download-icon"
 							href={exportUrl}
 							download={exportFileName(statTitle)}
-						/>
+						>
+							<LuDownload className="download-icon"/>
+						</a>
 					</div>
 
 					{/* statistics total value */}
@@ -243,7 +245,7 @@ const TimeSeriesStatistics = ({
 						/* year/month selection for statistic via previous and next buttons */
 						<span className="preset">
 							<a
-								className="navigation prev"
+								className="navigation"
 								onClick={() =>
 									selectPrevious(
 										formik.setFieldValue,
@@ -252,7 +254,9 @@ const TimeSeriesStatistics = ({
 										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronLeft />
+							</a>
 							<div>
 								{formatSelectedTimeframeName(
 									formik.values.fromDate,
@@ -269,7 +273,9 @@ const TimeSeriesStatistics = ({
 										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronRight />
+							</a>
 						</span>
 					)}
 

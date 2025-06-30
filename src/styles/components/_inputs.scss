@@ -1,6 +1,4 @@
 @use "sass:color";
-@use "../base/fontawesome/fa-mixins";
-@use "../base/fontawesome/variables" as variables2;
 @use "../base/variables";
 @use "../mixins/button";
 
@@ -169,8 +167,6 @@ input[type="radio"].ios {
     height: 40px;
     position: relative;
 
-    @include fa-mixins.fa-icon(variables2.$fa-var-search, after, inline, 0, 0, inherit, 13px);
-
     outline: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
     border-radius: variables.$main-border-radius;
 
@@ -214,7 +210,6 @@ input[type="radio"].ios {
         width: 46px;
         float: right;
         @include button.btn(white);
-        @include fa-mixins.fa-icon(variables2.$fa-var-times, before, block, 0, 0.45em 0.45em 0.55em 0.45em, inherit, 14px);
         opacity: 1 !important;
 
         &, &:hover, &:focus, &:active {
@@ -235,10 +230,14 @@ input[type="radio"].ios {
 
     }
 
-    &:after {
+    .search-icon {
+        color: inherit;
+        font-size: 13px;
+
         position: absolute;
         top: 13px;
         left: 10px;
+        z-index: 1;
     }
 
 }
