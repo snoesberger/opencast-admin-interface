@@ -100,7 +100,7 @@ const DropDown = <T, >({
 		 * contains an `order` field, indicating that a custom ordering for that list
 		 * exists and the list therefore should not be ordered alphabetically.
 		 */
-		const hasCustomOrder = unformattedOptions.every((item) =>
+		const hasCustomOrder = unformattedOptions.every(item =>
 			isJson(item.label) && JSON.parse(item.label).order !== undefined);
 
 		if (hasCustomOrder) {
@@ -114,10 +114,10 @@ const DropDown = <T, >({
 		return unformattedOptions;
 	};
 
-  let commonProps: Props = {
+  const commonProps: Props = {
 	  	menuPlacement: menuPlacement ?? 'auto',
 		tabIndex: tabIndex,
-		theme: (theme) => (dropDownSpacingTheme(theme)),
+		theme: theme => (dropDownSpacingTheme(theme)),
 		styles: style,
 		defaultMenuIsOpen: defaultOpen,
 		autoFocus: autoFocus,
@@ -128,7 +128,7 @@ const DropDown = <T, >({
 			required,
 		),
 		placeholder: placeholder,
-		onChange: (element) => handleChange(element as {value: T, label: string}),
+		onChange: element => handleChange(element as {value: T, label: string}),
 		menuIsOpen: menuIsOpen,
 		onMenuOpen: () => openMenu(true),
 		onMenuClose: () => openMenu(false),
