@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 import TableFilters from "../shared/TableFilters";
@@ -13,7 +13,7 @@ import { eventsTemplateMap } from "../../configs/tableConfigs/eventsTableMap";
 import {
 	loadEventsIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchFilters, editTextFilter } from "../../slices/tableFilterSlice";
+import { fetchFilters } from "../../slices/tableFilterSlice";
 import {
 	getTotalEvents,
 	isFetchingAssetUploadOptions as getIsFetchingAssetUploadOptions,
@@ -61,7 +61,7 @@ const Events = () => {
 	const events = useAppSelector(state => getTotalEvents(state));
 	const isFetchingAssetUploadOptions = useAppSelector(state => getIsFetchingAssetUploadOptions(state));
 
-	let location = useLocation();
+	const location = useLocation();
 
 	useEffect(() => {
 		// State variable for interrupting the load function
@@ -70,10 +70,7 @@ const Events = () => {
 		// Clear redux of previous table data
 		dispatch(resetTableProperties());
 
-		dispatch(fetchFilters("events"))
-
-		// Reset text filter
-		dispatch(editTextFilter(""));
+		dispatch(fetchFilters("events"));
 
 		// disable actions button
 		dispatch(setShowActions(false));
@@ -87,12 +84,12 @@ const Events = () => {
 			if (allowLoadIntoTable) {
 				dispatch(loadEventsIntoTable());
 			}
-		}
+		};
 		// call the function
 		loadEvents();
 
 		// Fetch events every five seconds
-		let fetchEventsInterval = setInterval(() => loadEvents(), 5000);
+		const fetchEventsInterval = setInterval(() => loadEvents(), 5000);
 
 		return () => {
 			allowLoadIntoTable = false;
@@ -212,7 +209,7 @@ const Events = () => {
 									accessRole: ["ROLE_UI_EVENTS_DETAILS_METADATA_EDIT"],
 									handleOnClick: () => editMetadataEventsModalRef.current?.open(),
 									text: "BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION",
-								}
+								},
 							]}
 							disabled={!showActions}
 						/>
