@@ -33,6 +33,7 @@ const DropDown = <T, >({
 	creatable = false,
 	disabled = false,
 	menuIsOpen = undefined,
+	menuPlacement = "auto",
 	handleMenuIsOpen = undefined,
 	customCSS,
 }: {
@@ -51,6 +52,7 @@ const DropDown = <T, >({
 	disabled?: boolean,
 	menuIsOpen?: boolean,
 	handleMenuIsOpen?: (open: boolean) => void,
+	menuPlacement?: 'auto' | 'top' | 'bottom',
 	customCSS?: {
 		isMetadataStyle?: boolean,
 		width?: number | string,
@@ -75,14 +77,14 @@ const DropDown = <T, >({
 		if (handleMenuIsOpen !== undefined) {
 			handleMenuIsOpen(open);
 		}
-	};
+	}
 
 	const formatOptions = (
 		unformattedOptions: DropDownOption[],
 		required: boolean,
 	) => {
 		// Translate?
-		unformattedOptions = unformattedOptions.map(option => ({ ...option, label: t(option.label as ParseKeys) }));
+		unformattedOptions = unformattedOptions.map(option => ({...option, label: t(option.label as ParseKeys)}));
 
 		// Add "No value" option
 		if (!required) {
@@ -106,14 +108,14 @@ const DropDown = <T, >({
 			unformattedOptions.sort((a, b) => JSON.parse(a.label).order - JSON.parse(b.label).order);
 		} else {
 			// Apply alphabetical ordering.
-			unformattedOptions.sort((a, b) => a.label.localeCompare(b.label));
+			unformattedOptions.sort((a, b) => a.label.localeCompare(b.label))
 		}
 
 		return unformattedOptions;
 	};
 
-
   const commonProps: Props = {
+	  	menuPlacement: menuPlacement ?? 'auto',
 		tabIndex: tabIndex,
 		theme: theme => (dropDownSpacingTheme(theme)),
 		styles: style,
