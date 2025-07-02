@@ -24,6 +24,8 @@ import { hasAccess } from "../../../../utils/utils";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
+import { fetchAclDefaults } from "../../../../slices/aclSlice";
+import { getAclDefaults } from "../../../../selectors/aclSelectors";
 
 /**
  * This component manages the pages of the new event wizard and the submission of values
@@ -41,6 +43,7 @@ const NewEventWizard = ({
 	const extendedMetadata = useAppSelector(state => getExtendedEventMetadata(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
+	const aclDefaults = useAppSelector(state => getAclDefaults(state));
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
@@ -60,6 +63,7 @@ const NewEventWizard = ({
 		extendedMetadata,
 		uploadSourceOptions,
 		user,
+		aclDefaults,
 	);
 
 	const [page, setPage] = useState(0);
@@ -265,6 +269,7 @@ const getInitialValues = (
 	extendedMetadata: MetadataCatalog[],
 	uploadSourceOptions: UploadOption[],
 	user: UserInfoState,
+	aclDefaults?: { [key: string]: string },
 ) => {
 	let initialValues = initialFormValuesNewEvents;
 
@@ -335,7 +340,7 @@ const getInitialValues = (
 			role: user.userRole,
 			read: true,
 			write: true,
-			actions: [],
+			actions: aclDefaults && aclDefaults["default_actions"] ? aclDefaults["default_actions"].split(",") : [],
 			user: user.user,
 		},
 	];
