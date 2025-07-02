@@ -6,7 +6,7 @@ import { transformToIdValueArray } from "../utils/utils";
 import { NOTIFICATION_CONTEXT_ACCESS } from "../configs/modalConfig";
 import { addNotification, removeNotificationWizardAccess } from "./notificationSlice";
 import { getUserInformation } from "../selectors/userInfoSelectors";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { initialFormValuesNewAcl } from "../configs/modalConfig";
 import { TransformedAcl } from "./aclDetailsSlice";
@@ -14,6 +14,14 @@ import { TransformedAcl } from "./aclDetailsSlice";
 /**
  * This file contains redux reducer for actions affecting the state of acls
  */
+type FetchAcls = {
+	total: AclsState["total"],
+	count: AclsState["count"],
+	limit: AclsState["limit"],
+	offset: AclsState["offset"],
+	results: AclsState["results"],
+};
+
 export type Ace = {
 	action: string,
 	allow: boolean,
@@ -53,6 +61,7 @@ type AclsState = {
 	count: number,
 	offset: number,
 	limit: number,
+	aclDefaults: { [key: string]: string }
 };
 
 // Fill columns initially with columns defined in aclsTableConfig
@@ -71,6 +80,7 @@ const initialState: AclsState = {
 	count: 0,
 	offset: 0,
 	limit: 0,
+	aclDefaults: {},
 };
 
 export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getState }) => {
@@ -79,14 +89,14 @@ export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getSt
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/acl/acls.json", { params: params });
+	const res = await axios.get<FetchAcls>("/admin-ng/acl/acls.json", { params: params });
 	return res.data;
 });
 
 // todo: unite following in one fetch method (maybe also move to own file containing all fetches regarding resources endpoint)
 // get acl templates
 export const fetchAclTemplates = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.json");
 
 	const response = await data.data;
 
@@ -95,7 +105,7 @@ export const fetchAclTemplates = async () => {
 
 // fetch additional actions that a policy allows user to perform on an event
 export const fetchAclActions = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.ACTIONS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.ACTIONS.json");
 
 	const response = await data.data;
 
@@ -105,17 +115,17 @@ export const fetchAclActions = async () => {
 };
 
 // fetch defaults for the access policy tab in the details views
-export const fetchAclDefaults = async () => {
-	const data = await axios.get("/admin-ng/resources/ACL.DEFAULTS.json");
+export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", async (_, { getState }) => {
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
 	const response = await data.data;
 
 	return response;
-};
+});
 
 // fetch all policies of an certain acl template
 export const fetchAclTemplateById = async (id: string) => {
-	const response = await axios.get(`/acl-manager/acl/${id}`);
+	const response = await axios.get<AclResult>(`/acl-manager/acl/${id}`);
 
 	const acl = response.data.acl;
 
@@ -129,8 +139,8 @@ export const fetchRolesWithTarget = async (target: string) => {
 		target: target,
 	};
 
-	const response = await axios.get("/admin-ng/acl/roles.json", { params: params });
-	const data : Role[] = response.data
+	const response = await axios.get<Role[]>("/admin-ng/acl/roles.json", { params: params });
+	const data = response.data;
 
 	return data;
 };
@@ -174,8 +184,8 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		});
 };
 
-// @ts-expect-error TS(7006):
-export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState) => {
+
+export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	// Remove old notifications of context event-access
 	// Helps to prevent multiple notifications for same problem
 	dispatch(removeNotificationWizardAccess());
@@ -245,13 +255,7 @@ const aclsSlice = createSlice({
 				state.status = "loading";
 			})
 			// Pass the generated action creators to `.addCase()`
-			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<{
-				total: AclsState["total"],
-				count: AclsState["count"],
-				limit: AclsState["limit"],
-				offset: AclsState["offset"],
-				results: AclsState["results"],
-			}>) => {
+			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<FetchAcls>) => {
 				// Same "mutating" update syntax thanks to Immer
 				state.status = "succeeded";
 				const acls = action.payload;
@@ -265,6 +269,11 @@ const aclsSlice = createSlice({
 				state.status = "failed";
 				state.results = [];
 				state.error = action.error;
+			})
+			.addCase(fetchAclDefaults.fulfilled, (state, action: PayloadAction<
+				AclsState["aclDefaults"]
+			>) => {
+				state.aclDefaults = action.payload;
 			});
 	},
 });
