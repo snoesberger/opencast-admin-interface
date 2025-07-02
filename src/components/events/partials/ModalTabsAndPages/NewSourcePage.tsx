@@ -621,7 +621,7 @@ const Schedule = <T extends {
 								placeholder={"EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.LOCATION"}
 								callback={async (value: string) => {
 										// Set inputs depending on location
-										let inputDevice = inputDevices.find(
+										const inputDevice = inputDevices.find(
 											({ name }) => name === value,
 										);
 										if (inputDevice && inputDevice.inputs) {

@@ -31,10 +31,8 @@ const MultiValueCell = ({
 
 	// Filter with value of current cell
 	const addFilter = async (presenter: string) => {
-		let filter = filterMap.find(
-			({ name }) => name === filterName
-		);
-		if (!!filter) {
+		const filter = filterMap.find(({ name }) => name === filterName);
+		if (filter) {
 		  dispatch(goToPage(0));
 			await dispatch(editFilterValue({filterName: filter.name, value: presenter}));
 			await dispatch(fetchResource());
