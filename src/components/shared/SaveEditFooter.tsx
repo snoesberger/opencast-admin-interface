@@ -22,7 +22,6 @@ export const SaveEditFooter: React.FC<SaveEditFooterProps> = ({
     isValid,
     additionalButton,
     customSaveButtonText,
-    additionalButton,
 }) => {
     const { t } = useTranslation();
 

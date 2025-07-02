@@ -7,6 +7,7 @@ import { renderValidDate } from "../../utils/dateUtils";
 import { IconButton } from "../shared/IconButton";
 import { ParseKeys } from "i18next";
 import { AsyncThunk } from "@reduxjs/toolkit";
+import { goToPage } from "../../thunks/tableThunks";
 
 /**
  * This component renders the start date cells of events in the table view
@@ -35,6 +36,7 @@ const DateTimeCell = ({
 	const addFilter = async (date: string) => {
 		let filter = filterMap.find(({ name }) => name === filterName);
 		if (!!filter) {
+		  dispatch(goToPage(0));
 			let startDate = new Date(date);
 			startDate.setHours(0);
 			startDate.setMinutes(0);
