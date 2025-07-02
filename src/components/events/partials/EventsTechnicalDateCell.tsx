@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { getFilters } from "../../../selectors/tableFilterSelectors";
 import { editFilterValue } from "../../../slices/tableFilterSlice";
-import { loadEventsIntoTable } from "../../../thunks/tableThunks";
+import { loadEventsIntoTable, goToPage } from "../../../thunks/tableThunks";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { fetchEvents } from "../../../slices/eventSlice";
 import { renderValidDate } from "../../../utils/dateUtils";
@@ -25,6 +25,7 @@ const EventsTechnicalDateCell = ({
 	const addFilter = async (date: string) => {
 		const filter = filterMap.find(({ name }) => name === "technicalStart");
 		if (filter) {
+		  dispatch(goToPage(0));
 			await dispatch(editFilterValue({filterName: filter.name, value: date + "/" + date}));
 			await dispatch(fetchEvents());
 			dispatch(loadEventsIntoTable());
