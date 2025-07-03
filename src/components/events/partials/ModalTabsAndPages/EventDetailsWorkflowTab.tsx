@@ -6,9 +6,9 @@ import {
 	getWorkflow,
 	getWorkflowConfiguration,
 	getWorkflowDefinitions,
-	getWorkflows,
 	isFetchingWorkflows,
 	performingWorkflowAction as getPerformingWorkflowAction,
+	getWorkflowsSortedByDate,
 } from "../../../../selectors/eventDetailsSelectors";
 import Notifications from "../../../shared/Notifications";
 import RenderWorkflowConfig from "../wizards/RenderWorkflowConfig";
@@ -58,7 +58,7 @@ const EventDetailsWorkflowTab = ({
 	const workflow = useAppSelector(state => getWorkflow(state));
 	const workflowConfiguration = useAppSelector(state => getWorkflowConfiguration(state));
 	const workflowDefinitions = useAppSelector(state => getWorkflowDefinitions(state));
-	const workflows = useAppSelector(state => getWorkflows(state));
+	const workflows = useAppSelector(state => getWorkflowsSortedByDate(state));
 	const isLoading = useAppSelector(state => isFetchingWorkflows(state));
 	const performingWorkflowAction = useAppSelector(state => getPerformingWorkflowAction(state));
 
