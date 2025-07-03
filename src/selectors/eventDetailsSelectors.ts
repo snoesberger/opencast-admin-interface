@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 /* selectors for modal */
@@ -87,6 +88,17 @@ export const isCheckingConflicts = (state: RootState) =>
 
 /* selectors for workflows */
 export const getWorkflows = (state: RootState) => state.eventDetails.workflows;
+export const getWorkflowsSortedByDate = createSelector(
+	[getWorkflows],
+	workflows => {
+		return ({
+			...workflows,
+			entries: [...workflows.entries].sort(
+				(a, b) => new Date(b.submitted).getTime() - new Date(a.submitted).getTime(),
+			),
+		})
+	},
+);
 export const isFetchingWorkflows = (state: RootState) =>
 	state.eventDetails.statusWorkflows === "loading";
 export const getWorkflowDefinitions = (state: RootState) =>
