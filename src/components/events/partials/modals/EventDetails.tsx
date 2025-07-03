@@ -288,11 +288,6 @@ const EventDetails = ({
 						(workflowTabHierarchy === "workflow-operation-details" && (
 							<EventDetailsWorkflowOperationDetails />
 						)) ||
-						(workflowTabHierarchy === "errors-and-warnings" && (
-							<EventDetailsWorkflowErrors
-								eventId={eventId}
-							/>
-						)) ||
 						(workflowTabHierarchy === "workflow-error-details" && (
 							<EventDetailsWorkflowErrorDetails />
 						)))}

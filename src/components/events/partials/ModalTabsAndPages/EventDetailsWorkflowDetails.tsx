@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import EventDetailsWorkflowErrors from "./EventDetailsWorkflowErrors";
 
 /**
  * This component manages the workflow details for the workflows tab of the event details modal
@@ -66,6 +67,8 @@ const EventDetailsWorkflowDetails = ({
 		>
 					{/* Notifications */}
 					<Notifications context="not_corner" />
+
+					<EventDetailsWorkflowErrors eventId={eventId} />
 
 					{/* the contained view is only displayed, if the data has been fetched */}
 					{isFetching || (
@@ -238,25 +241,6 @@ const EventDetailsWorkflowDetails = ({
 												}
 											</ButtonLikeAnchor>
 										</li>
-										<li>
-											<span>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE",
-													) /* Errors & Warnings */
-												}
-											</span>
-											<ButtonLikeAnchor
-												extraClassName="details-link"
-												onClick={() => openSubTab("errors-and-warnings")}
-											>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
-													) /* Details */
-												}
-											</ButtonLikeAnchor>
-										</li>
 									</ul>
 								</div>
 							</div>
@@ -321,22 +305,6 @@ const EventDetailsWorkflowDetails = ({
 													t(
 														"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK",
 													) /* Operations */
-												}
-											</span>
-											<ButtonLikeAnchor extraClassName="details-link">
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
-													) /* Details */
-												}
-											</ButtonLikeAnchor>
-										</li>
-										<li>
-											<span>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE",
-													) /* Errors & Warnings */
 												}
 											</span>
 											<ButtonLikeAnchor extraClassName="details-link">
