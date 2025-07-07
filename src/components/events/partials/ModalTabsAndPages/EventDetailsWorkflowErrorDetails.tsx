@@ -34,13 +34,13 @@ const EventDetailsWorkflowErrorDetails = () => {
 				/* Hierarchy navigation */
 				<EventDetailsTabHierarchyNavigation
 				openSubTab={openSubTab}
-				hierarchyDepth={1}
-				translationKey0={"EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.TITLE"}
-				subTabArgument0={"workflow-details"}
-				translationKey1={
-					"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HEADER"
-				}
-				subTabArgument1={"workflow-error-details"}
+				hierarchyDepth={2}
+				translationKey0={"EVENTS.EVENTS.DETAILS.WORKFLOW_INSTANCES.TITLE"}
+				subTabArgument0={"workflows"}
+				translationKey1={"EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.TITLE"}
+				subTabArgument1={"workflow-details"}
+				translationKey2={"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HEADER"}
+				subTabArgument2={"workflow-error-details"}
 			/>
 			}
 			modalBodyChildren={<Notifications context="not_corner" />}

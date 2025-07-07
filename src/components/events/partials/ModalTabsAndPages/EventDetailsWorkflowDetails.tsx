@@ -14,6 +14,8 @@ import {
 	fetchWorkflowDetails,
 	fetchWorkflowOperationDetails,
 	fetchWorkflowOperations,
+	fetchWorkflows,
+	setModalWorkflowId,
 	setModalWorkflowTabHierarchy,
 } from "../../../../slices/eventDetailsSlice";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
@@ -43,8 +45,18 @@ const EventDetailsWorkflowDetails = ({
 	const isFetching = useAppSelector(state => isFetchingWorkflowDetails(state));
 
 	useEffect(() => {
-		dispatch(fetchWorkflowDetails({ eventId, workflowId }));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		if (!workflowId) {
+			dispatch(fetchWorkflows(eventId)).unwrap()
+				.then(workflows => {
+					const currentWorkflow = workflows.entries[workflows.entries.length - 1];
+					dispatch(fetchWorkflowDetails({ eventId, workflowId: currentWorkflow.id }));
+					dispatch(setModalWorkflowId(currentWorkflow.id));
+				},
+			);
+		} else {
+			dispatch(fetchWorkflowDetails({ eventId, workflowId }));
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const openSubTab = (tabType: WorkflowTabHierarchy) => {
@@ -63,9 +75,11 @@ const EventDetailsWorkflowDetails = ({
 				/* Hierarchy navigation */
 			<EventDetailsTabHierarchyNavigation
 				openSubTab={openSubTab}
-				hierarchyDepth={0}
-				translationKey0={"EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.TITLE"}
-				subTabArgument0={"workflow-details"}
+				hierarchyDepth={1}
+				translationKey0={"EVENTS.EVENTS.DETAILS.WORKFLOW_INSTANCES.TITLE"}
+				subTabArgument0={"workflows"}
+				translationKey1={"EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.TITLE"}
+				subTabArgument1={"workflow-details"}
 			/>
 			}
 		>

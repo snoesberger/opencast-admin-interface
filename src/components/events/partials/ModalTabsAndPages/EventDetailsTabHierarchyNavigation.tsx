@@ -19,6 +19,8 @@ const EventDetailsTabHierarchyNavigation = <T, >({
 	subTabArgument1,
 	translationKey2,
 	subTabArgument2,
+	translationKey3,
+	subTabArgument3,
 }: {
 	openSubTab: (tabType: T) => void,
 	hierarchyDepth: number,
@@ -28,6 +30,8 @@ const EventDetailsTabHierarchyNavigation = <T, >({
 	subTabArgument1?: T,
 	translationKey2?: ParseKeys,
 	subTabArgument2?: T,
+	translationKey3?: ParseKeys,
+	subTabArgument3?: T,
 }) => {
 	const { t } = useTranslation();
 
@@ -67,10 +71,23 @@ const EventDetailsTabHierarchyNavigation = <T, >({
 			{hierarchyDepth > 1 && subTabArgument2 && (
 				<ButtonLikeAnchor
 					extraClassName="breadcrumb-link scope"
-					style={styleNavHierarchy}
+					style={
+						hierarchyDepth === 2
+							? styleNavHierarchy
+							: styleNavHierarchyInactive
+					}
 					onClick={() => openSubTab(subTabArgument2)}
 				>
 					{translationKey2 && t(translationKey2)}
+				</ButtonLikeAnchor>
+			)}
+			{hierarchyDepth > 2 && subTabArgument3 && (
+				<ButtonLikeAnchor
+					extraClassName="breadcrumb-link scope"
+					style={styleNavHierarchy}
+					onClick={() => openSubTab(subTabArgument3)}
+				>
+					{translationKey3 && t(translationKey3)}
 				</ButtonLikeAnchor>
 			)}
 		</nav>

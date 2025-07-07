@@ -64,7 +64,7 @@ export enum EventDetailsPage {
 	Statistics,
 }
 
-export type WorkflowTabHierarchy = "entry" | "workflow-details" | "workflow-operations" | "workflow-operation-details" | "errors-and-warnings" | "workflow-error-details"
+export type WorkflowTabHierarchy = "workflows" | "workflow-details" | "workflow-operations" | "workflow-operation-details" | "errors-and-warnings" | "workflow-error-details"
 export type AssetTabHierarchy = "entry" | "add-asset" | "asset-attachments" | "attachment-details" | "asset-catalogs" | "catalog-details" | "asset-media" | "media-details" | "asset-publications" | "publication-details";
 
 /**
@@ -219,7 +219,7 @@ const EventDetails = ({
 
 	const openTab = (tabNr: EventDetailsPage) => {
 		dispatch(removeNotificationWizardForm());
-		dispatch(openModalTab(tabNr, "entry", "entry"));
+		dispatch(openModalTab(tabNr, "workflow-details", "entry"));
 	};
 
 	return (
@@ -269,7 +269,7 @@ const EventDetails = ({
 					/>
 				)}
 				{page === EventDetailsPage.Workflow &&
-					((workflowTabHierarchy === "entry" && (
+					((workflowTabHierarchy === "workflows" && (
 						<EventDetailsWorkflowTab
 							eventId={eventId}
 							formikRef={formikRef}
