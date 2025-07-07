@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Notifications from "../../../shared/Notifications";
 import {
+	getLatestWorkflowOperation,
 	getModalWorkflowId,
 	getWorkflow,
 	isFetchingWorkflowDetails,
@@ -11,6 +12,8 @@ import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
 	fetchWorkflowDetails,
+	fetchWorkflowOperationDetails,
+	fetchWorkflowOperations,
 	setModalWorkflowTabHierarchy,
 } from "../../../../slices/eventDetailsSlice";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
@@ -21,6 +24,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import EventDetailsWorkflowErrors from "./EventDetailsWorkflowErrors";
+import { Operation } from "./EventDetailsWorkflowOperations";
 
 /**
  * This component manages the workflow details for the workflows tab of the event details modal
@@ -67,6 +71,8 @@ const EventDetailsWorkflowDetails = ({
 		>
 					{/* Notifications */}
 					<Notifications context="not_corner" />
+
+					<OperationsPreview eventId={eventId} openSubTab={openSubTab}/>
 
 					<EventDetailsWorkflowErrors eventId={eventId} />
 
@@ -209,41 +215,6 @@ const EventDetailsWorkflowDetails = ({
 								</div>
 							)}
 
-							{/* 'More Information' table */}
-							<div className="obj tbl-container more-info-actions">
-								<header>
-									{
-										t(
-											"EVENTS.EVENTS.DETAILS.WORKFLOWS.MORE_INFO",
-										) /* More Information */
-									}
-								</header>
-
-								{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}
-								<div className="obj-container">
-									<ul>
-										<li>
-											<span>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK",
-													) /* Operations */
-												}
-											</span>
-											<ButtonLikeAnchor
-												extraClassName="details-link"
-												onClick={() => openSubTab("workflow-operations")}
-											>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
-													) /* Details */
-												}
-											</ButtonLikeAnchor>
-										</li>
-									</ul>
-								</div>
-							</div>
 						</>
 					)}
 
@@ -287,41 +258,109 @@ const EventDetailsWorkflowDetails = ({
 									</div>
 								</div>
 							)}
-
-							{/* 'More Information' table */}
-							<div className="obj tbl-container more-info-actions">
-								<header>
-									{
-										t(
-											"EVENTS.EVENTS.DETAILS.WORKFLOWS.MORE_INFO",
-										) /* More Information */
-									}
-								</header>
-								<div className="obj-container">
-									<ul>
-										<li>
-											<span>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK",
-													) /* Operations */
-												}
-											</span>
-											<ButtonLikeAnchor extraClassName="details-link">
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
-													) /* Details */
-												}
-											</ButtonLikeAnchor>
-										</li>
-									</ul>
-								</div>
-							</div>
 						</>
 					)}
 		</ModalContentTable>
 	);
 };
+
+const OperationsPreview = ({
+	eventId,
+	openSubTab,
+}: {
+	eventId: string,
+	openSubTab: (tab: WorkflowTabHierarchy) => void,
+}) => {
+	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
+
+	const workflowId = useAppSelector(state => getModalWorkflowId(state));
+	const operationsEntry = useAppSelector(state => getLatestWorkflowOperation(state));
+
+	const loadWorkflowOperations = async () => {
+		// Fetching workflow operations from server
+		dispatch(fetchWorkflowOperations({ eventId, workflowId }));
+	};
+
+	useEffect(() => {
+		// Fetch workflow operations initially
+		loadWorkflowOperations().then();
+
+		// Fetch workflow operations every 5 seconds
+		const fetchWorkflowOperationsInterval = setInterval(loadWorkflowOperations, 5000);
+
+		// Unmount interval
+		return () => clearInterval(fetchWorkflowOperationsInterval);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const openDetailsSubTab = (tabType: WorkflowTabHierarchy, operationId: number | undefined = undefined) => {
+		dispatch(removeNotificationWizardForm());
+		dispatch(setModalWorkflowTabHierarchy(tabType));
+		if (tabType === "workflow-operation-details") {
+			dispatch(fetchWorkflowOperationDetails({ eventId, workflowId, operationId })).then();
+		}
+	};
+
+	return (
+		<div className="obj tbl-container more-info-actions">
+			<header>
+				{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.LATEST_OPERATION")}
+			</header>
+
+			<table className="main-tbl">
+				<thead>
+					<tr>
+						<th>
+							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS") /* Status */}
+						</th>
+						<th>
+							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE") /* Title */}
+						</th>
+						<th>
+							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION") /* Description */}
+						</th>
+						<th className="medium" />
+					</tr>
+				</thead>
+				<tbody>
+					{ operationsEntry &&
+						<Operation
+							operationId={operationsEntry.index}
+							item={operationsEntry.operation}
+							openSubTab={openDetailsSubTab}
+						/>
+					}
+				</tbody>
+			</table>
+			<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0"}} />
+
+			{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}
+			<div className="obj-container">
+				<ul>
+					<li>
+						<span>
+							{
+								t(
+									"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK",
+								) /* Operations */
+							}
+						</span>
+						<ButtonLikeAnchor
+							extraClassName="details-link"
+							onClick={() => openSubTab("workflow-operations")}
+						>
+							{
+								t(
+									"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
+								) /* Details */
+							}
+						</ButtonLikeAnchor>
+					</li>
+				</ul>
+			</div>
+		</div>
+	);
+}
 
 export default EventDetailsWorkflowDetails;

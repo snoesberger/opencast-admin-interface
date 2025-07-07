@@ -991,7 +991,6 @@
 					"ACTIONS": "Actions",
 					"DETAILS": "Details",
 					"DESCRIPTION": "Description",
-					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Type",
 					"TITLE": "Title",
@@ -1031,11 +1030,12 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Workflow details",
-					"CONFIGURATION": "Workflow configuration"
+					"CONFIGURATION": "Workflow configuration",
+					"LATEST_OPERATION": "Latest workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Workflow operations",
-					"DETAILS_LINK": "Operations",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Title",
 						"STATUS": "Status",

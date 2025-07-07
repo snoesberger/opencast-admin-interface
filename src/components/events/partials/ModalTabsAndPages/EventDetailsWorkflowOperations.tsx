@@ -111,33 +111,62 @@ const EventDetailsWorkflowOperations = ({
 						<tbody>
 							{/* workflow operation details */}
 							{operations.entries.map((item, key) => (
-								<tr key={key}>
-									<td>{t(item.status as ParseKeys)}</td>
-									<td>{item.title}</td>
-									<td>{item.description}</td>
-
-									{/* link to 'Operation Details'  sub-Tab */}
-									<td>
-										<ButtonLikeAnchor
-											extraClassName="details-link"
-											onClick={() =>
-												openSubTab("workflow-operation-details", key)
-											}
-										>
-											{
-												t(
-													"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
-												) /* Details */
-											}
-										</ButtonLikeAnchor>
-									</td>
-								</tr>
+								<Operation
+									key={key}
+									operationId={key}
+									item={item}
+									openSubTab={openSubTab}
+								/>
 							))}
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</ModalContentTable>
+	);
+};
+
+export const Operation = ({
+	operationId,
+	item,
+	openSubTab,
+}: {
+	operationId: number,
+	item: {
+		configuration: {
+				[key: string]: string;
+		};
+		description: string;
+		id: number;
+		status: string;
+		title: string;
+	},
+	openSubTab: (tab: WorkflowTabHierarchy, operationId: number | undefined) => void,
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<tr>
+			<td>{t(item.status as ParseKeys)}</td>
+			<td>{item.title}</td>
+			<td>{item.description}</td>
+
+			{/* link to 'Operation Details'  sub-Tab */}
+			<td>
+				<ButtonLikeAnchor
+					extraClassName="details-link"
+					onClick={() =>
+						openSubTab("workflow-operation-details", operationId)
+					}
+				>
+					{
+						t(
+							"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
+						) /* Details */
+					}
+				</ButtonLikeAnchor>
+			</td>
+		</tr>
 	);
 };
 
