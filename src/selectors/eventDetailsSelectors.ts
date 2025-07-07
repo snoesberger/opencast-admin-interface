@@ -115,6 +115,22 @@ export const deletingWorkflow = (state: RootState) =>
 	state.eventDetails.statusDeleteWorkflow === "loading";
 export const getWorkflowOperations = (state: RootState) =>
 	state.eventDetails.workflowOperations;
+// Get the workflow operation currently running (or the last one that was run)
+export const getLatestWorkflowOperation = createSelector(
+	[getWorkflowOperations],
+	operations => {
+		const entries = operations.entries;
+
+		for (let i = entries.length - 1; i >= 0; i--) {
+			const operation = entries[i];
+			if (operation.id !== null) {
+				return { operation, index: i };
+			}
+		}
+
+		return null; // if none found
+	},
+);
 export const isFetchingWorkflowOperations = (state: RootState) =>
 	state.eventDetails.statusWorkflowOperations === "loading";
 export const getWorkflowOperationDetails = (state: RootState) =>
