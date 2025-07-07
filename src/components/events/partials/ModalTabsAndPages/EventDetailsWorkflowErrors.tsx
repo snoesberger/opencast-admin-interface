@@ -70,90 +70,95 @@ const EventDetailsWorkflowErrors = ({
 				}
 			</header>
 
-			<div className="obj-container">
-				<table className="main-tbl">
-					{isFetching || (
-						<>
-							<thead>
-								<tr>
-									<th className="small" />
-									<th>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DATE",
-											) /* Date */
-										}
-										<i />
-									</th>
-									<th>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE",
-											) /* Errors & Warnings */
-										}
-										<i />
-									</th>
-									<th className="medium" />
-								</tr>
-							</thead>
-							<tbody>
+			{
+				/* No errors message */
+				errors.entries.length === 0 && (
+					<table className="main-tbl">
+						<tr>
+							<td colSpan={4}>
 								{
-									/* error details */
-									errors.entries.map((item, key) => (
-										<tr key={key}>
-											<td>
-												{!!item.severity && (
-													<div
-														className={`circle ${severityColor(
-															item.severity,
-														)}`}
-													/>
-												)}
-											</td>
-											<td>
-												{t("dateFormats.dateTime.medium", {
-													dateTime: renderValidDate(item.timestamp),
-												})}
-											</td>
-											<td>{item.title}</td>
+									t(
+										"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.EMPTY",
+									) /* No errors found. */
+								}
+							</td>
+						</tr>
+					</table>
+				)
+			}
 
-											{/* link to 'Error Details'  sub-Tab */}
-											<td>
-												<ButtonLikeAnchor
-													extraClassName="details-link"
-													onClick={() =>
-														openSubTab("workflow-error-details", item.id)
-													}
-												>
-													{
-														t(
-															"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
-														) /*  Details */
-													}
-												</ButtonLikeAnchor>
-											</td>
-										</tr>
-									))
-								}
-								{
-									/* No errors message */
-									errors.entries.length === 0 && (
-										<tr>
-											<td colSpan={4}>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.EMPTY",
-													) /* No errors found. */
-												}
-											</td>
-										</tr>
-									)
-								}
-							</tbody>
-						</>
-					)}
-				</table>
-			</div>
+			{ errors.entries.length !== 0 && (
+				<div className="obj-container">
+					<table className="main-tbl">
+						{isFetching || (
+							<>
+								<thead>
+									<tr>
+										<th className="small" />
+										<th>
+											{
+												t(
+													"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DATE",
+												) /* Date */
+											}
+											<i />
+										</th>
+										<th>
+											{
+												t(
+													"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE",
+												) /* Errors & Warnings */
+											}
+											<i />
+										</th>
+										<th className="medium" />
+									</tr>
+								</thead>
+								<tbody>
+									{
+										/* error details */
+										errors.entries.map((item, key) => (
+											<tr key={key}>
+												<td>
+													{!!item.severity && (
+														<div
+															className={`circle ${severityColor(
+																item.severity,
+															)}`}
+														/>
+													)}
+												</td>
+												<td>
+													{t("dateFormats.dateTime.medium", {
+														dateTime: renderValidDate(item.timestamp),
+													})}
+												</td>
+												<td>{item.title}</td>
+
+												{/* link to 'Error Details'  sub-Tab */}
+												<td>
+													<ButtonLikeAnchor
+														extraClassName="details-link"
+														onClick={() =>
+															openSubTab("workflow-error-details", item.id)
+														}
+													>
+														{
+															t(
+																"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
+															) /*  Details */
+														}
+													</ButtonLikeAnchor>
+												</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</>
+						)}
+					</table>
+				</div>
+			)}
 		</div>
 	);
 };
