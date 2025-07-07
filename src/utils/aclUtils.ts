@@ -88,7 +88,7 @@ export const handleTemplateChange = async <T extends { policies: TransformedAcl[
 			role: defaultUser.userRole,
 			read: true,
 			write: true,
-			actions: [],
+			actions: aclDefaults && aclDefaults["default_actions"] ? aclDefaults["default_actions"].split(",") : [],
 			user: {
 				username: defaultUser.user.username,
 				name: defaultUser.user.name,
