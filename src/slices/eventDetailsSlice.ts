@@ -439,7 +439,7 @@ const initialState: EventDetailsState = {
 		show: false,
 		page: EventDetailsPage.Metadata,
 		event: null,
-		workflowTabHierarchy: "entry",
+		workflowTabHierarchy: "workflow-details",
 		assetsTabHierarchy: "entry",
 		workflowId: "",
 	},
@@ -1422,7 +1422,7 @@ export const fetchWorkflowOperations = createAppAsyncThunk("eventDetails/fetchWo
 export const openModal = (
 	page: EventDetailsPage,
 	event: Event,
-	workflowTab: WorkflowTabHierarchy = "entry",
+	workflowTab: WorkflowTabHierarchy = "workflow-details",
 	assetsTab: AssetTabHierarchy = "entry",
 	workflowId: string = "",
 ) => (dispatch: AppDispatch) => {

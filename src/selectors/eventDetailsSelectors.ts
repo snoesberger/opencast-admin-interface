@@ -107,7 +107,7 @@ export const getWorkflowConfiguration = (state: RootState) =>
 	state.eventDetails.workflowConfiguration;
 export const getWorkflow = (state: RootState) => state.eventDetails.workflows.workflow;
 export const isFetchingWorkflowDetails = (state: RootState) =>
-	state.eventDetails.statusWorkflowDetails === "loading";
+	state.eventDetails.statusWorkflowDetails === "loading" || state.eventDetails.statusWorkflowDetails === "uninitialized";
 export const getBaseWorkflow = (state: RootState) => state.eventDetails.baseWorkflow;
 export const performingWorkflowAction = (state: RootState) =>
 	state.eventDetails.statusDoWorkflowAction === "loading";
