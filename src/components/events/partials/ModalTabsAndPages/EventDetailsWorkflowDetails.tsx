@@ -236,6 +236,37 @@ const EventDetailsWorkflowDetails = ({
 					{/* empty view for displaying, while the data is being fetched */}
 					{isFetching && (
 						<>
+							{/* 'Workflow Operation table */}
+							<div className="obj tbl-container more-info-actions">
+								<header>
+									{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.LATEST_OPERATION")}
+								</header>
+
+								<table className="main-tbl">
+									<tbody>
+										<tr />
+									</tbody>
+								</table>
+							</div>
+
+							{/* 'Workflow Errors' table */}
+							<div className="obj tbl-details">
+								<header>
+									{
+										t(
+											"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.HEADER",
+										) /* Errors & Warnings */
+									}
+								</header>
+								<div className="obj-container">
+									<table className="main-tbl vertical-headers">
+										<tbody>
+											<tr />
+										</tbody>
+									</table>
+								</div>
+							</div>
+
 							{/* 'Workflow Details' table */}
 							<div className="obj tbl-details">
 								<header>
