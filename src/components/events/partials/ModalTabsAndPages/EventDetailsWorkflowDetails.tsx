@@ -45,6 +45,7 @@ const EventDetailsWorkflowDetails = ({
 	const isFetching = useAppSelector(state => isFetchingWorkflowDetails(state));
 
 	useEffect(() => {
+		// Get latest workflow. Ideally we would have an endpoint that gives us the latest workflow straight up.
 		if (!workflowId) {
 			dispatch(fetchWorkflows(eventId)).unwrap()
 				.then(workflows => {
