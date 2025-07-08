@@ -359,6 +359,7 @@ type EventDetailsState = {
 		}[],
 		id: number,
 		jobId: number,
+		rootJobId?: number,
 		processingHost: string,
 		serviceType: string,
 		severity: string,
