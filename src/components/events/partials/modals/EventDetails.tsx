@@ -289,7 +289,9 @@ const EventDetails = ({
 							<EventDetailsWorkflowOperationDetails />
 						)) ||
 						(workflowTabHierarchy === "workflow-error-details" && (
-							<EventDetailsWorkflowErrorDetails />
+							<EventDetailsWorkflowErrorDetails
+								eventId={eventId}
+							/>
 						)))}
 				{page === EventDetailsPage.AccessPolicy && (
 					<EventDetailsAccessPolicyTab

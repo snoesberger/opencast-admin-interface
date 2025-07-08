@@ -1,5 +1,7 @@
 import Notifications from "../../../shared/Notifications";
 import {
+	getModalWorkflowId,
+	getWorkflowByJobId,
 	getWorkflowErrorDetails,
 	isFetchingWorkflowErrorDetails,
 } from "../../../../selectors/eventDetailsSelectors";
@@ -10,22 +12,37 @@ import { removeNotificationWizardForm } from "../../../../slices/notificationSli
 import { renderValidDate } from "../../../../utils/dateUtils";
 import { WorkflowTabHierarchy } from "../modals/EventDetails";
 import { useTranslation } from "react-i18next";
-import { setModalWorkflowTabHierarchy } from "../../../../slices/eventDetailsSlice";
+import { fetchWorkflowOperationDetails, setModalWorkflowTabHierarchy } from "../../../../slices/eventDetailsSlice";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { Operation } from "./EventDetailsWorkflowOperations";
 
 /**
  * This component manages the workflow error details for the workflows tab of the event details modal
  */
-const EventDetailsWorkflowErrorDetails = () => {
+const EventDetailsWorkflowErrorDetails = ({
+	eventId,
+}: {
+	eventId: string
+}) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const errorDetails = useAppSelector(state => getWorkflowErrorDetails(state));
 	const isFetching = useAppSelector(state => isFetchingWorkflowErrorDetails(state));
+	const operationsEntry = useAppSelector(state => getWorkflowByJobId(state, errorDetails.rootJobId ?? errorDetails.jobId, errorDetails.jobId))
+	const workflowId = useAppSelector(state => getModalWorkflowId(state));
 
 	const openSubTab = (tabType: WorkflowTabHierarchy) => {
 		dispatch(removeNotificationWizardForm());
 		dispatch(setModalWorkflowTabHierarchy(tabType));
+	};
+
+	const openOperationDetailsSubTab = (tabType: WorkflowTabHierarchy, operationId: number | undefined = undefined) => {
+		dispatch(removeNotificationWizardForm());
+		dispatch(setModalWorkflowTabHierarchy(tabType));
+		if (tabType === "workflow-operation-details") {
+			dispatch(fetchWorkflowOperationDetails({ eventId, workflowId, operationId })).then();
+		}
 	};
 
 	return (
@@ -45,6 +62,38 @@ const EventDetailsWorkflowErrorDetails = () => {
 			}
 			modalBodyChildren={<Notifications context="not_corner" />}
 		>
+			{/* Error operation table */}
+			<div className="obj tbl-container">
+				<header>
+					{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.OPERATION")}
+				</header>
+				<table className="main-tbl">
+					<thead>
+						<tr>
+							<th>
+								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS") /* Status */}
+							</th>
+							<th>
+								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE") /* Title */}
+							</th>
+							<th>
+								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION") /* Description */}
+							</th>
+							<th className="medium" />
+						</tr>
+					</thead>
+					<tbody>
+						{ operationsEntry &&
+							<Operation
+								operationId={operationsEntry.index}
+								item={operationsEntry.operation}
+								openSubTab={openOperationDetailsSubTab}
+							/>
+						}
+					</tbody>
+				</table>
+			</div>
+
 			{/* 'Error Details' table */}
 			<div className="obj tbl-details">
 				<header>

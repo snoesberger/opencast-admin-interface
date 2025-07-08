@@ -131,6 +131,36 @@ export const getLatestWorkflowOperation = createSelector(
 		return null; // if none found
 	},
 );
+// Get operation by root_job_id, or jobId
+export const getWorkflowByJobId = createSelector(
+	[
+		getWorkflowOperations,
+		(_operations, rootJobId: number) => rootJobId,
+		(_operations, rootJobId: number, jobId: number) => jobId,
+	],
+	(operations, rootJobId, jobId) => {
+		let operation = null;
+		let index = null;
+
+		index = operations.entries.findIndex(
+			entry => entry.id === rootJobId,
+		);
+		operation = operations.entries[index];
+
+		if (!operation) {
+			index = operations.entries.findIndex(
+				entry => entry.id === jobId,
+			);
+			operation = operations.entries[index];
+		}
+
+		if (operation) {
+			return { operation, index };
+		}
+
+		return null;
+	},
+);
 export const isFetchingWorkflowOperations = (state: RootState) =>
 	state.eventDetails.statusWorkflowOperations === "loading";
 export const getWorkflowOperationDetails = (state: RootState) =>
