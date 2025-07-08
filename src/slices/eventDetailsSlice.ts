@@ -323,7 +323,7 @@ type EventDetailsState = {
 			configuration: { [key: string]: string },
 			description: string,
 			id: number,
-			status: string,  // translation key
+			status: string,  // translation key, ending on INSTANTIATED, RUNNING, PAUSED, SUCCEEDED, FAILED, SKIPPED, RETRY
 			title: string,
 		}[]
 	},

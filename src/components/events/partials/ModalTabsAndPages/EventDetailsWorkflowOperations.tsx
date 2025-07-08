@@ -14,6 +14,8 @@ import { WorkflowTabHierarchy } from "../modals/EventDetails";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { LuCheck, LuEllipsis, LuLoader, LuPause, LuRotateCcw, LuX } from "react-icons/lu";
+import { GoDash } from "react-icons/go";
 
 /**
  * This component manages the workflow operations for the workflows tab of the event details modal
@@ -149,7 +151,10 @@ export const Operation = ({
 
 	return (
 		<tr>
-			<td>{t(item.status as ParseKeys)}</td>
+			<td style={{ display: "flex", alignItems: "center" }}>
+				<OperationStatusIcon status={item.status} />
+				{t(item.status as ParseKeys)}
+			</td>
 			<td>{item.title}</td>
 			<td>{item.description}</td>
 
@@ -171,5 +176,35 @@ export const Operation = ({
 		</tr>
 	);
 };
+
+const OperationStatusIcon = ({
+	status,
+}: {
+	status: string
+}) => {
+	// Parse translation key to state
+	const state = status.split(".").pop();
+
+	const iconStyle = { marginRight: "5px"};
+
+	switch (state) {
+		case "INSTANTIATED":
+			return <LuEllipsis style={{ ...iconStyle, color: "#666"}}/>;
+		case "RUNNING":
+			return <LuLoader className="fa-spin" style={{ ...iconStyle, color: "#666"}}/>;
+		case "PAUSED":
+			return <LuPause style={{ ...iconStyle, color: "#666"}}/>;
+		case "SUCCEEDED":
+			return <LuCheck style={{ ...iconStyle, color: "#37c180"}}/>;
+		case "FAILED":
+			return <LuX style={{ ...iconStyle, color: "#fa1919"}}/>;
+		case "SKIPPED":
+			return <GoDash style={{ ...iconStyle, color: "#378dd4"}}/>;
+		case "RETRY":
+			return <LuRotateCcw className="fa-spin" style={{ ...iconStyle, color: "#666"}}/>;
+		default:
+			return <></>;
+	}
+}
 
 export default EventDetailsWorkflowOperations;
