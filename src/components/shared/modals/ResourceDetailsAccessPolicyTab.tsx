@@ -422,9 +422,15 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 	editAccessRole: string
 }) => {
 	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
 
 	const user = useAppSelector(state => getUserInformation(state));
 	const aclDefaults = useAppSelector(state => getAclDefaults(state));
+
+	useEffect(() => {
+		dispatch(fetchAclDefaults());
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const createPolicy = (role: string, withUser: boolean): TransformedAcl => {
 		const user = withUser ? { username: "", name: "", email: "" } : undefined;
