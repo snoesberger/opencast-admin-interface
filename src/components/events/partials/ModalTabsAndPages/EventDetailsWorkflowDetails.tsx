@@ -239,7 +239,7 @@ const EventDetailsWorkflowDetails = ({
 							{/* 'Workflow Operation table */}
 							<div className="obj tbl-container more-info-actions">
 								<header>
-									{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.LATEST_OPERATION")}
+									{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.OPERATIONS")}
 								</header>
 
 								<table className="main-tbl">
@@ -322,6 +322,14 @@ const OperationsPreview = ({
 
 	const workflowId = useAppSelector(state => getModalWorkflowId(state));
 	const operationsEntry = useAppSelector(state => getLatestWorkflowOperation(state));
+	const workflow = useAppSelector(state => getWorkflow(state));
+
+	// Parse translation key to state
+	let workflowDone = false;
+	if ("status" in workflow) {
+		const workflowStatus = workflow.status.split(".").pop();
+		workflowDone = !(workflowStatus === "SUCCEEDED" || workflowStatus === "FAILED" || workflowStatus === "STOPPED");
+	}
 
 	const loadWorkflowOperations = async () => {
 		// Fetching workflow operations from server
@@ -351,9 +359,13 @@ const OperationsPreview = ({
 	return (
 		<div className="obj tbl-container more-info-actions">
 			<header>
-				{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.LATEST_OPERATION")}
+				{ workflowDone
+					? t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.CURRENT_OPERATION")
+					: t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.OPERATIONS")
+				}
 			</header>
 
+			{ workflowDone && <>
 			<table className="main-tbl">
 				<thead>
 					<tr>
@@ -380,6 +392,7 @@ const OperationsPreview = ({
 				</tbody>
 			</table>
 			<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0"}} />
+			</>}
 
 			{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}
 			<div className="obj-container">
