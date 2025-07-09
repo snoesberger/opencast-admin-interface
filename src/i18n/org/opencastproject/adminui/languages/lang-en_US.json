@@ -1031,7 +1031,8 @@
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Workflow details",
 					"CONFIGURATION": "Workflow configuration",
-					"LATEST_OPERATION": "Latest workflow operation"
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Workflow operations",
