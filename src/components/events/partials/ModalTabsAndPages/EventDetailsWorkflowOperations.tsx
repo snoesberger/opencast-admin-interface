@@ -8,6 +8,7 @@ import {
 	fetchWorkflowOperationDetails,
 	fetchWorkflowOperations,
 	setModalWorkflowTabHierarchy,
+	WorkflowOperation,
 } from "../../../../slices/eventDetailsSlice";
 import { useTranslation } from "react-i18next";
 import { WorkflowTabHierarchy } from "../modals/EventDetails";
@@ -25,7 +26,6 @@ const EventDetailsWorkflowOperations = ({
 }: {
 	eventId: string,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const workflowId = useAppSelector(state => getModalWorkflowId(state));
@@ -73,60 +73,87 @@ const EventDetailsWorkflowOperations = ({
 			}
 			modalBodyChildren={<Notifications context="not_corner" />}
 		>
-		{/* 'Workflow Operations' table */}
-			<div className="obj tbl-container">
-				<header>
-					{
-						t(
-							"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TITLE",
-						) /* Workflow Operations */
-					}
-				</header>
-				<div className="obj-container">
-					<table className="main-tbl">
-						<thead>
-							<tr>
-								<th>
-									{
-										t(
-											"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS",
-										) /* Status */
-									}
-								</th>
-								<th>
-									{
-										t(
-											"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE",
-										) /* Title */
-									}
-									<i />
-								</th>
-								<th>
-									{
-										t(
-											"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION",
-										) /* Description */
-									}
-									<i />
-								</th>
-								<th className="medium" />
-							</tr>
-						</thead>
-						<tbody>
-							{/* workflow operation details */}
-							{operations.entries.map((item, key) => (
-								<Operation
-									key={key}
-									operationId={key}
-									item={item}
-									openSubTab={openSubTab}
-								/>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div>
+			{/* 'Workflow Operations' table */}
+			<WorkflowOperationsTable
+				operations={operations.entries.map((entry, index) => (
+					{ operation: entry, operationId: index }
+				))}
+				openSubTab={openSubTab}
+				title={"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TITLE"}
+			/>
 		</ModalContentTable>
+	);
+};
+
+export const WorkflowOperationsTable = ({
+	operations,
+	openSubTab,
+	title,
+}: {
+	operations: {
+		operation: WorkflowOperation
+		operationId: number
+	}[]
+	openSubTab: (tab: WorkflowTabHierarchy, operationId: number | undefined) => void
+	title?: ParseKeys
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<div className="obj tbl-container">
+			<header>
+				{t(title ?? "EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TITLE")}
+			</header>
+			<div className="obj-container">
+				<WorfklowOperationsTableBody
+					operations={operations}
+					openSubTab={openSubTab}
+				/>
+			</div>
+		</div>
+	);
+};
+
+export const WorfklowOperationsTableBody = ({
+	operations,
+	openSubTab,
+}: {
+	operations: {
+		operation: WorkflowOperation
+		operationId: number
+	}[]
+	openSubTab: (tab: WorkflowTabHierarchy, operationId: number | undefined) => void
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<table className="main-tbl">
+			<thead>
+				<tr>
+					<th>
+						{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS") /* Status */}
+					</th>
+					<th>
+						{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE") /* Title */}
+					</th>
+					<th>
+						{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION") /* Description */}
+					</th>
+					<th className="medium" />
+				</tr>
+			</thead>
+			<tbody>
+				{/* workflow operation details */}
+				{operations.map((item, key) => (
+					<Operation
+						key={key}
+						operationId={item.operationId}
+						item={item.operation}
+						openSubTab={openSubTab}
+					/>
+				))}
+			</tbody>
+		</table>
 	);
 };
 
@@ -136,15 +163,7 @@ export const Operation = ({
 	openSubTab,
 }: {
 	operationId: number,
-	item: {
-		configuration: {
-				[key: string]: string;
-		};
-		description: string;
-		id: number;
-		status: string;
-		title: string;
-	},
+	item: WorkflowOperation,
 	openSubTab: (tab: WorkflowTabHierarchy, operationId: number | undefined) => void,
 }) => {
 	const { t } = useTranslation();
@@ -166,11 +185,7 @@ export const Operation = ({
 						openSubTab("workflow-operation-details", operationId)
 					}
 				>
-					{
-						t(
-							"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
-						) /* Details */
-					}
+					{t("EVENTS.EVENTS.DETAILS.MEDIA.DETAILS") /* Details */}
 				</ButtonLikeAnchor>
 			</td>
 		</tr>

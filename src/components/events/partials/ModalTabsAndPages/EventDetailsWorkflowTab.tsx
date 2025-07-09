@@ -168,32 +168,16 @@ const EventDetailsWorkflowTab = ({
 												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.ID") /* ID */}
 											</th>
 											<th>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.TITLE",
-													) /* Title */
-												}
+												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.TITLE") /* Title */}
 											</th>
 											<th>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.SUBMITTER",
-													) /* Submitter */
-												}
+												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.SUBMITTER") /* Submitter */}
 											</th>
 											<th>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.SUBMITTED",
-													) /* Submitted */
-												}
+												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.SUBMITTED") /* Submitted */}
 											</th>
 											<th>
-												{
-													t(
-														"EVENTS.EVENTS.DETAILS.WORKFLOWS.STATUS",
-													) /* Status */
-												}
+												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.STATUS") /* Status */}
 											</th>
 											{isRoleWorkflowEdit && (
 												<th className="fit">
@@ -313,11 +297,7 @@ const EventDetailsWorkflowTab = ({
 								{formik => (
 									<div className="obj list-obj">
 										<header>
-											{
-												t(
-													"EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.CONFIGURATION",
-												) /* Workflow configuration */
-											}
+											{t("EVENTS.EVENTS.DETAILS.WORKFLOW_DETAILS.CONFIGURATION") /* Workflow configuration */}
 										</header>
 										<div className="obj-container">
 											<div className="obj list-obj quick-actions">
@@ -325,11 +305,7 @@ const EventDetailsWorkflowTab = ({
 													<thead>
 														<tr>
 															<th>
-																{
-																	t(
-																		"EVENTS.EVENTS.DETAILS.WORKFLOWS.WORKFLOW",
-																	) /*Select Workflow*/
-																}
+																{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.WORKFLOW") /*Select Workflow*/}
 															</th>
 														</tr>
 													</thead>
@@ -395,11 +371,7 @@ const EventDetailsWorkflowTab = ({
 													<thead>
 														<tr>
 															<th>
-																{
-																	t(
-																		"EVENTS.EVENTS.DETAILS.WORKFLOWS.CONFIGURATION",
-																	) /* Configuration */
-																}
+																{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.CONFIGURATION") /* Configuration */}
 															</th>
 														</tr>
 													</thead>
@@ -427,11 +399,7 @@ const EventDetailsWorkflowTab = ({
 																	{(!!workflowConfiguration &&
 																		!!workflowConfiguration.workflowId) || (
 																		<div>
-																			{
-																				t(
-																					"EVENTS.EVENTS.DETAILS.WORKFLOWS.NO_CONFIGURATION",
-																				) /* No config */
-																			}
+																			{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.NO_CONFIGURATION") /* No config */}
 																		</div>
 																	)}
 																</div>

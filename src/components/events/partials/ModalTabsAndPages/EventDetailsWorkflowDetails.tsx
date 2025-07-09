@@ -26,7 +26,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import EventDetailsWorkflowErrors from "./EventDetailsWorkflowErrors";
-import { Operation } from "./EventDetailsWorkflowOperations";
+import { Operation, WorfklowOperationsTableBody } from "./EventDetailsWorkflowOperations";
 
 /**
  * This component manages the workflow details for the workflows tab of the event details modal
@@ -366,32 +366,14 @@ const OperationsPreview = ({
 			</header>
 
 			{ workflowDone && <>
-			<table className="main-tbl">
-				<thead>
-					<tr>
-						<th>
-							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS") /* Status */}
-						</th>
-						<th>
-							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE") /* Title */}
-						</th>
-						<th>
-							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION") /* Description */}
-						</th>
-						<th className="medium" />
-					</tr>
-				</thead>
-				<tbody>
-					{ operationsEntry &&
-						<Operation
-							operationId={operationsEntry.index}
-							item={operationsEntry.operation}
-							openSubTab={openDetailsSubTab}
-						/>
+				<WorfklowOperationsTableBody
+					operations={operationsEntry
+						? [{ operation: operationsEntry.operation, operationId: operationsEntry.index}]
+						: []
 					}
-				</tbody>
-			</table>
-			<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0"}} />
+					openSubTab={openDetailsSubTab}
+				/>
+				<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0"}} />
 			</>}
 
 			{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}
@@ -399,21 +381,13 @@ const OperationsPreview = ({
 				<ul>
 					<li>
 						<span>
-							{
-								t(
-									"EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK",
-								) /* Operations */
-							}
+							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK") /* Operations */}
 						</span>
 						<ButtonLikeAnchor
 							extraClassName="details-link"
 							onClick={() => openSubTab("workflow-operations")}
 						>
-							{
-								t(
-									"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS",
-								) /* Details */
-							}
+							{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS") /* Details */}
 						</ButtonLikeAnchor>
 					</li>
 				</ul>

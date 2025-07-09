@@ -63,11 +63,7 @@ const EventDetailsWorkflowErrors = ({
 	return (
 		<div className="obj tbl-container">
 			<header>
-				{
-					t(
-						"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.HEADER",
-					) /* Errors & Warnings */
-				}
+				{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.HEADER") /* Errors & Warnings */}
 			</header>
 
 			{
@@ -96,20 +92,10 @@ const EventDetailsWorkflowErrors = ({
 									<tr>
 										<th className="small" />
 										<th>
-											{
-												t(
-													"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DATE",
-												) /* Date */
-											}
-											<i />
+											{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DATE") /* Date */}
 										</th>
 										<th>
-											{
-												t(
-													"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE",
-												) /* Errors & Warnings */
-											}
-											<i />
+											{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.TITLE") /* Errors & Warnings */}
 										</th>
 										<th className="medium" />
 									</tr>
@@ -143,11 +129,7 @@ const EventDetailsWorkflowErrors = ({
 															openSubTab("workflow-error-details", item.id)
 														}
 													>
-														{
-															t(
-																"EVENTS.EVENTS.DETAILS.MEDIA.DETAILS",
-															) /*  Details */
-														}
+														{t("EVENTS.EVENTS.DETAILS.MEDIA.DETAILS") /*  Details */}
 													</ButtonLikeAnchor>
 												</td>
 											</tr>
