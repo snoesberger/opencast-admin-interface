@@ -14,7 +14,7 @@ import { WorkflowTabHierarchy } from "../modals/EventDetails";
 import { useTranslation } from "react-i18next";
 import { fetchWorkflowOperationDetails, setModalWorkflowTabHierarchy } from "../../../../slices/eventDetailsSlice";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
-import { Operation } from "./EventDetailsWorkflowOperations";
+import { WorkflowOperationsTable } from "./EventDetailsWorkflowOperations";
 
 /**
  * This component manages the workflow error details for the workflows tab of the event details modal
@@ -63,45 +63,19 @@ const EventDetailsWorkflowErrorDetails = ({
 			modalBodyChildren={<Notifications context="not_corner" />}
 		>
 			{/* Error operation table */}
-			<div className="obj tbl-container">
-				<header>
-					{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.OPERATION")}
-				</header>
-				<table className="main-tbl">
-					<thead>
-						<tr>
-							<th>
-								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.STATUS") /* Status */}
-							</th>
-							<th>
-								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.TITLE") /* Title */}
-							</th>
-							<th>
-								{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.TABLE_HEADERS.DESCRIPTION") /* Description */}
-							</th>
-							<th className="medium" />
-						</tr>
-					</thead>
-					<tbody>
-						{ operationsEntry &&
-							<Operation
-								operationId={operationsEntry.index}
-								item={operationsEntry.operation}
-								openSubTab={openOperationDetailsSubTab}
-							/>
-						}
-					</tbody>
-				</table>
-			</div>
+			<WorkflowOperationsTable
+				operations={operationsEntry
+					? [{ operation: operationsEntry.operation, operationId: operationsEntry.index}]
+					: []
+				}
+				openSubTab={openOperationDetailsSubTab}
+				title={"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.OPERATION"}
+			/>
 
 			{/* 'Error Details' table */}
 			<div className="obj tbl-details">
 				<header>
-					{
-						t(
-							"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HEADER",
-						) /* Error Details */
-					}
+					{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HEADER") /* Error Details */}
 				</header>
 				<div className="obj-container">
 					<table className="main-tbl">
@@ -109,51 +83,31 @@ const EventDetailsWorkflowErrorDetails = ({
 							<tbody>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.SEVERITY",
-											) /* Severity */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.SEVERITY") /* Severity */}
 									</td>
 									<td>{errorDetails.severity}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TITLE",
-											) /* Title */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TITLE") /* Title */}
 									</td>
 									<td>{errorDetails.title}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.DESCRIPTION",
-											) /* Description */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.DESCRIPTION") /* Description */}
 									</td>
 									<td>{errorDetails.description}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.JOB_ID",
-											) /* Job ID */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.JOB_ID") /* Job ID */}
 									</td>
 									<td>{errorDetails.jobId}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.DATE",
-											) /* Date */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.DATE") /* Date */}
 									</td>
 									<td>
 										{t("dateFormats.dateTime.medium", {
@@ -163,31 +117,19 @@ const EventDetailsWorkflowErrorDetails = ({
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HOST",
-											) /* Host */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.HOST") /* Host */}
 									</td>
 									<td>{errorDetails.processingHost}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TYPE",
-											) /* Type */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TYPE") /* Type */}
 									</td>
 									<td>{errorDetails.serviceType}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TECHNICAL_DETAILS",
-											) /* Technical Details */
-										}
+										{t("EVENTS.EVENTS.DETAILS.ERRORS_AND_WARNINGS.DETAILS.TECHNICAL_DETAILS") /* Technical Details */}
 									</td>
 
 									{/* list of technical error details */}

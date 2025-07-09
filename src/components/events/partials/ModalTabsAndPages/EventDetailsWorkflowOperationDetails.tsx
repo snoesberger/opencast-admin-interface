@@ -50,11 +50,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 			{/* 'Operation Details' table */}
 			<div className="obj tbl-details">
 				<header>
-					{
-						t(
-							"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TITLE",
-						) /* Operation Details */
-					}
+					{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TITLE") /* Operation Details */}
 				</header>
 				<div className="obj-container">
 					<table className="main-tbl">
@@ -62,71 +58,43 @@ const EventDetailsWorkflowOperationDetails = () => {
 							<tbody>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.TITLE",
-											) /* Title */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.TITLE") /* Title */}
 									</td>
 									<td>{operationDetails.name}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.DESCRIPTION",
-											) /* Description */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.DESCRIPTION") /* Description */}
 									</td>
 									<td>{operationDetails.description}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.STATE",
-											) /* State */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.STATE") /* State */}
 									</td>
 									<td>{t(operationDetails.state as ParseKeys)}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.EXECUTION_HOST",
-											) /* Execution Host */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.EXECUTION_HOST") /* Execution Host */}
 									</td>
 									<td>{operationDetails.executionHost}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.JOB",
-											) /* Job */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.JOB") /* Job */}
 									</td>
 									<td>{operationDetails.job}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.TIME_IN_QUEUE",
-											) /* Time in Queue */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.TIME_IN_QUEUE") /* Time in Queue */}
 									</td>
 									<td>{operationDetails.timeInQueue}ms</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.STARTED",
-											) /* Started */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.STARTED") /* Started */}
 									</td>
 									<td>
 										{t("dateFormats.dateTime.medium", {
@@ -136,11 +104,7 @@ const EventDetailsWorkflowOperationDetails = () => {
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FINISHED",
-											) /* Finished */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FINISHED") /* Finished */}
 									</td>
 									<td>
 										{t("dateFormats.dateTime.medium", {
@@ -150,51 +114,31 @@ const EventDetailsWorkflowOperationDetails = () => {
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.RETRY_STRATEGY",
-											) /* Retry Strategy */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.RETRY_STRATEGY") /* Retry Strategy */}
 									</td>
 									<td>{operationDetails.retryStrategy}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FAILED_ATTEMPTS",
-											) /* Failed Attempts */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FAILED_ATTEMPTS") /* Failed Attempts */}
 									</td>
 									<td>{operationDetails.failedAttempts}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.MAX_ATTEMPTS",
-											) /* Max */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.MAX_ATTEMPTS") /* Max */}
 									</td>
 									<td>{operationDetails.maxAttempts}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.EXCEPTION_HANDLER_WORKFLOW",
-											) /* Exception Handler Workflow */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.EXCEPTION_HANDLER_WORKFLOW") /* Exception Handler Workflow */}
 									</td>
 									<td>{operationDetails.exceptionHandlerWorkflow}</td>
 								</tr>
 								<tr>
 									<td>
-										{
-											t(
-												"EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FAIL_ON_ERROR",
-											) /* Fail on Error */
-										}
+										{t("EVENTS.EVENTS.DETAILS.OPERATION_DETAILS.TABLE_HEADERS.FAIL_ON_ERROR") /* Fail on Error */}
 									</td>
 									<td>{operationDetails.failOnError}</td>
 								</tr>

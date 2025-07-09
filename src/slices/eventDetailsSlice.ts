@@ -102,6 +102,14 @@ type Workflow = {
 	}
 }
 
+export type WorkflowOperation = {
+	configuration: { [key: string]: string },
+	description: string,
+	id: number,
+	status: string,  // translation key, ending on INSTANTIATED, RUNNING, PAUSED, SUCCEEDED, FAILED, SKIPPED, RETRY
+	title: string,
+}
+
 type Device = {
 	id: string,
 	inputs: { id: string, value: string }[],
@@ -319,13 +327,7 @@ type EventDetailsState = {
 		configuration?: {[key: string]: unknown}
 	},
 	workflowOperations: {
-		entries: {
-			configuration: { [key: string]: string },
-			description: string,
-			id: number,
-			status: string,  // translation key, ending on INSTANTIATED, RUNNING, PAUSED, SUCCEEDED, FAILED, SKIPPED, RETRY
-			title: string,
-		}[]
+		entries: WorkflowOperation[]
 	},
 	workflowOperationDetails: {
 		completed: string,  // date
