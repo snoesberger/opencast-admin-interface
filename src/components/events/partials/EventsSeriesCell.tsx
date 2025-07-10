@@ -21,9 +21,9 @@ const EventsSeriesCell = ({
 
 	// Filter with value of current cell
 	const addFilter = async (seriesId: string) => {
-		let filter = filterMap.find(({ name }) => name === "series");
-		if (!!filter) {
-			await dispatch(editFilterValue({filterName: filter.name, value: seriesId, resource: "events"}));
+		const filter = filterMap.find(({ name }) => name === "series");
+		if (filter) {
+			dispatch(editFilterValue({filterName: filter.name, value: seriesId, resource: "events"}));
 			await dispatch(fetchEvents());
 			dispatch(loadEventsIntoTable());
 		}
