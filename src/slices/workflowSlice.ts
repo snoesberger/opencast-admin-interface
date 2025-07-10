@@ -1,3 +1,4 @@
+import camelcaseKeys from "camelcase-keys";
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
@@ -25,7 +26,7 @@ type ConfigurationPanelField = {
 
 export type Workflow = {
 	configuration_panel: string,  //XML
-	configuration_panel_json: string | ConfigurationPanelField[],  // 'string' will always be the empty string
+	configurationPanelJson: string | ConfigurationPanelField[],  // 'string' will always be the empty string
 	description: string,
 	displayOrder: number,
 	id: string,
@@ -81,14 +82,14 @@ export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef",
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	const res = await axios.get("/admin-ng/event/new/processing?", { params: urlParams });
-	let workflows = res.data.workflows;
+	let workflows = camelcaseKeys(res.data.workflows);
 
 	workflows = workflows.map((workflow: Workflow) => {
-		if (workflow.configuration_panel_json.length > 0) {
+		if (workflow.configurationPanelJson.length > 0) {
 			return {
 				...workflow,
-				configuration_panel_json: JSON.parse(
-					workflow.configuration_panel_json as string,
+				configurationPanelJson: JSON.parse(
+					workflow.configurationPanelJson as string,
 				),
 			};
 		} else {
