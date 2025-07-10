@@ -697,6 +697,9 @@ const RegistrationModalContent = () => {
 										disabled={
 											!(formik.isValid && formik.values.agreedToPolicy)
 										}
+										aria-disabled={
+											!(formik.isValid && formik.values.agreedToPolicy)
+										}
 										onClick={() => onClickContinue()}
 										className={cn("submit", {
 											active:
