@@ -3,7 +3,7 @@ import {
 	getWorkflowErrorDetails,
 	isFetchingWorkflowErrorDetails,
 } from "../../../../selectors/eventDetailsSelectors";
-import { error_detail_style } from "../../../../utils/eventDetailsUtils";
+import { errorDetailStyle } from "../../../../utils/eventDetailsUtils";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
@@ -98,7 +98,7 @@ const EventDetailsWorkflowErrorDetails = () => {
 											) /* Job ID */
 										}
 									</td>
-									<td>{errorDetails.job_id}</td>
+									<td>{errorDetails.jobId}</td>
 								</tr>
 								<tr>
 									<td>
@@ -122,7 +122,7 @@ const EventDetailsWorkflowErrorDetails = () => {
 											) /* Host */
 										}
 									</td>
-									<td>{errorDetails.processing_host}</td>
+									<td>{errorDetails.processingHost}</td>
 								</tr>
 								<tr>
 									<td>
@@ -132,7 +132,7 @@ const EventDetailsWorkflowErrorDetails = () => {
 											) /* Type */
 										}
 									</td>
-									<td>{errorDetails.service_type}</td>
+									<td>{errorDetails.serviceType}</td>
 								</tr>
 								<tr>
 									<td>
@@ -148,7 +148,7 @@ const EventDetailsWorkflowErrorDetails = () => {
 										{errorDetails.details.map((item, key) => (
 											<div key={key}>
 												<h3>{item.name}</h3>
-												<div style={error_detail_style}>
+												<div style={errorDetailStyle}>
 													<pre>{item.value}</pre>
 												</div>
 											</div>

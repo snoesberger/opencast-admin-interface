@@ -1,7 +1,7 @@
 import React from "react";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import Notifications from "../../../shared/Notifications";
-import { style_button_spacing } from "../../../../utils/eventDetailsUtils";
+import { styleButtonSpacing } from "../../../../utils/eventDetailsUtils";
 import { Formik, FormikProps } from "formik";
 import { translateOverrideFallback } from "../../../../utils/utils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
@@ -134,7 +134,7 @@ const EventDetailsAssetsAddAsset = ({
 								<footer>
 									<button
 										className="submit"
-										style={style_button_spacing}
+										style={styleButtonSpacing}
 										type="submit"
 										onClick={() => formik.handleSubmit()}
 									>
