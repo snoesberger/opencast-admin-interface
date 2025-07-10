@@ -457,6 +457,7 @@ const FilterSwitch = ({
 						openMenuOnFocus
 						menuIsOpen={openSecondFilterMenu}
 						handleMenuIsOpen={setOpenSecondFilterMenu}
+						skipTranslate={!filter.translatable}
 						customCSS={{ width: 200, optionPaddingTop: 5 }}
 					/>
 				</div>

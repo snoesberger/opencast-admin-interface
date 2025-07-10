@@ -241,6 +241,14 @@ const NewAccessPage = <T extends RequiredFormProps>({
 																								formik.values.acls
 																							)
 																						)}
+																						fetchOptions={() =>
+																							formatAclRolesForDropdown(
+																								filterRoles(
+																									roles,
+																									formik.values.acls
+																								)
+																							)
+																						}
 																						required={true}
 																						handleChange={(element) => {
 																							if (element) {
@@ -259,6 +267,8 @@ const NewAccessPage = <T extends RequiredFormProps>({
 																								user
 																							)
 																						}
+																						skipTranslate
+																						optionHeight={35}
 																						customCSS={{ width: 360, optionPaddingTop: 5 }}
 																					/>
 																				</td>
