@@ -259,10 +259,10 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				<div className="obj-container">
 					<table className="main-tbl">
 						<tbody>
-							<FieldArray name="uploadAssetsTrack">
-								{/*File upload button for each upload asset*/}
-								{ }
-								{({ insert, remove, push }) =>
+							{/*File upload button for each upload asset*/}
+							<FieldArray
+								name="uploadAssetsTrack"
+								render={arrayHelpers => (
 									formik.values.uploadAssetsTrack &&
 									formik.values.uploadAssetsTrack.length > 0 &&
 									formik.values.uploadAssetsTrack.map((asset, key) => (
@@ -306,8 +306,8 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											</td>
 										</tr>
 									))
-								}
-							</FieldArray>
+								)}
+							/>
 						</tbody>
 					</table>
 				</div>
