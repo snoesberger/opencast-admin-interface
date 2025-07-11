@@ -102,6 +102,14 @@ type Workflow = {
 	}
 }
 
+export type WorkflowOperation = {
+	configuration: { [key: string]: string },
+	description: string,
+	id: number,
+	status: string,  // translation key, ending on INSTANTIATED, RUNNING, PAUSED, SUCCEEDED, FAILED, SKIPPED, RETRY
+	title: string,
+}
+
 type Device = {
 	id: string,
 	inputs: { id: string, value: string }[],
@@ -319,13 +327,7 @@ type EventDetailsState = {
 		configuration?: {[key: string]: unknown}
 	},
 	workflowOperations: {
-		entries: {
-			configuration: { [key: string]: string },
-			description: string,
-			id: number,
-			status: string,  // translation key
-			title: string,
-		}[]
+		entries: WorkflowOperation[]
 	},
 	workflowOperationDetails: {
 		completed: string,  // date
@@ -359,6 +361,7 @@ type EventDetailsState = {
 		}[],
 		id: number,
 		jobId: number,
+		rootJobId?: number,
 		processingHost: string,
 		serviceType: string,
 		severity: string,
@@ -439,7 +442,7 @@ const initialState: EventDetailsState = {
 		show: false,
 		page: EventDetailsPage.Metadata,
 		event: null,
-		workflowTabHierarchy: "entry",
+		workflowTabHierarchy: "workflow-details",
 		assetsTabHierarchy: "entry",
 		workflowId: "",
 	},
@@ -1422,7 +1425,7 @@ export const fetchWorkflowOperations = createAppAsyncThunk("eventDetails/fetchWo
 export const openModal = (
 	page: EventDetailsPage,
 	event: Event,
-	workflowTab: WorkflowTabHierarchy = "entry",
+	workflowTab: WorkflowTabHierarchy = "workflow-details",
 	assetsTab: AssetTabHierarchy = "entry",
 	workflowId: string = "",
 ) => (dispatch: AppDispatch) => {

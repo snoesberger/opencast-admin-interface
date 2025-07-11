@@ -991,7 +991,6 @@
 					"ACTIONS": "Actions",
 					"DETAILS": "Details",
 					"DESCRIPTION": "Description",
-					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Type",
 					"TITLE": "Title",
@@ -1031,11 +1030,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Workflow details",
-					"CONFIGURATION": "Workflow configuration"
+					"CONFIGURATION": "Workflow configuration",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Workflow operations",
-					"DETAILS_LINK": "Operations",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Title",
 						"STATUS": "Status",
@@ -1095,7 +1096,8 @@
 						"DATE": "Date",
 						"HOST": "Processing host",
 						"TYPE": "Service type",
-						"TECHNICAL_DETAILS": "Technical details"
+						"TECHNICAL_DETAILS": "Technical details",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}

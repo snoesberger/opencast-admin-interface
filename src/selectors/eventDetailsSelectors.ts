@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 /* selectors for modal */
@@ -87,6 +88,17 @@ export const isCheckingConflicts = (state: RootState) =>
 
 /* selectors for workflows */
 export const getWorkflows = (state: RootState) => state.eventDetails.workflows;
+export const getWorkflowsSortedByDate = createSelector(
+	[getWorkflows],
+	workflows => {
+		return ({
+			...workflows,
+			entries: [...workflows.entries].sort(
+				(a, b) => new Date(b.submitted).getTime() - new Date(a.submitted).getTime(),
+			),
+		})
+	},
+);
 export const isFetchingWorkflows = (state: RootState) =>
 	state.eventDetails.statusWorkflows === "loading";
 export const getWorkflowDefinitions = (state: RootState) =>
@@ -95,7 +107,7 @@ export const getWorkflowConfiguration = (state: RootState) =>
 	state.eventDetails.workflowConfiguration;
 export const getWorkflow = (state: RootState) => state.eventDetails.workflows.workflow;
 export const isFetchingWorkflowDetails = (state: RootState) =>
-	state.eventDetails.statusWorkflowDetails === "loading";
+	state.eventDetails.statusWorkflowDetails === "loading" || state.eventDetails.statusWorkflowDetails === "uninitialized";
 export const getBaseWorkflow = (state: RootState) => state.eventDetails.baseWorkflow;
 export const performingWorkflowAction = (state: RootState) =>
 	state.eventDetails.statusDoWorkflowAction === "loading";
@@ -103,6 +115,52 @@ export const deletingWorkflow = (state: RootState) =>
 	state.eventDetails.statusDeleteWorkflow === "loading";
 export const getWorkflowOperations = (state: RootState) =>
 	state.eventDetails.workflowOperations;
+// Get the workflow operation currently running (or the last one that was run)
+export const getLatestWorkflowOperation = createSelector(
+	[getWorkflowOperations],
+	operations => {
+		const entries = operations.entries;
+
+		for (let i = entries.length - 1; i >= 0; i--) {
+			const operation = entries[i];
+			if (operation.id !== null) {
+				return { operation, index: i };
+			}
+		}
+
+		return null; // if none found
+	},
+);
+// Get operation by root_job_id, or jobId
+export const getWorkflowByJobId = createSelector(
+	[
+		getWorkflowOperations,
+		(_operations, rootJobId: number) => rootJobId,
+		(_operations, rootJobId: number, jobId: number) => jobId,
+	],
+	(operations, rootJobId, jobId) => {
+		let operation = null;
+		let index = null;
+
+		index = operations.entries.findIndex(
+			entry => entry.id === rootJobId,
+		);
+		operation = operations.entries[index];
+
+		if (!operation) {
+			index = operations.entries.findIndex(
+				entry => entry.id === jobId,
+			);
+			operation = operations.entries[index];
+		}
+
+		if (operation) {
+			return { operation, index };
+		}
+
+		return null;
+	},
+);
 export const isFetchingWorkflowOperations = (state: RootState) =>
 	state.eventDetails.statusWorkflowOperations === "loading";
 export const getWorkflowOperationDetails = (state: RootState) =>
