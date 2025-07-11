@@ -441,6 +441,7 @@ const EventDetailsWorkflowTab = ({
 																		formik.resetForm();
 																	}}
 																	disabled={!formik.isValid}
+																	aria-disabled={!formik.isValid}
 																	className={`cancel  ${
 																		!formik.isValid ? "disabled" : ""
 																	}`}
@@ -452,6 +453,7 @@ const EventDetailsWorkflowTab = ({
 																<button
 																	onClick={() => formik.handleSubmit()}
 																	disabled={!(formik.dirty && formik.isValid)}
+																	aria-disabled={!(formik.dirty && formik.isValid)}
 																	className={`save green  ${
 																		!(formik.dirty && formik.isValid)
 																			? "disabled"

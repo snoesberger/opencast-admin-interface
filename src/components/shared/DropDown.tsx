@@ -4,10 +4,12 @@ import {
 	dropDownSpacingTheme,
 	dropDownStyle,
 } from "../../utils/componentStyles";
-import Select, { GroupBase, Props, SelectInstance } from "react-select";
-import CreatableSelect from "react-select/creatable";
+import { GroupBase, MenuListProps, Props, SelectInstance, createFilter } from "react-select";
 import { isJson } from "../../utils/utils";
 import { ParseKeys } from "i18next";
+import { FixedSizeList, ListChildComponentProps } from "react-window";
+import AsyncSelect from 'react-select/async';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 
 export type DropDownOption = {
 	label: string,
@@ -35,7 +37,10 @@ const DropDown = <T, >({
 	menuIsOpen = undefined,
 	menuPlacement = "auto",
 	handleMenuIsOpen = undefined,
+	skipTranslate = false,
+	optionHeight = 25,
 	customCSS,
+	fetchOptions,
 }: {
 	ref?: React.RefObject<SelectInstance<any, boolean, GroupBase<any>> | null>
 	value: T
@@ -53,12 +58,15 @@ const DropDown = <T, >({
 	menuIsOpen?: boolean,
 	handleMenuIsOpen?: (open: boolean) => void,
 	menuPlacement?: 'auto' | 'top' | 'bottom',
+	skipTranslate?: boolean,
+	optionHeight?: number,
 	customCSS?: {
 		isMetadataStyle?: boolean,
 		width?: number | string,
 		optionPaddingTop?: number,
 		optionLineHeight?: string
 	},
+	fetchOptions?: () => { label: string, value: string}[]
 }) => {
 	const { t } = useTranslation();
 
@@ -83,8 +91,11 @@ const DropDown = <T, >({
 		unformattedOptions: DropDownOption[],
 		required: boolean,
 	) => {
-		// Translate?
-		unformattedOptions = unformattedOptions.map(option => ({...option, label: t(option.label as ParseKeys)}));
+		// Translate
+		// Translating is expensive, skip it if it is not required
+		if (!skipTranslate) {
+			unformattedOptions = unformattedOptions.map(option => ({...option, label: t(option.label as ParseKeys)}))
+		}
 
 		// Add "No value" option
 		if (!required) {
@@ -114,8 +125,42 @@ const DropDown = <T, >({
 		return unformattedOptions;
 	};
 
+	const itemHeight = optionHeight;
+	/**
+	 * Custom component for list virtualization
+	 */
+	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
+		const { options, children, maxHeight, getValue } = props
+
+		console.log("Menu List render")
+
+		return Array.isArray(children) ? (
+			<div style={{ paddingTop: 4 }}>
+				<FixedSizeList
+					height={maxHeight < (children.length * itemHeight) ? maxHeight : children.length * itemHeight}
+					itemCount={children.length}
+					itemSize={itemHeight}
+					overscanCount={4}
+					width="100%"
+				>
+					{({ index, style }: ListChildComponentProps) => <div style={{ ...style }}>{children[index]}</div>}
+				</FixedSizeList>
+			</div>
+		) : null
+	}
+
+	const loadOptions = (
+		inputValue: string,
+		callback: (options: DropDownOption[]) => void,
+	) => {
+		callback(formatOptions(
+			fetchOptions ? fetchOptions() : options,
+			required,
+		));
+	};
+
+
   const commonProps: Props = {
-	  	menuPlacement: menuPlacement ?? 'auto',
 		tabIndex: tabIndex,
 		theme: theme => (dropDownSpacingTheme(theme)),
 		styles: style,
@@ -134,18 +179,35 @@ const DropDown = <T, >({
 		onMenuClose: () => openMenu(false),
 		isDisabled: disabled,
 		openMenuOnFocus: openMenuOnFocus,
+		menuPlacement: menuPlacement ?? 'auto',
+
+		//@ts-expect-error: React-Select typing does not account for the typing of option it itself requires
+		components: { MenuList },
+		filterOption: createFilter({ ignoreAccents: false }), // To improve performance on filtering
 	};
 
 	return creatable ? (
-		<CreatableSelect
+		<AsyncCreatableSelect
 			ref={selectRef}
 			{...commonProps}
+			cacheOptions
+			defaultOptions={formatOptions(
+				options,
+				required,
+			)}
+			loadOptions={loadOptions}
 		/>
 	) : (
-		<Select
+		<AsyncSelect
 			ref={selectRef}
 			{...commonProps}
 			noOptionsMessage={() => t("SELECT_NO_MATCHING_RESULTS")}
+			cacheOptions
+			defaultOptions={formatOptions(
+				options,
+				required,
+			)}
+			loadOptions={loadOptions}
 		/>
 	);
 };

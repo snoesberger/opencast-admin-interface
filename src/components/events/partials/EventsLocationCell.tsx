@@ -22,7 +22,7 @@ const EventsLocationCell = ({
 	const addFilter = (location: string) => {
 		const filter = filterMap.find(({ name }) => name === "location");
 		if (filter) {
-			dispatch(editFilterValue({filterName: filter.name, value: location}));
+			dispatch(editFilterValue({filterName: filter.name, value: location, resource: "events"}));
 			dispatch(fetchEvents());
 			dispatch(loadEventsIntoTable());
 		}
