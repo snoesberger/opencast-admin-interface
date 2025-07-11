@@ -370,12 +370,12 @@ const OperationsPreview = ({
 			{ workflowDone && <>
 				<WorfklowOperationsTableBody
 					operations={operationsEntry
-						? [{ operation: operationsEntry.operation, operationId: operationsEntry.index}]
+						? [{ operation: operationsEntry.operation, operationId: operationsEntry.index }]
 						: []
 					}
 					openSubTab={openDetailsSubTab}
 				/>
-				<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0"}} />
+				<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0" }} />
 			</>}
 
 			{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}
@@ -396,6 +396,6 @@ const OperationsPreview = ({
 			</div>
 		</div>
 	);
-}
+};
 
 export default EventDetailsWorkflowDetails;

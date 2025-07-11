@@ -29,7 +29,7 @@ const EventDetailsWorkflowErrorDetails = ({
 
 	const errorDetails = useAppSelector(state => getWorkflowErrorDetails(state));
 	const isFetching = useAppSelector(state => isFetchingWorkflowErrorDetails(state));
-	const operationsEntry = useAppSelector(state => getWorkflowByJobId(state, errorDetails.rootJobId ?? errorDetails.jobId, errorDetails.jobId))
+	const operationsEntry = useAppSelector(state => getWorkflowByJobId(state, errorDetails.rootJobId ?? errorDetails.jobId, errorDetails.jobId));
 	const workflowId = useAppSelector(state => getModalWorkflowId(state));
 
 	const openSubTab = (tabType: WorkflowTabHierarchy) => {
@@ -65,7 +65,7 @@ const EventDetailsWorkflowErrorDetails = ({
 			{/* Error operation table */}
 			<WorkflowOperationsTable
 				operations={operationsEntry
-					? [{ operation: operationsEntry.operation, operationId: operationsEntry.index}]
+					? [{ operation: operationsEntry.operation, operationId: operationsEntry.index }]
 					: []
 				}
 				openSubTab={openOperationDetailsSubTab}

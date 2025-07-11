@@ -200,26 +200,26 @@ const OperationStatusIcon = ({
 	// Parse translation key to state
 	const state = status.split(".").pop();
 
-	const iconStyle = { marginRight: "5px"};
+	const iconStyle = { marginRight: "5px" };
 
 	switch (state) {
 		case "INSTANTIATED":
-			return <LuEllipsis style={{ ...iconStyle, color: "#666"}}/>;
+			return <LuEllipsis style={{ ...iconStyle, color: "#666" }}/>;
 		case "RUNNING":
-			return <LuLoader className="fa-spin" style={{ ...iconStyle, color: "#666"}}/>;
+			return <LuLoader className="fa-spin" style={{ ...iconStyle, color: "#666" }}/>;
 		case "PAUSED":
-			return <LuPause style={{ ...iconStyle, color: "#666"}}/>;
+			return <LuPause style={{ ...iconStyle, color: "#666" }}/>;
 		case "SUCCEEDED":
-			return <LuCheck style={{ ...iconStyle, color: "#37c180"}}/>;
+			return <LuCheck style={{ ...iconStyle, color: "#37c180" }}/>;
 		case "FAILED":
-			return <LuX style={{ ...iconStyle, color: "#fa1919"}}/>;
+			return <LuX style={{ ...iconStyle, color: "#fa1919" }}/>;
 		case "SKIPPED":
-			return <GoDash style={{ ...iconStyle, color: "#378dd4"}}/>;
+			return <GoDash style={{ ...iconStyle, color: "#378dd4" }}/>;
 		case "RETRY":
-			return <LuRotateCcw className="fa-spin" style={{ ...iconStyle, color: "#666"}}/>;
+			return <LuRotateCcw className="fa-spin" style={{ ...iconStyle, color: "#666" }}/>;
 		default:
 			return <></>;
 	}
-}
+};
 
 export default EventDetailsWorkflowOperations;

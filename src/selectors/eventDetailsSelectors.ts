@@ -96,7 +96,7 @@ export const getWorkflowsSortedByDate = createSelector(
 			entries: [...workflows.entries].sort(
 				(a, b) => new Date(b.submitted).getTime() - new Date(a.submitted).getTime(),
 			),
-		})
+		});
 	},
 );
 export const isFetchingWorkflows = (state: RootState) =>
