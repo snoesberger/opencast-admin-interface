@@ -277,7 +277,7 @@ export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, {
 });
 
 // fetch event metadata from server
-export const fetchEventMetadata = createAppAsyncThunk('events/fetchEventMetadata', async (_, { rejectWithValue }) => {
+export const fetchEventMetadata = createAppAsyncThunk("events/fetchEventMetadata", async (_, { rejectWithValue }) => {
 	const data = await axios.get("/admin-ng/event/new/metadata");
 	const response = await data.data;
 
@@ -304,7 +304,7 @@ export const fetchEventMetadata = createAppAsyncThunk('events/fetchEventMetadata
 });
 
 // get merged metadata for provided event ids
-export const postEditMetadata = createAppAsyncThunk('events/postEditMetadata', async (ids: Event["id"][]) => {
+export const postEditMetadata = createAppAsyncThunk("events/postEditMetadata", async (ids: Event["id"][]) => {
 	const formData = new URLSearchParams();
 	formData.append("eventIds", JSON.stringify(ids));
 
@@ -676,7 +676,7 @@ export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: 
 		});
 });
 
-export const deleteMultipleEvent = createAppAsyncThunk('events/deleteMultipleEvent', async (events: Event[], { dispatch }) => {
+export const deleteMultipleEvent = createAppAsyncThunk("events/deleteMultipleEvent", async (events: Event[], { dispatch }) => {
 	const data = [];
 
 	for (const event of events) {

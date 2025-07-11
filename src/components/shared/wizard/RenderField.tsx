@@ -40,10 +40,10 @@ const RenderField = ({
 			onClick={() => {
 				if (editableRef.current) {
 					if (editableRef.current.focus) {
-						editableRef.current.focus()
+						editableRef.current.focus();
 					}
 					if (editableRef.current.setFocus) {
-						editableRef.current.setFocus() // For DatePicker
+						editableRef.current.setFocus(); // For DatePicker
 					}
 				}
 			}}

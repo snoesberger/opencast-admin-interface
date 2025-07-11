@@ -159,7 +159,7 @@ export const fetchSeriesMetadata = createAppAsyncThunk("series/fetchSeriesMetada
 });
 
 // fetch series themes from server
-export const fetchSeriesThemes = createAppAsyncThunk('series/fetchSeriesThemes', async () => {
+export const fetchSeriesThemes = createAppAsyncThunk("series/fetchSeriesThemes", async () => {
 	const res = await axios.get("/admin-ng/series/new/themes");
 	const data = await res.data as { [key: string]: { name: string, description: string } };
 	// Transform object of objects to array of objects
@@ -322,7 +322,7 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 		selected: boolean,
 		title: string,
 	}[],
-{dispatch}) => {
+{ dispatch }) => {
 	const data = [];
 
 	for (let i = 0; i < series.length; i++) {

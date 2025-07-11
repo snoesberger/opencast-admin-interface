@@ -202,7 +202,7 @@ type TobiraTableProps = {
 const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTableProps) => {
 	const { t } = useTranslation();
 	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
-	const prefix = i18nKey === "SERIES" ? 's' : 'v';
+	const prefix = i18nKey === "SERIES" ? "s" : "v";
 
 	return <div className="obj">
 		<header>{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.PAGES`)}</header>
@@ -222,8 +222,8 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 				{tobiraData.hostPages.map(hostPage => <tr key={hostPage.path}>
 					<td>
 						<a href={tobiraData.baseURL + hostPage.path +
-							(tobiraData.id.length > 2 ? `/${prefix}/${tobiraData.id.substring(2)}` : '')}>
-							{hostPage.path !== '/' && <>
+							(tobiraData.id.length > 2 ? `/${prefix}/${tobiraData.id.substring(2)}` : "")}>
+							{hostPage.path !== "/" && <>
 								<span className="tobira-page-separator">/</span>
 								{hostPage.ancestors.map((ancestor, key) => (
 									<span key={key}>

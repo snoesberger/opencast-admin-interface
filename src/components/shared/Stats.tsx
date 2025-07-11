@@ -39,7 +39,7 @@ const Stats = () => {
 			const filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
 			if (filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: filterValue, resource: "events"}));
+				dispatch(editFilterValue({ filterName: filter.name, value: filterValue, resource: "events" }));
 			}
 		});
 		await dispatch(fetchEvents());
@@ -67,10 +67,10 @@ const Stats = () => {
 				{/* Show one counter for each status */}
 				{stats.map((st, key) => (
 					<div className="col" key={key}>
-						<Tooltip title={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys)})}>
+						<Tooltip title={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys) })}>
 							<button
 								className="stat"
-								aria-label={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys)})}
+								aria-label={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys) })}
 								onClick={() => showStatsFilter(st)}
 							>
 								<div>{st.count}</div>

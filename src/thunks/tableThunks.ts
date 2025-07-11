@@ -200,7 +200,7 @@ export const loadServicesIntoTable = (): AppThunk => (dispatch, getState) => {
 
 	const tableData = {
 		rows: resource.map(obj => {
-			return { ...obj, selected: false }
+			return { ...obj, selected: false };
 		}),
 		pages: pages,
 		totalItems: total,
