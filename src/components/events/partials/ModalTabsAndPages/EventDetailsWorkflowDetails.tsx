@@ -333,7 +333,9 @@ const OperationsPreview = ({
 
 	const loadWorkflowOperations = async () => {
 		// Fetching workflow operations from server
-		dispatch(fetchWorkflowOperations({ eventId, workflowId }));
+		if (workflowId) {
+			dispatch(fetchWorkflowOperations({ eventId, workflowId }));
+		}
 	};
 
 	useEffect(() => {
