@@ -41,7 +41,7 @@ const NavigationButtons = ({
 					aria-disabled={disabled}
 					onClick={() => {
 						if (nextPage) {
-							nextPage()
+							nextPage();
 						}
 					}}
 					tabIndex={100}
@@ -69,7 +69,7 @@ const NavigationButtons = ({
 					className="cancel"
 					onClick={() => {
 						if (previousPage) {
-							previousPage()
+							previousPage();
 						}
 					}}
 					tabIndex={101}

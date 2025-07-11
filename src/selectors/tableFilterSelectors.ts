@@ -16,7 +16,7 @@ export const getFilters = createSelector(
 	[getAllFilters, (state, resource: Resource) => resource],
 	(filters, resource) => {
 		return filters.filter(obj => obj.resource === resource);
-	})
+	});
 export const getTextFilter = createSelector(
 	[getAllTextFilter, (state, resource: Resource) => resource],
 	(textFilter, resource) => {
