@@ -497,7 +497,7 @@ const ResourceDetailsAccessPolicyTab = ({
 																								}
 																								skipTranslate
 																								optionHeight={35}
-																								customCSS={{ width: 360, optionPaddingTop: 5 }}
+																								customCSS={{ width: "100%", optionPaddingTop: 5 }}
 																							/>
 																						) : (
 																							<p>{policy.role}</p>
