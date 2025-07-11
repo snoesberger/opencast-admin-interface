@@ -114,12 +114,11 @@ const ResourceDetailsAccessPolicyTab = ({
 		dispatch(removeNotificationWizardForm());
 		async function fetchData() {
 			setLoading(true);
-			const responseTemplates = await fetchAclTemplates();
-			await setAclTemplates(responseTemplates);
-			const responseActions = await fetchAclActions();
+			const [responseTemplates, responseActions] = await Promise.all([
+				fetchAclTemplates(), fetchAclActions(), dispatch(fetchAccessPolicies(resourceId))]);
+			setAclTemplates(responseTemplates);
 			setAclActions(responseActions);
 			setHasActions(responseActions.length > 0);
-			await dispatch(fetchAccessPolicies(resourceId));
 			fetchRolesWithTarget("ACL").then(roles => setRoles(roles));
 			if (fetchHasActiveTransactions) {
 				const fetchTransactionResult = await dispatch(fetchHasActiveTransactions(resourceId)).then(unwrapResult)
@@ -544,6 +543,11 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
 																				: []
 																		}
+																		fetchOptions={() =>
+																			roles.length > 0
+																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
+																				: []
+																		}
 																		required={true}
 																		creatable={true}
 																		handleChange={element => {
@@ -565,6 +569,8 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																				user,
 																			)
 																		}
+																		skipTranslate
+																		optionHeight={35}
 																	/>
 																) : (
 																	<p>{policy.role}</p>

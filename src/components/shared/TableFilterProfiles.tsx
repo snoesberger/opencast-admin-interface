@@ -18,6 +18,7 @@ import { availableHotkeys } from "../../configs/hotkeysConfig";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
+import { Resource } from "../../slices/tableSlice";
 
 /**
  * This component renders the table filter profiles in the upper right corner when clicked on settings icon of the
@@ -34,7 +35,7 @@ const TableFiltersProfiles = ({
 	setFilterSettings: (_: boolean) => void,
 	loadResource: AsyncThunk<any, void, any>,
 	loadResourceIntoTable: () => AppThunk,
-	resource: string,
+	resource: Resource,
 }) => {
 	const dispatch = useAppDispatch();
 
@@ -224,6 +225,7 @@ const TableFiltersProfiles = ({
 									value={profileName}
 									onChange={e => handleChange(e)}
 									placeholder={t("TABLE_FILTERS.PROFILES.NAME_PLACEHOLDER")}
+									autoFocus={true}
 								/>
 
 								<label>{t("TABLE_FILTERS.PROFILES.DESCRIPTION")}</label>
@@ -240,12 +242,14 @@ const TableFiltersProfiles = ({
 							<div className="input-container">
 								{/* Buttons for saving and canceling editing */}
 								<div className="btn-container">
+									{/* <button className="cancel">J</button> */}
 									<ButtonLikeAnchor onClick={cancelEditProfile} extraClassName="cancel">
 										{t("CANCEL")}
 									</ButtonLikeAnchor>
 									<ButtonLikeAnchor
 										onClick={saveProfile}
 										extraClassName={cn("save", { disabled: !validName })}
+										aria-disabled={!validName}
 									>
 										{t("SAVE")}
 									</ButtonLikeAnchor>

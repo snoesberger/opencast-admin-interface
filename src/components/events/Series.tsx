@@ -79,9 +79,11 @@ const Series = () => {
 	}, [location.hash]);
 
 	const onNewSeriesModal = async () => {
-		await dispatch(fetchSeriesMetadata());
-		await dispatch(fetchSeriesThemes());
-		await dispatch(fetchSeriesDetailsTobiraNew("/"));
+		await Promise.all([
+			dispatch(fetchSeriesMetadata()),
+			dispatch(fetchSeriesThemes()),
+			dispatch(fetchSeriesDetailsTobiraNew("/")),
+		]);
 
 		newSeriesModalRef.current?.open();
 	};

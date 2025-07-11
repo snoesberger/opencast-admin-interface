@@ -49,10 +49,12 @@ const EventActionCell = ({
 
 	const onClickSeriesDetails = async () => {
 		if (row.series) {
-			await dispatch(fetchSeriesDetailsMetadata(row.series.id));
-			await dispatch(fetchSeriesDetailsAcls(row.series.id));
-			await dispatch(fetchSeriesDetailsTheme(row.series.id));
-			await dispatch(fetchSeriesDetailsThemeNames());
+			await Promise.all([
+				dispatch(fetchSeriesDetailsMetadata(row.series.id)),
+				dispatch(fetchSeriesDetailsAcls(row.series.id)),
+				dispatch(fetchSeriesDetailsTheme(row.series.id)),
+				dispatch(fetchSeriesDetailsThemeNames()),
+			]);
 
 			showSeriesDetailsModal();
 		}

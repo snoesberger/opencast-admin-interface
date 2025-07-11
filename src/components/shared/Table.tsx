@@ -332,6 +332,7 @@ const Table = ({
 				<div className="pagination">
 					<ButtonLikeAnchor
 						extraClassName={cn("prev", { disabled: !isNavigatePrevious() })}
+						aria-disabled={!isNavigatePrevious()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset - 1));
 							forceDeselectAll();
@@ -341,14 +342,20 @@ const Table = ({
 					</ButtonLikeAnchor>
 					{directAccessible.map((page, key) =>
 						page.active ? (
-							<ButtonLikeAnchor key={key} extraClassName="active">
+							<ButtonLikeAnchor key={key}
+								extraClassName="active"
+								aria-label={t("TABLE_CURRENT", { pageNumber: page.label })}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						) : (
-							<ButtonLikeAnchor key={key} onClick={() => {
-								dispatch(goToPage(page.number));
-								forceDeselectAll();
-							}}>
+							<ButtonLikeAnchor key={key}
+								aria-label={t("TABLE_NUMBERED", { pageNumber: page.label })}
+								onClick={() => {
+									dispatch(goToPage(page.number));
+									forceDeselectAll();
+								}}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						),
@@ -356,6 +363,7 @@ const Table = ({
 
 					<ButtonLikeAnchor
 						extraClassName={cn("next", { disabled: !isNavigateNext() })}
+						aria-disabled={!isNavigateNext()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset + 1));
 							forceDeselectAll();

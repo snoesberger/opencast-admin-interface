@@ -272,6 +272,15 @@ const EventDetailsCommentsTab = ({
 											isSavingComment
 										)
 									}
+									aria-disabled={
+										!!(
+											!newCommentText.length ||
+											newCommentText.length <= 0 ||
+											!commentReason.length ||
+											commentReason.length <= 0 ||
+											isSavingComment
+										)
+									}
 									className={`save green  ${
 										!newCommentText.length ||
 										newCommentText.length <= 0 ||

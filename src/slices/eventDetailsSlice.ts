@@ -599,6 +599,7 @@ const initialState: EventDetailsState = {
 	hasStatisticsError: false,
 	tobiraData: {
 		baseURL: "",
+		id: "",
 		hostPages: [],
 	},
 };
