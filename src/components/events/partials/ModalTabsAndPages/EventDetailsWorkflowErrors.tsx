@@ -47,7 +47,9 @@ const EventDetailsWorkflowErrors = ({
 	};
 
 	useEffect(() => {
-		dispatch(fetchWorkflowErrors({ eventId, workflowId })).then();
+		if (workflowId) {
+			dispatch(fetchWorkflowErrors({ eventId, workflowId })).then();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
