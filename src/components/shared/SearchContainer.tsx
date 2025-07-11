@@ -1,6 +1,6 @@
 import { t } from "i18next";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
-import { LuSearch } from "react-icons/lu";
+import { LuSearch, LuX } from "react-icons/lu";
 
 
 const SearchContainer = ({
@@ -47,7 +47,10 @@ const SearchContainer = ({
 				className={buttonClassName}
 				onClick={() => clearSearchField()}
 				disabled={isDisabled}
-			/>}
+				style={{ display: "flex", alignItems: "center" }}
+			>
+				<LuX />
+			</ButtonLikeAnchor>}
 			<input
 				type="text"
 				className={inputClassName}
