@@ -158,7 +158,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 				{!loading && (
 					<FieldArray
 						name="editedEvents"
-						render={arrayHelpers => (
+						render={_arrayHelpers => (
 							<>
 							{hasAccess(
 								"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",

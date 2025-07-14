@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { editFilterValue } from "../../slices/tableFilterSlice";
 import { getFilters } from "../../selectors/tableFilterSelectors";
