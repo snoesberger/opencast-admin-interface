@@ -86,7 +86,7 @@ const NewAssetUploadPage = <T extends RequiredFormProps>({
 													})()}
 												</div>
 											</td>
-											{/*Button to remove asset*/}
+											{/* Button to remove asset*/}
 											<td className="fit">
 												<ButtonLikeAnchor
 													extraClassName="remove"

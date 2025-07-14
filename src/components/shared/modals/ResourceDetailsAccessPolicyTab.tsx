@@ -810,7 +810,7 @@ export const TemplateSelector = <T extends TemplateSelectorProps>({
 									/>
 								)}
 								{!(aclTemplates.length > 0) &&
-									//Show if no option is available
+									// Show if no option is available
 									<td>
 										<div className="obj-container padded">
 											{t(emptyText)}

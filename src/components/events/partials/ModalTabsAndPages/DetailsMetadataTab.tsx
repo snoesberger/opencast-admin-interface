@@ -42,7 +42,7 @@ const DetailsMetadataTab = ({
 		id: string;
 		values: { [key: string]: any; };
 		catalog: MetadataCatalog;
-	}, any> //(id: string, values: { [key: string]: any }, catalog: MetadataCatalog) => void,
+	}, any> // (id: string, values: { [key: string]: any }, catalog: MetadataCatalog) => void,
 	editAccessRole: string,
 	formikRef?: React.RefObject<FormikProps<InitialValues> | null>
 	header?: ParseKeys

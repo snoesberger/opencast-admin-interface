@@ -119,7 +119,7 @@ export function dropDownStyle(customCss: {
 			color: state.isFocused || state.isSelected ? "white" : provided.color,
 			cursor: "pointer",
 			overflowWrap: "normal",
-			lineHeight: customCss.optionLineHeight ?? "inherit", //type === "comment" ? "105%" : "inherit",
+			lineHeight: customCss.optionLineHeight ?? "inherit", // type === "comment" ? "105%" : "inherit",
 		}),
 		singleValue: (provided, _state) => ({
 			...provided,

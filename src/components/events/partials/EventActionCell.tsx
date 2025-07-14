@@ -151,7 +151,7 @@ const EventActionCell = ({
 				/>
 			)}
 
-			{/*If the event is in in a paused workflow state then a warning icon is shown and workflow tab of event
+			{/* If the event is in in a paused workflow state then a warning icon is shown and workflow tab of event
 				details can be opened directly */}
 			{row.workflow_state === "PAUSED" &&
 				<IconButton

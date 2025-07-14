@@ -64,7 +64,7 @@ const GeneralPage = <T, >({
 
 			{/* Show navigation buttons only if page is used for a new theme*/}
 			{!isEdit && (
-				//Button for navigation to next page
+				// Button for navigation to next page
 				<WizardNavigationButtons isFirst formik={formik} nextPage={nextPage} />
 			)}
 		</>

@@ -152,7 +152,7 @@ const EditScheduledEventsSummaryPage = <T extends RequiredFormProps>({
 			<ModalContent modalContentClassName="modal-content active">
 				{changes.length > 0 ? (
 					<div className="full-col">
-						{/*Repeat for each changed event*/}
+						{/* Repeat for each changed event*/}
 						{changes.map((event, key) => (
 							<div key={key} className="obj tbl-list">
 								<header>
