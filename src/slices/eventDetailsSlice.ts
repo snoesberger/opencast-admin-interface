@@ -75,8 +75,8 @@ type CommentAuthor = {
 
 type WorkflowEntry = {
 			id: string,
-		status: string,  //translation key
-		submitted: string,  //date
+		status: string,  // translation key
+		submitted: string,  // date
 		submitter: string,
 		submitterEmail: string,
 		submitterName: string,
@@ -614,7 +614,7 @@ const initialState: EventDetailsState = {
 
 export const fetchMetadata = createAppAsyncThunk("eventDetails/fetchMetadata", async (eventId: Event["id"]) => {
 	const metadataRequest = await axios.get<(MetadataCatalog & { locked?: string})[]>(`/admin-ng/event/${eventId}/metadata.json`);
-	const metadataResponse = await metadataRequest.data;
+	const metadataResponse = metadataRequest.data;
 
 	const mainCatalog = "dublincore/episode";
 	let metadata: MetadataCatalog = {
@@ -660,7 +660,7 @@ export const fetchAssets = createAppAsyncThunk("eventDetails/fetchAssets", async
 	const assetsRequest = await axios.get<EventDetailsState["assets"]>(
 		`/admin-ng/event/${eventId}/asset/assets.json`,
 	);
-	const assets = await assetsRequest.data;
+	const assets = assetsRequest.data;
 
 	let transactionsReadOnly = true;
 	const fetchTransactionResult = await dispatch(fetchHasActiveTransactions(eventId))
@@ -672,7 +672,7 @@ export const fetchAssets = createAppAsyncThunk("eventDetails/fetchAssets", async
 	const resourceOptionsListRequest = await axios.get<{ [key: string]: string}>(
 		"/admin-ng/resources/eventUploadAssetOptions.json",
 	);
-	const resourceOptionsListResponse = await resourceOptionsListRequest.data;
+	const resourceOptionsListResponse = resourceOptionsListRequest.data;
 
 	const optionsData = formatUploadAssetOptions(resourceOptionsListResponse);
 
@@ -754,7 +754,7 @@ export const fetchAssetAttachments = createAppAsyncThunk("eventDetails/fetchAsse
 		`/admin-ng/event/${eventId}/asset/attachment/attachments.json`,
 		{ params },
 	);
-	return await attachmentsRequest.data;
+	return attachmentsRequest.data;
 });
 
 export const fetchAssetAttachmentDetails = createAppAsyncThunk("eventDetails/fetchAssetAttachmentDetails", async (params: {
@@ -769,7 +769,7 @@ export const fetchAssetAttachmentDetails = createAppAsyncThunk("eventDetails/fet
 		`/admin-ng/event/${eventId}/asset/attachment/${attachmentId}.json`,
 		{ params },
 	);
-	return await attachmentDetailsRequest.data;
+	return attachmentDetailsRequest.data;
 });
 
 export const fetchAssetCatalogs = createAppAsyncThunk("eventDetails/fetchAssetCatalogs", async (eventId: Event["id"]) => {
@@ -780,7 +780,7 @@ export const fetchAssetCatalogs = createAppAsyncThunk("eventDetails/fetchAssetCa
 		`/admin-ng/event/${eventId}/asset/catalog/catalogs.json`,
 		{ params },
 	);
-	return await catalogsRequest.data;
+	return catalogsRequest.data;
 });
 
 export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchAssetCatalogDetails", async (params: {
@@ -795,7 +795,7 @@ export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchA
 		`/admin-ng/event/${eventId}/asset/catalog/${catalogId}.json`,
 		{ params },
 	);
-	return await catalogDetailsRequest.data;
+	return catalogDetailsRequest.data;
 });
 
 export const fetchAssetMedia = createAppAsyncThunk("eventDetails/fetchAssetMedia", async (eventId: Event["id"]) => {
@@ -813,11 +813,11 @@ export const fetchAssetMedia = createAppAsyncThunk("eventDetails/fetchAssetMedia
 		`/admin-ng/event/${eventId}/asset/media/media.json`,
 		{ params },
 	);
-	const mediaResponse = await mediaRequest.data;
+	const mediaResponse = mediaRequest.data;
 
 	const media: EventDetailsState["assetMedia"] = [];
 
-	//for every media file item we define the filename
+	// for every media file item we define the filename
 	for (let i = 0; i < mediaResponse.length; i++) {
 		const url = mediaResponse[i].url;
 		const mediaFileName = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
@@ -844,7 +844,7 @@ export const fetchAssetMediaDetails = createAppAsyncThunk("eventDetails/fetchAss
 		`/admin-ng/event/${eventId}/asset/media/${mediaId}.json`,
 		{ params },
 	);
-	const mediaDetailsResponse = await mediaDetailsRequest.data;
+	const mediaDetailsResponse = mediaDetailsRequest.data;
 
 	let mediaDetails: EventDetailsState["assetMediaDetails"];
 
@@ -877,7 +877,7 @@ export const fetchAssetPublications = createAppAsyncThunk("eventDetails/fetchAss
 		`/admin-ng/event/${eventId}/asset/publication/publications.json`,
 		{ params },
 	);
-	return await publicationsRequest.data;
+	return publicationsRequest.data;
 });
 
 export const fetchAssetPublicationDetails = createAppAsyncThunk("eventDetails/fetchAssetPublicationDetails", async (params: {
@@ -892,7 +892,7 @@ export const fetchAssetPublicationDetails = createAppAsyncThunk("eventDetails/fe
 		`/admin-ng/event/${eventId}/asset/publication/${publicationId}.json`,
 		{ params },
 	);
-	return await publicationDetailsRequest.data;
+	return publicationDetailsRequest.data;
 });
 
 export const fetchAccessPolicies = createAppAsyncThunk("eventDetails/fetchAccessPolicies", async (id: Event["id"]) => {
@@ -905,7 +905,7 @@ export const fetchAccessPolicies = createAppAsyncThunk("eventDetails/fetchAccess
 	const policyData = await axios.get<FetchAccessPolicies>(
 		`/admin-ng/event/${id}/access.json`,
 	);
-	const accessPolicies = await policyData.data;
+	const accessPolicies = policyData.data;
 
 	let policies: TransformedAcl[] = [];
 	let currentAclTemplateId = 0;
@@ -920,12 +920,12 @@ export const fetchAccessPolicies = createAppAsyncThunk("eventDetails/fetchAccess
 
 export const fetchComments = createAppAsyncThunk("eventDetails/fetchComments", async (eventId: Event["id"]) => {
 	const commentsData = await axios.get<Comment[]>(`/admin-ng/event/${eventId}/comments`);
-	const comments = await commentsData.data;
+	const comments = commentsData.data;
 
 	const commentReasonsData = await axios.get<{ eventCommentReasons: { [key: string]: string }}>(
 		"/admin-ng/resources/components.json",
 	);
-	const commentReasons = (await commentReasonsData.data).eventCommentReasons;
+	const commentReasons = (commentReasonsData.data).eventCommentReasons;
 
 	return { comments, commentReasons };
 });
@@ -942,7 +942,7 @@ export const fetchEventPublications = createAppAsyncThunk("eventDetails/fetchEve
 	};
 	const data = await axios.get<FetchEventPublications>(`/admin-ng/event/${eventId}/publications.json`);
 
-	const publications = await data.data;
+	const publications = data.data;
 
 	return await dispatch(enrichPublications(publications)).unwrap();
 });
@@ -1023,7 +1023,7 @@ export const fetchSchedulingInfo = createAppAsyncThunk("eventDetails/fetchSchedu
 		const schedulingRequest = await axios.get<FetchSchedulingInfo>(
 			`/admin-ng/event/${eventId}/scheduling.json`,
 		);
-		const schedulingResponse = await schedulingRequest.data;
+		const schedulingResponse = schedulingRequest.data;
 
 		// get data from API about capture agents
 		await dispatch(fetchRecordings("inputs"));
@@ -1235,7 +1235,7 @@ if (endDate < now) {
 		.then(response => {
 			const responseStatus = response.status;
 			if (responseStatus === 409) {
-				//conflict detected, add notification and get conflict specifics
+				// conflict detected, add notification and get conflict specifics
 				dispatch(
 					addNotification({
 						type: "error",
@@ -1256,7 +1256,7 @@ if (endDate < now) {
 
 				hasSchedulingConflicts = true;
 			} else if (responseStatus === 204) {
-				//no conflicts detected
+				// no conflicts detected
 				hasSchedulingConflicts = false;
 			} else {
 				hasSchedulingConflicts = true;
@@ -1266,7 +1266,7 @@ if (endDate < now) {
 			if (axios.isAxiosError<{ title: string, start: string, end: string }[]>(error) && error.response) {
 				const responseStatus = error.response.status;
 				if (responseStatus === 409) {
-					//conflict detected, add notification and get conflict specifics
+					// conflict detected, add notification and get conflict specifics
 					dispatch(
 						addNotification({
 							type: "error",
@@ -1309,7 +1309,7 @@ export const fetchWorkflows = createAppAsyncThunk("eventDetails/fetchWorkflows",
 		workflowId: string
 	}
 	const data = await axios.get<FetchWorkflows>(`/admin-ng/event/${eventId}/workflows.json`);
-	const workflowsData = await data.data;
+	const workflowsData = data.data;
 	let workflows: Workflow;
 
 	if ("results" in workflowsData) {
@@ -1354,7 +1354,7 @@ export const fetchWorkflowDetails = createAppAsyncThunk("eventDetails/fetchWorkf
 	const data = await axios.get<EventDetailsState["workflows"]["workflow"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}.json`,
 	);
-	return await data.data;
+	return data.data;
 });
 
 export const performWorkflowAction = createAppAsyncThunk("eventDetails/performWorkflowAction", async (params: {
@@ -1458,7 +1458,7 @@ export const fetchWorkflowOperations = createAppAsyncThunk("eventDetails/fetchWo
 	const data = await axios.get<EventDetailsState["workflowOperations"]["entries"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/operations.json`,
 	);
-	const workflowOperationsData = await data.data;
+	const workflowOperationsData = data.data;
 	return { entries: workflowOperationsData };
 });
 
@@ -1504,7 +1504,7 @@ export const fetchWorkflowOperationDetails = createAppAsyncThunk("eventDetails/f
 	const data = await axios.get<EventDetailsState["workflowOperationDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/operations/${operationId}`,
 	);
-	return await data.data;
+	return data.data;
 });
 
 export const fetchWorkflowErrors = createAppAsyncThunk("eventDetails/fetchWorkflowErrors", async (params: {
@@ -1515,7 +1515,7 @@ export const fetchWorkflowErrors = createAppAsyncThunk("eventDetails/fetchWorkfl
 	const data = await axios.get<EventDetailsState["workflowErrors"]["entries"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/errors.json`,
 	);
-	const workflowErrorsData = await data.data;
+	const workflowErrorsData = data.data;
 	return { entries: workflowErrorsData };
 });
 
@@ -1528,7 +1528,7 @@ export const fetchWorkflowErrorDetails = createAppAsyncThunk("eventDetails/fetch
 	const data = await axios.get<EventDetailsState["workflowErrorDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/errors/${errorId}.json`,
 	);
-	return await data.data;
+	return data.data;
 });
 
 // TODO: Fix this after the modernization of statisticsThunks happened
@@ -1638,7 +1638,7 @@ export const fetchHasActiveTransactions = createAppAsyncThunk("eventDetails/fetc
 	const transactionsData = await axios.get<{ active: boolean }>(
 		`/admin-ng/event/${eventId}/hasActiveTransaction`,
 	);
-	const hasActiveTransactions = await transactionsData.data;
+	const hasActiveTransactions = transactionsData.data;
 	return hasActiveTransactions;
 });
 
@@ -2504,7 +2504,7 @@ const eventDetailsSlice = createSlice({
 				state.errorStatistics = action.error;
 				console.error(action.error);
 			})
-			//fetchEventStatisticsValueUpdate
+			// fetchEventStatisticsValueUpdate
 			.addCase(fetchEventStatisticsValueUpdate.pending, state => {
 				state.statusStatisticsValue = "loading";
 			})

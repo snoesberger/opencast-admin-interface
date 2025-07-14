@@ -96,7 +96,7 @@ export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getSt
 export const fetchAclTemplates = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return transformToIdValueArray(response);
 };
@@ -105,7 +105,7 @@ export const fetchAclTemplates = async () => {
 export const fetchAclActions = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.ACTIONS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	const actions = transformToIdValueArray(response);
 
@@ -116,7 +116,7 @@ export const fetchAclActions = async () => {
 export const fetchAclDefaults = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return response;
 };
@@ -172,7 +172,7 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		.delete(`/admin-ng/acl/${id}`)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "ACL_DELETED" }));
 		})
 		.catch(res => {

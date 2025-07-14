@@ -191,7 +191,7 @@ const DeleteSeriesModal = ({
 											</td>
 											<td>{isSeries(series) && series.title}</td>
 											<td>
-												{/*Repeat for each creator*/}
+												{/* Repeat for each creator*/}
 												{isSeries(series) && series.organizers.map((organizer, key) => (
 													<span className="metadata-entry" key={key}>
 														{organizer}

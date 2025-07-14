@@ -281,7 +281,7 @@ const EditTableViewModalContent = ({
 			<footer>
 				{/* Render buttons for updating table data */}
 					<button onClick={() => clearData()} className="cancel active">
-						{t("CANCEL") /*Cancel*/}
+						{t("CANCEL") /* Cancel*/}
 					</button>
 					<button onClick={() => save()} className="submit active">
 						{t("SAVE") /* Save As Default */}

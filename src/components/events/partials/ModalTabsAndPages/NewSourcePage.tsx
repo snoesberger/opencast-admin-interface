@@ -109,7 +109,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 	return (
 		<>
 			<ModalContentTable>
-				{/*Show notifications with context events-form*/}
+				{/* Show notifications with context events-form*/}
 				<Notifications context="not_corner" />
 				{
 					<SchedulingConflicts
@@ -259,7 +259,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				<div className="obj-container">
 					<table className="main-tbl">
 						<tbody>
-							{/*File upload button for each upload asset*/}
+							{/* File upload button for each upload asset */}
 							<FieldArray
 								name="uploadAssetsTrack"
 								render={arrayHelpers => (

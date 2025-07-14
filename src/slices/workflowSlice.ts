@@ -27,7 +27,7 @@ type ConfigurationPanelField = {
 }
 
 export type Workflow = {
-	configurationPanel: string,  //XML
+	configurationPanel: string,  // XML
 	configurationPanelJson: string | ConfigurationPanelField[],  // 'string' will always be the empty string
 	description: string,
 	displayOrder: number,

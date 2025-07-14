@@ -107,7 +107,7 @@ const EventDetailsWorkflowTab = ({
 	};
 
 	const hasCurrentAgentAccess = () => {
-		//todo
+		// todo
 		return true;
 	};
 
@@ -195,7 +195,7 @@ const EventDetailsWorkflowTab = ({
 										{isLoading ||
 											workflows.entries.map((
 												item,
-												key, /*orderBy:'submitted':true track by $index"*/
+												key, /* orderBy:'submitted':true track by $index" */
 											) => (
 												<tr key={key}>
 													<td>{item.id}</td>
@@ -305,7 +305,7 @@ const EventDetailsWorkflowTab = ({
 													<thead>
 														<tr>
 															<th>
-																{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.WORKFLOW") /*Select Workflow*/}
+																{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.WORKFLOW") /* Select Workflow */}
 															</th>
 														</tr>
 													</thead>
@@ -354,7 +354,7 @@ const EventDetailsWorkflowTab = ({
 																			}
 																			customCSS={{ width: "100%" }}
 																		/>
-																		{/*pre-select-from="workflowDefinitionIds"*/}
+																		{/* pre-select-from="workflowDefinitionIds" */}
 																	</div>
 																	<div className="obj-container padded">
 																		{workflow.description}

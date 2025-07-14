@@ -49,7 +49,7 @@ const GroupUsersPage = <T, >({
 		<>
 			<ModalContent>
 				<div className="form-container">
-					{/*Select container for roles*/}
+					{/* Select container for roles*/}
 					{!loading && (
 						<SelectContainer
 							resource={{

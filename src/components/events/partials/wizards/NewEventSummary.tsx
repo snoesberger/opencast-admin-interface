@@ -100,26 +100,26 @@ const NewEventSummary = <T extends RequiredFormProps>({
 	return (
 		<>
 			<ModalContentTable>
-				{/*Summary metadata*/}
+				{/* Summary metadata*/}
 				<MetadataSummaryTable
 					metadataCatalogs={[metadataEvents]}
-					//@ts-expect-error: Metadata not correctly typed
+					// @ts-expect-error: Metadata not correctly typed
 					formikValues={formik.values}
 					header={"EVENTS.EVENTS.NEW.METADATA.CAPTION"}
 				/>
 
-				{/*Summary metadata extended*/}
+				{/* Summary metadata extended*/}
 				{!metaDataExtendedHidden && (
 					<MetadataSummaryTable
 						metadataCatalogs={extendedMetadata}
-						//@ts-expect-error: Metadata not correctly typed
+						// @ts-expect-error: Metadata not correctly typed
 						formikValues={formik.values}
 						header={"EVENTS.EVENTS.NEW.METADATA_EXTENDED.CAPTION"}
 					/>
 				)}
 
-				{/*Summary upload assets*/}
-				{/*Show only if asset upload page is not hidden, the sourceMode is UPLOAD and the there
+				{/* Summary upload assets*/}
+				{/* Show only if asset upload page is not hidden, the sourceMode is UPLOAD and the there
 										are actually upload assets provided by the user*/}
 				{!assetUploadHidden &&
 				formik.values.sourceMode === "UPLOAD" &&
@@ -131,7 +131,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 						<div className="obj-container">
 							<table className="main-tbl">
 								<tbody>
-									{/*Insert row for each upload asset user has provided*/}
+									{/* Insert row for each upload asset user has provided*/}
 									{uploadAssetsNonTrack.map((asset, key) => (
 										<tr key={key}>
 											<td>
@@ -152,11 +152,11 @@ const NewEventSummary = <T extends RequiredFormProps>({
 						{t("EVENTS.EVENTS.NEW.SOURCE.CAPTION")}
 					</header>
 					<div className="obj-container">
-						{/*Summary source mode UPLOAD*/}
+						{/* Summary source mode UPLOAD*/}
 						{formik.values.sourceMode === "UPLOAD" && (
 							<table className="main-tbl">
 								<tbody>
-									{/*Insert row for each upload asset of type track user has provided*/}
+									{/* Insert row for each upload asset of type track user has provided */}
 									{formik.values.uploadAssetsTrack && formik.values.uploadAssetsTrack.map((asset, key) =>
 										asset.file ? (
 											<tr key={key}>
@@ -182,7 +182,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 								</tbody>
 							</table>
 						)}
-						{/*Summary source mode SCHEDULE-SINGLE/SCHEDULE-MULTIPLE*/}
+						{/* Summary source mode SCHEDULE-SINGLE/SCHEDULE-MULTIPLE*/}
 						{(formik.values.sourceMode === "SCHEDULE_SINGLE" ||
 							formik.values.sourceMode === "SCHEDULE_MULTIPLE") && (
 							<table className="main-tbl">
@@ -298,7 +298,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 					</table>
 				</div>
 
-				{/*Summary access configuration*/}
+				{/* Summary access configuration*/}
 				<AccessSummaryTable
 					policies={formik.values.policies}
 					header={"EVENTS.EVENTS.NEW.ACCESS.CAPTION"}

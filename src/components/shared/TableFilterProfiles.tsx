@@ -143,7 +143,7 @@ const TableFiltersProfiles = ({
 
 	return (
 		<>
-			{/*Show filter profiles dialog if settings icon in TableFilters is clicked*/}
+			{/* Show filter profiles dialog if settings icon in TableFilters is clicked*/}
 			{showFilterSettings && (
 				<div className="btn-dd filter-settings-dd df-profile-filters">
 					{/* depending on settingsMode show list of all saved profiles or the chosen profile to edit*/}
@@ -159,7 +159,7 @@ const TableFiltersProfiles = ({
 							</header>
 							<ul>
 								{currentProfiles.length === 0 ? (
-									//if no profiles saved yet
+									// if no profiles saved yet
 									<li>{t("TABLE_FILTERS.PROFILES.EMPTY")}</li>
 								) : (
 									// repeat for each profile in profiles filtered for currently shown resource (else-case)
@@ -217,7 +217,7 @@ const TableFiltersProfiles = ({
 									{t("TABLE_FILTERS.PROFILES.NAME")}{" "}
 									<i className="required">*</i>
 								</label>
-								{/*Input for name of the filter profile*/}
+								{/* Input for name of the filter profile*/}
 								<input
 									required
 									name="name"
@@ -229,7 +229,7 @@ const TableFiltersProfiles = ({
 								/>
 
 								<label>{t("TABLE_FILTERS.PROFILES.DESCRIPTION")}</label>
-								{/*Input for a description of the filter profile*/}
+								{/* Input for a description of the filter profile*/}
 								<textarea
 									value={profileDescription}
 									name="description"

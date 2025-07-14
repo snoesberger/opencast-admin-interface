@@ -86,7 +86,7 @@ const WatermarkPage = <T extends RequiredFormProps>({
 							</div>
 						</div>
 
-						{/*if file uploaded, then render buttons for choice of position*/}
+						{/* if file uploaded, then render buttons for choice of position*/}
 						{formik.values.watermarkFile && (
 							<div className="obj">
 								<header>
@@ -167,7 +167,7 @@ const WatermarkPage = <T extends RequiredFormProps>({
 			</ModalContentTable>
 			{/* Show navigation buttons only if page is used for a new theme*/}
 			{!isEdit && (
-				//Button for navigation to next page
+				// Button for navigation to next page
 				<WizardNavigationButtons
 					formik={formik}
 					previousPage={previousPage}

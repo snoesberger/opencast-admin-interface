@@ -143,7 +143,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 			dispatch(setTobiraPage(page));
 			formik.setFieldValue("breadcrumbs", [...formik.values.breadcrumbs, page]);
 		} else {
-			//fetch tobira resource
+			// fetch tobira resource
 			dispatch(fetchSeriesDetailsTobiraNew(page.path));
 		}
 	};
