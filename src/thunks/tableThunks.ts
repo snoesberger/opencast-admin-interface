@@ -485,7 +485,7 @@ export const changeColumnSelection = (updatedColumns: TableConfig["columns"]) =>
 
 	switch (getResourceType(state)) {
 		case "events": {
-			await dispatch(setEventColumns(updatedColumns));
+			dispatch(setEventColumns(updatedColumns));
 
 			if (getSelectedRows(state).length > 0) {
 				dispatch(showEventsActions(true));
@@ -501,7 +501,7 @@ export const changeColumnSelection = (updatedColumns: TableConfig["columns"]) =>
 			break;
 		}
 		case "series": {
-			await dispatch(setSeriesColumns(updatedColumns));
+			dispatch(setSeriesColumns(updatedColumns));
 
 			if (getSelectedRows(state).length > 0) {
 				dispatch(showActionsSeries(true));
@@ -513,42 +513,42 @@ export const changeColumnSelection = (updatedColumns: TableConfig["columns"]) =>
 			break;
 		}
 		case "recordings": {
-			await dispatch(setRecordingsColumns(updatedColumns));
+			dispatch(setRecordingsColumns(updatedColumns));
 			dispatch(loadRecordingsIntoTable());
 			break;
 		}
 		case "jobs": {
-			await dispatch(setJobColumns(updatedColumns));
+			dispatch(setJobColumns(updatedColumns));
 			dispatch(loadJobsIntoTable());
 			break;
 		}
 		case "servers": {
-			await dispatch(setServerColumns(updatedColumns));
+			dispatch(setServerColumns(updatedColumns));
 			dispatch(loadServersIntoTable());
 			break;
 		}
 		case "services": {
-			await dispatch(setServiceColumns(updatedColumns));
+			dispatch(setServiceColumns(updatedColumns));
 			dispatch(loadServicesIntoTable());
 			break;
 		}
 		case "users": {
-			await dispatch(setUserColumns(updatedColumns));
+			dispatch(setUserColumns(updatedColumns));
 			dispatch(loadUsersIntoTable());
 			break;
 		}
 		case "groups": {
-			await dispatch(setGroupColumns(updatedColumns));
+			dispatch(setGroupColumns(updatedColumns));
 			dispatch(loadGroupsIntoTable());
 			break;
 		}
 		case "acls": {
-			await dispatch(setAclColumns(updatedColumns));
+			dispatch(setAclColumns(updatedColumns));
 			dispatch(loadAclsIntoTable());
 			break;
 		}
 		case "themes": {
-			await dispatch(setThemeColumns(updatedColumns));
+			dispatch(setThemeColumns(updatedColumns));
 			dispatch(loadThemesIntoTable());
 			break;
 		}

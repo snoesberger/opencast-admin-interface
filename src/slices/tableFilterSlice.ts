@@ -204,7 +204,7 @@ export const setSpecificEventFilter = createAppAsyncThunk("tableFilters/setSpeci
 	}
 
 	if (filterToChange) {
-		await dispatch(editFilterValue({
+		dispatch(editFilterValue({
 			filterName: filterToChange.name,
 			value: filterValue,
 			resource: "events",
@@ -226,7 +226,7 @@ export const setSpecificServiceFilter = createAppAsyncThunk("tableFilters/setSpe
 	}
 
 	if (filterToChange) {
-		await dispatch(editFilterValue({
+		dispatch(editFilterValue({
 			filterName: filterToChange.name,
 			value: filterValue,
 			resource: "services",

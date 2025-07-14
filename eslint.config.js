@@ -15,7 +15,6 @@ export default [
             "max-len": "off",
             "no-tabs": "off",
             "spaced-comment": "off",
-            "@typescript-eslint/await-thenable": "off",
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-floating-promises": "off",
             "@typescript-eslint/no-misused-promises": "off",
