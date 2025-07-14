@@ -8,6 +8,7 @@ import SearchContainer from "../SearchContainer";
 
 type Item = {
 	name: string
+	id?: string
 	[key: string]: unknown
 }
 
@@ -31,14 +32,14 @@ const SelectContainer = ({
 
 	// Formik hook for getting data of specific form field
 	// DON'T delete field and meta, hook works with indices not variable names
-	const [field, , helpers] = useField(formikField);
+	const [field, , helpers] = useField<Item[]>(formikField);
 
 	// Search field for filter options/items
 	const [searchField, setSearchField] = useState("");
 	const [defaultItems, setDefaultItems] = useState<Item[]>([]);
 	// arrays an item can be part of depending on its state
 	const [items, setItems] = useState<Item[]>([]);
-	const [selectedItems, setSelectedItems] = useState(field.value);
+	const [selectedItems, setSelectedItems] = useState<Item[]>(field.value);
 	const [markedForAddition, setMarkedForAddition] = useState<string[]>([]);
 	const [markedForRemoval, setMarkedForRemoval] = useState<string[]>([]);
 
@@ -255,7 +256,6 @@ const SelectContainer = ({
 							onChange={e => handleChangeRemove(e)}
 							value={markedForRemoval}
 						>
-							{/* @ts-expect-error TS(7006): Parameter 'item' implicitly has an 'any' type. */}
 							{selectedItems.map((item, key) => (
 								<option key={key} value={item.name}>
 									{item.name}

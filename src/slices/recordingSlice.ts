@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { recordingsTableConfig } from "../configs/tableConfigs/recordingsTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getURLParams } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -14,7 +14,6 @@ export type Recording = {
 	inputs: { id: string, value: string }[],
 	name: string,
 	removable: boolean,
-	roomId: string,
 	status: string,
 	type: string,
 	updated: string,
@@ -52,23 +51,37 @@ const initialState: RecordingState = {
 
 // fetch recordings from server
 export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings", async (flag: string | undefined, { getState }) => {
+	type Results = {
+		Name: string,
+		Status: string,
+		Update: string,
+		URL: string,
+		inputs?: { id: string, value: string }[],
+	};
+	type FetchRecordings = {
+		results: Results[],
+		total: number,
+		count: number,
+		offset: number,
+		limit: number,
+	}
 	let res;
 
 	if (flag === "inputs") {
-		res = await axios.get(
+		res = await axios.get<FetchRecordings>(
 			"/admin-ng/capture-agents/agents.json?inputs=true",
 			);
-		} else {
-			const state = getState();
-			const params = getURLParams(state, "recordings");
+	} else {
+		const state = getState();
+		const params = getURLParams(state, "recordings");
 
 		// /agents.json?filter={filter}&limit=100&offset=0&inputs=false&sort={sort}
-		res = await axios.get("/admin-ng/capture-agents/agents.json", {
+		res = await axios.get<FetchRecordings>("/admin-ng/capture-agents/agents.json", {
 			params: params,
 		});
 	}
 
-	const recordings = await res.data;
+	const recordings: FetchRecordings = res.data;
 
 	const captureAgents = [];
 
@@ -79,9 +92,8 @@ export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings",
 			status: agent.Status,
 			updated: agent.Update,
 			inputs: agent.inputs ? [...agent.inputs] : [],
-			roomId: agent.roomId ? agent.roomId : "",
 			type: "LOCATION",
-			url: agent.url ? agent.url : "",
+			url: agent.URL ? agent.URL : "",
 			removable:
 				"AGENTS.STATUS.OFFLINE" === agent.Status ||
 				"AGENTS.STATUS.UNKNOWN" === agent.Status,
@@ -103,10 +115,10 @@ export const deleteRecording = createAppAsyncThunk("recordings/deleteRecording",
 			// add success notification
 			dispatch(addNotification({ type: "success", key: "LOCATION_DELETED" }));
 		})
-		.catch(res => {
-			console.error(res);
+		.catch((error: AxiosError) => {
+			console.error(error);
 			// add error notification depending on status code
-			if (res.status === 401) {
+			if (error.status === 401) {
 				dispatch(
 					addNotification({ type: "error", key: "LOCATION_NOT_DELETED_NOT_AUTHORIZED" }),
 				);

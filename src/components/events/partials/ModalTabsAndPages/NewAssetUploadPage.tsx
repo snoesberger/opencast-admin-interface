@@ -14,7 +14,7 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
  */
 interface RequiredFormProps {
 	sourceMode: string,
-	[key: string]: any,
+	[key: string]: unknown,
 }
 
 const NewAssetUploadPage = <T extends RequiredFormProps>({
@@ -73,11 +73,17 @@ const NewAssetUploadPage = <T extends RequiredFormProps>({
 														type="file"
 														tabIndex={0}
 													/>
-													{formik.values[asset.id] && (
-														<span className="ui-helper">
-															{formik.values[asset.id].name.substr(0, 50)}
-														</span>
-													)}
+													{(() => {
+														const val = formik.values[asset.id];
+														if (val instanceof File) {
+															return (
+																<span className="ui-helper">
+																	{val.name.substring(0, 50)}
+																</span>
+															);
+														}
+														return null;
+													})()}
 												</div>
 											</td>
 											{/*Button to remove asset*/}

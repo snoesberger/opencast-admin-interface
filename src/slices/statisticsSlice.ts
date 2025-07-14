@@ -14,6 +14,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 export type TimeMode = "year" | "month" | "custom"
 export type DataResolution = "daily" | "monthly" | "yearly" | "weekly" | "hourly"
 
+type FetchData = {
+	total: number,
+	providerId: string,
+	providerType: string,
+	values: number[],
+	labels: string[],
+};
+
 export type Statistics = {
 	title: string
 	description: string,
@@ -88,7 +96,14 @@ export const fetchStatistics = async (resourceId: string, resourceType: string, 
 
 	// get the available statistics providers from API
 	try {
-		const response = await axios.get("/admin-ng/statistics/providers.json", { params });
+		type FetchProviders = {
+			providerId: string,
+			dataResolutions: string[],
+			description: string,
+			title: string,
+			providerType: string,
+		};
+		const response = await axios.get<FetchProviders[]>("/admin-ng/statistics/providers.json", { params });
 		// default values to use, when statistics are viewed the first time
 		const originalDataResolution = "monthly";
 		const originalTimeMode = "year";
@@ -100,6 +115,14 @@ export const fetchStatistics = async (resourceId: string, resourceType: string, 
 			// currently, only time series data can be displayed, for other types, add data directly, then continue
 			if (response.data[i].providerType !== "timeSeries") {
 				newStatistics.push({
+					from: "",
+					to: "",
+					dataResolution: "daily",
+					timeMode: "year",
+					csvUrl: "",
+					values: [],
+					labels: [],
+					totalValue: 0,
 					...response.data[i],
 				});
 			} else {
@@ -135,11 +158,14 @@ export const fetchStatistics = async (resourceId: string, resourceType: string, 
 
 				// add provider to statistics list and add statistic settings
 				newStatistics.push({
+					values: [],
+					labels: [],
+					totalValue: 0,
 					...response.data[i],
 					from: from,
 					to: to,
-					timeMode: timeMode,
-					dataResolution: dataResolution,
+					timeMode: timeMode as TimeMode,
+					dataResolution: dataResolution as DataResolution,
 					csvUrl: csvUrl,
 				});
 
@@ -161,7 +187,7 @@ export const fetchStatistics = async (resourceId: string, resourceType: string, 
 		});
 
 		// request statistics values from API
-		const dataResponse = await axios.post("/admin-ng/statistics/data.json", requestData, requestHeaders);
+		const dataResponse = await axios.post<FetchData[]>("/admin-ng/statistics/data.json", requestData, requestHeaders);
 			// iterate over value responses
 			for (const statisticsValue of dataResponse.data) {
 				// get the statistic the response is meant for
@@ -229,10 +255,10 @@ export const fetchStatisticsValueUpdate = async (
 		data: JSON.stringify(statisticsValueRequest),
 	});
 
-	let newStatistics;
+	let newStatistics: Statistics[] = [];
 	// request statistic values from API
 	await axios
-		.post("/admin-ng/statistics/data.json", requestData, requestHeaders)
+		.post<FetchData[]>("/admin-ng/statistics/data.json", requestData, requestHeaders)
 		.then(dataResponse => {
 			// if only one element is in the response (as expected), get the response
 			if (dataResponse.data.length === 1) {
@@ -242,6 +268,10 @@ export const fetchStatisticsValueUpdate = async (
 				const stat = statistics.find(
 					element => element.providerId === providerId,
 				);
+
+				if (!stat) {
+					return [];
+				}
 
 				// get statistic options and download url for new statistic settings
 				// const options = createChartOptions(timeMode, dataResolution);
@@ -255,10 +285,10 @@ export const fetchStatisticsValueUpdate = async (
 				);
 
 				// update statistic
-				const statistic = {
+				const statistic: Statistics = {
 					...stat,
-					from: from,
-					to: to,
+					from: from.toString(),
+					to: from.toString(),
 					dataResolution: dataResolution,
 					timeMode: timeMode,
 					// options: options,
@@ -309,7 +339,7 @@ const statisticsSlice = createSlice({
 				state.statusUpdate = "loading";
 			})
 			.addCase(fetchStatisticsPageStatisticsValueUpdate.fulfilled, (state, action: PayloadAction<
-				any
+				StatisticsState["statistics"]
 			>) => {
 				state.statusUpdate = "succeeded";
 				const statistics = action.payload;

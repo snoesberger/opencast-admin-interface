@@ -29,7 +29,7 @@ const RenderMultiField = ({
 	// Temporary storage for value user currently types in
 	const [inputValue, setInputValue] = useState("");
 
-	const fieldValue = [...field.value];
+	const fieldValue = [...field.value as string[]];
 
 	// Handle change of value user currently types in
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,6 +221,7 @@ const ShowValue = ({
 				{showCheck && (
 					<i
 						className={cn("saved fa fa-check", {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: JSON.stringify(initialValues[field.name] ?? []) !== JSON.stringify(field.value ?? []),
 						})}
 					/>

@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import type { ChartOptions } from "chart.js";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../store";
-import { DataResolution, TimeMode } from "../../slices/statisticsSlice";
+import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSlice";
 import { ParseKeys } from "i18next";
 
 
@@ -48,7 +48,7 @@ const TimeSeriesStatistics = ({
 	timeMode: TimeMode,
 	dataResolution: DataResolution,
 	statDescription: string,
-	onChange: AsyncThunk<undefined, { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
+	onChange: AsyncThunk<Statistics[], { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
 	exportUrl: string,
 	exportFileName: (statsTitle: string) => string,
 	totalValue: number,
@@ -221,10 +221,9 @@ const TimeSeriesStatistics = ({
 									name="timeMode"
 									value={mode.value}
 									id={providerId + "-mode-" + key}
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-									onChange={event =>
+									onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
 										changeTimeMode(
-											event.target.value,
+											event.target.value as TimeMode, // see type of "mode.value"
 											formik.setFieldValue,
 											formik.values.fromDate,
 											formik.values.toDate,
@@ -328,10 +327,9 @@ const TimeSeriesStatistics = ({
 										name="dataResolution"
 										as="select"
 										data-width="'100px'"
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-										onChange={event =>
+										onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
 											changeGranularity(
-												event.target.value,
+												event.target.value as DataResolution,
 												formik.setFieldValue,
 												formik.values.timeMode,
 												formik.values.fromDate,

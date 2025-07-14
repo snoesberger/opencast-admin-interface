@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { buildGroupBody } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
@@ -36,12 +36,13 @@ const initialState: GroupDetailsState = {
 
 // fetch details about certain group from server
 export const fetchGroupDetails = createAppAsyncThunk("groupDetails/fetchGroupDetails", async (groupId: GroupDetails["id"]) => {
-	const res = await axios.get(`/admin-ng/groups/${groupId}`);
+	type FetchGroupDetails = Omit<GroupDetails, "users"> & { users: { username: string, name: string }[] };
+	const res = await axios.get<FetchGroupDetails>(`/admin-ng/groups/${groupId}`);
 	const response = await res.data;
 
 	let users: GroupDetailsState["users"] = [];
 	if (response.users.length > 0) {
-		users = response.users.map((user: { username: string, name: string }) => {
+		users = response.users.map(user => {
 			return {
 				id: user.username,
 				name: user.name,
@@ -78,9 +79,9 @@ export const updateGroupDetails = createAppAsyncThunk("groupDetails/updateGroupD
 			console.info(response);
 			dispatch(addNotification({ type: "success", key: "GROUP_UPDATED" }));
 		})
-		.catch(response => {
-			console.error(response);
-			if (response.status === 409) {
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
 				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));

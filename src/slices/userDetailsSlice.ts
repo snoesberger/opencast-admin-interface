@@ -8,6 +8,15 @@ import { UserRole } from "./userSlice";
 /**
  * This file contains redux reducer for actions affecting the state of details of a user
  */
+type FetchUserDetails = {
+	provider: UserDetailsState["provider"],
+	roles: UserDetailsState["roles"],
+	name: UserDetailsState["name"],
+	username: UserDetailsState["username"],
+	email: UserDetailsState["email"],
+	manageable: UserDetailsState["manageable"],
+}
+
 export type UpdateUser = {
 	email?: string,
 	name?: string,
@@ -44,7 +53,7 @@ export const fetchUserDetails = createAppAsyncThunk("userDetails/fetchUserDetail
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get(`/admin-ng/users/${username}.json`);
+	const res = await axios.get<FetchUserDetails>(`/admin-ng/users/${username}.json`);
 	return res.data;
 });
 
@@ -81,14 +90,7 @@ const userDetailsSlice = createSlice({
 			.addCase(fetchUserDetails.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchUserDetails.fulfilled, (state, action: PayloadAction<{
-				provider: UserDetailsState["provider"],
-				roles: UserDetailsState["roles"],
-				name: UserDetailsState["name"],
-				username: UserDetailsState["username"],
-				email: UserDetailsState["email"],
-				manageable: UserDetailsState["manageable"],
-			}>) => {
+			.addCase(fetchUserDetails.fulfilled, (state, action: PayloadAction<FetchUserDetails>) => {
 				state.status = "succeeded";
 				const userDetails = action.payload;
 				state.provider = userDetails.provider;

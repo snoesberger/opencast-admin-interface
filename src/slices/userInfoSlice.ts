@@ -22,7 +22,7 @@ type UserInfoOrganization = {
 }
 
 type UserInfoUser = {
-	email: string,
+	email?: string,
 	name: string,
 	provider: string,
 	username: string,
@@ -77,13 +77,21 @@ export const fetchUserInfo = createAppAsyncThunk("UserInfo/fetchUserInfo", async
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/info/me.json")
+	type FetchUserInfo = {
+		org: UserInfoOrganization
+		roles: string[]
+		userRole: string
+		user: UserInfoUser
+	}
+
+	const res = await axios.get<FetchUserInfo>("/info/me.json")
 		.then(response => {
 			return response.data;
 		})
-		.catch(response => {
-			console.error(response);
+		.catch(error => {
+			console.error(error);
 			dispatch(addNotification({ type: "error", key: "USER_NOT_SAVED" }));
+			throw error;
 		});
 
 	// Redirect to login if not in ROLE_ADMIN_UI
@@ -95,7 +103,7 @@ export const fetchUserInfo = createAppAsyncThunk("UserInfo/fetchUserInfo", async
 });
 
 export const fetchOcVersion = createAppAsyncThunk("UserInfo/fetchOcVersion", async () => {
-	const res = await axios.get("/sysinfo/bundles/version?prefix=opencast");
+	const res = await axios.get<OcVersion>("/sysinfo/bundles/version?prefix=opencast");
 	return res.data;
 });
 
@@ -148,7 +156,7 @@ const userInfoSlice = createSlice({
 				state.statusOcVersion = "loading";
 			})
 			.addCase(fetchOcVersion.fulfilled, (state, action: PayloadAction<
-        OcVersion
+				OcVersion
 			>) => {
 				state.statusOcVersion = "succeeded";
 				const ocVersion = action.payload;

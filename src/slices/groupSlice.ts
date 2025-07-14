@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { groupsTableConfig } from "../configs/tableConfigs/groupsTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { buildGroupBody, getURLParams } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -10,6 +10,14 @@ import { initialFormValuesNewGroup } from "../configs/modalConfig";
 /**
  * This file contains redux reducer for actions affecting the state of groups
  */
+type FetchGroups = {
+	total: GroupState["total"],
+	count: GroupState["count"],
+	limit: GroupState["limit"],
+	offset: GroupState["offset"],
+	results: GroupState["results"],
+};
+
 export type Group = {
 	description: string,
 	id: string,
@@ -54,7 +62,7 @@ export const fetchGroups = createAppAsyncThunk("groups/fetchGroups", async (_, {
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/groups/groups.json", { params: params });
+	const res = await axios.get<FetchGroups>("/admin-ng/groups/groups.json", { params: params });
 	return res.data;
 });
 
@@ -73,9 +81,9 @@ export const postNewGroup = createAppAsyncThunk("groups/postNewGroup", async (va
 		.then(() => {
 			dispatch(addNotification({ type: "success", key: "GROUP_ADDED" }));
 		})
-		.catch(response => {
-			console.error(response);
-			if (response.status === 409) {
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
 				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));
@@ -114,13 +122,7 @@ const groupSlice = createSlice({
 			.addCase(fetchGroups.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchGroups.fulfilled, (state, action: PayloadAction<{
-				total: GroupState["total"],
-				count: GroupState["count"],
-				limit: GroupState["limit"],
-				offset: GroupState["offset"],
-				results: GroupState["results"],
-			}>) => {
+			.addCase(fetchGroups.fulfilled, (state, action: PayloadAction<FetchGroups>) => {
 				state.status = "succeeded";
 				const groups = action.payload;
 				state.total = groups.total;

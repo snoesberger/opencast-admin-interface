@@ -20,12 +20,13 @@ const About = () => {
 			return `/ui/config/admin-ui/${location.pathname.split("/").pop()}.${language}.html`;
 		};
 
-		axios.get(getURL(i18n.language))
+		// We should be getting HTML from the endpoint
+		axios.get<string>(getURL(i18n.language))
 			.then(response => {
 				setAboutContent(response.data);
 			})
 			.catch(() => {
-				axios.get(getURL(typeof i18n.options.fallbackLng === "string" ? i18n.options.fallbackLng : "en-US"))
+				axios.get<string>(getURL(typeof i18n.options.fallbackLng === "string" ? i18n.options.fallbackLng : "en-US"))
 					.then(response => {
 						setAboutContent(response.data);
 					})

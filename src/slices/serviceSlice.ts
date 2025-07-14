@@ -8,6 +8,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of services
  */
+type FetchServices = {
+	total: ServiceState["total"],
+	count: ServiceState["count"],
+	limit: ServiceState["limit"],
+	offset: ServiceState["offset"],
+	results: ServiceState["results"],
+};
+
 export type Service = {
 	completed: number,
 	hostname: string,
@@ -58,7 +66,7 @@ export const fetchServices = createAppAsyncThunk("services/fetchServices", async
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/services/services.json", { params: params });
+	const res = await axios.get<FetchServices>("/admin-ng/services/services.json", { params: params });
 	return res.data;
 });
 
@@ -98,13 +106,7 @@ const serviceSlice = createSlice({
 			.addCase(fetchServices.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchServices.fulfilled, (state, action: PayloadAction<{
-				total: ServiceState["total"],
-				count: ServiceState["count"],
-				limit: ServiceState["limit"],
-				offset: ServiceState["offset"],
-				results: ServiceState["results"],
-			}>) => {
+			.addCase(fetchServices.fulfilled, (state, action: PayloadAction<FetchServices>) => {
 				state.status = "succeeded";
 				const acls = action.payload;
 				state.total = acls.total;

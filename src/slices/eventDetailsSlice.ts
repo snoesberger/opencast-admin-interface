@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice, unwrapResult } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { addNotification, removeNotificationWizardForm } from "./notificationSlice";
 import {
 	getHttpHeaders,
@@ -73,17 +73,19 @@ type CommentAuthor = {
 	username: string,
 }
 
-type Workflow = {
-	scheduling: boolean,
-	entries: {
-		id: string,
+type WorkflowEntry = {
+			id: string,
 		status: string,  //translation key
 		submitted: string,  //date
 		submitter: string,
 		submitterEmail: string,
 		submitterName: string,
 		title: string
-	}[],
+}
+
+type Workflow = {
+	scheduling: boolean,
+	entries: WorkflowEntry[],
 	// TODO: This looks like really bad practice. Rewrite.
 	workflow: { // The type when looking at the list of workflows
 		workflowId: string,
@@ -271,9 +273,11 @@ type EventDetailsState = {
 			}[],
 		},
 		video: {
-			previews: {
-				uri: string,
-			}[]
+			video: {
+				previews: {
+					uri: string,
+				}[]
+			},
 			url: string,
 		} | undefined,
 	},
@@ -609,7 +613,7 @@ const initialState: EventDetailsState = {
 
 
 export const fetchMetadata = createAppAsyncThunk("eventDetails/fetchMetadata", async (eventId: Event["id"]) => {
-	const metadataRequest = await axios.get(`/admin-ng/event/${eventId}/metadata.json`);
+	const metadataRequest = await axios.get<(MetadataCatalog & { locked?: string})[]>(`/admin-ng/event/${eventId}/metadata.json`);
 	const metadataResponse = await metadataRequest.data;
 
 	const mainCatalog = "dublincore/episode";
@@ -653,7 +657,7 @@ export const fetchMetadata = createAppAsyncThunk("eventDetails/fetchMetadata", a
 });
 
 export const fetchAssets = createAppAsyncThunk("eventDetails/fetchAssets", async (eventId: Event["id"], { dispatch }) => {
-	const assetsRequest = await axios.get(
+	const assetsRequest = await axios.get<EventDetailsState["assets"]>(
 		`/admin-ng/event/${eventId}/asset/assets.json`,
 	);
 	const assets = await assetsRequest.data;
@@ -665,7 +669,7 @@ export const fetchAssets = createAppAsyncThunk("eventDetails/fetchAssets", async
 		transactionsReadOnly = fetchTransactionResult.active;
 	}
 
-	const resourceOptionsListRequest = await axios.get(
+	const resourceOptionsListRequest = await axios.get<{ [key: string]: string}>(
 		"/admin-ng/resources/eventUploadAssetOptions.json",
 	);
 	const resourceOptionsListResponse = await resourceOptionsListRequest.data;
@@ -716,6 +720,8 @@ const formatUploadAssetOptions = (optionsData: { [key: string]: string }) => {
 				key.indexOf(optionPrefixSource) >= 0
 			) {
 				// parse upload asset options
+				// TODO: Handle JSON parsing errors
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				const options: UploadOption = JSON.parse(value);
 				if (!options["title"]) {
 					options["title"] = key;
@@ -744,7 +750,7 @@ export const fetchAssetAttachments = createAppAsyncThunk("eventDetails/fetchAsse
 	const params = new URLSearchParams();
 	params.append("id1", "attachment");
 
-	const attachmentsRequest = await axios.get(
+	const attachmentsRequest = await axios.get<EventDetailsState["assetAttachments"]>(
 		`/admin-ng/event/${eventId}/asset/attachment/attachments.json`,
 		{ params },
 	);
@@ -759,7 +765,7 @@ export const fetchAssetAttachmentDetails = createAppAsyncThunk("eventDetails/fet
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "attachment");
 
-	const attachmentDetailsRequest = await axios.get(
+	const attachmentDetailsRequest = await axios.get<EventDetailsState["assetAttachmentDetails"]>(
 		`/admin-ng/event/${eventId}/asset/attachment/${attachmentId}.json`,
 		{ params },
 	);
@@ -770,7 +776,7 @@ export const fetchAssetCatalogs = createAppAsyncThunk("eventDetails/fetchAssetCa
 	const params = new URLSearchParams();
 	params.append("id1", "catalog");
 
-	const catalogsRequest = await axios.get(
+	const catalogsRequest = await axios.get<EventDetailsState["assetCatalogs"]>(
 		`/admin-ng/event/${eventId}/asset/catalog/catalogs.json`,
 		{ params },
 	);
@@ -785,7 +791,7 @@ export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchA
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "catalog");
 
-	const catalogDetailsRequest = await axios.get(
+	const catalogDetailsRequest = await axios.get<EventDetailsState["assetCatalogDetails"]>(
 		`/admin-ng/event/${eventId}/asset/catalog/${catalogId}.json`,
 		{ params },
 	);
@@ -793,24 +799,33 @@ export const fetchAssetCatalogDetails = createAppAsyncThunk("eventDetails/fetchA
 });
 
 export const fetchAssetMedia = createAppAsyncThunk("eventDetails/fetchAssetMedia", async (eventId: Event["id"]) => {
+	type FetchAssetMedia = {
+		mimetype: string,
+		id: string,
+		type: string,
+		url: string,
+		tags: string[],
+	};
 	const params = new URLSearchParams();
 	params.append("id1", "media");
 
-	const mediaRequest = await axios.get(
+	const mediaRequest = await axios.get<FetchAssetMedia[]>(
 		`/admin-ng/event/${eventId}/asset/media/media.json`,
 		{ params },
 	);
 	const mediaResponse = await mediaRequest.data;
 
-	const media = [];
+	const media: EventDetailsState["assetMedia"] = [];
 
 	//for every media file item we define the filename
 	for (let i = 0; i < mediaResponse.length; i++) {
-		const item = mediaResponse[i];
-		const url = item.url;
-		item.mediaFileName = url
-			.substring(url.lastIndexOf("/") + 1)
-			.split("?")[0];
+		const url = mediaResponse[i].url;
+		const mediaFileName = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
+		const item = {
+			...mediaResponse[i],
+			url,
+			mediaFileName,
+		};
 		media.push(item);
 	}
 
@@ -825,18 +840,23 @@ export const fetchAssetMediaDetails = createAppAsyncThunk("eventDetails/fetchAss
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "media");
 
-	const mediaDetailsRequest = await axios.get(
+	const mediaDetailsRequest = await axios.get<Omit<EventDetailsState["assetMediaDetails"], "video">>(
 		`/admin-ng/event/${eventId}/asset/media/${mediaId}.json`,
 		{ params },
 	);
 	const mediaDetailsResponse = await mediaDetailsRequest.data;
 
-	let mediaDetails;
+	let mediaDetails: EventDetailsState["assetMediaDetails"];
 
 	if (typeof mediaDetailsResponse === "string") {
+		// TODO: Handle JSON parsing errors
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		mediaDetails = JSON.parse(mediaDetailsResponse);
 	} else {
-		mediaDetails = mediaDetailsResponse;
+		mediaDetails = {
+			...mediaDetailsResponse,
+			video: undefined,
+		};
 	}
 
 	mediaDetails.video = {
@@ -853,7 +873,7 @@ export const fetchAssetPublications = createAppAsyncThunk("eventDetails/fetchAss
 	const params = new URLSearchParams();
 	params.append("id1", "publication");
 
-	const publicationsRequest = await axios.get(
+	const publicationsRequest = await axios.get<EventDetailsState["assetPublications"]>(
 		`/admin-ng/event/${eventId}/asset/publication/publications.json`,
 		{ params },
 	);
@@ -868,7 +888,7 @@ export const fetchAssetPublicationDetails = createAppAsyncThunk("eventDetails/fe
 	const searchParams = new URLSearchParams();
 	searchParams.append("id1", "publication");
 
-	const publicationDetailsRequest = await axios.get(
+	const publicationDetailsRequest = await axios.get<EventDetailsState["assetPublicationDetails"]>(
 		`/admin-ng/event/${eventId}/asset/publication/${publicationId}.json`,
 		{ params },
 	);
@@ -876,7 +896,13 @@ export const fetchAssetPublicationDetails = createAppAsyncThunk("eventDetails/fe
 });
 
 export const fetchAccessPolicies = createAppAsyncThunk("eventDetails/fetchAccessPolicies", async (id: Event["id"]) => {
-	const policyData = await axios.get(
+	type FetchAccessPolicies = {
+		episode_access: {
+			acl: TransformedAcl[],
+			current_acl: number,
+		}
+	};
+	const policyData = await axios.get<FetchAccessPolicies>(
 		`/admin-ng/event/${id}/access.json`,
 	);
 	const accessPolicies = await policyData.data;
@@ -893,10 +919,10 @@ export const fetchAccessPolicies = createAppAsyncThunk("eventDetails/fetchAccess
 });
 
 export const fetchComments = createAppAsyncThunk("eventDetails/fetchComments", async (eventId: Event["id"]) => {
-	const commentsData = await axios.get(`/admin-ng/event/${eventId}/comments`);
+	const commentsData = await axios.get<Comment[]>(`/admin-ng/event/${eventId}/comments`);
 	const comments = await commentsData.data;
 
-	const commentReasonsData = await axios.get(
+	const commentReasonsData = await axios.get<{ eventCommentReasons: { [key: string]: string }}>(
 		"/admin-ng/resources/components.json",
 	);
 	const commentReasons = (await commentReasonsData.data).eventCommentReasons;
@@ -905,9 +931,7 @@ export const fetchComments = createAppAsyncThunk("eventDetails/fetchComments", a
 });
 
 export const fetchEventPublications = createAppAsyncThunk("eventDetails/fetchEventPublications", async (eventId: Event["id"], { dispatch }) => {
-	const data = await axios.get(`/admin-ng/event/${eventId}/publications.json`);
-
-	const publications: {
+	type FetchEventPublications = {
 		publications: {
 			id: string,
 			name: string,
@@ -915,7 +939,10 @@ export const fetchEventPublications = createAppAsyncThunk("eventDetails/fetchEve
 		}[],
 		"start-date": string,
 		"end-date": string,
-	} = await data.data;
+	};
+	const data = await axios.get<FetchEventPublications>(`/admin-ng/event/${eventId}/publications.json`);
+
+	const publications = await data.data;
 
 	return await dispatch(enrichPublications(publications)).unwrap();
 });
@@ -925,8 +952,8 @@ export const fetchEventDetailsTobira = createAppAsyncThunk("eventDetails/fetchEv
 	id: string,
 	{ dispatch },
 ) => {
-	const res = await axios.get(`/admin-ng/event/${id}/tobira/pages`)
-		.catch(response => handleTobiraError(response, dispatch));
+	const res = await axios.get<EventDetailsState["tobiraData"]>(`/admin-ng/event/${id}/tobira/pages`)
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
 
 	if (!res) {
 		throw new Error();
@@ -983,8 +1010,17 @@ export const saveCommentReply = createAppAsyncThunk("eventDetails/saveCommentRep
 });
 
 export const fetchSchedulingInfo = createAppAsyncThunk("eventDetails/fetchSchedulingInfo", async (eventId: Event["id"], { dispatch, getState }) => {
+		type FetchSchedulingInfo = {
+			agentId: string,
+			agentConfiguration: {
+				"capture.device.names": string,
+			},
+			presenters: string[],
+			start: string,
+			end: string,
+		};
 		// get data from API about event scheduling
-		const schedulingRequest = await axios.get(
+		const schedulingRequest = await axios.get<FetchSchedulingInfo>(
 			`/admin-ng/event/${eventId}/scheduling.json`,
 		);
 		const schedulingResponse = await schedulingRequest.data;
@@ -1195,7 +1231,7 @@ if (endDate < now) {
 	data.append("metadata", JSON.stringify(conflictTimeFrame));
 
 	await axios
-		.post("/admin-ng/event/new/conflicts", data, headers)
+		.post<EventDetailsState["schedulingConflicts"]>("/admin-ng/event/new/conflicts", data, headers)
 		.then(response => {
 			const responseStatus = response.status;
 			if (responseStatus === 409) {
@@ -1227,29 +1263,34 @@ if (endDate < now) {
 			}
 		})
 		.catch(error => {
-			const responseStatus = error.response.status;
-			if (responseStatus === 409) {
-				//conflict detected, add notification and get conflict specifics
-				dispatch(
-					addNotification({
-						type: "error",
-						key: "CONFLICT_DETECTED",
-						duration: -1,
-						context: NOTIFICATION_CONTEXT,
-					}),
-				);
-				const conflictsResponse = error.response.data;
+			if (axios.isAxiosError<{ title: string, start: string, end: string }[]>(error) && error.response) {
+				const responseStatus = error.response.status;
+				if (responseStatus === 409) {
+					//conflict detected, add notification and get conflict specifics
+					dispatch(
+						addNotification({
+							type: "error",
+							key: "CONFLICT_DETECTED",
+							duration: -1,
+							context: NOTIFICATION_CONTEXT,
+						}),
+					);
+					const conflictsResponse = error.response.data;
 
-				for (const conflict of conflictsResponse) {
-					conflicts.push({
-						title: conflict.title,
-						start: conflict.start,
-						end: conflict.end,
-					});
+					for (const conflict of conflictsResponse) {
+						conflicts.push({
+							title: conflict.title,
+							start: conflict.start,
+							end: conflict.end,
+						});
+					}
+
+					hasSchedulingConflicts = true;
+				} else {
+					hasSchedulingConflicts = true;
 				}
-
-				hasSchedulingConflicts = true;
 			} else {
+				console.error("Unexpected error", error);
 				hasSchedulingConflicts = true;
 			}
 		});
@@ -1259,11 +1300,19 @@ if (endDate < now) {
 });
 
 export const fetchWorkflows = createAppAsyncThunk("eventDetails/fetchWorkflows", async (eventId: Event["id"], { dispatch, getState }) => {
-	const data = await axios.get(`/admin-ng/event/${eventId}/workflows.json`);
+	type FetchWorkflows = {
+		results: WorkflowEntry[]
+	} | {
+		configuration: {
+			straightToPublishing: string
+		},
+		workflowId: string
+	}
+	const data = await axios.get<FetchWorkflows>(`/admin-ng/event/${eventId}/workflows.json`);
 	const workflowsData = await data.data;
 	let workflows: Workflow;
 
-	if (workflowsData.results) {
+	if ("results" in workflowsData) {
 		workflows = {
 			entries: workflowsData.results,
 			scheduling: false,
@@ -1302,7 +1351,7 @@ export const fetchWorkflowDetails = createAppAsyncThunk("eventDetails/fetchWorkf
 	workflowId: string
 }) => {
 	const { eventId, workflowId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflows"]["workflow"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}.json`,
 	);
 	return await data.data;
@@ -1406,7 +1455,7 @@ export const fetchWorkflowOperations = createAppAsyncThunk("eventDetails/fetchWo
 	workflowId: string
 }) => {
 	const { eventId, workflowId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowOperations"]["entries"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/operations.json`,
 	);
 	const workflowOperationsData = await data.data;
@@ -1452,7 +1501,7 @@ export const fetchWorkflowOperationDetails = createAppAsyncThunk("eventDetails/f
 	operationId?: number
 }) => {
 	const { eventId, workflowId, operationId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowOperationDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/operations/${operationId}`,
 	);
 	return await data.data;
@@ -1463,7 +1512,7 @@ export const fetchWorkflowErrors = createAppAsyncThunk("eventDetails/fetchWorkfl
 	workflowId: string
 }) => {
 	const { eventId, workflowId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowErrors"]["entries"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/errors.json`,
 	);
 	const workflowErrorsData = await data.data;
@@ -1476,7 +1525,7 @@ export const fetchWorkflowErrorDetails = createAppAsyncThunk("eventDetails/fetch
 	errorId?: number
 }) => {
 	const { eventId, workflowId, errorId } = params;
-	const data = await axios.get(
+	const data = await axios.get<EventDetailsState["workflowErrorDetails"]>(
 		`/admin-ng/event/${eventId}/workflows/${workflowId}/errors/${errorId}.json`,
 	);
 	return await data.data;
@@ -1586,7 +1635,7 @@ export const updateExtendedMetadata = createAppAsyncThunk("eventDetails/updateEx
 });
 
 export const fetchHasActiveTransactions = createAppAsyncThunk("eventDetails/fetchHasActiveTransactions", async (eventId: Event["id"]) => {
-	const transactionsData = await axios.get(
+	const transactionsData = await axios.get<{ active: boolean }>(
 		`/admin-ng/event/${eventId}/hasActiveTransaction`,
 	);
 	const hasActiveTransactions = await transactionsData.data;
@@ -1782,6 +1831,7 @@ export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflow
 	const header = getHttpHeaders();
 	const data = new URLSearchParams();
 	// Scheduler service in Opencast expects values to be strings, so we convert them here
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	data.append("configuration", JSON.stringify(jsonData, (_k, v) => v && typeof v === "object" ? v : "" + v));
 
 	axios
@@ -2459,7 +2509,7 @@ const eventDetailsSlice = createSlice({
 				state.statusStatisticsValue = "loading";
 			})
 			.addCase(fetchEventStatisticsValueUpdate.fulfilled, (state, action: PayloadAction<
-				any
+				EventDetailsState["statistics"]
 			>) => {
 				state.statusStatisticsValue = "succeeded";
 				state.statistics = action.payload;
