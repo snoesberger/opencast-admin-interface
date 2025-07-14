@@ -287,7 +287,7 @@ export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, {
 // fetch event metadata from server
 export const fetchEventMetadata = createAppAsyncThunk("events/fetchEventMetadata", async (_, { rejectWithValue }) => {
 	const data = await axios.get<MetadataCatalog[]>("/admin-ng/event/new/metadata");
-	const response = await data.data;
+	const response = data.data;
 
 	const mainCatalog = "dublincore/episode";
 	let metadata: EventState["metadata"] | undefined = undefined;
@@ -331,7 +331,7 @@ export const postEditMetadata = createAppAsyncThunk("events/postEditMetadata", a
 			},
 		},
 	);
-	const response = await data.data;
+	const response = data.data;
 
 	// transform response
 	const metadata = transformMetadataFields(response.metadata)
@@ -753,7 +753,7 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 			formData,
 		);
 
-		const data = await response.data;
+		const data = response.data;
 
 		// transform data for further use
 		for (const d of data) {
