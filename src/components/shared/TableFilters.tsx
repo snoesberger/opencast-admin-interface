@@ -161,7 +161,7 @@ const TableFilters = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [itemValue]);
 
-	const handleDatepicker = async (dates?: [Date | undefined | null, Date | undefined | null]) => {
+	const handleDatepicker = (dates?: [Date | undefined | null, Date | undefined | null]) => {
 		if (dates != null) {
 			const [start, end] = dates;
 
@@ -185,7 +185,7 @@ const TableFilters = ({
 
 	// Workaround for entering a date range by only entering one date
 	// (e.g. 01/01/2025 results in a range of 01/01/2025 - 01/01/2025)
-	const handleDatePickerOnKeyDown = async (keyEvent: React.KeyboardEvent<HTMLElement>) => {
+	const handleDatePickerOnKeyDown = (keyEvent: React.KeyboardEvent<HTMLElement>) => {
 		if (keyEvent.key === "Enter") {
 			const end = endDate ?? (startDate ? new Date(startDate) : undefined);
 			end?.setHours(23);

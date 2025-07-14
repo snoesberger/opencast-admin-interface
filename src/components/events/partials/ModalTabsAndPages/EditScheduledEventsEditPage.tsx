@@ -399,10 +399,10 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 			<WizardNavigationButtons
 				formik={formik}
 				nextPage={
-					async () => {
+					() => {
 						dispatch(removeNotificationWizardForm());
 						if (
-							await checkSchedulingConflicts(
+							checkSchedulingConflicts(
 								formik.values,
 								setConflicts,
 								dispatch,

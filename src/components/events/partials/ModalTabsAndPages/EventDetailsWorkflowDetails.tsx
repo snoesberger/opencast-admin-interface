@@ -331,7 +331,7 @@ const OperationsPreview = ({
 		workflowDone = !(workflowStatus === "SUCCEEDED" || workflowStatus === "FAILED" || workflowStatus === "STOPPED");
 	}
 
-	const loadWorkflowOperations = async () => {
+	const loadWorkflowOperations = () => {
 		// Fetching workflow operations from server
 		if (workflowId) {
 			dispatch(fetchWorkflowOperations({ eventId, workflowId }));
@@ -340,7 +340,7 @@ const OperationsPreview = ({
 
 	useEffect(() => {
 		// Fetch workflow operations initially
-		loadWorkflowOperations().then();
+		loadWorkflowOperations();
 
 		// Fetch workflow operations every 5 seconds
 		const fetchWorkflowOperationsInterval = setInterval(loadWorkflowOperations, 5000);

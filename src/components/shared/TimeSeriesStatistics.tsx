@@ -107,7 +107,7 @@ const TimeSeriesStatistics = ({
 	};
 
 	// change time mode in formik and get new values from API
-	const changeTimeMode = async (
+	const changeTimeMode = (
 		newTimeMode: TimeMode,
 		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
 		from: string,
@@ -119,7 +119,7 @@ const TimeSeriesStatistics = ({
 	};
 
 	// change custom time granularity in formik and get new values from API
-	const changeGranularity = async (
+	const changeGranularity = (
 		granularity: DataResolution,
 		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
 		timeMode: TimeMode,

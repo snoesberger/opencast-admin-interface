@@ -28,7 +28,7 @@ const EventsStatusCell = ({
 		}
 
 		dispatch(fetchWorkflows(row.id)).unwrap()
-			.then(async workflows => {
+			.then(workflows => {
 				// Open workflow overview modal if no workflows available
 				if (!workflows.entries.length) {
 					return dispatch(openModal(EventDetailsPage.Workflow, row));
