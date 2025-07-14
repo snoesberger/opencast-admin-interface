@@ -133,7 +133,7 @@ export const fetchUsersAndUsernames = async () => {
 		"/admin-ng/resources/USERS.NAME.AND.USERNAME.json",
 	);
 
-	const response = await data.data;
+	const response = data.data;
 
 	return transformToIdValueArray(response);
 };
