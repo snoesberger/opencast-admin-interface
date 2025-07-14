@@ -56,13 +56,13 @@ export const fetchThemeDetails = createAppAsyncThunk("themeDetails/fetchThemeDet
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get(`/admin-ng/themes/${id}.json`);
+	const res = await axios.get<ThemeDetailsState["details"]>(`/admin-ng/themes/${id}.json`);
 	return res.data;
 });
 
 // fetch usage of a certain theme
 export const fetchUsage = createAppAsyncThunk("themeDetails/fetchUsage", async (id: ThemeDetailsState["details"]["id"]) => {
-	const res = await axios.get(`/admin-ng/themes/${id}/usage.json`);
+	const res = await axios.get<ThemeDetailsState["usage"]>(`/admin-ng/themes/${id}/usage.json`);
 	return res.data;
 });
 

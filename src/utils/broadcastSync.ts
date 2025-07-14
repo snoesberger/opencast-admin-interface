@@ -1,11 +1,13 @@
 const bc = new BroadcastChannel("auth_channel");
 
+type MessageType = { type: "LOGOUT" };
+
 export const broadcastLogout = () => {
     bc.postMessage({ type: "LOGOUT" });
 };
 
 export const subscribeToAuthEvents = () => {
-    bc.onmessage = event => {
+    bc.onmessage = (event: MessageEvent<MessageType>) => {
         if (event.data?.type === "LOGOUT") {
             performOnLogoutActions();
         }

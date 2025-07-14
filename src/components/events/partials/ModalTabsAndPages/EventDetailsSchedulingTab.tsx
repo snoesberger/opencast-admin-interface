@@ -152,7 +152,7 @@ const EventDetailsSchedulingTab = ({
 	};
 
 	// checks validity of the formik form
-	const checkValidity = (formik: FormikProps<any>) => {
+	const checkValidity = (formik: FormikProps<InitialValues>) => {
 		if (
 			formik.dirty &&
 			formik.isValid &&

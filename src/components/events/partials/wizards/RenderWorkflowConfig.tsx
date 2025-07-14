@@ -124,11 +124,11 @@ const RenderRadio = <T extends RequiredFormProps>(
 };
 
 const RenderNumber = <T extends RequiredFormProps>(
-	{ field, formik } : { field: any, formik: FormikProps<T> }) => {
+	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
 	// validate that value of number is between max and min
 	const validate = (value: string) => {
 		let error;
-		if (parseInt(value) > field.max || parseInt(value) < field.min) {
+		if (field.max && field.min && (parseInt(value) > field.max || parseInt(value) < field.min)) {
 			error = "out of range";
 		}
 		return error;

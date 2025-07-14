@@ -10,6 +10,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of users
  */
+type FetchUsers = {
+	total: UsersState["total"],
+	count: UsersState["count"],
+	limit: UsersState["limit"],
+	offset: UsersState["offset"],
+	results: UsersState["results"],
+};
+
 export type UserRole = {
 	name: string
 	type: string
@@ -68,7 +76,7 @@ export const fetchUsers = createAppAsyncThunk("users/fetchUsers", async (_, { ge
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/users/users.json", { params: params });
+	const res = await axios.get<FetchUsers>("/admin-ng/users/users.json", { params: params });
 	return res.data;
 });
 
@@ -121,7 +129,7 @@ export const deleteUser = createAppAsyncThunk("users/deleteUser", async (id: str
 
 // get users and their user names
 export const fetchUsersAndUsernames = async () => {
-	const data = await axios.get(
+	const data = await axios.get<{ [key: string]: string }>(
 		"/admin-ng/resources/USERS.NAME.AND.USERNAME.json",
 	);
 
@@ -147,13 +155,7 @@ const usersSlice = createSlice({
 			.addCase(fetchUsers.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<{
-				total: UsersState["total"],
-				count: UsersState["count"],
-				limit: UsersState["limit"],
-				offset: UsersState["offset"],
-				results: UsersState["results"],
-			}>) => {
+			.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<FetchUsers>) => {
 				state.status = "succeeded";
 				const users = action.payload;
 				state.total = users.total;

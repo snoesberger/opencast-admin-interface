@@ -88,8 +88,8 @@ const NewAclWizard = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
-								hasAccessPage
+								isValid={formik.isValid}
+								acls={formik.values.policies}
 							/>
 							<div>
 								{steps[page].name === "metadata" && (

@@ -1,7 +1,12 @@
 /* this file contains constants for available options and used date formats for statistics */
 
+import { TimeMode } from "../slices/statisticsSlice";
+
 // available modes of choosing statistic timeframe
-export const statisticTimeModes = [
+export const statisticTimeModes: {
+	value: TimeMode,
+	translation: string,
+}[] = [
 	{
 		value: "year",
 		translation: "Year",

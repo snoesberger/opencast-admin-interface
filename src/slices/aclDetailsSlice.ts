@@ -41,11 +41,18 @@ const initialState: AclDetailsState = {
 
 // fetch details about a certain acl from server
 export const fetchAclDetails = createAppAsyncThunk("aclDetails/fetchAclDetails", async (aclId: AclDetailsState["id"]) => {
-	const res = await axios.get(`/admin-ng/acl/${aclId}`);
+	type FetchAclDetails = {
+		organizationId: string,
+		id: number,
+		name: string,
+		acl: Acl,
+	}
 
-	let aclDetails = res.data;
+	const res = await axios.get<FetchAclDetails>(`/admin-ng/acl/${aclId}`);
 
-	const acl: Acl = aclDetails.acl;
+	const aclDetails = res.data;
+
+	const acl = aclDetails.acl;
 	let transformedAcls: TransformedAcl[] = [];
 
 	// transform policies for further use
@@ -116,12 +123,12 @@ export const fetchAclDetails = createAppAsyncThunk("aclDetails/fetchAclDetails",
 		}
 	}
 
-	aclDetails = {
+	const newDetails = {
 		...aclDetails,
 		acl: transformedAcls,
 	};
 
-	return aclDetails;
+	return newDetails;
 });
 
 // update details of a certain acl

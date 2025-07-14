@@ -114,8 +114,7 @@ const DeleteEventsModal = ({
 											<td>{isEvent(event) && event.title}</td>
 											<td>
 												{/* Repeat for each presenter*/}
-{/* @ts-expect-error TS(7006): Parameter 'presenter' implicitly has an 'any' type... Remove this comment to see the full error message */}
-												{event.presenters.map((presenter, key) => (
+												{isEvent(event) && event.presenters.map((presenter, key) => (
 													<span className="metadata-entry" key={key}>
 														{presenter}
 													</span>

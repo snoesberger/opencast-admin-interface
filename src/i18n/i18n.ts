@@ -63,6 +63,7 @@ i18n
 					return moment(value).format(format);
 				}
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return value;
 			},
 		},
