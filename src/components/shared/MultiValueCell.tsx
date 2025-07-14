@@ -35,7 +35,7 @@ const MultiValueCell = ({
 			({ name }) => name === filterName,
 		);
 		if (filter) {
-			await dispatch(editFilterValue({ filterName: filter.name, value: presenter, resource }));
+			dispatch(editFilterValue({ filterName: filter.name, value: presenter, resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());
 		}

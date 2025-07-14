@@ -45,7 +45,7 @@ const DateTimeCell = ({
 			endDate.setMinutes(59);
 			endDate.setSeconds(59);
 
-			await dispatch(editFilterValue({ filterName: filter.name, value: startDate.toISOString() + "/" + endDate.toISOString(), resource }));
+			dispatch(editFilterValue({ filterName: filter.name, value: startDate.toISOString() + "/" + endDate.toISOString(), resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());
 		}
