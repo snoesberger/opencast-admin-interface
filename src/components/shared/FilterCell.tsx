@@ -11,7 +11,7 @@ import { ReactNode } from "react";
  * This component renders a table cell with one or more clickable items
  * where clicking the items will set a filter
  */
-const FilterCell = ({
+const FilterCell = <T, >({
 	resource,
 	filterName,
 	filterItems,
@@ -25,7 +25,7 @@ const FilterCell = ({
 		children: ReactNode
 		cellTooltipText?: ParseKeys
 	}[]
-	fetchResource: AsyncThunk<unknown, void, any>
+	fetchResource: AsyncThunk<T, void, any>
 	loadResourceIntoTable: () => AppThunk,
 }) => {
 	const dispatch = useAppDispatch();
