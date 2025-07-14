@@ -41,10 +41,10 @@ const WizardStepper = ({
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const handleOnClick = async (key: number) => {
+	const handleOnClick = (key: number) => {
 		if (isSummaryReachable(key, steps, completed)) {
 			if (acls) {
-				const check = await dispatch(checkAcls(acls));
+				const check = dispatch(checkAcls(acls));
 				if (!check) {
 					return;
 				}
