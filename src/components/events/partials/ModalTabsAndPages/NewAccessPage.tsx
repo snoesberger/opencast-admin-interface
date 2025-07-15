@@ -306,7 +306,7 @@ const NewAccessPage = <T extends RequiredFormProps>({
 																				<td>
 																					<ButtonLikeAnchor
 																						onClick={() => remove(index)}
-																						extraClassName="remove"
+																						className="remove"
 																					/>
 																				</td>
 																			</tr>

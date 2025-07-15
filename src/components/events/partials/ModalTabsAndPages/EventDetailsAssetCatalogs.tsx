@@ -90,7 +90,7 @@ const EventDetailsAssetCatalogs = ({
 										</td>
 										<td>
 											<ButtonLikeAnchor
-												extraClassName="details-link"
+												className="details-link"
 												onClick={() =>
 													openSubTab("catalog-details", item.id)
 												}

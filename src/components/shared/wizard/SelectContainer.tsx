@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useField } from "formik";
-import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import SearchContainer from "../SearchContainer";
+import BaseButton from "../BaseButton";
 
 type Item = {
 	name: string
@@ -228,7 +228,7 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("submit", {
 									disabled: !markedForAddition.length || !manageable,
 								})}
@@ -236,7 +236,7 @@ const SelectContainer = ({
 								onClick={() => handleClickAdd()}
 							>
 								{t(`${resource.label}.ADD` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>
@@ -265,7 +265,7 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("remove", {
 									disabled: !markedForRemoval.length || !manageable,
 								})}
@@ -273,7 +273,7 @@ const SelectContainer = ({
 								onClick={() => handleClickRemove()}
 							>
 								{t(`${resource.label}.REMOVE` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>
