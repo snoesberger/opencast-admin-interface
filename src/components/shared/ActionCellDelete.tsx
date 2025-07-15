@@ -1,8 +1,8 @@
 import ConfirmModal, { ResourceType } from "./ConfirmModal";
 import { useRef } from "react";
-import { IconButton } from "./IconButton";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
+import ButtonLikeAnchor from "./ButtonLikeAnchor";
 
 export const ActionCellDelete = <T, >({
 	editAccessRole,
@@ -32,9 +32,9 @@ export const ActionCellDelete = <T, >({
 	return (
 		<>
 			{/* delete button */}
-			<IconButton
-				callback={() => deleteConfirmationModalRef.current?.open()}
-				iconClassname={"remove"}
+			<ButtonLikeAnchor
+				onClick={() => deleteConfirmationModalRef.current?.open()}
+				className={"remove"}
 				editAccessRole={editAccessRole}
 				tooltipText={tooltipText}
 			/>

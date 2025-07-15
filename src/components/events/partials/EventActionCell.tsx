@@ -16,8 +16,8 @@ import { Event, deleteEvent } from "../../../slices/eventSlice";
 import { Tooltip } from "../../shared/Tooltip";
 import { openModal } from "../../../slices/eventDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
-import { IconButton } from "../../shared/IconButton";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the action cells of events in the table view
@@ -91,18 +91,18 @@ const EventActionCell = ({
 			)}
 
 			{/* Open event details */}
-			<IconButton
-				callback={onClickEventDetails}
-				iconClassname={"more"}
+			<ButtonLikeAnchor
+				onClick={onClickEventDetails}
+				className={"more"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DETAILS"}
 			/>
 
 			{/* If event belongs to a series then the corresponding series details can be opened */}
 			{!!row.series && (
-				<IconButton
-					callback={onClickSeriesDetails}
-					iconClassname={"more-series"}
+				<ButtonLikeAnchor
+					onClick={onClickSeriesDetails}
+					className={"more-series"}
 					editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
 					tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
 				/>
@@ -139,18 +139,18 @@ const EventActionCell = ({
 
 			{/* If the event has comments and no open comments then the comment tab of event details can be opened directly */}
 			{row.has_comments && !row.has_open_comments && (
-				<IconButton
-					callback={() => onClickComments()}
-					iconClassname={"comments"}
+				<ButtonLikeAnchor
+					onClick={() => onClickComments()}
+					className={"comments"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
 				/>
 			)}
 
 			{/* If the event has comments and open comments then the comment tab of event details can be opened directly */}
 			{row.has_comments && row.has_open_comments && (
-				<IconButton
-					callback={() => onClickComments()}
-					iconClassname={"comments-open"}
+				<ButtonLikeAnchor
+					onClick={() => onClickComments()}
+					className={"comments-open"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
 				/>
 			)}
@@ -158,26 +158,26 @@ const EventActionCell = ({
 			{/*If the event is in in a paused workflow state then a warning icon is shown and workflow tab of event
 				details can be opened directly */}
 			{row.workflow_state === "PAUSED" &&
-				<IconButton
-					callback={() => onClickWorkflow()}
-					iconClassname={"fa fa-warning"}
+				<ButtonLikeAnchor
+					onClick={() => onClickWorkflow()}
+					className={"fa fa-warning"}
 					editAccessRole={"ROLE_UI_EVENTS_DETAILS_WORKFLOWS_EDIT"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.PAUSED_WORKFLOW"}
 				/>
 			}
 
 			{/* Open assets tab of event details directly*/}
-			<IconButton
-				callback={() => onClickAssets()}
-				iconClassname={"fa fa-folder-open"}
+			<ButtonLikeAnchor
+				onClick={() => onClickAssets()}
+				className={"fa fa-folder-open"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_ASSETS_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.ASSETS"}
 			/>
 
 			{/* Open dialog for embedded code*/}
-			<IconButton
-				callback={() => showEmbeddingCodeModal()}
-				iconClassname={"fa fa-link"}
+			<ButtonLikeAnchor
+				onClick={() => showEmbeddingCodeModal()}
+				className={"fa fa-link"}
 				editAccessRole={"ROLE_UI_EVENTS_EMBEDDING_CODE_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.EMBEDDING_CODE"}
 			/>

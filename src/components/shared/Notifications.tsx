@@ -106,7 +106,7 @@ export const NotificationComponent = ({
 			{closeNotification &&
 				<ButtonLikeAnchor
 					onClick={() => closeNotification(notification.id)}
-					extraClassName="fa fa-times close"
+					className="fa fa-times close"
 				/>
 			}
 			<p>{t(notification.message, notification.parameter)}</p>

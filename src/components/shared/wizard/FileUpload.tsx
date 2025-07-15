@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../../store";
 import { addNotification } from "../../../slices/notificationSlice";
 import { FormikProps } from "formik";
 import { ParseKeys } from "i18next";
+import BaseButton from "../BaseButton";
 
 /**
  * This component renders a custom file upload button in wizards.
@@ -131,20 +132,20 @@ const FileUpload = <T extends RequiredFormProps>({
 									</a>
 								</p>
 								<div className="button-container">
-									<button
+									<BaseButton
 										id="remove-file-1"
 										className="remove-file-button"
 										onClick={() => handleDelete()}
 									>
 										<div className="remove-icon" />
-									</button>
+									</BaseButton>
 								</div>
 							</div>
 						) : (
 							<>
-								<button className="upload-button" onClick={() => handleClick()}>
+								<BaseButton className="upload-button" onClick={() => handleClick()}>
 									{t(buttonKey)}
-								</button>
+								</BaseButton>
 								<input
 									type="file"
 									style={{ display: "none" }}

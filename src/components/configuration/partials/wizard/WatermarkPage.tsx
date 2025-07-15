@@ -7,6 +7,7 @@ import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButt
 import FileUpload from "../../../shared/wizard/FileUpload";
 import Notifications from "../../../shared/Notifications";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import BaseButton from "../../../shared/BaseButton";
 
 /**
  * This component renders the watermark page for new themes in the new themes wizard
@@ -97,7 +98,7 @@ const WatermarkPage = <T extends RequiredFormProps>({
 									<div className="video-container">
 										<div className="watermark-config">
 											<div className="position-selection">
-												<button
+												<BaseButton
 													className={cn(
 														"position-button position-top-left",
 														{
@@ -111,8 +112,8 @@ const WatermarkPage = <T extends RequiredFormProps>({
 													{t(
 														"CONFIGURATION.THEMES.DETAILS.WATERMARK.TOP_LEFT"
 													)}
-												</button>
-												<button
+												</BaseButton>
+												<BaseButton
 													className={cn(
 														"position-button position-top-right",
 														{
@@ -126,8 +127,8 @@ const WatermarkPage = <T extends RequiredFormProps>({
 													{t(
 														"CONFIGURATION.THEMES.DETAILS.WATERMARK.TOP_RIGHT"
 													)}
-												</button>
-												<button
+												</BaseButton>
+												<BaseButton
 													className={cn(
 														"position-button position-bottom-left",
 														{
@@ -141,8 +142,8 @@ const WatermarkPage = <T extends RequiredFormProps>({
 													{t(
 														"CONFIGURATION.THEMES.DETAILS.WATERMARK.BOTTOM_LEFT"
 													)}
-												</button>
-												<button
+												</BaseButton>
+												<BaseButton
 													className={cn(
 														"position-button position-bottom-right",
 														{
@@ -156,7 +157,7 @@ const WatermarkPage = <T extends RequiredFormProps>({
 													{t(
 														"CONFIGURATION.THEMES.DETAILS.WATERMARK.BOTTOM_RIGHT"
 													)}
-												</button>
+												</BaseButton>
 											</div>
 										</div>
 									</div>
