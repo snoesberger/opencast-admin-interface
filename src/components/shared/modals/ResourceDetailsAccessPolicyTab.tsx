@@ -495,6 +495,13 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 											) /* <!-- Write --> */
 										}
 									</th>
+									<th className="fit">
+										{
+											t(
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
+											) /* <!-- Read --> */
+										}
+									</th>
 									{hasActions && (
 										<th className="fit">
 											{
@@ -564,6 +571,31 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 															</td>
 
 															{/* Checkboxes for policy.read and policy.write */}
+															<td className="fit text-center">
+																<Field
+																	type="checkbox"
+																	name={`policies.${formik.values.policies.findIndex(p => p === policy)}.read`}
+																	disabled={
+																		transactions.read_only ||
+																		!hasAccess(
+																			editAccessRole,
+																			user,
+																		) ||
+																		(aclDefaults && aclDefaults["read_readonly"] !== "false")
+																	}
+																	className={`${
+																		transactions.read_only
+																			? "disabled"
+																			: "false"
+																	}`}
+																	onChange={(read: React.ChangeEvent<HTMLInputElement>) =>
+																		replace(formik.values.policies.findIndex(p => p === policy), {
+																			...policy,
+																			read: read.target.checked,
+																		})
+																	}
+																/>
+															</td>
 															<td className="fit text-center">
 																<Field
 																	type="checkbox"
@@ -658,7 +690,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 											{!transactions.read_only &&
 												hasAccess(editAccessRole, user) && (
 													<tr>
-														<td colSpan={4}>
+														<td colSpan={5}>
 															<ButtonLikeAnchor
 																onClick={() =>
 																	push(createPolicy("", isUserTable))
