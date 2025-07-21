@@ -209,8 +209,6 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Obstoječe dogodke v tej seriji bo treba znova obdelati",
 		"SERIES_ACL_LOCKED": "Urejanje pravilnikov o dostopu ni dovoljeno, ko se v dogodku, ki je del serije, izvajajo postopki",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Pravilnik o dostopu zahteva vsaj eno vlogo z dovoljenji za branje in pisanje.",
-		"METADATA_SAVED": "The metadata has been saved.",
-		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "Ime ne sme biti prazno",
 		"BUMPER_UPLOAD_ERROR": "Napaka pri nalaganju predstavnosti",
 		"THEME_CREATED": "Tema je ustvarjena",
@@ -897,11 +895,7 @@
 						"ADDITIONAL_ACTIONS": "Dodatna dejanja",
 						"ACTION": "Dejanja",
 						"NEW": "Nov pravilnik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
-						"USERS": "Users who are authorized for the event",
-						"NEW_USER": "New user",
-						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
+						"DETAILS": "Details"
 					},
 					"ROLES": {
 						"LABEL": "Select or create a role"
@@ -988,6 +982,7 @@
 					"ACTIONS": "Dejanja",
 					"DETAILS": "Podrobnosti",
 					"DESCRIPTION": "Opis",
+					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Vrsta",
 					"TITLE": "Naslov",
@@ -1027,13 +1022,11 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Podrobnosti poteka dela",
-					"CONFIGURATION": "Konfiguracija poteka dela",
-					"OPERATIONS": "Operations",
-					"CURRENT_OPERATION": "Current workflow operation"
+					"CONFIGURATION": "Konfiguracija poteka dela"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Postopki poteka dela",
-					"DETAILS_LINK": "All operations",
+					"DETAILS_LINK": "Operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Naslov",
 						"STATUS": "Stanje",
@@ -1093,8 +1086,7 @@
 						"DATE": "Datum",
 						"HOST": "Gostitelj za obdelavo",
 						"TYPE": "Vrsta storitve",
-						"TECHNICAL_DETAILS": "Tehnične podrobnosti",
-						"OPERATION": "Operation the error occured in"
+						"TECHNICAL_DETAILS": "Tehnične podrobnosti"
 					}
 				}
 			}
@@ -1216,10 +1208,7 @@
 						"ADDITIONAL_ACTIONS": "Dodatna dejanja",
 						"ACTION": "Dejanja",
 						"NEW": "Nov pravilnik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
-						"USERS": "Users who are authorized for the series",
-						"NEW_USER": "New user",
+						"DETAILS": "Details",
 						"REPLACE_EVENT_ACLS": "Update series permissions",
 						"REPLACE_EVENT_ACLS_HINT": "Ensure all events of this series have these permissions in effect",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1478,11 +1467,8 @@
 						"ADDITIONAL_ACTIONS": "Dodatna dejanja",
 						"ACTION": "Dejanja",
 						"NEW": "Nov pravilnik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
-						"DESCRIPTION": "Izberite vnaprej nastavljen komplet pravilnikov ali spodaj dodajte pravilnike po meri",
-						"USER": "User",
-						"USERS": "Users who are authorized for the access policy",
-						"NEW_USER": "New user"
+						"DETAILS": "Details",
+						"DESCRIPTION": "Izberite vnaprej nastavljen komplet pravilnikov ali spodaj dodajte pravilnike po meri"
 					},
 					"ROLES": {
 						"LABEL": "Izberite vlogo",
