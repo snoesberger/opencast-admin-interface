@@ -437,7 +437,7 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 	values: {
 		policies: TransformedAcl[],
 		configuration: { [key: string]: unknown },
-		deviceInputs?: string[],
+		inputs?: string[],
 		processingWorkflow: string,
 		repeatOn: string[],
 		scheduleDurationHours: string,
@@ -456,7 +456,6 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 	extendedMetadata: MetadataCatalog[],
 }, { dispatch, getState }) => {
 	const { values, metadataInfo, extendedMetadata } = params;
-
 	// get asset upload options from redux store
 	const state = getState();
 	const uploadAssetOptions = getAssetUploadOptions(state);
@@ -544,7 +543,7 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 			metadata: {
 				start: startDate,
 				device: values.location,
-				inputs: values.deviceInputs ? values.deviceInputs.join(",") : "",
+				inputs: values.inputs ? values.inputs.join(",") : "",
 				end: endDate,
 				duration: duration.toString(),
 			},
