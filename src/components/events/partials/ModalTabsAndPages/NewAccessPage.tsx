@@ -269,7 +269,7 @@ const NewAccessPage = <T extends RequiredFormProps>({
 																						}
 																						skipTranslate
 																						optionHeight={35}
-																						customCSS={{ width: 360, optionPaddingTop: 5 }}
+																						customCSS={{ width: "100%", optionPaddingTop: 5 }}
 																					/>
 																				</td>
 																				{/* Checkboxes for  policy.read and policy.write*/}

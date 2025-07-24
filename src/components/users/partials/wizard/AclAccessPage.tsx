@@ -229,7 +229,7 @@ const AclAccessPage = <T extends RequiredFormProps>({
 																						disabled={!isAccess}
 																						skipTranslate
 																						optionHeight={35}
-																						customCSS={{ width: 360, optionPaddingTop: 5 }}
+																						customCSS={{ width: "100%", optionPaddingTop: 5 }}
 																					/>
 																				</td>
 																				<td className="fit text-center">
