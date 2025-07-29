@@ -18,7 +18,7 @@ const NewMetadataPage = ({
 	header?: ParseKeys
 }) => {
 	const { t } = useTranslation();
-
+	console.log(metadataCatalogs);
 	return (
 		<ModalContentTable>
 			{
