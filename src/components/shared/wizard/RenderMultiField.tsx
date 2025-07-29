@@ -83,7 +83,9 @@ const RenderMultiField = ({
 
 			// reset inputValue
 			setInputValue("");
-		}
+		} else {
+		setEditMode(false);
+	}
 	};
 
 	// Remove item/value from inserted field values
@@ -204,7 +206,11 @@ const ShowValue = ({
 	showCheck: boolean,
 }) => {
 	return (
-		<div onClick={() => setEditMode(true)} className="show-edit">
+	<div
+  		tabIndex={0}
+  		onClick={() => setEditMode(true)}
+  		className="show-edit"
+			>
 			{field.value instanceof Array && field.value.length !== 0 ? (
 				<ul>
 					{field.value.map((item, key) => (
