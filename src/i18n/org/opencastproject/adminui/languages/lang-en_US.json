@@ -1352,6 +1352,7 @@
 				"PROVIDER": "Provider",
 				"ACTION": "Actions",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Delete user",
 					"DETAILS": "Open user details"
 				}
