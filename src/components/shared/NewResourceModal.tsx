@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import NewEventWizard from "../events/partials/wizards/NewEventWizard";
 import NewSeriesWizard from "../events/partials/wizards/NewSeriesWizard";
@@ -7,6 +7,7 @@ import NewAclWizard from "../users/partials/wizard/NewAclWizard";
 import NewGroupWizard from "../users/partials/wizard/NewGroupWizard";
 import NewUserWizard from "../users/partials/wizard/NewUserWizard";
 import { Modal, ModalHandle } from "./modals/Modal";
+import { useState } from "react";
 
 /**
  * This component renders the modal for adding new resources
@@ -23,9 +24,43 @@ const NewResourceModal = ({
 	modalRef: React.RefObject<ModalHandle | null>
 }) => {
 	const { t } = useTranslation();
+	const [mode, setMode] = useState<"form" | "confirm">("form");
+	const [closeRequested, setCloseRequested] = useState(false);
 
 	const close = () => {
 		handleClose();
+	};
+
+	const onAttemptClose = () => {
+  	if (mode === "form") {
+    setCloseRequested(true);
+    return false;  // prevent close, show confirmation modal
+  	}
+  	if (mode === "confirm") {
+    cancelClose();  // go back to form mode
+    return false;   // prevent modal close
+  	}
+    return true;     // default allow close
+	};
+
+	// When closeRequested is set, switch to confirm mode
+	useEffect(() => {
+		if (closeRequested) {
+			setMode("confirm");
+			setCloseRequested(false);  // Reset flag
+		}
+	}, [closeRequested]);
+
+const confirmClose = () => {
+  console.log("modalRef:", modalRef);
+  console.log("modalRef.current:", modalRef.current);
+  console.log("modalRef.current?.close:", modalRef.current?.close);
+  setMode("form");
+  modalRef.current?.close?.();
+  handleClose();
+};
+	const cancelClose = () => {
+	setMode("form");
 	};
 
 	const headerText = () => {
@@ -41,12 +76,14 @@ const NewResourceModal = ({
 
 	return (
 		<Modal
-			header={headerText()}
+			header={mode === "confirm" ? "Confirm Close" : headerText()}
 			classId="add-event-modal"
 			// initialFocus={"#firstField"}
 			ref={modalRef}
+			closeCallback={onAttemptClose}
 		>
-			{resource === "events" && (
+		<div style={{ display: mode === "form" ? "block" : "none" }}>
+		{resource === "events" && (
 				// New Event Wizard
 				<NewEventWizard close={close} />
 			)}
@@ -70,6 +107,26 @@ const NewResourceModal = ({
 				// New User Wizard
 				<NewUserWizard close={close} />
 			)}
+			</div>
+		{mode === "confirm" && (
+		<div style={{ padding: "1rem" }}>
+			<p>Are you sure you want to close? Your changes will be lost.</p>
+			<div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
+				<button
+					style={{ backgroundColor: "red", color: "white", padding: "0.5rem 1rem" }}
+					onClick={confirmClose}
+				>
+					Yes, Close
+				</button>
+				<button
+					style={{ backgroundColor: "gray", color: "white", padding: "0.5rem 1rem" }}
+					onClick={cancelClose}
+				>
+					No, Go Back
+				</button>
+			</div>
+		</div>
+	)}
 		</Modal>
 	);
 };
