@@ -32,13 +32,13 @@ const NewResourceModal = ({
 	};
 
 	const onAttemptClose = () => {
-  	if (mode === "form") {
+  	if (mode === "form" && modalRef.current?.isOpen?.()) {
     setCloseRequested(true);
     return false;  // prevent close, show confirmation modal
   	}
   	if (mode === "confirm") {
     cancelClose();  // go back to form mode
-    return false;   // prevent modal close
+    return true;   // make modal close
   	}
     return true;     // default allow close
 	};
@@ -47,18 +47,13 @@ const NewResourceModal = ({
 	useEffect(() => {
 		if (closeRequested) {
 			setMode("confirm");
-			setCloseRequested(false);  // Reset flag
+			setCloseRequested(false);
 		}
 	}, [closeRequested]);
 
-const confirmClose = () => {
-  console.log("modalRef:", modalRef);
-  console.log("modalRef.current:", modalRef.current);
-  console.log("modalRef.current?.close:", modalRef.current?.close);
-  setMode("form");
-  modalRef.current?.close?.();
-  handleClose();
-};
+ 	const confirmClose = () => {
+  	modalRef.current?.close?.();
+	};
 	const cancelClose = () => {
 	setMode("form");
 	};

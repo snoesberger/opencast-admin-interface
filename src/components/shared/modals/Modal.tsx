@@ -59,7 +59,9 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(({
 
 	return ReactDOM.createPortal(
 		isOpen &&
-			<FocusTrap>
+			<FocusTrap focusTrapOptions={{
+			escapeDeactivates: false }} // Prevent escape from deactivating the trap
+			>
 				<div>
 					<div className="modal-animation modal-overlay" />
 					<section
