@@ -11,7 +11,7 @@ import {
 	hasStatistics as seriesHasStatistics,
 } from "../../../../selectors/seriesDetailsSelectors";
 import { getOrgProperties, getUserInformation } from "../../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../../utils/utils";
+import { confirmUnsaved, hasAccess } from "../../../../utils/utils";
 import SeriesDetailsAccessTab from "../ModalTabsAndPages/SeriesDetailsAccessTab";
 import SeriesDetailsThemeTab from "../ModalTabsAndPages/SeriesDetailsThemeTab";
 import SeriesDetailsStatisticTab from "../ModalTabsAndPages/SeriesDetailsStatisticTab";
@@ -28,6 +28,7 @@ import DetailsTobiraTab from "../ModalTabsAndPages/DetailsTobiraTab";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { removeNotificationWizardTobira } from "../../../../slices/notificationSlice";
 import { ParseKeys } from "i18next";
+import { FormikProps } from "formik";
 
 /**
  * This component manages the tabs of the series details modal
@@ -36,10 +37,12 @@ const SeriesDetails = ({
 	seriesId,
 	policyChanged,
 	setPolicyChanged,
+	formikRef,
 }: {
 	seriesId: string
 	policyChanged: boolean
 	setPolicyChanged: (policyChanged: boolean) => void
+	formikRef: React.RefObject<FormikProps<any> | null>
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
@@ -110,7 +113,15 @@ const SeriesDetails = ({
 	];
 
 	const openTab = (tabNr: number) => {
-		setPage(tabNr);
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
+		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
+			setPage(tabNr);
+		}
 	};
 
 	return (
@@ -136,6 +147,7 @@ const SeriesDetails = ({
 						metadata={[metadataFields]}
 						updateResource={updateSeriesMetadata}
 						editAccessRole="ROLE_UI_SERIES_DETAILS_METADATA_EDIT"
+						formikRef={formikRef}
 						header={tabs[page].tabNameTranslation}
 					/>
 				)}
@@ -145,6 +157,7 @@ const SeriesDetails = ({
 						metadata={extendedMetadata}
 						updateResource={updateExtendedSeriesMetadata}
 						editAccessRole="ROLE_UI_SERIES_DETAILS_METADATA_EDIT"
+						formikRef={formikRef}
 					/>
 				)}
 				{page === 2 && (

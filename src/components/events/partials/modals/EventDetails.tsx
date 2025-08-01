@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
-import { hasAccess } from "../../../../utils/utils";
+import { confirmUnsaved, hasAccess } from "../../../../utils/utils";
 import EventDetailsCommentsTab from "../ModalTabsAndPages/EventDetailsCommentsTab";
 import EventDetailsAccessPolicyTab from "../ModalTabsAndPages/EventDetailsAccessPolicyTab";
 import EventDetailsWorkflowTab from "../ModalTabsAndPages/EventDetailsWorkflowTab";
@@ -219,8 +219,16 @@ const EventDetails = ({
 	];
 
 	const openTab = (tabNr: EventDetailsPage) => {
-		dispatch(removeNotificationWizardForm());
-		dispatch(openModalTab(tabNr, "entry", "entry"))
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
+		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
+			dispatch(removeNotificationWizardForm());
+			dispatch(openModalTab(tabNr, "entry", "entry"))
+		}
 	};
 
 	return (
