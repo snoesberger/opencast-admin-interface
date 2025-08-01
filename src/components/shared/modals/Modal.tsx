@@ -68,7 +68,7 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(({
 					>
 						<header>
 							<ButtonLikeAnchor
-								extraClassName="fa fa-times close-modal"
+								className="fa fa-times close-modal"
 								onClick={close}
 								tabIndex={0}
 							/>
