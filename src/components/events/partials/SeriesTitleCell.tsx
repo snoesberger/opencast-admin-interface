@@ -1,8 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { setSpecificEventFilter } from "../../../slices/tableFilterSlice";
 import { useNavigate } from "react-router";
 import { useAppDispatch } from "../../../store";
-import { Tooltip } from "../../shared/Tooltip";
 import { Series } from "../../../slices/seriesSlice";
 import RedirectCell from "../../shared/RedirectCell";
 

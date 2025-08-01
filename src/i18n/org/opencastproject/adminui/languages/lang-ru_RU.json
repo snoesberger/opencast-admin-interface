@@ -209,8 +209,6 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "The existing events in this series will need to be reprocessed",
 		"SERIES_ACL_LOCKED": "Editing Access Policies is not allowed when operations are running on an event that is part of the series",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "The Access Policy requires at least one role with Read and Write permissions.",
-		"METADATA_SAVED": "The metadata has been saved.",
-		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "The name cannot be empty",
 		"BUMPER_UPLOAD_ERROR": "Error while uploading media",
 		"THEME_CREATED": "The theme has been created",
@@ -897,11 +895,7 @@
 						"ADDITIONAL_ACTIONS": "Additional Actions",
 						"ACTION": "Действия",
 						"NEW": "New policy",
-						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
-						"USERS": "Users who are authorized for the event",
-						"NEW_USER": "New user",
-						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
+						"DETAILS": "Details"
 					},
 					"ROLES": {
 						"LABEL": "Select or create a role"
@@ -988,6 +982,7 @@
 					"ACTIONS": "Действия",
 					"DETAILS": "Details",
 					"DESCRIPTION": "Description",
+					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Type",
 					"TITLE": "Title",
@@ -1027,13 +1022,11 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Workflow details",
-					"CONFIGURATION": "Workflow configuration",
-					"OPERATIONS": "Operations",
-					"CURRENT_OPERATION": "Current workflow operation"
+					"CONFIGURATION": "Workflow configuration"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Workflow operations",
-					"DETAILS_LINK": "All operations",
+					"DETAILS_LINK": "Operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Title",
 						"STATUS": "Статус",
@@ -1093,8 +1086,7 @@
 						"DATE": "Date",
 						"HOST": "Processing host",
 						"TYPE": "Service type",
-						"TECHNICAL_DETAILS": "Technical details",
-						"OPERATION": "Operation the error occured in"
+						"TECHNICAL_DETAILS": "Technical details"
 					}
 				}
 			}
@@ -1216,10 +1208,7 @@
 						"ADDITIONAL_ACTIONS": "Additional Actions",
 						"ACTION": "Actions",
 						"NEW": "New policy",
-						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
-						"USERS": "Users who are authorized for the series",
-						"NEW_USER": "New user",
+						"DETAILS": "Details",
 						"REPLACE_EVENT_ACLS": "Update series permissions",
 						"REPLACE_EVENT_ACLS_HINT": "Ensure all events of this series have these permissions in effect",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1478,11 +1467,8 @@
 						"ADDITIONAL_ACTIONS": "Additional Actions",
 						"ACTION": "Actions",
 						"NEW": "New policy",
-						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
-						"DESCRIPTION": "Please choose a pre-configured set of policies or add custom policies below",
-						"USER": "User",
-						"USERS": "Users who are authorized for the access policy",
-						"NEW_USER": "New user"
+						"DETAILS": "Details",
+						"DESCRIPTION": "Please choose a pre-configured set of policies or add custom policies below"
 					},
 					"ROLES": {
 						"LABEL": "Select a role",

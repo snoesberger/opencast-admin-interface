@@ -215,7 +215,7 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "STOP")
 																	}
-																	extraClassName="stop fa-fw"
+																	className="stop fa-fw"
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.STOP"
 																>
 																	{/* STOP */}
@@ -227,7 +227,7 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "NONE")
 																	}
-																	extraClassName="fa fa-hand-stop-o fa-fw"
+																	className="fa fa-hand-stop-o fa-fw"
 																	style={{ color: "red" }}
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.ABORT"
 																>
@@ -240,7 +240,7 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "RETRY")
 																	}
-																	extraClassName="fa fa-refresh fa-fw"
+																	className="fa fa-refresh fa-fw"
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.RETRY"
 																>
 																	{/* Retry */}
@@ -256,7 +256,7 @@ const EventDetailsWorkflowTab = ({
 																isRoleWorkflowDelete && (
 																	<ButtonLikeAnchor
 																		onClick={() => deleteWorkflow(item.id)}
-																		extraClassName="remove fa-fw"
+																		className="remove fa-fw"
 																		tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.DELETE"
 																	>
 																		{/* DELETE */}
@@ -266,7 +266,7 @@ const EventDetailsWorkflowTab = ({
 													)}
 													<td>
 														<ButtonLikeAnchor
-															extraClassName="details-link"
+															className="details-link"
 															onClick={() =>
 																openSubTab("workflow-details", item.id)
 															}
