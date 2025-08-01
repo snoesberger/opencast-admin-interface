@@ -209,8 +209,6 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Wydarzenia w tej serii będą musiały być przetworzone ponownie",
 		"SERIES_ACL_LOCKED": "Edytowanie zasad dostępu jest niedozwolone, jeśli wykonywane są operacje dotyczące zdarzenia, które jest częścią serii",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Zasada dostępu musi zawierać przynajmniej jedną rolę użytkownika z uprawnieniem do zapisu lub odczytu.",
-		"METADATA_SAVED": "The metadata has been saved.",
-		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "Nazwa nie może być pusta",
 		"BUMPER_UPLOAD_ERROR": "Wystąpił błąd podczas przesyłania multimediów",
 		"THEME_CREATED": "Motyw został utworzony",
@@ -897,11 +895,7 @@
 						"ADDITIONAL_ACTIONS": "Dodatkowe Działania",
 						"ACTION": "Działania",
 						"NEW": "Nowe zasada",
-						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
-						"USERS": "Users who are authorized for the event",
-						"NEW_USER": "New user",
-						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
+						"DETAILS": "Details"
 					},
 					"ROLES": {
 						"LABEL": "Select or create a role"
@@ -988,6 +982,7 @@
 					"ACTIONS": "Działania",
 					"DETAILS": "Szczegóły",
 					"DESCRIPTION": "Opis",
+					"MORE_INFO": "More Information",
 					"ID": "Identyfikator",
 					"TYPE": "Typ",
 					"TITLE": "Tytuł",
@@ -1027,13 +1022,11 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Szczegóły przepływu pracy",
-					"CONFIGURATION": "Konfiguracja przepływu pracy",
-					"OPERATIONS": "Operations",
-					"CURRENT_OPERATION": "Current workflow operation"
+					"CONFIGURATION": "Konfiguracja przepływu pracy"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Operacje w przepływie pracy",
-					"DETAILS_LINK": "All operations",
+					"DETAILS_LINK": "Operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Tytuł",
 						"STATUS": "Status",
@@ -1093,8 +1086,7 @@
 						"DATE": "Data",
 						"HOST": "Serwer wykonujący pracę",
 						"TYPE": "Rodzaj usługi",
-						"TECHNICAL_DETAILS": "Szczegóły techniczne",
-						"OPERATION": "Operation the error occured in"
+						"TECHNICAL_DETAILS": "Szczegóły techniczne"
 					}
 				}
 			}
@@ -1216,10 +1208,7 @@
 						"ADDITIONAL_ACTIONS": "Dodatkowe Działania",
 						"ACTION": "Działania",
 						"NEW": "Nowe zasada",
-						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
-						"USERS": "Users who are authorized for the series",
-						"NEW_USER": "New user",
+						"DETAILS": "Details",
 						"REPLACE_EVENT_ACLS": "Update series permissions",
 						"REPLACE_EVENT_ACLS_HINT": "Upewnij się, że wszystkie zdarzenia tej serii mają te uprawnienia w mocy",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1478,11 +1467,8 @@
 						"ADDITIONAL_ACTIONS": "Dodatkowe Działania",
 						"ACTION": "Działania",
 						"NEW": "Nowe zasada",
-						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
-						"DESCRIPTION": "Proszę wybrać zestaw wstępnie skonfigurowanych zasad lub dodać niestandardowe zasady poniżej",
-						"USER": "User",
-						"USERS": "Users who are authorized for the access policy",
-						"NEW_USER": "New user"
+						"DETAILS": "Details",
+						"DESCRIPTION": "Proszę wybrać zestaw wstępnie skonfigurowanych zasad lub dodać niestandardowe zasady poniżej"
 					},
 					"ROLES": {
 						"LABEL": "Wybierz rolę",

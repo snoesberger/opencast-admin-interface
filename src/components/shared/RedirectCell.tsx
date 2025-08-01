@@ -32,7 +32,7 @@ const RedirectCell = ({
 
 	return (
 		<ButtonLikeAnchor
-			extraClassName="crosslink"
+			className="crosslink"
 			tooltipText={tooltipText}
 			onClick={() => redirectToResource(filterValue)}
 		>

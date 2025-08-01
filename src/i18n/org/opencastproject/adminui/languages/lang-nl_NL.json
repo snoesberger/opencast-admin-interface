@@ -209,8 +209,6 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "De eksisterende begivenheder i denne serie skal genbehandles",
 		"SERIES_ACL_LOCKED": "Redigering af Adgangspolitikker er ikke tilladt, når operationer afvikles for en begivenhed, der er en del af serien",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Adgangspolitikken kræver mindst én rolle med Læse- og skriverettigheder.",
-		"METADATA_SAVED": "The metadata has been saved.",
-		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "Navn er obligatorisk",
 		"BUMPER_UPLOAD_ERROR": "Fejl under upload af medie",
 		"THEME_CREATED": "Mediet er blevet oprettet",
@@ -897,11 +895,7 @@
 						"ADDITIONAL_ACTIONS": "Yderligere handlinger",
 						"ACTION": "Handlinger",
 						"NEW": "Nye politik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
-						"USERS": "Users who are authorized for the event",
-						"NEW_USER": "New user",
-						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
+						"DETAILS": "Details"
 					},
 					"ROLES": {
 						"LABEL": "Select or create a role"
@@ -988,6 +982,7 @@
 					"ACTIONS": "Handlinger",
 					"DETAILS": "Oplysninger",
 					"DESCRIPTION": "Beskriveslse",
+					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Type",
 					"TITLE": "Titel",
@@ -1027,13 +1022,11 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Arbejdsgangsoplysninger",
-					"CONFIGURATION": "Arbejdsgangsopsætning",
-					"OPERATIONS": "Operations",
-					"CURRENT_OPERATION": "Current workflow operation"
+					"CONFIGURATION": "Arbejdsgangsopsætning"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Arbejdsgangshandlinger",
-					"DETAILS_LINK": "All operations",
+					"DETAILS_LINK": "Operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Titel",
 						"STATUS": "Status",
@@ -1093,8 +1086,7 @@
 						"DATE": "Dato",
 						"HOST": "Behandler vært",
 						"TYPE": "Tjenestetype",
-						"TECHNICAL_DETAILS": "Tekniske oplysninger",
-						"OPERATION": "Operation the error occured in"
+						"TECHNICAL_DETAILS": "Tekniske oplysninger"
 					}
 				}
 			}
@@ -1216,10 +1208,7 @@
 						"ADDITIONAL_ACTIONS": "Yderligere handlinger",
 						"ACTION": "Handlinger",
 						"NEW": "Ny politik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
-						"USERS": "Users who are authorized for the series",
-						"NEW_USER": "New user",
+						"DETAILS": "Details",
 						"REPLACE_EVENT_ACLS": "Opdatér begivenhedsrettigheder",
 						"REPLACE_EVENT_ACLS_HINT": "Sikrer, at alle begivenhederne i denne serie har disse aktive rettighedeer",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1478,11 +1467,8 @@
 						"ADDITIONAL_ACTIONS": "Yderligere handlinger",
 						"ACTION": "Handlinger",
 						"NEW": "Ny politik",
-						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
-						"DESCRIPTION": "Vælg et præopsat sæt af politikker eller tilføj tilpassede politikker nedenfor",
-						"USER": "User",
-						"USERS": "Users who are authorized for the access policy",
-						"NEW_USER": "New user"
+						"DETAILS": "Details",
+						"DESCRIPTION": "Vælg et præopsat sæt af politikker eller tilføj tilpassede politikker nedenfor"
 					},
 					"ROLES": {
 						"LABEL": "Vælg en rolle",
