@@ -18,9 +18,8 @@ import {
 	checkForEventsDeleteSeriesModal,
 	deleteSeries,
 } from "../../../slices/seriesSlice";
-import { IconButton } from "../../shared/IconButton";
-
 import { ModalHandle } from "../../shared/modals/Modal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the action cells of series in the table view
@@ -67,9 +66,9 @@ const SeriesActionsCell = ({
 	return (
 		<>
 			{/* series details */}
-			<IconButton
-				callback={() => showSeriesDetailsModal()}
-				iconClassname={"more-series"}
+			<ButtonLikeAnchor
+				onClick={() => showSeriesDetailsModal()}
+				className={"more-series"}
 				editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
 				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
 			/>
@@ -81,9 +80,9 @@ const SeriesActionsCell = ({
 			/>
 
 			{/* delete series */}
-			<IconButton
-				callback={() => showDeleteConfirmation()}
-				iconClassname={"remove"}
+			<ButtonLikeAnchor
+				onClick={() => showDeleteConfirmation()}
+				className={"remove"}
 				editAccessRole={"ROLE_UI_SERIES_DELETE"}
 				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"}
 			/>

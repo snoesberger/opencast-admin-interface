@@ -3,9 +3,9 @@ import { useAppDispatch } from "../../../store";
 import { Recording, deleteRecording } from "../../../slices/recordingSlice";
 import { fetchRecordingDetails } from "../../../slices/recordingDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
-import { IconButton } from "../../shared/IconButton";
 import { ModalHandle } from "../../shared/modals/Modal";
 import RecordingDetailsModal from "./modal/RecordingDetailsModal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the action cells of recordings in the table view
@@ -32,9 +32,9 @@ const RecordingsActionCell = ({
 	return (
 		<>
 			{/* view details location/recording */}
-			<IconButton
-				callback={() => showRecordingDetails()}
-				iconClassname={"more"}
+			<ButtonLikeAnchor
+				onClick={() => showRecordingDetails()}
+				className={"more"}
 				editAccessRole={"ROLE_UI_LOCATIONS_DETAILS_VIEW"}
 				tooltipText={"RECORDINGS.RECORDINGS.TABLE.TOOLTIP.DETAILS"}
 			/>

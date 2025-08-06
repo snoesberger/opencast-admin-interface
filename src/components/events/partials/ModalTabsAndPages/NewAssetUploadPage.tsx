@@ -89,7 +89,7 @@ const NewAssetUploadPage = <T extends RequiredFormProps>({
 											{/* Button to remove asset*/}
 											<td className="fit">
 												<ButtonLikeAnchor
-													extraClassName="remove"
+													className="remove"
 													onClick={() => {
 														formik.setFieldValue(asset.id, null);
 														(document.getElementById(asset.id) as HTMLInputElement).value = "";
