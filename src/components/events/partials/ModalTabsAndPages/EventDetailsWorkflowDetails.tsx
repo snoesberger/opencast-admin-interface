@@ -386,7 +386,7 @@ const OperationsPreview = ({
 							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK") /* Operations */}
 						</span>
 						<ButtonLikeAnchor
-							extraClassName="details-link"
+							className="details-link"
 							onClick={() => openSubTab("workflow-operations")}
 						>
 							{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS") /* Details */}

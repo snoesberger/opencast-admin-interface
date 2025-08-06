@@ -5,8 +5,8 @@ import { fetchAclDetails } from "../../../slices/aclDetailsSlice";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
 import AclDetails from "./modal/AclDetails";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
-import { IconButton } from "../../shared/IconButton";
 import { useTranslation } from "react-i18next";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the action cells of acls in the table view
@@ -38,9 +38,9 @@ const AclsActionsCell = ({
 	return (
 		<>
 			{/* edit/show ACL details */}
-			<IconButton
-				callback={showAclDetails}
-				iconClassname={"more"}
+			<ButtonLikeAnchor
+				onClick={showAclDetails}
+				className={"more"}
 				editAccessRole={"ROLE_UI_ACLS_EDIT"}
 				tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DETAILS"}
 			/>

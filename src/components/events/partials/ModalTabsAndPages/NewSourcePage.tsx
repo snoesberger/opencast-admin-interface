@@ -294,7 +294,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											<td className="fit">
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
-													extraClassName="remove"
+													className="remove"
 													onClick={() => {
 														formik.setFieldValue(
 															`uploadAssetsTrack.${key}.file`,

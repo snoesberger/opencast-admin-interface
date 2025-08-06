@@ -68,11 +68,7 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(
 
     return ReactDOM.createPortal(
       isOpen && (
-        <FocusTrap
-          focusTrapOptions={{
-            escapeDeactivates: false,
-          }} // Prevent escape from deactivating the trap
-        >
+        <FocusTrap>
           <div>
             <div className="modal-animation modal-overlay" />
             <section
@@ -81,7 +77,7 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(
             >
               <header>
                 <ButtonLikeAnchor
-                  extraClassName="fa fa-times close-modal"
+                  className="fa fa-times close-modal"
                   onClick={close}
                   tabIndex={0}
                 />
