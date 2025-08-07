@@ -148,7 +148,7 @@ const Table = ({
 		}
 	};
 
-	const showEditTableViewModal = async () => {
+	const showEditTableViewModal = () => {
 		editTableViewModalRef.current?.open();
 	};
 
