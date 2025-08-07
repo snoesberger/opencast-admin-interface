@@ -168,7 +168,7 @@ const EventDetailsAssetsTab = ({
 														user,
 													) && (
 														<ButtonLikeAnchor
-															extraClassName="details-link"
+															className="details-link"
 															onClick={() =>
 																openSubTab("add-asset")
 															}
@@ -192,7 +192,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.attachments > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-attachments")
 														}
@@ -218,7 +218,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.catalogs > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-catalogs")
 														}
@@ -244,7 +244,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.media > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() => openSubTab("asset-media")}
 													>
 														{
@@ -268,7 +268,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.publications > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-publications")
 														}

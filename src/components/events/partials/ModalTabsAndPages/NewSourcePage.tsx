@@ -262,7 +262,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 							{/* File upload button for each upload asset */}
 							<FieldArray
 								name="uploadAssetsTrack"
-								render={arrayHelpers => (
+								render={_arrayHelpers => (
 									formik.values.uploadAssetsTrack &&
 									formik.values.uploadAssetsTrack.length > 0 &&
 									formik.values.uploadAssetsTrack.map((asset, key) => (
@@ -294,7 +294,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											<td className="fit">
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
-													extraClassName="remove"
+													className="remove"
 													onClick={() => {
 														formik.setFieldValue(
 															`uploadAssetsTrack.${key}.file`,

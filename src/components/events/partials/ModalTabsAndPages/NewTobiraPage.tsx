@@ -224,7 +224,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 								{formik.values.breadcrumbs.map((breadcrumb, key) => (
 									<ButtonLikeAnchor
 										key={key}
-										extraClassName="breadcrumb-link"
+										className="breadcrumb-link"
 										onClick={() => back(key)}
 									>
 										{breadcrumb.segment === ""
@@ -278,7 +278,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 													onChange={e => setPage(key, e, "title")}
 												/>
 												: <ButtonLikeAnchor
-													extraClassName={
+													className={
 														(!page.blocks?.length
 															? "tobira-selectable"
 															: "tobira-button-disabled"
@@ -308,7 +308,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 										</td>
 										<td>
 											{((!page.new || isValid) && page.title) && <ButtonLikeAnchor
-												extraClassName="details-link"
+												className="details-link"
 												onClick={() => goto(page)}
 											>
 												{t("EVENTS.SERIES.NEW.TOBIRA.SUBPAGES")}
@@ -326,7 +326,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 													select(undefined);
 												}}
 												title={t("EVENTS.SERIES.NEW.TOBIRA.CANCEL")}
-												extraClassName="remove"
+												className="remove"
 											/>}
 										</td>}
 									</tr>)}

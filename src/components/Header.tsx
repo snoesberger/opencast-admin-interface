@@ -25,6 +25,7 @@ import { IconContext } from "react-icons";
 import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
 import { ModalHandle } from "./shared/modals/Modal";
 import { broadcastLogout } from "../utils/broadcastSync";
+import BaseButton from "./shared/BaseButton";
 
 // References for detecting a click outside of the container of the dropdown menus
 const containerLang = React.createRef<HTMLDivElement>();
@@ -144,11 +145,11 @@ const Header = () => {
 					{/* Select language */}
 					<div className="nav-dd lang-dd" id="lang-dd" ref={containerLang}>
 						<Tooltip active={!displayMenuLang} title={t("LANGUAGE")}>
-							<button className="lang" onClick={() => setMenuLang(!displayMenuLang)}>
+							<BaseButton className="lang" onClick={() => setMenuLang(!displayMenuLang)}>
 								<IconContext.Provider value={{ style: { fontSize: "20px" } }}>
 									<HiTranslate />
 								</IconContext.Provider>
-							</button>
+							</BaseButton>
 						</Tooltip>
 						{displayMenuLang && <MenuLang handleChangeLanguage={handleChangeLanguage}/>}
 					</div>
@@ -192,14 +193,14 @@ const Header = () => {
 							ref={containerNotify}
 						>
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
-								<button onClick={() => setMenuNotify(!displayMenuNotify)}>
+								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)}>
 									<i className="fa fa-bell" aria-hidden="true" />
 									{errorCounter !== 0 && (
 										<span id="error-count" className="badge">
 											{errorCounter}
 										</span>
 									)}
-								</button>
+								</BaseButton>
 							</Tooltip>
 							{/* Click on the bell icon, a dropdown menu with all services in serviceList and their status opens */}
 							{displayMenuNotify && (
@@ -227,11 +228,11 @@ const Header = () => {
 								ref={containerHelp}
 							>
 								<Tooltip active={!displayMenuHelp} title={t("HELP.HELP")}>
-									<button
+									<BaseButton
 										onClick={() => setMenuHelp(!displayMenuHelp)}
 									>
 										<span className="fa fa-question-circle"></span>
-									</button>
+									</BaseButton>
 								</Tooltip>
 								{/* Click on the help icon, a dropdown menu with documentation, REST-docs and shortcuts (if available) opens */}
 								{displayMenuHelp && (
@@ -248,13 +249,13 @@ const Header = () => {
 
 					{/* Username */}
 					<div className="nav-dd user-dd" id="user-dd" ref={containerUser}>
-						<button
+						<BaseButton
 							className="h-nav"
 							onClick={() => setMenuUser(!displayMenuUser)}
 						>
 							{user.user.name || user.user.username}
 							<span className="dropdown-icon" />
-						</button>
+						</BaseButton>
 						{/* Click on username, a dropdown menu with the option to logout opens */}
 						{displayMenuUser && <MenuUser />}
 					</div>
@@ -281,7 +282,7 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 			{languages.map((language, key) => (
 				<li key={key}>
 					<ButtonLikeAnchor
-						extraClassName={(i18n.language === language.code ? "selected" : "")}
+						className={(i18n.language === language.code ? "selected" : "")}
 						onClick={() => handleChangeLanguage(language.code)}
 					>
 						{language.long}
@@ -312,8 +313,7 @@ const MenuNotify = ({
 			{healthStatus.map((service, key) => (
 				<li key={key}>
 					{!!service.status && (
-						<button
-							className="button-like-anchor"
+						<ButtonLikeAnchor
 							onClick={() => redirectToServices()}
 						>
 							<span> {service.name} </span>
@@ -326,7 +326,7 @@ const MenuNotify = ({
 									{service.status}
 								</span>
 							)}
-						</button>
+						</ButtonLikeAnchor>
 					)}
 				</li>
 			))}

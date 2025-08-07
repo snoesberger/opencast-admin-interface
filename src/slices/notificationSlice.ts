@@ -11,7 +11,6 @@ import {
 	ADMIN_NOTIFICATION_DURATION_WARNING,
 } from "../configs/generalConfig";
 import { getLastAddedNotification } from "../selectors/notificationSelector";
-import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { ParseKeys } from "i18next";
 import { AppThunk } from "../store";
 
