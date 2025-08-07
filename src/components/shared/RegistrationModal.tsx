@@ -76,7 +76,7 @@ const RegistrationModalContent = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const onClickContinue = async () => {
+	const onClickContinue = () => {
 		// if state is deleteSubmit then delete infos about adaptor else show next state
 		if (state === "deleteSubmit") {
 			resetRegistrationData();
