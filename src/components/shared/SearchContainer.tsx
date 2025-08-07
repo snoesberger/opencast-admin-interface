@@ -42,7 +42,7 @@ const SearchContainer = ({
 	return (
 		<div className={containerClassName} style={style}>
 			{value && <ButtonLikeAnchor
-				extraClassName={buttonClassName}
+				className={buttonClassName}
 				onClick={() => clearSearchField()}
 				disabled={isDisabled}
 			/>}

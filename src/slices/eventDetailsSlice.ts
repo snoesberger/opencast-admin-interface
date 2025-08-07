@@ -2527,7 +2527,7 @@ const eventDetailsSlice = createSlice({
 				state.errorStatisticsValue = action.error;
 				console.error(action.error);
 			})
-			.addCase(fetchHasActiveTransactions.rejected, (state, action) => {
+			.addCase(fetchHasActiveTransactions.rejected, (_state, action) => {
 				console.error(action.error);
 			})
 			.addCase(deleteComment.rejected, (_state, action) => {

@@ -37,7 +37,7 @@ const DetailsModal = ({
 			<section className="modal wizard modal-animation" id="details-modal">
 				<header>
 					<ButtonLikeAnchor
-						extraClassName="fa fa-times close-modal"
+						className="fa fa-times close-modal"
 						onClick={() => close()}
 					/>
 					<h2>

@@ -331,7 +331,7 @@ const Table = ({
 				{/* Pagination and navigation trough pages */}
 				<div className="pagination">
 					<ButtonLikeAnchor
-						extraClassName={cn("prev", { disabled: !isNavigatePrevious() })}
+						className={cn("prev", { disabled: !isNavigatePrevious() })}
 						aria-disabled={!isNavigatePrevious()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset - 1));
@@ -343,7 +343,7 @@ const Table = ({
 					{directAccessible.map((page, key) =>
 						page.active ? (
 							<ButtonLikeAnchor key={key}
-								extraClassName="active"
+								className="active"
 								aria-label={t("TABLE_CURRENT", { pageNumber: page.label })}
 							>
 								{page.label}
@@ -362,7 +362,7 @@ const Table = ({
 					)}
 
 					<ButtonLikeAnchor
-						extraClassName={cn("next", { disabled: !isNavigateNext() })}
+						className={cn("next", { disabled: !isNavigateNext() })}
 						aria-disabled={!isNavigateNext()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset + 1));

@@ -571,6 +571,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																		}
 																		skipTranslate
 																		optionHeight={35}
+																		customCSS={{ width: "100%", optionPaddingTop: 5 }}
 																	/>
 																) : (
 																	<p>{policy.role}</p>
@@ -684,7 +685,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																			onClick={() =>
 																				arrayHelpers.remove(formik.values.policies.findIndex(p => p === policy))
 																			}
-																			extraClassName="remove"
+																			className="remove"
 																		/>
 																	)}
 																</td>

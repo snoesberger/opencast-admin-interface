@@ -180,7 +180,7 @@ export const Operation = ({
 			{/* link to 'Operation Details'  sub-Tab */}
 			<td>
 				<ButtonLikeAnchor
-					extraClassName="details-link"
+					className="details-link"
 					onClick={() =>
 						openSubTab("workflow-operation-details", operationId)
 					}

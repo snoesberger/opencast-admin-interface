@@ -4,7 +4,6 @@ import axios from "axios";
 import { getURLParams } from "../utils/resourceUtils";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
-import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of servers

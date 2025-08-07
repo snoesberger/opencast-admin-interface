@@ -26,7 +26,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import EventDetailsWorkflowErrors from "./EventDetailsWorkflowErrors";
-import { Operation, WorfklowOperationsTableBody } from "./EventDetailsWorkflowOperations";
+import { WorfklowOperationsTableBody } from "./EventDetailsWorkflowOperations";
 
 /**
  * This component manages the workflow details for the workflows tab of the event details modal
@@ -386,7 +386,7 @@ const OperationsPreview = ({
 							{t("EVENTS.EVENTS.DETAILS.WORKFLOW_OPERATIONS.DETAILS_LINK") /* Operations */}
 						</span>
 						<ButtonLikeAnchor
-							extraClassName="details-link"
+							className="details-link"
 							onClick={() => openSubTab("workflow-operations")}
 						>
 							{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS") /* Details */}
