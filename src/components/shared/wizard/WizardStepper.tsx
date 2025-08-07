@@ -9,7 +9,6 @@ import {
 import CustomStepIcon from "./CustomStepIcon";
 import { checkAcls } from "../../../slices/aclSlice";
 import { useAppDispatch } from "../../../store";
-import { FormikProps } from "formik/dist/types";
 import { ParseKeys } from "i18next";
 import { TransformedAcl } from "../../../slices/aclDetailsSlice";
 
