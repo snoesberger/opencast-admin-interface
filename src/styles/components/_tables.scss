@@ -1,6 +1,7 @@
 @use "sass:color";
 @use "../base/variables";
 @use "../mixins/mixins-config";
+@use "../mixins/button";
 
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
@@ -96,22 +97,6 @@
         font-weight: 600;
         color: variables.$medium-prim-color;
         text-shadow: 0px 1px 0px #fff;
-
-
-        // Sort icon
-        span .sort {
-            float: right;
-            margin: 12px 0 0 5px;
-            @include mixins-config.build-icon(auto, auto, tbl-sort, 8px, 13px);
-
-            &.asc  {
-                @include mixins-config.build-icon(auto, auto, tbl-sort-up, 8px, 13px);
-            }
-
-            &.desc {
-                @include mixins-config.build-icon(auto, auto, tbl-sort-down, 8px, 13px);
-            }
-        }
 
         > .info {
             padding-left: 5px;
@@ -227,39 +212,40 @@
             color: #1d5888;
             padding: unset;
 
+            &.action-cell-button {
+                width: 17px;
+                height: 17px;
+
+                > svg {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
             &.remove {
-                @include mixins-config.build-icon(auto, auto, remove-icon, 17px, 17px);
-            }
-
-            &.stop {
-                @include mixins-config.build-icon(auto, auto, stop-icon, 17px, 17px);
-            }
-
-            &.audio {
-                @include mixins-config.build-icon(auto, auto, audio-icon, 18px, 16px);
-                margin-right: 9px;
-            }
-
-            &.more {
-                @include mixins-config.build-icon(auto, auto, more-icon, 19px, 15px);
+                color: variables.$red;
             }
 
             &.more-series {
-                @include mixins-config.build-icon(auto, auto, more-series-icon, 19px, 15px);
+                color: variables.$green;
             }
 
             &.cut {
                 .badge {
                   position: relative;
                   margin-right: -9px;
-                  left: -8px;
-                  bottom: 8px;
+                  left: -7px;
+                  bottom: 10px;
                   width: 6px;
                   height: 6px;
                   display: inline-block;
                   border-radius:100%;
                   background-color: variables.$red;
                 }
+            }
+
+            &.stop {
+                color: variables.$grey;
             }
 
             &.edit {

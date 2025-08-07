@@ -215,32 +215,6 @@
                 margin-right: 0;
              }
         }
-
-        .export {
-
-            // Overide DD container
-            line-height: 0;
-            padding: 0;
-            text-shadow: none;
-            color: #fff;
-
-            // Overide size
-            width: 115px;
-            height: 39px;
-
-            > i {
-                vertical-align: middle;
-
-                &:first-child {
-                    @include mixins-config.build-icon(auto, auto, export, 19px, 16px);
-                }
-            }
-        }
-
-        .upload > i {
-            vertical-align: middle;
-            @include mixins-config.build-icon(auto, auto, upload, 19px, 16px);
-        }
     }
 
     // Menu top

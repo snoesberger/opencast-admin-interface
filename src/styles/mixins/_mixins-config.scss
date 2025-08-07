@@ -27,17 +27,6 @@
 
 // Temporary Inline Files
 
-// Build icons mixin
-@mixin build-icon($top, $left, $image, $width, $height) {
-    top: $top;
-    left: $left;
-    width: $width;
-    height: $height;
-    background-image: url("#{variables.$img-path}/#{$image}.png");
-    background-size: $width $height;
-}
-
-
 // Mixin for removing the object padding
 // Easier to add this than add padding to every element
 @mixin negate-padding($col-width) {
