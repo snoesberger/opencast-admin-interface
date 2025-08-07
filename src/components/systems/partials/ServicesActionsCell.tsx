@@ -21,7 +21,7 @@ const ServicesActionCell = ({
 	};
 
 	return (
-		row.status === "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
+		row.status !== "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
 			<ButtonLikeAnchor
 				onClick={() => onClickRestart()}
 				className={"sanitize"}

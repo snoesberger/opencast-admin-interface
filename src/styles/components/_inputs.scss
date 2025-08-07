@@ -64,24 +64,6 @@ textarea {
         color: variables.$red;
     }
 
-    // Input icons
-    // ----------------------------------------
-
-    &#email {
-       background-image: url("#{variables.$img-path}/user-input-icon.png");
-       background-size: 23px 20px;
-       background-repeat: no-repeat;
-       background-position: 14px center;
-    }
-
-    &#password {
-        background-image: url("#{variables.$img-path}/key-icon.png");
-        background-size: 16px 20px;
-        background-repeat: no-repeat;
-        background-position: 19px center;
-    }
-
-
     &.small {
         padding: 15px;
         height: 30px;

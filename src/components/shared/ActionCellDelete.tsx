@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { LuCircleX } from "react-icons/lu";
 
 export const ActionCellDelete = <T, >({
 	editAccessRole,
@@ -34,10 +35,12 @@ export const ActionCellDelete = <T, >({
 			{/* delete button */}
 			<ButtonLikeAnchor
 				onClick={() => deleteConfirmationModalRef.current?.open()}
-				className={"remove"}
+				className={"action-cell-button remove"}
 				editAccessRole={editAccessRole}
 				tooltipText={tooltipText}
-			/>
+			>
+				<LuCircleX />
+			</ButtonLikeAnchor>
 
 			{/* Confirmation modal for deleting */}
 			<ConfirmModal

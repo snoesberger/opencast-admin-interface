@@ -18,7 +18,7 @@ import { openModal } from "../../../slices/eventDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
-import { LuFolderOpen, LuLink, LuMessageCircle, LuScissors, LuTriangleAlert } from "react-icons/lu";
+import { LuFileSymlink, LuFileText, LuFolderOpen, LuLink, LuMessageCircle, LuScissors, LuTriangleAlert } from "react-icons/lu";
 
 /**
  * This component renders the action cells of events in the table view
@@ -90,19 +90,23 @@ const EventActionCell = ({
 			{/* Open event details */}
 			<ButtonLikeAnchor
 				onClick={onClickEventDetails}
-				className={"more"}
+				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DETAILS"}
-			/>
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
 			{/* If event belongs to a series then the corresponding series details can be opened */}
 			{!!row.series && (
 				<ButtonLikeAnchor
 					onClick={onClickSeriesDetails}
-					className={"more-series"}
+					className={"action-cell-button more-series"}
 					editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
 					tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
-				/>
+				>
+					<LuFileSymlink />
+				</ButtonLikeAnchor>
 			)}
 
 			{/* Delete an event */}
@@ -126,14 +130,10 @@ const EventActionCell = ({
 				>
 					<a
 						href={`/editor-ui/index.html?id=${row.id}`}
-						className="cut"
+						className="action-cell-button cut"
 						target="_blank" rel="noreferrer"
-						style={{ height: "17px", width: "17px" }}
 					>
-						<LuScissors style={{
-							height: "100%",
-							width: "100%",
-						}}/>
+						<LuScissors />
 						{row.needs_cutting && <span id="badge" className="badge" />}
 					</a>
 				</Tooltip>
@@ -144,11 +144,9 @@ const EventActionCell = ({
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
-					style={{ height: "17px", width: "17px" }}
+					className={"action-cell-button"}
 				>
 					<LuMessageCircle style={{
-						height: "100%",
-						width: "100%",
 						color: "#1d5888",
 					}}/>
 				</ButtonLikeAnchor>
@@ -159,11 +157,9 @@ const EventActionCell = ({
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
-					style={{ height: "17px", width: "17px" }}
+					className={"action-cell-button"}
 				>
 					<LuMessageCircle style={{
-						height: "100%",
-						width: "100%",
 						color: "#1d5888",
 					}}/>
 				</ButtonLikeAnchor>
@@ -176,11 +172,9 @@ const EventActionCell = ({
 					onClick={() => onClickWorkflow()}
 					editAccessRole={"ROLE_UI_EVENTS_DETAILS_WORKFLOWS_EDIT"}
 					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.PAUSED_WORKFLOW"}
-					style={{ height: "17px", width: "17px" }}
+					className={"action-cell-button"}
 				>
 					<LuTriangleAlert style={{
-						height: "100%",
-						width: "100%",
 						color: "#444",
 					}}/>
 				</ButtonLikeAnchor>
@@ -191,11 +185,9 @@ const EventActionCell = ({
 				onClick={() => onClickAssets()}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_ASSETS_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.ASSETS"}
-				style={{ height: "17px", width: "17px" }}
+				className={"action-cell-button"}
 				>
 					<LuFolderOpen style={{
-						height: "100%",
-						width: "100%",
 						color: "#444"
 					}}/>
 				</ButtonLikeAnchor>
@@ -205,11 +197,9 @@ const EventActionCell = ({
 				onClick={() => showEmbeddingCodeModal()}
 				editAccessRole={"ROLE_UI_EVENTS_EMBEDDING_CODE_VIEW"}
 				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.EMBEDDING_CODE"}
-				style={{ height: "17px", width: "17px" }}
+				className={"action-cell-button"}
 				>
 					<LuLink style={{
-						height: "100%",
-						width: "100%",
 						color: "#444"
 					}}/>
 				</ButtonLikeAnchor>

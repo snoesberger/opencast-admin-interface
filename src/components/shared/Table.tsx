@@ -39,7 +39,7 @@ import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
-import { LuChevronDown, LuChevronLeft, LuChevronRight, LuLoaderCircle } from "react-icons/lu";
+import { LuChevronDown, LuChevronLeft, LuChevronRight, LuChevronUp, LuLoaderCircle } from "react-icons/lu";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
@@ -219,19 +219,20 @@ const Table = ({
 								>
 									<span>
 										<span>{t(column.label)}</span>
-										<i style={{
-											float: "right",
-											margin: "12px 0 0 5px",
-											top: "auto",
-											left: "auto",
-											width: 8,
-											height: 13,
-											backgroundImage: `url(${column.name === sortBy
-												? reverse === "ASC"
-													? sortUpIcon
-													: sortDownIcon
-												: sortIcon})`,
-										}} />
+										<div style={{
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "center",
+										}}>
+											<LuChevronUp style={{
+												position: "relative",
+												top: "3px",
+												color: reverse === "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b"}}/>
+											<LuChevronDown style={{
+												position: "relative",
+												top: "-3px",
+												color: reverse !== "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b"}}/>
+										</div>
 									</span>
 								</th>
 							) : (
