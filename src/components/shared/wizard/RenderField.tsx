@@ -366,7 +366,7 @@ const EditableSingleSelectSeries = ({
 
 	// Fetch collection
 	const fetchOptions = async (inputValue: string) => {
-		const res = await axios.get<{ [key: string]: string }>(`/admin-ng/resources/SERIES.WRITE_ONLY.json?filter=textFilter:*${inputValue}*`);
+		const res = await axios.get<{ [key: string]: string }>(`/admin-ng/resources/SERIES.WRITE_ONLY.json?filter=textFilter:${inputValue}`);
 		const data = res.data;
 		return transformListProvider(data);
 	};
