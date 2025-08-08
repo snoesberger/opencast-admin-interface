@@ -219,7 +219,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 							onClick={() => openSubTab("edit-path")}
 							tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.MOUNT_SERIES"
 						>
-							<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px"}} />
+							<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }} />
 						</ButtonLikeAnchor>}
 					</td>
 				</tr>}

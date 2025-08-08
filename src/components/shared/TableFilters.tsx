@@ -261,9 +261,9 @@ const TableFilters = ({
 							<ButtonLikeAnchor
 								onClick={() => setFilterSelector(!showFilterSelector)}
 								tooltipText="TABLE_FILTERS.ADD"
-								style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+								style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
 							>
-								<HiFunnel style={{ fontSize: "13px", color: "#666"}}/>
+								<HiFunnel style={{ fontSize: "13px", color: "#666" }}/>
 							</ButtonLikeAnchor>
 
 							{/* show if icon is clicked*/}
@@ -347,7 +347,7 @@ const TableFilters = ({
 										<ButtonLikeAnchor
 											onClick={() => removeFilter(filter)}
 											tooltipText="TABLE_FILTERS.REMOVE"
-											style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+											style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
 										>
 											<LuX />
 										</ButtonLikeAnchor>
@@ -361,7 +361,7 @@ const TableFilters = ({
 							<ButtonLikeAnchor
 								onClick={removeFilters}
 								tooltipText="TABLE_FILTERS.CLEAR"
-								style={{display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0"}}
+								style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0" }}
 							>
 								<LuX style={{ color: "#666" }}/>
 							</ButtonLikeAnchor>
@@ -370,7 +370,7 @@ const TableFilters = ({
 						<ButtonLikeAnchor
 							onClick={() => setFilterSettings(!showFilterSettings)}
 							tooltipText="TABLE_FILTERS.PROFILES.FILTERS_HEADER"
-							style={{display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0"}}
+							style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0" }}
 						>
 							<LuSettings className="settings" style={{ color: "#666" }}/>
 						</ButtonLikeAnchor>

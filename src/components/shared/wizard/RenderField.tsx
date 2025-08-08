@@ -132,7 +132,7 @@ const RenderField = ({
 						style={{ float: "right", cursor: "pointer" }}
 					/>
 				)}
-				{!focused && <LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px"}}/>}
+				{!focused && <LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }}/>}
 			</div>
 		</div>
 	);
