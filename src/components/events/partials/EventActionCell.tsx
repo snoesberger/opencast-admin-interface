@@ -188,7 +188,7 @@ const EventActionCell = ({
 				className={"action-cell-button"}
 				>
 					<LuFolderOpen style={{
-						color: "#444"
+						color: "#444",
 					}}/>
 				</ButtonLikeAnchor>
 
@@ -200,7 +200,7 @@ const EventActionCell = ({
 				className={"action-cell-button"}
 				>
 					<LuLink style={{
-						color: "#444"
+						color: "#444",
 					}}/>
 				</ButtonLikeAnchor>
 

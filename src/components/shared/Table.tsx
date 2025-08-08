@@ -227,11 +227,11 @@ const Table = ({
 											<LuChevronUp style={{
 												position: "relative",
 												top: "3px",
-												color: reverse === "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b"}}/>
+												color: reverse === "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
 											<LuChevronDown style={{
 												position: "relative",
 												top: "-3px",
-												color: reverse !== "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b"}}/>
+												color: reverse !== "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
 										</div>
 									</span>
 								</th>
