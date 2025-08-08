@@ -35,7 +35,6 @@ import ModalContent from "../../../shared/modals/ModalContent";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import { HiHandRaised } from "react-icons/hi2";
 import { LuChevronRight, LuCircleStop, LuRefreshCw } from "react-icons/lu";
-import { LuChevronRight, LuRefreshCw } from "react-icons/lu";
 
 type InitialValues = {
 	workflowDefinition: string;
