@@ -36,7 +36,6 @@ $disable-warnings: true !default; // disables deprecation warnings
 
 // Mixins
 @use "mixins/_mixins-config";
-@use "mixins/mixins-bourbon";
 
 // Components
 @use "components/components-config";
@@ -648,7 +647,6 @@ tr.info {
 }
 
 .video-player {
-  @include mixins-bourbon.clearfix;
   width: 100%;
   margin: 0 auto;
   background: #1e1e1e;

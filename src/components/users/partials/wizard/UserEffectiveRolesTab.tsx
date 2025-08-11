@@ -39,7 +39,7 @@ const UserEffectiveRolesTab = <T extends RequiredFormProps>({
 
 	return (
 		<ModalContent>
-			<div className="form-container multi-select-container">
+			<div className="form-container effective-roles-container">
 				<label>{t("USERS.USERS.DETAILS.TABS.EFFECTIVEROLES")}</label>
 				<p>{t("USERS.USERS.DETAILS.DESCRIPTION.EFFECTIVEROLES")}</p>
 
