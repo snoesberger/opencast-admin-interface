@@ -98,6 +98,7 @@ body {
         .filters-container {
             float: right;
             position: relative;
+            display: flex;
 
             // Refactor if ">" selector is not there the filters break
             > span {

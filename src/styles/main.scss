@@ -22,9 +22,6 @@
 // Frameworks
 // ----------------------------------------
 
-// Bourbon Settings
-$disable-warnings: true !default; // disables deprecation warnings
-
 // Imports
 @use "sass:meta";
 
@@ -59,46 +56,7 @@ $disable-warnings: true !default; // disables deprecation warnings
 // Third Party Imports
 // ----------------------------------------
 
-// Import custome
-#new-theme-modal, #theme-details {
-
-  [data-modal-tab-content="general"] {
-
-    .input-block {
-      margin-bottom: 15px;
-    }
-
-    .drop-down-container,
-    input[type="text"],
-    textarea {
-      width: 360px;
-      margin-bottom: 0;
-    }
-
-    input[type="checkbox"]{
-      margin: 0px; // reset the top margin from form-container
-      width: 20px; // reset the width from form-container
-    }
-
-    .text-variables {
-      float: right;
-      width: 190px;
-    }
-  }
-}
-
 @include meta.load-css("vendor/chosen");
-
-.filters-container {
-  display: flex;
-
-  div.chosen-container {
-    width: 230px !important;
-    ul.chosen-choices {
-      line-height: 34px;
-    }
-  }
-}
 
 // We rely on border-box to center elements and cut down padding
 // This had to be added during the bourbon upgrade from 4 to 7
@@ -113,23 +71,6 @@ html {
 a {
   cursor: pointer;
 }
-
-// Mark mockups as stubs
-.main-view.stub, div.full-col > div.stub {
-  margin-right: 20px;
-  -webkit-background-size: 50px 50px;
-  -moz-background-size: 50px 50px;
-  background-size: 50px 50px;
-
-  background-color: rgba(236, 233, 207, 0.62);
-  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .2)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.75, rgba(255, 255, 255, .2)), color-stop(.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-  background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-}
-
 
 .modal {
   top: 30px;
@@ -327,89 +268,12 @@ textarea.editable {
   height: auto;
 }
 
-.editable-select {
-  margin-top: -26px;
-}
-
 button.red {
   @include button.btn(red);
 }
 
 button.green {
   @include button.btn(green-dark-bg);
-}
-
-div[data-modal-tab-content="metadata"], div[data-modal-tab-content="extended-metadata"] {
-  & button.save {
-    float: right;
-  }
-  & td:first-child {
-    width: 200px;
-    max-width: 200px;
-  }
-}
-
-.modal .obj.comments {
-  .add-comment .chosen-container {
-    float: left;
-  }
-  .comment-container {
-    height: 300px;
-    .comment .resolve {
-      cursor: default;
-    }
-  }
-  .comment.active {
-    background: #BDDAF1;
-  }
-  .add-comment {
-    button {
-      float: right;
-    }
-
-    label, input[type=checkbox] {
-      float: left;
-    }
-
-    label, input[type=checkbox] {
-      margin-top: 10px;
-      display: inline-block;
-      margin: 4px;
-      line-height: 2em;
-    }
-    label {
-      margin-right: 20px;
-    }
-    input[type=text] {
-      padding-left: 20px;
-      color: #919FA5;
-    }
-    button.cancel {
-      @include button.btn(grey);
-      height: 40px;
-    }
-    button.save{
-      margin-left: 5px;
-    }
-  }
-}
-// Chosen CSS fix for custom height select fields
-.chosen-container-multi .chosen-choices li.search-field input {
-  height: auto !important;
-}
-
-// Visual search replacements
-.filters-container > input[type="search"] {
-  float: left;
-  margin-right: 0;
-}
-
-input[type="text"].small-search {
-  height: 100%;
-  width: 120px;
-  margin: 0;
-  padding: 1px;
-  text-align: center;
 }
 
 div.table-filter {
@@ -471,10 +335,6 @@ div.table-filter {
     }
   }
 
-  .fa {
-    font-size: 13px;
-  }
-
   i {
     color: variables.$global-text-color;
     cursor: pointer;
@@ -521,32 +381,12 @@ input.disabled, select.disabled {
   }
 }
 
-.quick-actions {
-  p {
-    padding: 10px 0;
-  }
-  select {
-    width: 200px;
-  }
-}
-
 // Use HTML5 input field for file upload
 .file-upload > input[type="file"] {
   width: 100%;
   visibility: visible !important;
   text-align: left;
 }
-
-// Notification alias error to danger
-.alert {
-  &.error {
-    @include alerts.alert-variant(variables.$state-danger-bg, variables.$state-danger-border, variables.$state-danger-text);
-  }
-  & .autonomous {
-    padding-right: 20px; /* fixes a design bug */
-  }
-}
-
 
 /*
  * ---------------------------------------------
@@ -557,44 +397,7 @@ input.disabled, select.disabled {
   display: inline-flex;
 }
 
-// pagination of tables
-main.main-view {
-  #tbl-view-controls-container {
-
-    .pagination {
-
-      button {
-        padding: 7px 10px;
-      }
-
-      button.wide {
-        width: inline;
-      }
-
-      button:hover:not(.active) {
-        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fefefe), to(#f0f0f0));
-        background: -moz-linear-gradient(0% 0% 270deg, #fefefe, #f0f0f0);
-      }
-
-      .active {
-        border: 1px solid #616161;
-      }
-    }
-  }
-}
-
 table.main-tbl {
-  &.vertical-headers {
-    tr > td:first-of-type {
-      white-space: nowrap;
-    }
-  }
-
-  /* we don't want to let the angular animation show up*/
-  .ng-hide-add, .ng-hide-remove {
-    display: none !important;
-  }
-
   th {
     span {
       display: flex;
@@ -624,26 +427,6 @@ table.main-tbl {
 
     } // fa-check
   }
-}
-
-//we introduced a separate layer in file-upload to support directive
-.modal .obj .obj-container > div.file-upload > p {
-  font-size: 11px;
-  color: #999999;
-  line-height: 18px;
-  margin-bottom: 15px;
-}
-
-.hidden {
-  visibility: hidden;
-}
-
-tr.error {
-  background: variables.$state-warning-bg !important;
-}
-
-tr.info {
-  background: variables.$state-info-bg !important;
 }
 
 .video-player {
