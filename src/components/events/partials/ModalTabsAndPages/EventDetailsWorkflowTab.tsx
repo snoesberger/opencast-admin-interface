@@ -136,7 +136,6 @@ const EventDetailsWorkflowTab = ({
 
 	return (
 		<ModalContent
-			data-modal-tab-content="workflows"
 			modalContentChildren={
 				/* Hierarchy navigation */
 				<EventDetailsTabHierarchyNavigation

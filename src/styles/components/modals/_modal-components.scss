@@ -36,7 +36,7 @@
 
         .comment-container {
             padding: variables.$modal-container-padding;
-            height: 400px;
+            height: 300px;
             overflow-y: auto;
 
             .comment {
@@ -131,10 +131,15 @@
                 .resolve {
                     color: variables.$light-prim-color;
                     margin-right: 10px;
+                    cursor: default;
 
                     &.resolved {
                         color: variables.$green;
                     }
+                }
+
+                .active {
+                    background: #BDDAF1;
                 }
             }
         }

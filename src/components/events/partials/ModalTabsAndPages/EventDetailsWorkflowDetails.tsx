@@ -105,7 +105,7 @@ const EventDetailsWorkflowDetails = ({
 									}
 								</header>
 								<div className="obj-container">
-									<table className="main-tbl vertical-headers">
+									<table className="main-tbl">
 										<tbody>
 											<tr>
 												<td>
@@ -260,7 +260,7 @@ const EventDetailsWorkflowDetails = ({
 									}
 								</header>
 								<div className="obj-container">
-									<table className="main-tbl vertical-headers">
+									<table className="main-tbl">
 										<tbody>
 											<tr />
 										</tbody>
@@ -278,7 +278,7 @@ const EventDetailsWorkflowDetails = ({
 									}
 								</header>
 								<div className="obj-container">
-									<table className="main-tbl vertical-headers">
+									<table className="main-tbl">
 										<tbody>
 											<tr />
 										</tbody>
