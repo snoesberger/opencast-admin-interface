@@ -1,5 +1,4 @@
 @use "sass:color";
-@use "../mixins/mixins-bourbon";
 @use "../base/variables";
 
 /**
@@ -97,7 +96,6 @@ body {
         // ## (End)
 
         .filters-container {
-            @include mixins-bourbon.clearfix;
             float: right;
             position: relative;
 

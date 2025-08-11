@@ -1,5 +1,4 @@
 @use "sass:color";
-@use "../../mixins/mixins-bourbon";
 @use "../../base/variables";
 @use "../../mixins/button";
 
@@ -35,7 +34,6 @@
 }
 
 .action-bar {
-    @include mixins-bourbon.clearfix;
     border: 1px solid variables.$main-border-color;
     border-bottom: none;
     border-top-left-radius: variables.$main-border-radius;
@@ -46,20 +44,8 @@
 
     ul {
         padding: 10px 12px 12px;
-        float: right;
-
-        li {
-            display: inline-block;
-            margin: 0 4px;
-
-            &:first-child {
-                margin-left: 0;
-            }
-
-            &:last-child {
-                margin-right: 0;
-            }
-        }
+        display: flex;
+        justify-content: flex-end;
     }
 
     button {

@@ -1,4 +1,3 @@
-@use "../mixins/mixins-bourbon";
 @use "../base/variables";
 
 /**
@@ -24,7 +23,6 @@
 
 
 .form-container {
-    @include mixins-bourbon.clearfix;
     max-width: 100%;
     padding: 0;
     margin: 15px 0;
@@ -60,7 +58,6 @@
     }
 
     .row {
-        @include mixins-bourbon.clearfix;
         display: block;
         width: 100%;
         margin: 15px 0;

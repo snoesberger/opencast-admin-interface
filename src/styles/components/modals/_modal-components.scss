@@ -1,7 +1,6 @@
 @use "sass:color";
 @use "../../base/variables";
 @use "../../mixins/button";
-@use "../../mixins/mixins-bourbon";
 
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
@@ -344,12 +343,7 @@
     // Manage Files
     // ----------------------------------------
 
-    .file-upload {
-        @include mixins-bourbon.clearfix;
-    }
-
     .upload-file-info {
-        @include mixins-bourbon.clearfix;
         color: variables.$medium-prim-color;
         font-size: 10px;
         font-weight: variables.$weight-semibold;
@@ -464,7 +458,6 @@
     }
 
     .list-row {
-        @include mixins-bourbon.clearfix;
         padding: 15px 0;
         border-bottom: 1px solid variables.$main-border-color;
 
@@ -473,7 +466,6 @@
         }
 
         &:last-child {
-            padding-bottom: 0;
             border-bottom: 0;
         }
 
@@ -483,12 +475,8 @@
     }
 
     .list-sub-row {
-        @include mixins-bourbon.clearfix;
+        display: flex;
         padding: 5px 0;
-
-        &:last-child {
-            padding-bottom: 0;
-        }
     }
 
     .header-column,
@@ -514,7 +502,6 @@
     // ----------------------------------------
 
     .video-container {
-        @include mixins-bourbon.clearfix;
         position: relative;
 
         .video-wrapper {
