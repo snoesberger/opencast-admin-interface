@@ -116,7 +116,6 @@
                     font-weight: 600;
                     cursor: pointer;
                     color: variables.$l-blue;
-                    display: inline-block;
                     line-height: inherit;
                     padding: initial;
                 }
@@ -320,13 +319,6 @@
         border-top: 1px solid variables.$main-border-color;
     }
 
-    .red-btn {
-        margin: 10px 10px 0 0;
-        display: inline-block;
-        float: right;
-        padding: 7px 10px;
-    }
-
 
     // Dropdown Container
     // ----------------------------------------
@@ -357,7 +349,6 @@
         // Filename label
         p {
             color: variables.$dark-prim-color;
-            display: inline-block;
             padding: 4px 10px;
             float: left;
             max-width: 175px;
@@ -531,58 +522,6 @@
         }
 
         // Watermark Layout
-
-        .watermark-preview,
-        .watermark-config {
-
-        }
-
-        .watermark-preview {
-
-            video,
-            iframe,
-            img,
-            picture {
-                max-width: 100%;
-                height: auto;
-            }
-        }
-
-        .watermark-image {
-            position: absolute;
-            z-index: variables.$z-60;
-
-            img {
-                max-width: 50px;
-                height: auto;
-            }
-
-            $watermark-margin: 15px;
-
-            // default attributes
-            bottom: $watermark-margin;
-            right: $watermark-margin;
-
-            &.position-top-left {
-                top: $watermark-margin;
-                left: $watermark-margin;
-            }
-
-            &.position-top-right {
-                top: $watermark-margin;
-                right: $watermark-margin;
-            }
-
-            &.position-bottom-left {
-                bottom: $watermark-margin;
-                left: $watermark-margin;
-            }
-
-            &.position-bottom-right {
-                bottom: $watermark-margin;
-                right: $watermark-margin;
-            }
-        }
 
         .position-selection {
             position: relative;
