@@ -24,7 +24,7 @@ const NewAclSummaryPage = <T extends RequiredFormProps>({
 			<ModalContentTable>
 				<Notifications context={"other"}/>
 				<div className="obj tbl-list">
-					<header className="no-expand">{""}</header>
+					<header>{""}</header>
 					<div className="obj-container">
 						<table className="main-tbl">
 							<tr>
@@ -36,7 +36,7 @@ const NewAclSummaryPage = <T extends RequiredFormProps>({
 				</div>
 
 				<div className="obj tbl-list">
-					<header className="no-expand">
+					<header>
 						{t("USERS.ACLS.NEW.ACCESS.CAPTION")}
 					</header>
 					<table className="main-tbl">

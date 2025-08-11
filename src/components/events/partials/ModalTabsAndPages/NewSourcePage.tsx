@@ -119,7 +119,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 				}
 
 				<div className="obj list-obj">
-					<header className="no-expand">
+					<header>
 						{t("EVENTS.EVENTS.NEW.SOURCE.SELECT_SOURCE")}
 					</header>
 					{/* Radio buttons for choosing source mode */}
@@ -316,7 +316,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				</div>
 			</div>
 			<div className="obj list-obj">
-				<header className="no-expand">
+				<header>
 					{t("EVENTS.EVENTS.NEW.SOURCE.UPLOAD.RECORDING_METADATA")}
 				</header>
 				<div className="obj-container">

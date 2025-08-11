@@ -16,7 +16,7 @@ const AccessSummaryTable = ({
 
 	return (
 		<div className="obj tbl-list">
-			<header className="no-expand">{t(header)}</header>
+			<header>{t(header)}</header>
 			<table className="main-tbl">
 				<thead>
 					<tr>
