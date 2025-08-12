@@ -6,11 +6,11 @@
   margin: 1px 5px 1px 0;
   font-size: 11px;
   background: variables.$l-blue;
-  color: #fff;
+  color: variables.$white;
   border-radius: 4px;
 
   button {
-    color: white;
+    color: variables.$white;
     font-weight: bold;
   }
 

@@ -3,7 +3,7 @@
 div.table-filter {
   display: flex;
   float: right;
-  border: 1px solid #c9d0d3;
+  border: 1px solid variables.$main-border-color;
   border-radius: 4px;
   margin-left: 10px;
   position: inherit;
@@ -15,7 +15,7 @@ div.table-filter {
     gap: 4px;
     border: 0;
     border-radius: 4px;
-    background-color: #fafafa;
+    background-color: variables.$off-white;
     min-height: 23px;
     min-width: 150px;
     padding: 7px;
@@ -29,14 +29,14 @@ div.table-filter {
     }
 
     span button i {
-      color: white;
+      color: variables.$white;
     }
 
     input {
       height: auto;
-      border: 1px solid #c9d0d3;
+      border: 1px solid variables.$main-border-color;
       border-radius: 3px;
-      background-color: white;
+      background-color: variables.$white;
     }
 
     .multi-value {

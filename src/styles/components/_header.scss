@@ -73,7 +73,7 @@
         justify-content: center;
         width: 37px;
         height: 39px;
-        color: #fff;
+        color: variables.$white;
         cursor: pointer;
 
         // For dropdowns
@@ -167,11 +167,11 @@
             padding: 4px 7px;
             font-size: 10px;
             font-weight: 700;
-            color: #fff;
+            color: variables.$white;
             text-align: center;
             white-space: nowrap;
             border-radius: 100%;
-            background-color: red;
+            background-color: variables.$red;
             position: absolute;
             top: 3px;
             right: 3px;

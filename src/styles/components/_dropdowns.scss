@@ -38,15 +38,15 @@
     user-select: none;
 
     // Pulled from Button Mixin (keep in sync with those styles)
-    background: linear-gradient(#fff, #f7f7f7);
+    background: linear-gradient(variables.$white, variables.$color-lightgray);
     border: variables.$thin-border-stroke variables.$main-border-color;
-    box-shadow: inset 0px 1px 0px 0px #fff, 0px 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0px 1px 0px 0px variables.$white, 0px 1px 2px rgba(0,0,0,.05);
     color: variables.$medium-prim-color;
-    text-shadow: 0px 1px 0px #fff;
+    text-shadow: 0px 1px 0px variables.$white;
 
     &:hover {
         border: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
-        background: linear-gradient(color.adjust(#fff, $lightness: -1%), color.adjust(#f7f7f7, $lightness: -1%));
+        background: linear-gradient(color.adjust(variables.$white, $lightness: -1%), color.adjust(variables.$color-lightgray, $lightness: -1%));
         color: variables.$medium-prim-color;
     }
 
@@ -105,7 +105,7 @@
 
                 &.more-link {
                   text-align: center;
-                  color: #378dd4;
+                  color: variables.$l-blue;
                 }
             }
 
@@ -196,7 +196,7 @@
 
                     &.more-link {
                         text-align: center;
-                        color: #378dd4;
+                        color: variables.$l-blue;
                     }
                 }
 
