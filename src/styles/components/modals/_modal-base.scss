@@ -53,53 +53,90 @@
 // ----------------------------------------
 
 .modal {
-
-    // Hide modal
-    visibility: hidden;
-    opacity: 0;
-    display: none;
-    transition: all .2s;
     z-index: (variables.$max-z + 2);
     width: variables.$modal-width;
     height: auto;
+    max-height: 90vh;
+    overflow: auto;
 
     // Center box
-    position: absolute;
-    top: 100px;
+    top: 30px;
+    position: fixed;
     left: 50%;
     margin-left: -(variables.$modal-width * 0.5);
     background: variables.$body-background;
     border-radius: variables.$main-border-radius;
     box-shadow: 0 0 20px 2px rgba(variables.$black, 0.3);
 
-    &.active {
-        opacity: 1;
-        top: 30px;
-        visibility: visible;
+    input[readonly] {
+        border: none;
+    }
+    &#group-modal, &#add-acl-modal, &#user-modal {
+        input[type="text"], input[type="password"], [type="email"] {
+        width: 100%;
+        padding-left: 15px;
+        }
+    }
+    .select-container > p {
+        margin-bottom: 10px;
     }
 
-    // Directional Arrows Outside of Modal
-    .arrow {
-        $spacing: -75px;
-        position: absolute;
-        top: 48%;
-        font-size: 50px;
-        color: rgba(variables.$white, 0.7);
-        text-shadow: 0 0 10px rgba(variables.$black, 0.4);
-        transition: all 0.2s;
+    h2 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-        &.fa-chevron-left  {
-            left: $spacing;
-        }
+    // When not focused, make it look like a span
+    .single-value:not(:focus){
+        background-color: transparent;
+        padding: 0px;
+        border: initial;
+        font: inherit;
+        margin: 0px;
 
-        &.fa-chevron-right {
-            right: $spacing;
-        }
+        width: auto;
+    }
+    .single-value:focus{
+        width: 98%;
+    }
 
+    .single-value-textarea:not(:focus){
+        background-color: transparent;
+        padding: 0px;
+        border: initial;
+        font: inherit;
+        margin: 0px;
+        resize: none;
+        overflow: hidden;
+
+        width: auto;
+    }
+    .single-value-textarea:focus{
+        resize: vertical;
+
+        width: 98%;
+    }
+
+    .datepicker-custom-input:not(:focus) {
+        background: transparent;
+        padding: 0px;
+        border: initial;
+        font: inherit;
+        margin: 0px;
         &:hover {
-            color: #fff;
+        border: initial;
         }
     }
+
+    .editable {
+        word-wrap: anywhere;
+    }
+}
+
+.modal-animation {
+    -webkit-transition: all linear 0.2s;
+    transition: all linear 0.2s;
 }
 
 
@@ -107,17 +144,6 @@
 // ----------------------------------------
 
 .modal-overlay {
-
-    // Hide overlay
-    visibility: hidden;
-    opacity: 0;
-    transition: all .15s;
-
-    &.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
     position: fixed;
     top: 0; left: 0;
     width: 100%;
@@ -125,7 +151,6 @@
     z-index: variables.$max-z + 1;
     background-color: rgba(variables.$black, 0.2);
     background-image: radial-gradient(rgba(variables.$black, 0.2), rgba(variables.$black, 0.4));
-
 }
 
 
@@ -142,10 +167,6 @@
         margin: 0 auto;
         width: 100%;
         box-sizing: border-box;
-
-        &.active {
-            display: block;
-        }
 
         .tab-description {
             color: variables.$medium-prim-color;
@@ -300,10 +321,6 @@
                     margin-top: 7px;
                 }
             }
-        }
-
-        .fa-calendar-o {
-            margin-left: 5px;
         }
 
         // Main container

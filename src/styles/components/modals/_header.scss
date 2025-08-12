@@ -50,27 +50,3 @@
         color: inherit;
     }
 }
-
-
-
-// Modal Object Headers
-// --------------------
-
-// Collapsed state
-// ## Refactor out !important tags
-.collapsed {
-
-    > header {
-        margin-bottom: 0 !important;
-        border-bottom: 0 !important;
-        border-radius: variables.$main-border-radius !important;
-
-        &:after {
-            transform: rotate(180deg);
-        }
-    }
-
-    > .obj-container {
-        display: none;
-    }
-}

@@ -33,7 +33,7 @@ const RegistrationModal = ({
 		<Modal
 			header={t("ADOPTER_REGISTRATION.MODAL.CAPTION")}
 			classId="registration-modal"
-			className="modal active modal-open modal-animation"
+			className="modal modal-animation"
 			ref={modalRef}
 		>
 			<RegistrationModalContent />
@@ -137,7 +137,7 @@ const RegistrationModalContent = () => {
 	<>
 		{/* shows information about the registration*/}
 		{state === "information" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div
 					className="registration-header"
 					style={{ padding: "5px 0 15px 0" }}
@@ -166,7 +166,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows terms of use */}
 		{state === "legalInfo" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div>
 					<div className="row">
 						<div className="scrollbox">
@@ -179,7 +179,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows state after skipping the registration */}
 		{state === "skip" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div className="registration-header">
 					<h2>{t("ADOPTER_REGISTRATION.MODAL.SKIP_STATE.HEADER")}</h2>
 				</div>
@@ -198,7 +198,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows delete confirmation */}
 		{state === "deleteSubmit" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<p>
 					<span>
 						{t("ADOPTER_REGISTRATION.MODAL.DELETE_SUBMIT_STATE.TEXT")}
@@ -209,7 +209,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows spinner while API requests are processed */}
 		{(state === "save" || state === "delete" || state === "update") && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div>
 					<div className="row spinner-container">
 						<LuLoaderCircle className="fa-spin" style={{ fontSize: "60px" }}/>
@@ -220,7 +220,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows thank you after registration */}
 		{state === "thankYou" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div className="registration-header">
 					<h2>
 						{t("ADOPTER_REGISTRATION.MODAL.THANK_YOU_STATE.HEADER")}
@@ -255,7 +255,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows error */}
 		{state === "error" && (
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				<div className="registration-header">
 					<h2>{t("ADOPTER_REGISTRATION.MODAL.ERROR.HEADER")}</h2>
 				</div>
@@ -279,7 +279,7 @@ const RegistrationModalContent = () => {
 			{formik => (
 				<>
 					{state === "form" && (
-						<ModalContent modalContentClassName="modal-content active">
+						<ModalContent modalContentClassName="modal-content">
 							<div>
 								<fieldset>
 									<legend>
@@ -658,7 +658,7 @@ const RegistrationModalContent = () => {
 
 					{/* shows summary of information */}
 					{state === "summary" && (
-						<ModalContent modalContentClassName="modal-content active">
+						<ModalContent modalContentClassName="modal-content">
 							<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.HEADER")}</p>
 							<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.GENERAL_HEADER")}</p>
 							<div className="scrollbox">

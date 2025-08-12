@@ -36,7 +36,7 @@ const HotKeyCheatSheet = ({
 			classId=""
 			ref={modalRef}
 		>
-			<ModalContentTable modalContentClassName="modal-content active">
+			<ModalContentTable modalContentClassName="modal-content">
 				<p className="hint">{t("HOTKEYS.CHEAT_SHEET.HINT")}</p>
 				{/* Repeat table for each key */}
 				{Object.keys(availableHotkeys).map((hotkeyGroup, key) => (
