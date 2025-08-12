@@ -16,7 +16,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ModalHandle } from "../../../shared/modals/Modal";
 import { fetchEventDetailsTobira } from "../../../../slices/eventDetailsSlice";
 import BaseButton from "../../../shared/BaseButton";
-import { LuCopy, LuSquarePen } from "react-icons/lu";
+import { LuCircleX, LuCopy, LuSquarePen } from "react-icons/lu";
 
 
 export type TobiraTabHierarchy = "main" | "edit-path";
@@ -249,15 +249,19 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
 								onClick={() => deleteConfirmationModalRef.current?.open()}
-								className="remove pull-right"
+								className="action-cell-button remove pull-right"
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.REMOVE_PATH"
-							/>
+							>
+								<LuCircleX />
+							</ButtonLikeAnchor>
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
-								className="edit fa fa-pencil-square pull-right"
+								className="edit pull-right"
 								onClick={() => openSubTab("edit-path", hostPage)}
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.EDIT_PATH"
-							/>
+							>
+								<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }} />
+							</ButtonLikeAnchor>
 							<ConfirmModal
 								close={() => deleteConfirmationModalRef.current?.close?.()}
 								resourceName={hostPage.path}

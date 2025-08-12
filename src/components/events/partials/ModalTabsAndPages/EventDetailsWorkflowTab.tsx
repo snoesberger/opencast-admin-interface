@@ -34,7 +34,7 @@ import { ParseKeys } from "i18next";
 import ModalContent from "../../../shared/modals/ModalContent";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import { HiHandRaised } from "react-icons/hi2";
-import { LuChevronRight, LuCircleStop, LuRefreshCw } from "react-icons/lu";
+import { LuChevronRight, LuCircleStop, LuCircleX, LuRefreshCw } from "react-icons/lu";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -259,10 +259,11 @@ const EventDetailsWorkflowTab = ({
 																isRoleWorkflowDelete && (
 																	<ButtonLikeAnchor
 																		onClick={() => deleteWorkflow(item.id)}
-																		className="remove"
+																		className="action-cell-button remove"
 																		tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.DELETE"
 																	>
 																		{/* DELETE */}
+																		<LuCircleX />
 																	</ButtonLikeAnchor>
 																)}
 														</td>
