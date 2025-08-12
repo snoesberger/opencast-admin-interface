@@ -286,7 +286,7 @@
         color: variables.$medium-prim-color;
         font-size: 10px;
         font-weight: variables.$weight-semibold;
-        background: #fff;
+        background: variables.$white;
         border: 1px solid variables.$main-border-color;
         border-radius: 10px;
         height: 19px;
@@ -446,7 +446,7 @@
             border: 1px solid variables.$main-border-color;
             border-radius: variables.$main-border-radius;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-            background: #fff;
+            background: variables.$white;
             min-height: 202px;
         }
 

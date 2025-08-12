@@ -38,7 +38,7 @@
     > h2 {
         font-weight: bold;
         color: variables.$modal-heading-color;
-        text-shadow: 0px 1px 0px #fff;
+        text-shadow: 0px 1px 0px variables.$white;
         font-size: 17px;
     }
 

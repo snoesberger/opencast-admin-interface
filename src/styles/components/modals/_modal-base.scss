@@ -182,7 +182,7 @@
             box-sizing: border-box;
             height: $height;
             line-height: $height;
-            background: linear-gradient(to bottom, #fff, #f3f5f6);
+            background: linear-gradient(to bottom, variables.$white, #f3f5f6);
             border-bottom: 1px solid variables.$main-border-color;
             border-top-left-radius: variables.$main-border-radius;
             border-top-right-radius: variables.$main-border-radius;
@@ -190,7 +190,7 @@
             width: 100%;
             padding-left: 10px;
             padding-right: 10px;
-            color: color.adjust(#8c939b, $lightness: -10%);
+            color: color.adjust(variables.$grey, $lightness: -10%);
             font-weight: 600;
             text-shadow: 0 1px 0 variables.$white;
             font-size: 13px;
@@ -285,7 +285,7 @@
     // Object within columns
     .obj {
         box-sizing: border-box;
-        background: #fff;
+        background: variables.$white;
         border-radius: variables.$main-border-radius;
         border: variables.$thin-border-stroke variables.$main-border-color;
         color: variables.$medium-prim-color;

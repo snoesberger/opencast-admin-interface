@@ -81,9 +81,6 @@ div.show-edit {
   justify-content: space-between;
 }
 
-span.editable {
-  border-bottom: 1px dashed #999;
-}
 div.editable {
   cursor: text;
   line-height: 25px;
@@ -148,14 +145,14 @@ textarea.editable {
 
 // Generic select fields
 select {
-  border: 1px solid #c9d0d3;
+  border: 1px solid variables.$main-border-color;
   border-radius: 3px;
-  background-color: white;
+  background-color: variables.$white;
 }
 
 // Disabled input field
 input.disabled, select.disabled {
-  background: #eeeff0;
+  background: variables.$modal-nav-bg-color;
 }
 
 // Use HTML5 input field for file upload

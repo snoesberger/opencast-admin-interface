@@ -217,7 +217,7 @@ const ShowValue = ({
 					))}
 				</ul>
 			) : (
-				<span className="editable preserve-newlines">{""}</span>
+				<span className="preserve-newlines">{""}</span>
 			)}
 			<div>
 				<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }}/>
