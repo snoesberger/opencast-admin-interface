@@ -12,6 +12,7 @@ import { getUploadAssetOptions } from "../../../../selectors/eventDetailsSelecto
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import BaseButton from "../../../shared/BaseButton";
+import { LuCircleX } from "react-icons/lu";
 
 /**
  * This component manages the add asset sub-tab for assets tab of event details modal
@@ -115,7 +116,7 @@ const EventDetailsAssetsAddAsset = ({
 													{/* Button to remove asset*/}
 													<td className="fit">
 														<ButtonLikeAnchor
-															className="remove"
+															className="action-cell-button remove"
 															onClick={() => {
 																formik.setFieldValue(asset.id, null);
 																const element = document.getElementById(asset.id) as HTMLInputElement;
@@ -123,7 +124,9 @@ const EventDetailsAssetsAddAsset = ({
 																	element.value = "";
 																}
 															}}
-														/>
+														>
+															<LuCircleX />
+														</ButtonLikeAnchor>
 													</td>
 												</tr>
 											))
