@@ -172,29 +172,6 @@ a.disabled, button.disabled, div.disabled {
   pointer-events: none !important;
 }
 
-.ng-multi-value {
-  display: inline-block;
-  padding: 0px 5px;
-  margin: 1px 5px 1px 0;
-  font-size: 11px;
-  background: variables.$l-blue;
-  color: #fff;
-  border-radius: 4px;
-
-  button {
-    color: white;
-    font-weight: bold;
-  }
-
-  &-green {
-    background: #4bcc8f;
-  }
-
-  &-red {
-    background: #ff0000;
-  }
-}
-
 div.show-edit {
   display: flex;
   justify-content: space-between;
@@ -265,99 +242,6 @@ textarea.editable {
   height: auto;
 }
 
-button.red {
-  @include button.btn(red);
-}
-
-button.green {
-  @include button.btn(green-dark-bg);
-}
-
-div.table-filter {
-  display: flex;
-  float: right;
-  border: 1px solid #c9d0d3;
-  border-radius: 4px;
-  margin-left: 10px;
-  position: inherit;
-
-  .filters {
-    font-size: 12px;
-    line-height: normal;
-    display: flex;
-    gap: 4px;
-    border: 0;
-    border-radius: 4px;
-    background-color: #fafafa;
-    min-height: 23px;
-    min-width: 150px;
-    padding: 7px;
-
-    .chosen-search {
-      width: 100%;
-    }
-    &>i {
-      font-size: 18px;
-      padding: 2px;
-    }
-
-    span button i {
-      color: white;
-    }
-
-    input {
-      height: auto;
-      border: 1px solid #c9d0d3;
-      border-radius: 3px;
-      background-color: white;
-    }
-
-    .ng-multi-value {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      margin: 0;
-    }
-
-    .MuiInputBase-input {
-      box-sizing: border-box;
-    }
-
-    .MuiButtonBase-root {
-      padding: 0;
-    }
-
-    .MuiInputAdornment-root {
-      margin: 0;
-    }
-  }
-
-  i {
-    color: variables.$global-text-color;
-    cursor: pointer;
-
-    &.clear {
-      padding: 0 8px 0 0;
-    }
-
-    &.settings {
-      padding: 0 8px 0 0;
-    }
-  }
-
-  .filter-settings-dd {
-    margin-left: 0px;
-    border: 0;
-    float: left;
-    height: 38px;
-
-    .filters-list {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-}
-
 // Generic select fields
 select {
   border: 1px solid #c9d0d3;
@@ -370,47 +254,9 @@ input.disabled, select.disabled {
   background: #eeeff0;
 }
 
-// Make filter profile dialog work
-.filters-container {
-  .filter-settings-dd .filter-details {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
 // Use HTML5 input field for file upload
 .file-upload > input[type="file"] {
   width: 100%;
   visibility: visible !important;
   text-align: left;
-}
-
-/*
- * ---------------------------------------------
- * MH-12139 notification upload ratio override
- * ---------------------------------------------
- */
-.alert p {
-  display: inline-flex;
-}
-
-.video-player {
-  width: 100%;
-  margin: 0 auto;
-  background: #1e1e1e;
-  text-align: center;
-  border-radius: 4px 4px 0 0;
-
-  video {
-      max-height: 350px;
-      max-width: 100%;
-      height: auto;
-  }
-}
-
-.table-filter-blue-box {
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

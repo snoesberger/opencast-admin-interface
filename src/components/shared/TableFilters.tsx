@@ -325,7 +325,7 @@ const TableFilters = ({
 							{/* Show for each selected filter a blue label containing its name and option */}
 							{filterMap.map((filter, key) => {
 								return filter.value && (
-									<span className="ng-multi-value" key={key}>
+									<span className="multi-value" key={key}>
 										{
 											// Use different representation of name and value depending on type of filter
 											filter.type === "period" ? (

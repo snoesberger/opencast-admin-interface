@@ -1,0 +1,93 @@
+@use "../base/variables";
+
+div.table-filter {
+  display: flex;
+  float: right;
+  border: 1px solid #c9d0d3;
+  border-radius: 4px;
+  margin-left: 10px;
+  position: inherit;
+
+  .filters {
+    font-size: 12px;
+    line-height: normal;
+    display: flex;
+    gap: 4px;
+    border: 0;
+    border-radius: 4px;
+    background-color: #fafafa;
+    min-height: 23px;
+    min-width: 150px;
+    padding: 7px;
+
+    .chosen-search {
+      width: 100%;
+    }
+    &>i {
+      font-size: 18px;
+      padding: 2px;
+    }
+
+    span button i {
+      color: white;
+    }
+
+    input {
+      height: auto;
+      border: 1px solid #c9d0d3;
+      border-radius: 3px;
+      background-color: white;
+    }
+
+    .multi-value {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin: 0;
+    }
+
+    .MuiInputBase-input {
+      box-sizing: border-box;
+    }
+
+    .MuiButtonBase-root {
+      padding: 0;
+    }
+
+    .MuiInputAdornment-root {
+      margin: 0;
+    }
+  }
+
+  i {
+    color: variables.$global-text-color;
+    cursor: pointer;
+
+    &.clear {
+      padding: 0 8px 0 0;
+    }
+
+    &.settings {
+      padding: 0 8px 0 0;
+    }
+  }
+
+  .filter-settings-dd {
+    margin-left: 0px;
+    border: 0;
+    float: left;
+    height: 38px;
+
+    .filters-list {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.table-filter-blue-box {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
