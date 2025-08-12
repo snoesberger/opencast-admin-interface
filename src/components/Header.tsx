@@ -321,11 +321,11 @@ const MenuNotify = ({
 						>
 							<span> {service.name} </span>
 							{service.error ? (
-								<span className="ng-multi-value ng-multi-value-red">
+								<span className="multi-value multi-value-red">
 									{service.status}
 								</span>
 							) : (
-								<span className="ng-multi-value ng-multi-value-green">
+								<span className="multi-value multi-value-green">
 									{service.status}
 								</span>
 							)}

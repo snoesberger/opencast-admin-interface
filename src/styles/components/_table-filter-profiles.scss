@@ -1,6 +1,6 @@
 @use "sass:color";
-@use "../../base/variables";
-@use "../../mixins/button";
+@use "../base/variables";
+@use "../mixins/button";
 
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
@@ -84,6 +84,10 @@
     color: black 40%;
     text-shadow: 0px 1px 0px #fff;
 
+    // Make filter profile dialog work
+    opacity: 1;
+    visibility: visible;
+
     .filters-list {
         @include filter-dd-mixin();
 
@@ -126,6 +130,11 @@
 
     .filter-details {
         @include filter-dd-mixin();
+
+        // Make filter profile dialog work
+        opacity: 1;
+        visibility: visible;
+
 
         .edit-details {
             padding: 5px 10px;
@@ -212,5 +221,3 @@
         visibility: visible;
     } } // filters-list active
 }
-
-

@@ -180,7 +180,7 @@ const EditMultiSelect = ({
 				{fieldValue instanceof Array &&
 					fieldValue.length !== 0 &&
 					fieldValue.map((item, key) => (
-						<span className="ng-multi-value" key={key}>
+						<span className="multi-value" key={key}>
 							{item}
 							<ButtonLikeAnchor
 								onClick={() => removeItem(key)}
