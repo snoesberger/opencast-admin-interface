@@ -397,38 +397,6 @@ input.disabled, select.disabled {
   display: inline-flex;
 }
 
-table.main-tbl {
-  th {
-    span {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-  }
-
-  td {
-    max-width: 800px;
-  }
-
-  td {
-    .fa-check {
-      float: right;
-      color: variables.$green;
-      margin-top: 3px;
-      font-size: 18px;
-      opacity: 0;
-      visibility: hidden;
-      transition: all .2s;
-
-      &.active {
-        opacity: 1;
-        visibility: visible;
-      }
-
-    } // fa-check
-  }
-}
-
 .video-player {
   width: 100%;
   margin: 0 auto;
