@@ -41,7 +41,6 @@
 @use "views/views-config";
 
 // Extensions
-@use "extensions/extensions-config";
 @use "base/variables";
 @use "components/alerts";
 @use "mixins/button";
@@ -55,8 +54,6 @@
 
 // Third Party Imports
 // ----------------------------------------
-
-@include meta.load-css("vendor/chosen");
 
 // We rely on border-box to center elements and cut down padding
 // This had to be added during the bourbon upgrade from 4 to 7
