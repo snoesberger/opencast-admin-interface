@@ -115,7 +115,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 
 	return (
 		<>
-			<ModalContentTable modalContentClassName="modal-content active">
+			<ModalContentTable modalContentClassName="modal-content">
 				<Notifications context="not_corner" />
 
 				{/* Table that shows conflicts with other events*/}

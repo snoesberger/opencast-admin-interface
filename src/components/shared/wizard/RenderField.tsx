@@ -125,7 +125,7 @@ const RenderField = ({
 			<div style={{ display: "flex", justifyContent: "flex-end" }}>
 				{!focused && showCheck && (
 					<LuCheck
-						className={cn("fa-check", {
+						className={cn("checkmark", {
 							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: form.initialValues[field.name] !== field.value,
 						})}

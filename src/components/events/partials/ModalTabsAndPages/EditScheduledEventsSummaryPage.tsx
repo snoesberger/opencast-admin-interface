@@ -150,7 +150,7 @@ const EditScheduledEventsSummaryPage = <T extends RequiredFormProps>({
 
 	return (
 		<>
-			<ModalContent modalContentClassName="modal-content active">
+			<ModalContent modalContentClassName="modal-content">
 				{changes.length > 0 ? (
 					<div className="full-col">
 						{/* Repeat for each changed event*/}

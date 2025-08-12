@@ -223,7 +223,7 @@ const ShowValue = ({
 				<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }}/>
 				{showCheck && (
 					<LuCheck
-						className={cn("fa-check", {
+						className={cn("checkmark", {
 							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: JSON.stringify(initialValues[field.name] ?? []) !== JSON.stringify(field.value ?? []),
 						})}
