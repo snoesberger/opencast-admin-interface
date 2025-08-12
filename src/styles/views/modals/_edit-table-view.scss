@@ -23,6 +23,43 @@
  */
 
 
+#edit-table-view-modal {
+
+    .modal-content {
+
+        .row {
+            margin: 15px 0;
+        }
+
+        .tab-description {
+            padding: 10px 0;
+            color: variables.$medium-prim-color;
+            font-size: 12px;
+            line-height: 20px;
+            width: 100%;
+            margin-bottom: 0;
+
+        &.for-header {
+            padding-top: 0;
+        }
+
+        &.for-footer {
+            padding-bottom: 0;
+            margin-bottom: -5px;
+        }
+
+            p:not(:last-child) {
+                margin-bottom: 10px;
+            }
+        }
+
+        // Fix for Half Pixel Rounding Chrome
+        .col {
+            width: 48.72%;
+        }
+    }
+}
+
 .drag-drop-items {
     box-sizing: border-box;
     padding: 15px 10px;
