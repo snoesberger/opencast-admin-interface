@@ -209,7 +209,7 @@ const DropDown = <T, >({
 		<AsyncSelect
 			ref={selectRef}
 			{...commonProps}
-            openMenuOnFocus={false}
+			openMenuOnFocus={false}
 			noOptionsMessage={() => t("SELECT_NO_MATCHING_RESULTS")}
 			cacheOptions
 			defaultOptions={formatOptions(
