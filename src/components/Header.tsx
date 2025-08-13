@@ -193,9 +193,7 @@ const Header = () => {
 						>
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
 								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
-									<LuBell style={{
-										fontSize: "20px",
-									}}/>
+									<LuBell className="header-icon"/>
 									{errorCounter !== 0 && (
 										<span id="error-count" className="badge">
 											{errorCounter}

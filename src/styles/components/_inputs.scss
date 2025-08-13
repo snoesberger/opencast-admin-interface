@@ -75,6 +75,11 @@ textarea {
     height: auto;
 }
 
+select[type="text"] {
+    font-weight: 600;
+    color: variables.$medium-prim-color;
+}
+
 select[multiple] {
     background: variables.$white;
     border: variables.$thin-border-stroke variables.$main-border-color;

@@ -402,6 +402,29 @@
     }
 }
 
+// Optional sideways navigation
+// ---------------------------------------------
+.modal {
+    > div nav {
+        border-bottom: 1px solid variables.$modal-nav-border-color;
+        line-height: 35px;
+        padding-left: 15px;
+
+        .active {
+            padding: 14px 5px;
+            min-width: 100px;
+            color: variables.$header-link-color;
+            font-weight: 600;
+        }
+
+        .inactive {
+            padding: 14px 5px;
+            min-width: 100px;
+            color: variables.$modal-nav-link-color;
+        }
+    }
+}
+
 // Miscellaneous
 // --------------------------------------------------
 .loading {

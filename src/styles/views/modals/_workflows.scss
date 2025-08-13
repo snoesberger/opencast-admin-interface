@@ -1,0 +1,31 @@
+@use "../../base/variables";
+
+.workflow-operation-icon {
+    margin-right: 5px;
+    color: variables.$global-text-color;
+
+    &.green {
+    color: variables.$green;
+    }
+
+    &.red {
+    color: variables.$red;
+    }
+
+    &.blue {
+    color: variables.$l-blue;
+    }
+}
+
+.workflow-control-icon {
+    font-size: 20px;
+    vertical-align: middle;
+
+    &.grey {
+        color: variables.$grey;
+    }
+
+    &.darkgray {
+        color: variables.$color-darkgray
+    }
+}

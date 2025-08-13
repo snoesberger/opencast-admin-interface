@@ -40,6 +40,12 @@
       margin: -2px;
     }
 
+    > label.selected {
+      background-color: variables.$off-white;
+      background-image: linear-gradient(variables.$off-white, variables.$color-silver);
+      color: variables.$global-text-color;
+    }
+
     > label:first-of-type {
       border-right: 0;
       border-radius: 4px 0 0 4px;

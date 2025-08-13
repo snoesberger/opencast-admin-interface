@@ -221,14 +221,12 @@ const Table = ({
 											flexDirection: "column",
 											justifyContent: "center",
 										}}>
-											<LuChevronUp style={{
-												position: "relative",
-												top: "3px",
-												color: reverse === "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
-											<LuChevronDown style={{
-												position: "relative",
-												top: "-3px",
-												color: reverse !== "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
+											<LuChevronUp
+												className={cn("chevron-up", { active: reverse === "ASC" && column.name === sortBy })}
+											/>
+											<LuChevronDown
+												className={cn("chevron-down", { active: reverse === "ASC" && column.name === sortBy })}
+											/>
 										</div>
 									</span>
 								</th>

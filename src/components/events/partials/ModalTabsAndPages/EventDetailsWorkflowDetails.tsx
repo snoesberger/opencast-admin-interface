@@ -376,7 +376,7 @@ const OperationsPreview = ({
 					}
 					openSubTab={openDetailsSubTab}
 				/>
-				<hr style={{ height: "1px", border: 0, borderTop: "1px solid #ccc", margin: "0", padding: "0" }} />
+				<hr/>
 			</>}
 
 			{/* links to 'Operations' or 'Errors & Warnings' sub-Tabs */}

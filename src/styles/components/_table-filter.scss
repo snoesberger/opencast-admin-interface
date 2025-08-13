@@ -20,16 +20,15 @@ div.table-filter {
     min-width: 150px;
     padding: 7px;
 
-    .chosen-search {
-      width: 100%;
-    }
-    &>i {
-      font-size: 18px;
-      padding: 2px;
-    }
+    .table-filter-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    span button i {
-      color: variables.$white;
+      > svg {
+        font-size: 13px;
+        color: variables.$global-text-color;
+      }
     }
 
     input {
@@ -45,31 +44,16 @@ div.table-filter {
       align-items: center;
       margin: 0;
     }
-
-    .MuiInputBase-input {
-      box-sizing: border-box;
-    }
-
-    .MuiButtonBase-root {
-      padding: 0;
-    }
-
-    .MuiInputAdornment-root {
-      margin: 0;
-    }
   }
 
-  i {
+  .table-filter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     color: variables.$global-text-color;
     cursor: pointer;
-
-    &.clear {
-      padding: 0 8px 0 0;
-    }
-
-    &.settings {
-      padding: 0 8px 0 0;
-    }
+    padding: 0 8px 0 0;
   }
 
   .filter-settings-dd {
