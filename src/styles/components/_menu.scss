@@ -59,18 +59,16 @@
         text-align: center;
         display: block;
 
-        > i {
-            display: inline-block;
-            margin: 0 auto;
+        > .main-nav-icon {
+            height: 100%;
+            font-size: 29px;
             vertical-align: middle;
-            position: relative;
-            line-height: 50px;
             transition: all .2s;
             color: #818181;
         }
 
-        &:hover > i,
-        &:active > i {
+        &:hover > .main-nav-icon,
+        &:active > .main-nav-icon {
             color: variables.$d-blue;
         }
 

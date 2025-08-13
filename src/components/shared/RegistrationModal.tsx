@@ -383,7 +383,7 @@ const RegistrationModalContent = () => {
 										<div className="col">
 											<div className="form-group">
 												<Field
-													style={{ color: "#666", fontWeight: "600" }}
+													type="text"
 													id="adopter_country"
 													name="country"
 													as="select"
@@ -555,7 +555,6 @@ const RegistrationModalContent = () => {
 									<div className="row">
 										<div className="form-group">
 											<Field
-												style={{ color: "#666", fontWeight: "600" }}
 												id="system_type"
 												name="systemType"
 												as="select"

@@ -64,9 +64,23 @@
         box-shadow: none;
     }
 
-    .sr-only {
-        visibility: hidden;
-        opacity: 0;
+    &.bad {
+        background: variables.$white;
+    }
+    &.veryweak {
+        background: variables.$red;
+    }
+    &.weak {
+        background: variables.$orange;
+    }
+    &.good {
+        background: variables.$yellow;
+    }
+    &.strong {
+        background: #388ed6;
+    }
+    &.verystrong {
+        background: linear-gradient(variables.$primary-color-green, variables.$primary-color-green-dark-1);
     }
 }
 

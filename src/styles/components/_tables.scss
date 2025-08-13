@@ -178,6 +178,20 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+
+            .chevron-up {
+                position: relative;
+                top: 3px;
+                color: variables.$grey;
+            }
+            .chevron-down {
+                position: relative;
+                top: -3px;
+                color: variables.$grey;
+            }
+            .active {
+                color: variables.$l-blue;
+            }
         }
     }
 
@@ -271,6 +285,14 @@
                 > svg {
                     width: 100%;
                     height: 100%;
+                }
+
+                .blue {
+                    color: variables.$ref-blue;
+                }
+
+                .darkgrey {
+                    color: variables.$color-darkgray;
                 }
             }
 
