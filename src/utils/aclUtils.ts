@@ -1,4 +1,4 @@
-/*This File contains functions that are needed in several access right views*/
+/* This File contains functions that are needed in several access right views*/
 
 import { FormikProps } from "formik";
 import { TransformedAcl } from "../slices/aclDetailsSlice";
@@ -111,5 +111,5 @@ export const handleTemplateChange = async <T extends { policies: TransformedAcl[
 	formik.setFieldValue("policies", template);
 	formik.setFieldValue("aclTemplate", templateId);
 	// Is this necessary?
-	await dispatch(checkAcls(formik.values.policies));
+	dispatch(checkAcls(formik.values.policies));
 };

@@ -1995,7 +1995,7 @@
 	"TABLE_NEXT": "Nächste Seite",
 	"TABLE_PREVIOUS": "Vorherige Seite",
 	"TABLE_CURRENT": "Current page {{pageNumber}}",
-	"TABLE_NUMBERED": "Go to page {{pageNumber}}",
+	"TABLE_NUMBERED": "Gehe zu Seite {{pageNumber}}",
 	"DASHBOARD": {
 		"RUNNING": "In Verarbeitung",
 		"FINISHED": "Verarbeitet",

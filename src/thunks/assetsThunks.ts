@@ -95,7 +95,7 @@ export const enrichPublications = createAppAsyncThunk("assets/enrichPublications
 	// get information about possible publication channels
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/PUBLICATION.CHANNELS.json");
 
-	const publicationChannels = await data.data;
+	const publicationChannels = data.data;
 
 	const now = new Date();
 	let combinedPublications: Publication[] = [];

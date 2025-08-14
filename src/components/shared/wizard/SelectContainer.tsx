@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useField } from "formik";
-import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import SearchContainer from "../SearchContainer";
+import BaseButton from "../BaseButton";
+import { LuArrowRightLeft } from "react-icons/lu";
 
 type Item = {
 	name: string
@@ -78,7 +79,7 @@ const SelectContainer = ({
 		setItems(defaultItems);
 	};
 
-	const handleChangeSearch = async (input: string) => {
+	const handleChangeSearch = (input: string) => {
 		const filtered = defaultItems.filter(item => {
 			return item.name.toLowerCase().includes(input.toLowerCase());
 		});
@@ -138,7 +139,7 @@ const SelectContainer = ({
 		setMarkedForAddition([]);
 		// update items considered for search bar
 		setDefaultItems(editableDefaultItems);
-		//update formik field
+		// update formik field
 		helpers.setValue(editableSelectedItems);
 	};
 
@@ -201,7 +202,7 @@ const SelectContainer = ({
 							{t(`${resource.label}.LEFT` as ParseKeys)}
 							<i className="required" />
 						</label>
-						{/*Search*/}
+						{/* Search*/}
 						{resource.searchable && (
 							<SearchContainer
 								value={searchField}
@@ -211,7 +212,7 @@ const SelectContainer = ({
 								style={{ marginTop: "10px" }}
 							/>
 						)}
-						{/*Select with options provided by backend*/}
+						{/* Select with options provided by backend*/}
 						<select
 							multiple
 							className="available"
@@ -229,7 +230,7 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("submit", {
 									disabled: !markedForAddition.length || !manageable,
 								})}
@@ -237,14 +238,14 @@ const SelectContainer = ({
 								onClick={() => handleClickAdd()}
 							>
 								{t(`${resource.label}.ADD` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>
 
-				<div className="exchange-icon" />
+				<LuArrowRightLeft className="exchange-icon"/>
 
-				{/*Select with options chosen by user*/}
+				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">
 					<div className="row">
 						<label>{t(`${resource.label}.RIGHT` as ParseKeys)}</label>
@@ -265,7 +266,7 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("remove", {
 									disabled: !markedForRemoval.length || !manageable,
 								})}
@@ -273,7 +274,7 @@ const SelectContainer = ({
 								onClick={() => handleClickRemove()}
 							>
 								{t(`${resource.label}.REMOVE` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>

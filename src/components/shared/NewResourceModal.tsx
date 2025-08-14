@@ -47,7 +47,7 @@ const NewResourceModal = ({
 			ref={modalRef}
 		>
 			{resource === "events" && (
-				//New Event Wizard
+				// New Event Wizard
 				<NewEventWizard close={close} />
 			)}
 			{resource === "series" && (

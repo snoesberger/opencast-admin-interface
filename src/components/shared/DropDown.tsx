@@ -138,7 +138,7 @@ const DropDown = <T, >({
 	 * Custom component for list virtualization
 	 */
 	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
-		const { options, children, maxHeight, getValue } = props;
+		const { children, maxHeight } = props;
 
 		console.log("Menu List render");
 
@@ -158,7 +158,7 @@ const DropDown = <T, >({
 	};
 
 	const loadOptions = (
-		inputValue: string,
+		_inputValue: string,
 		callback: (options: DropDownOption[]) => void,
 	) => {
 		callback(formatOptions(
@@ -189,7 +189,7 @@ const DropDown = <T, >({
 		openMenuOnFocus: openMenuOnFocus,
 		menuPlacement: menuPlacement ?? "auto",
 
-		//@ts-expect-error: React-Select typing does not account for the typing of option it itself requires
+		// @ts-expect-error: React-Select typing does not account for the typing of option it itself requires
 		components: { MenuList },
 		filterOption: createFilter({ ignoreAccents: false }), // To improve performance on filtering
 	};

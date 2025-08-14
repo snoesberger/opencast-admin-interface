@@ -49,7 +49,7 @@ const GroupMetadataPage = <T, >({
 			</ModalContent>
 
 			{!isEdit && (
-				//{/* Button for navigation to next page */}
+				// {/* Button for navigation to next page */}
 				<WizardNavigationButtons isFirst formik={formik} nextPage={nextPage} />
 			)}
 		</>

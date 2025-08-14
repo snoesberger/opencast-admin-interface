@@ -16,6 +16,7 @@ import { TransformedAcl } from "./aclDetailsSlice";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { MetadataCatalog } from "./eventSlice";
 import { handleTobiraError } from "./shared/tobiraErrors";
+import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of series
@@ -142,7 +143,7 @@ export const fetchSeries = createAppAsyncThunk("series/fetchSeries", async (_, {
 // fetch series metadata from server
 export const fetchSeriesMetadata = createAppAsyncThunk("series/fetchSeriesMetadata", async (_, { rejectWithValue }) => {
 	const res = await axios.get<MetadataCatalog[]>("/admin-ng/series/new/metadata");
-	const data = await res.data;
+	const data = res.data;
 
 	const mainCatalog = "dublincore/series";
 	let metadata: SeriesState["metadata"] | undefined = undefined;
@@ -181,7 +182,7 @@ export const fetchSeriesThemes = createAppAsyncThunk("series/fetchSeriesThemes",
 });
 
 // post new series to backend
-export const postNewSeries = createAppAsyncThunk("series/postNewSeries", async (params: {
+export const postNewSeries = (params: {
 	values: {
 		[key: string]: any;
 		policies: TransformedAcl[],
@@ -200,7 +201,7 @@ export const postNewSeries = createAppAsyncThunk("series/postNewSeries", async (
 	},
 	metadataInfo: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[]
-}, { dispatch }) => {
+}): AppThunk => dispatch => {
 	const { values, metadataInfo, extendedMetadata } = params;
 
 	// prepare metadata provided by user
@@ -282,20 +283,20 @@ export const postNewSeries = createAppAsyncThunk("series/postNewSeries", async (
 			console.error(response);
 			dispatch(addNotification({ type: "error", key: "SERIES_NOT_SAVED" }));
 		});
-});
+};
 
 // check for events of the series and if deleting the series if it has events is allowed
 export const checkForEventsDeleteSeriesModal = createAppAsyncThunk("series/checkForEventsDeleteSeriesModal", async (id: Series["id"], { dispatch }) => {
 	const hasEventsRequest = await axios.get<{ hasEvents: boolean }>(
 		`/admin-ng/series/${id}/hasEvents.json`,
 	);
-	const hasEventsResponse = await hasEventsRequest.data;
+	const hasEventsResponse = hasEventsRequest.data;
 	const hasEvents = hasEventsResponse.hasEvents;
 
 	const deleteWithEventsAllowedRequest = await axios.get<{ deleteSeriesWithEventsAllowed: boolean }>(
 		"/admin-ng/series/configuration.json",
 	);
-	const deleteWithEventsAllowedResponse = await deleteWithEventsAllowedRequest.data;
+	const deleteWithEventsAllowedResponse = deleteWithEventsAllowedRequest.data;
 	const deleteWithEventsAllowed =
 		deleteWithEventsAllowedResponse.deleteSeriesWithEventsAllowed;
 
@@ -304,8 +305,8 @@ export const checkForEventsDeleteSeriesModal = createAppAsyncThunk("series/check
 	);
 });
 
-// delete series with provided id
-export const deleteSeries = createAppAsyncThunk("series/deleteSeries", async (id: Series["id"], { dispatch }) => {
+// delete series with provided
+export const deleteSeries = (id: Series["id"]): AppThunk => dispatch => {
 	// API call for deleting a series
 	axios
 		.delete(`/admin-ng/series/${id}`)
@@ -319,10 +320,10 @@ export const deleteSeries = createAppAsyncThunk("series/deleteSeries", async (id
 			// add error notification
 			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});
-});
+};
 
 // delete series with provided ids
-export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSeries", async (
+export const deleteMultipleSeries = (
 	series: {
 		contributors: string[],
 		createdBy: string,
@@ -333,7 +334,7 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 		selected: boolean,
 		title: string,
 	}[],
-{ dispatch }) => {
+): AppThunk => dispatch => {
 	const data = [];
 
 	for (let i = 0; i < series.length; i++) {
@@ -346,15 +347,15 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 		.post("/admin-ng/series/deleteSeries", data)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "SERIES_DELETED" }));
 		})
 		.catch((error: AxiosError) => {
 			console.error(error);
-			//add error notification
+			// add error notification
 			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});
-});
+};
 
 // fetch metadata of certain series from server
 export const fetchSeriesDetailsTobiraNew = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsTobiraNew", async (path: TobiraPage["path"], { dispatch }) => {
@@ -373,7 +374,7 @@ export const fetchSeriesDetailsTobiraNew = createAppAsyncThunk("seriesDetails/fe
 export const fetchSeriesOptions = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/SERIES.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	const seriesCollection = [];
 	for (const series of transformToIdValueArray(response)) {
@@ -387,14 +388,14 @@ export const fetchSeriesOptions = async () => {
 export const hasEvents = async (seriesId: Series["id"]) => {
 	const data = await axios.get<{ hasEvents: boolean }>(`/admin-ng/series/${seriesId}/hasEvents.json`);
 
-	return (await data.data).hasEvents;
+	return (data.data).hasEvents;
 };
 
 // Get series configuration and flag indicating if series with events is allowed to delete
 export const getSeriesConfig = async () => {
 	const data = await axios.get<{ deleteSeriesWithEventsAllowed: boolean }>("/admin-ng/series/configuration.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return !!response.deleteSeriesWithEventsAllowed;
 };

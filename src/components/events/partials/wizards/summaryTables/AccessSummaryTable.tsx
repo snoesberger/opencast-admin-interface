@@ -35,7 +35,7 @@ const AccessSummaryTable = ({
 					</tr>
 				</thead>
 				<tbody>
-					{/*Insert row for each policy user has provided*/}
+					{/* Insert row for each policy user has provided*/}
 					{policies.map((policy, key) => (
 						<tr key={key}>
 							<td>{policy.role}</td>
@@ -46,7 +46,7 @@ const AccessSummaryTable = ({
 								<input type="checkbox" disabled checked={policy.write} />
 							</td>
 							<td className="fit">
-								{/*repeat for each additional action*/}
+								{/* repeat for each additional action*/}
 								{policy.actions.map((action, key) => (
 									<div key={key}>{action}</div>
 								))}

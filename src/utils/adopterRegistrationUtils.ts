@@ -14,7 +14,7 @@ export const fetchAdopterRegistration = async () => {
 	// fetch current information about adopter
 	const response = await axios.get<FetchRegistration>("/admin-ng/adopter/registration");
 
-	return await response.data;
+	return response.data;
 };
 
 // get statistics information about adopter
@@ -45,7 +45,7 @@ export const fetchAdopterStatisticsSummary = async () => {
 	};
 	const response = await axios.get<FetchSummary>("/admin-ng/adopter/summary");
 
-	return await response.data;
+	return response.data;
 };
 
 export type Registration = {

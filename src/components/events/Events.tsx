@@ -39,7 +39,6 @@ import { eventsLinks } from "./partials/EventsNavigation";
 import { Modal, ModalHandle } from "../shared/modals/Modal";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import { resetTableProperties } from "../../slices/tableSlice";
-import { fetchAclDefaults } from "../../slices/aclSlice";
 
 /**
  * This component renders the table view of events
@@ -227,12 +226,12 @@ const Events = () => {
 					<h4>{t("TABLE_SUMMARY", { numberOfRows: events })}</h4>
 				</div>
 
-				{/*Include table modal*/}
+				{/* Include table modal*/}
 				{displayEventDetailsModal &&
 					<EventDetailsModal />
 				}
 
-				{/*Include table component*/}
+				{/* Include table component*/}
 				{/* <Table templateMap={eventsTemplateMap} resourceType="events" /> */}
 				<Table templateMap={eventsTemplateMap} />
 			</MainView>
