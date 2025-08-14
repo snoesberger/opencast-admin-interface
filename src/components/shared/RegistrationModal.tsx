@@ -237,7 +237,7 @@ const RegistrationModalContent = () => {
 							<b>
 								(<span>{t("HELP.HELP")}</span>)
 								{" "}
-								<LuMessageCircleQuestion />
+								<LuMessageCircleQuestion style={{ position: "relative", top: 1 }}/>
 								{" > "}
 								<span>{t("HELP.ADOPTER_REGISTRATION")}</span>
 							</b>
