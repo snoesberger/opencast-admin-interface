@@ -103,12 +103,6 @@ export const NotificationComponent = ({
 
 	return (
 		<div className={cn(notification.type, "alert sticky")}>
-			{notification.type === "warning" &&
-				<LuTriangleAlert className="warning-symbol-warning" />
-			}
-			{notification.type === "error" &&
-				<LuTriangleAlert className="warning-symbol-error" />
-			}
 			{closeNotification &&
 				<ButtonLikeAnchor
 					onClick={() => closeNotification(notification.id)}
@@ -117,7 +111,15 @@ export const NotificationComponent = ({
 					<LuX />
 				</ButtonLikeAnchor>
 			}
-			<p>{t(notification.message, notification.parameter)}</p>
+			<p>
+				{(notification.type === "warning") &&
+					<LuTriangleAlert className="warning-symbol-warning" />
+				}
+				{(notification.type === "error") &&
+					<LuTriangleAlert className="warning-symbol-error" />
+				}
+				{t(notification.message, notification.parameter)}
+			</p>
 		</div>
 	);
 };
