@@ -20,8 +20,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
-import { HiOutlineTranslate, HiTranslate } from "react-icons/hi";
-import { IconContext } from "react-icons";
+import { HiOutlineTranslate } from "react-icons/hi";
 import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
 import { ModalHandle } from "./shared/modals/Modal";
 import { broadcastLogout } from "../utils/broadcastSync";
@@ -147,9 +146,7 @@ const Header = () => {
 					<div className="nav-dd lang-dd" id="lang-dd" ref={containerLang}>
 						<Tooltip active={!displayMenuLang} title={t("LANGUAGE")}>
 							<BaseButton className="lang nav-dd-element" onClick={() => setMenuLang(!displayMenuLang)}>
-								<IconContext.Provider value={{ style: { fontSize: "20px" } }}>
-									<HiOutlineTranslate />
-								</IconContext.Provider>
+									<HiOutlineTranslate className="header-icon"/>
 							</BaseButton>
 						</Tooltip>
 						{displayMenuLang && <MenuLang handleChangeLanguage={handleChangeLanguage}/>}
@@ -170,10 +167,7 @@ const Header = () => {
 										target="_blank" rel="noreferrer"
 										className="nav-dd-element"
 									>
-										<LuCirclePlay style={{
-											fontSize: "20px",
-											color: "#fff",
-										}}/>
+										<LuCirclePlay className="header-icon"/>
 									</a>
 								</Tooltip>
 							</div>
@@ -184,10 +178,7 @@ const Header = () => {
 						<div className="nav-dd">
 							<Tooltip title={t("STUDIO")}>
 								<a href={studioURL} target="_blank" rel="noreferrer" className="nav-dd-element">
-									<LuVideo style={{
-										fontSize: "20px",
-										color: "#fff",
-									}}/>
+									<LuVideo className="header-icon"/>
 								</a>
 							</Tooltip>
 						</div>
@@ -242,9 +233,7 @@ const Header = () => {
 										onClick={() => setMenuHelp(!displayMenuHelp)}
 										className="nav-dd-element"
 									>
-										<LuMessageCircleQuestion style={{
-											fontSize: "20px",
-										}}/>
+										<LuMessageCircleQuestion className="header-icon"/>
 									</BaseButton>
 								</Tooltip>
 								{/* Click on the help icon, a dropdown menu with documentation, REST-docs and shortcuts (if available) opens */}
