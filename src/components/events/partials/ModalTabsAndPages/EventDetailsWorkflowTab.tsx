@@ -221,7 +221,7 @@ const EventDetailsWorkflowTab = ({
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.STOP"
 																>
 																	{/* STOP */}
-																	<LuCircleStop style={{ fontSize: "20px", verticalAlign: "middle" }}/>
+																	<LuCircleStop style={{ fontSize: "17px", verticalAlign: "middle" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{item.status ===
@@ -234,7 +234,7 @@ const EventDetailsWorkflowTab = ({
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.ABORT"
 																>
 																	{/* Abort */}
-																	<LuHand style={{ fontSize: "20px", verticalAlign: "middle" }}/>
+																	<LuHand style={{ fontSize: "17px", verticalAlign: "middle" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{item.status ===
@@ -246,7 +246,7 @@ const EventDetailsWorkflowTab = ({
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.RETRY"
 																>
 																	{/* Retry */}
-																	<LuRefreshCw style={{ fontSize: "20px", verticalAlign: "middle", color: "#444" }}/>
+																	<LuRefreshCw style={{ fontSize: "17px", verticalAlign: "middle", color: "#444" }}/>
 																</ButtonLikeAnchor>
 															)}
 															{(item.status ===
