@@ -5,7 +5,7 @@ import { useField } from "formik";
 import { ParseKeys } from "i18next";
 import SearchContainer from "../SearchContainer";
 import BaseButton from "../BaseButton";
-import { LuArrowRightLeft, LuSearch } from "react-icons/lu";
+import { LuArrowRightLeft } from "react-icons/lu";
 
 type Item = {
 	name: string

@@ -2,7 +2,7 @@ import { loadServicesIntoTable } from "../../../thunks/tableThunks";
 import { useAppDispatch } from "../../../store";
 import { Service, fetchServices, restartService } from "../../../slices/serviceSlice";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
-import { LuRotateCcw, LuUndo } from "react-icons/lu";
+import { LuRotateCcw } from "react-icons/lu";
 
 /**
  * This component renders the action cells of services in the table view

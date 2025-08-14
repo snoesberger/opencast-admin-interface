@@ -21,7 +21,7 @@ import { isEvent } from "../../../../slices/tableSlice";
 import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import { ParseKeys } from "i18next";
 import ModalContent from "../../../shared/modals/ModalContent";
-import { LuLoader, LuLoaderCircle } from "react-icons/lu";
+import { LuLoaderCircle } from "react-icons/lu";
 
 /**
  * This component manges the edit metadata bulk action
