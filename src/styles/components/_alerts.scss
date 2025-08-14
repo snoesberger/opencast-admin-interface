@@ -184,11 +184,13 @@
     .warning-symbol-warning {
         color: variables.$state-warning-text;
         margin-right: 5px;
+        font-size: 17px;
     }
 
     .warning-symbol-error {
         color: variables.$state-danger-text;
         margin-right: 5px;
+        font-size: 17px;
     }
 }
 
