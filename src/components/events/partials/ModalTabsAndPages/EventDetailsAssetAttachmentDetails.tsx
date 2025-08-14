@@ -122,8 +122,9 @@ const EventDetailsAssetAttachmentDetails = () => {
 										<a
 											href={attachment.url}
 											target="_blank" rel="noreferrer"
+											className="action-cell-button"
 										>
-											<LuExternalLink style={{ fontSize: "20px", verticalAlign: "middle" }}/>
+											<LuExternalLink />
 										</a>
 									</td>
 								</tr>
