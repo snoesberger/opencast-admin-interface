@@ -33,8 +33,7 @@ import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import { ParseKeys } from "i18next";
 import ModalContent from "../../../shared/modals/ModalContent";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
-import { HiHandRaised } from "react-icons/hi2";
-import { LuBan, LuChevronRight, LuCircleStop, LuCircleX, LuHand, LuRefreshCw } from "react-icons/lu";
+import { LuChevronRight, LuCircleStop, LuCircleX, LuHand, LuRefreshCw } from "react-icons/lu";
 
 type InitialValues = {
 	workflowDefinition: string;

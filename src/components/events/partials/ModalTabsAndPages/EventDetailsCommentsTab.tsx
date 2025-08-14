@@ -25,7 +25,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import BaseButton from "../../../shared/BaseButton";
-import { LuCircleX, LuClock9, LuX } from "react-icons/lu";
+import { LuCircleX, LuClock9 } from "react-icons/lu";
 
 /**
  * This component manages the comment tab of the event details modal

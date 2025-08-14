@@ -30,9 +30,6 @@ import cn from "classnames";
 
 import EditTableViewModal from "../shared/EditTableViewModal";
 
-import sortIcon from "../../img/tbl-sort.png";
-import sortUpIcon from "../../img/tbl-sort-up.png";
-import sortDownIcon from "../../img/tbl-sort-down.png";
 import Notifications from "./Notifications";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
