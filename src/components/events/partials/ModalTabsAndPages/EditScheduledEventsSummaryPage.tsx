@@ -166,13 +166,13 @@ const EditScheduledEventsSummaryPage = <T extends RequiredFormProps>({
 									<table className="main-tbl">
 										<thead>
 											<tr>
-												<th className="fit">
+												<th>
 													{t("BULK_ACTIONS.EDIT_EVENTS.SUMMARY.TYPE")}
 												</th>
-												<th className="fit">
+												<th>
 													{t("BULK_ACTIONS.EDIT_EVENTS.SUMMARY.PREVIOUS")}
 												</th>
-												<th className="fit">
+												<th>
 													{t("BULK_ACTIONS.EDIT_EVENTS.SUMMARY.NEXT")}
 												</th>
 											</tr>

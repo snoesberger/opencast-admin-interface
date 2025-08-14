@@ -488,14 +488,14 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 											) /* <!-- Role --> */
 										}
 									</th>
-									<th className="fit">
+									<th>
 										{
 											t(
 												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
 											) /* <!-- Read --> */
 										}
 									</th>
-									<th className="fit">
+									<th>
 										{
 											t(
 												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
@@ -503,7 +503,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 										}
 									</th>
 									{hasActions && (
-										<th className="fit">
+										<th>
 											{
 												t(
 													"EVENTS.SERIES.DETAILS.ACCESS.ACCESS_POLICY.ADDITIONAL_ACTIONS",
@@ -512,7 +512,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 										</th>
 									)}
 									{hasAccess(editAccessRole, user) && (
-										<th className="fit">
+										<th>
 											{
 												t(
 													"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.ACTION",
@@ -580,7 +580,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 															</td>
 
 															{/* Checkboxes for policy.read and policy.write */}
-															<td className="fit text-center">
+															<td className="text-center">
 																<Field
 																	type="checkbox"
 																	name={`policies.${formik.values.policies.findIndex(p => p === policy)}.read`}
@@ -605,7 +605,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																	}
 																/>
 															</td>
-															<td className="fit text-center">
+															<td className="text-center">
 																<Field
 																	type="checkbox"
 																	name={`policies.${formik.values.policies.findIndex(p => p === policy)}.write`}
@@ -636,7 +636,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 
 															{/* Multi value field for policy.actions (additional actions) */}
 															{hasActions && (
-																<td className="fit editable">
+																<td className="editable">
 																	{!transactions.readOnly &&
 																		hasAccess(
 																			editAccessRole,

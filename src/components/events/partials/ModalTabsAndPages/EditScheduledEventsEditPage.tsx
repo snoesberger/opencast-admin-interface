@@ -177,7 +177,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 															)}
 														</span>
 													</td>
-													<td className="editable ng-isolated-scope">
+													<td className="editable">
 													{/*
 														* Per event there are 14 input fields, so with 'key * 14', the right
 														* event is reached. After the '+' comes the number of the input field.
@@ -205,7 +205,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 															)}
 														</span>
 													</td>
-													<td className="editable ng-isolated-scope">
+													<td className="editable">
 														{/*
 															* Per event there are 14 input fields, so with 'key * 14', the right
 															* event is reached. After the '+' comes the number of the input field.

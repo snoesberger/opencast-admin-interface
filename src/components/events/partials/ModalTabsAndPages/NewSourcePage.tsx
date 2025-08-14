@@ -292,7 +292,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 													/>
 												</div>
 											</td>
-											<td className="fit">
+											<td>
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
 													className="action-cell-button remove"

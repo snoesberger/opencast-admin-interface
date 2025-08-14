@@ -180,7 +180,7 @@ const EventDetailsWorkflowTab = ({
 												{t("EVENTS.EVENTS.DETAILS.WORKFLOWS.STATUS") /* Status */}
 											</th>
 											{isRoleWorkflowEdit && (
-												<th className="fit">
+												<th>
 													{
 														t(
 															"EVENTS.EVENTS.DETAILS.WORKFLOWS.ACTIONS",
