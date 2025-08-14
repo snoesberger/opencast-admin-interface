@@ -269,7 +269,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 									formik.values.uploadAssetsTrack.map((asset, key) => (
 										<tr key={key}>
 											<td>
-												<span style={{ fontWeight: "bold" }}>
+												<span className="title">
 													{translateOverrideFallback(asset, t, "SHORT")}
 												</span>
 												<p>

@@ -125,14 +125,6 @@ const RegistrationModalContent = () => {
 			});
 	};
 
-	// style of label when input has content
-	const styleWithContent = {
-		fontSize: "70%",
-		fontWeight: "700",
-		transform: "translate3d(0, -35%, 0)",
-		opacity: 1,
-	};
-
 	return (
 	<>
 		{/* shows information about the registration*/}
@@ -140,7 +132,6 @@ const RegistrationModalContent = () => {
 			<ModalContent modalContentClassName="modal-content">
 				<div
 					className="registration-header"
-					style={{ padding: "5px 0 15px 0" }}
 				>
 					<h2>
 						{t("ADOPTER_REGISTRATION.MODAL.INFORMATION_STATE.HEADER")}
@@ -212,7 +203,7 @@ const RegistrationModalContent = () => {
 			<ModalContent modalContentClassName="modal-content">
 				<div>
 					<div className="row spinner-container">
-						<LuLoaderCircle className="fa-spin" style={{ fontSize: "60px" }}/>
+						<LuLoaderCircle className="fa-spin"/>
 					</div>
 				</div>
 			</ModalContent>
@@ -297,13 +288,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.organisationName })}
 													htmlFor="adopter_organisation"
-													style={
-														formik.values.organisationName
-															? styleWithContent
-															: {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.ORGANISATION",
@@ -320,13 +306,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.departmentName })}
 													htmlFor="adopter_department"
-													style={
-														formik.values.departmentName
-															? styleWithContent
-															: {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.DEPARTMENT",
@@ -345,11 +326,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.street })}
 													htmlFor="adopter_street"
-													style={
-														formik.values.street ? styleWithContent : {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.STREET",
@@ -366,11 +344,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.streetNo })}
 													htmlFor="adopter_streetnumber"
-													style={
-														formik.values.streetNo ? styleWithContent : {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.NUMBER",
@@ -397,11 +372,8 @@ const RegistrationModalContent = () => {
 													))}
 												</Field>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.country })}
 													htmlFor="adopter_country"
-													style={
-														formik.values.country ? styleWithContent : {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.COUNTRY",
@@ -419,13 +391,8 @@ const RegistrationModalContent = () => {
 														className="form-control"
 													/>
 													<label
-														className="form-control-placeholder"
+														className={cn("form-control-placeholder", { styleWithContent: formik.values.postalCode })}
 														htmlFor="adopter_postalcode"
-														style={
-															formik.values.postalCode
-																? styleWithContent
-																: {}
-														}
 													>
 														{t(
 															"ADOPTER_REGISTRATION.MODAL.FORM_STATE.POSTAL_CODE",
@@ -440,11 +407,8 @@ const RegistrationModalContent = () => {
 														className="form-control"
 													/>
 													<label
-														className="form-control-placeholder"
+														className={cn("form-control-placeholder", { styleWithContent: formik.values.city })}
 														htmlFor="adopter_city"
-														style={
-															formik.values.city ? styleWithContent : {}
-														}
 													>
 														{t(
 															"ADOPTER_REGISTRATION.MODAL.FORM_STATE.CITY",
@@ -471,13 +435,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.firstName })}
 													htmlFor="adopter_firstname"
-													style={
-														formik.values.firstName
-															? styleWithContent
-															: {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.FIRST_NAME",
@@ -494,11 +453,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.lastName })}
 													htmlFor="adopter_lastname"
-													style={
-														formik.values.lastName ? styleWithContent : {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.LAST_NAME",
@@ -517,11 +473,8 @@ const RegistrationModalContent = () => {
 													className="form-control"
 												/>
 												<label
-													className="form-control-placeholder"
+													className={cn("form-control-placeholder", { styleWithContent: formik.values.email })}
 													htmlFor="adopter_emailadr"
-													style={
-														formik.values.email ? styleWithContent : {}
-													}
 												>
 													{t(
 														"ADOPTER_REGISTRATION.MODAL.FORM_STATE.MAIL",
@@ -568,11 +521,8 @@ const RegistrationModalContent = () => {
 												))}
 											</Field>
 											<label
-												className="form-control-placeholder"
+												className={cn("form-control-placeholder", { styleWithContent: formik.values.systemType })}
 												htmlFor="system_type"
-												style={
-													formik.values.systemType ? styleWithContent : {}
-												}
 											>
 												{t(
 													"ADOPTER_REGISTRATION.MODAL.FORM_STATE.SYSTEM_TYPE",

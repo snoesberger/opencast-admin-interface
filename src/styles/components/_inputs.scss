@@ -193,6 +193,9 @@ input[type="radio"].ios {
         @include button.btn(white);
         opacity: 1 !important;
 
+        display: flex;
+        align-items: center;
+
         &, &:hover, &:focus, &:active {
             background: none;
             background-color: variables.$white;

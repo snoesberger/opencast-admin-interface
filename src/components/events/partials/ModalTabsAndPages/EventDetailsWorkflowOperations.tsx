@@ -171,7 +171,7 @@ export const Operation = ({
 
 	return (
 		<tr>
-			<td style={{ display: "flex", alignItems: "center" }}>
+			<td className="workflow-operation-status-container">
 				<OperationStatusIcon status={item.status} />
 				{t(item.status as ParseKeys)}
 			</td>

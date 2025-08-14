@@ -34,7 +34,7 @@ import { ParseKeys } from "i18next";
 import SearchContainer from "./SearchContainer";
 import { Resource } from "../../slices/tableSlice";
 import { HiFunnel } from "react-icons/hi2";
-import { LuSearch, LuSettings, LuX } from "react-icons/lu";
+import { LuSettings, LuX } from "react-icons/lu";
 
 /**
  * This component renders the table filters in the upper right corner of the table
@@ -347,7 +347,6 @@ const TableFilters = ({
 										<ButtonLikeAnchor
 											onClick={() => removeFilter(filter)}
 											tooltipText="TABLE_FILTERS.REMOVE"
-											style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
 										>
 											<LuX />
 										</ButtonLikeAnchor>

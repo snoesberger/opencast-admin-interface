@@ -179,18 +179,24 @@
             flex-direction: row;
             justify-content: space-between;
 
-            .chevron-up {
-                position: relative;
-                top: 3px;
-                color: variables.$grey;
-            }
-            .chevron-down {
-                position: relative;
-                top: -3px;
-                color: variables.$grey;
-            }
-            .active {
-                color: variables.$l-blue;
+            div {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .chevron-up {
+                    position: relative;
+                    top: 3px;
+                    color: variables.$grey;
+                }
+                .chevron-down {
+                    position: relative;
+                    top: -3px;
+                    color: variables.$grey;
+                }
+                .active {
+                    color: variables.$l-blue;
+                }
             }
         }
     }
@@ -235,6 +241,10 @@
 
         &.darker-row {
             background: color.adjust(variables.$color-lightgray, $lightness: -5%);
+        }
+
+        &.disabled {
+            opacity: 50%;
         }
     }
 
@@ -318,10 +328,6 @@
                 }
             }
 
-            &.stop {
-                color: variables.$grey;
-            }
-
             &.edit {
                 color: variables.$l-blue;
             }
@@ -394,6 +400,10 @@
 
         &:last-child {
             border-right: none;
+        }
+
+        .title {
+            font-weight: bold;
         }
 
         span[data-status]:before {

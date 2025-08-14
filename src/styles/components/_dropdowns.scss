@@ -26,16 +26,17 @@
 .drop-down-container {
     width: 160px;
     height: 40px;
-    line-height: 40px;
-    display: inline-block;
     border-radius: variables.$main-border-radius;
     padding-left: 15px;
     font-weight: 600;
     font-size: 12px;
     cursor: pointer;
-    position: relative;
-    vertical-align: middle;
     user-select: none;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
     // Pulled from Button Mixin (keep in sync with those styles)
     background: linear-gradient(variables.$white, variables.$color-lightgray);
@@ -63,9 +64,7 @@
     .chevron-down {
         color: inherit;
         font-size: 12px;
-        position: absolute;
-        top: 13px;
-        right: 10px;
+        margin-right: 10px;
     }
 
     > ul {
@@ -131,16 +130,9 @@
     &.small {
         width: 75px;
         height: 28px;
-        line-height: 26px;
-        display: inline-block;
-        padding-left: 15px;
         font-weight: 600;
         font-size: 12px;
         text-shadow: 0 1px 0 variables.$white;
-        cursor: pointer;
-        position: relative;
-        vertical-align: middle;
-        user-select: none;
         background-repeat: repeat-x;
 
         &:after {

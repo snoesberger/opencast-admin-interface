@@ -146,7 +146,7 @@ const EditMetadataEventsModal = ({
 			{loading && (
 				<ModalContent>
 					<div className="loading">
-						<LuLoaderCircle className="fa-spin" style={{ fontSize: "30px" }}/>
+						<LuLoaderCircle className="fa-spin"/>
 					</div>
 				</ModalContent>
 			)}

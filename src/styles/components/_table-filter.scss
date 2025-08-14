@@ -43,6 +43,12 @@ div.table-filter {
       gap: 4px;
       align-items: center;
       margin: 0;
+
+      > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 
