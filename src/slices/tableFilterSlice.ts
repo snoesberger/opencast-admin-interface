@@ -83,7 +83,7 @@ export const fetchFilters = createAppAsyncThunk("tableFilters/fetchFilters", asy
 	const data = await axios.get<FetchFilters>(
 		`/admin-ng/resources/${resource}/filters.json`,
 	);
-	const resourceData = await data.data;
+	const resourceData = data.data;
 
 	const filters = transformResponse(resourceData);
 	const filtersList: TableFilterState["data"] = Object.keys(filters.filters).map(key => {
@@ -135,7 +135,7 @@ export const fetchStats = createAppAsyncThunk("tableFilters/fetchStats", async (
 }
 	// fetch information about possible status an event can have
 	const data = await axios.get<FetchStats>("/admin-ng/resources/STATS.json");
-	const response = await data.data;
+	const response = data.data;
 
 	// transform response
 	const statsResponse = Object.keys(response).map(key => {
@@ -176,7 +176,7 @@ export const fetchStats = createAppAsyncThunk("tableFilters/fetchStats", async (
 			},
 		});
 
-		const response = await data.data;
+		const response = data.data;
 
 		// add count to status information fetched before
 		statsResponse[i] = {
@@ -204,7 +204,7 @@ export const setSpecificEventFilter = createAppAsyncThunk("tableFilters/setSpeci
 	}
 
 	if (filterToChange) {
-		await dispatch(editFilterValue({
+		dispatch(editFilterValue({
 			filterName: filterToChange.name,
 			value: filterValue,
 			resource: "events",
@@ -226,7 +226,7 @@ export const setSpecificServiceFilter = createAppAsyncThunk("tableFilters/setSpe
 	}
 
 	if (filterToChange) {
-		await dispatch(editFilterValue({
+		dispatch(editFilterValue({
 			filterName: filterToChange.name,
 			value: filterValue,
 			resource: "services",

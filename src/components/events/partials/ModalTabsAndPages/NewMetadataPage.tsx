@@ -22,7 +22,7 @@ const NewMetadataPage = ({
 	return (
 		<ModalContentTable>
 			{
-				//iterate through metadata catalogs
+				// iterate through metadata catalogs
 				!!metadataCatalogs &&
 				metadataCatalogs.length > 0 &&
 				metadataCatalogs.map((catalog, index) => (

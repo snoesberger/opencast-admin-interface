@@ -31,6 +31,7 @@ import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { formatAclTemplatesForDropdown } from "../../../utils/dropDownUtils";
 import ModalContentTable from "./ModalContentTable";
 import { getAclDefaults } from "../../../selectors/aclSelectors";
+import { LuCircleX } from "react-icons/lu";
 
 
 /**
@@ -568,6 +569,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																		}
 																		skipTranslate
 																		optionHeight={35}
+																		customCSS={{ width: "100%", optionPaddingTop: 5 }}
 																	/>
 																) : (
 																	<p>{policy.role}</p>
@@ -681,8 +683,10 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																			onClick={() =>
 																				arrayHelpers.remove(formik.values.policies.findIndex(p => p === policy))
 																			}
-																			extraClassName="remove"
-																		/>
+																			className="action-cell-button remove"
+																		>
+																			<LuCircleX />
+																		</ButtonLikeAnchor>
 																	)}
 																</td>
 															)}
@@ -798,7 +802,7 @@ export const TemplateSelector = <T extends TemplateSelectorProps>({
 									/>
 								)}
 								{!(aclTemplates.length > 0) &&
-									//Show if no option is available
+									// Show if no option is available
 									<td>
 										<div className="obj-container padded">
 											{t(emptyText)}

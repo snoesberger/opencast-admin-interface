@@ -6,7 +6,7 @@ import { transformToIdValueArray } from "../utils/utils";
 import { NOTIFICATION_CONTEXT_ACCESS } from "../configs/modalConfig";
 import { addNotification, removeNotificationWizardAccess } from "./notificationSlice";
 import { getUserInformation } from "../selectors/userInfoSelectors";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch, AppThunk, RootState } from "../store";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { initialFormValuesNewAcl } from "../configs/modalConfig";
 import { TransformedAcl } from "./aclDetailsSlice";
@@ -98,7 +98,7 @@ export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getSt
 export const fetchAclTemplates = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return transformToIdValueArray(response);
 };
@@ -107,7 +107,7 @@ export const fetchAclTemplates = async () => {
 export const fetchAclActions = async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.ACTIONS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	const actions = transformToIdValueArray(response);
 
@@ -115,10 +115,10 @@ export const fetchAclActions = async () => {
 };
 
 // fetch defaults for the access policy tab in the details views
-export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", async (_, { getState }) => {
+export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return response;
 });
@@ -146,7 +146,7 @@ export const fetchRolesWithTarget = async (target: string) => {
 };
 
 // post new acl to backend
-export const postNewAcl = (values: typeof initialFormValuesNewAcl) => async (dispatch: AppDispatch) => {
+export const postNewAcl = (values: typeof initialFormValuesNewAcl): AppThunk => dispatch => {
 	const acls = prepareAccessPolicyRulesForPost(values.policies);
 
 	const data = new URLSearchParams();
@@ -168,13 +168,14 @@ export const postNewAcl = (values: typeof initialFormValuesNewAcl) => async (dis
 			dispatch(addNotification({ type: "error", key: "ACL_NOT_SAVED" }));
 		});
 };
+
 // delete acl with provided id
-export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
+export const deleteAcl = (id: number): AppThunk => dispatch => {
 	axios
 		.delete(`/admin-ng/acl/${id}`)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "ACL_DELETED" }));
 		})
 		.catch(res => {
@@ -185,7 +186,7 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 };
 
 
-export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const checkAcls = (acls: TransformedAcl[]) => (dispatch: AppDispatch, getState: () => RootState) => {
 	// Remove old notifications of context event-access
 	// Helps to prevent multiple notifications for same problem
 	dispatch(removeNotificationWizardAccess());

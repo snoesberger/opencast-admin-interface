@@ -18,6 +18,7 @@ import { AsyncThunk } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../store";
 import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSlice";
 import { ParseKeys } from "i18next";
+import { LuChevronLeft, LuChevronRight, LuDownload } from "react-icons/lu";
 
 
 /**
@@ -107,7 +108,7 @@ const TimeSeriesStatistics = ({
 	};
 
 	// change time mode in formik and get new values from API
-	const changeTimeMode = async (
+	const changeTimeMode = (
 		newTimeMode: TimeMode,
 		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
 		from: string,
@@ -119,7 +120,7 @@ const TimeSeriesStatistics = ({
 	};
 
 	// change custom time granularity in formik and get new values from API
-	const changeGranularity = async (
+	const changeGranularity = (
 		granularity: DataResolution,
 		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
 		timeMode: TimeMode,
@@ -179,9 +180,9 @@ const TimeSeriesStatistics = ({
 				dataResolution: dataResolution,
 				// Typescript complains that the method "startOf" cannot take "custom" as a parameter, but in practice
 				// this does not seem to be a problem
-				//@ts-expect-error: timeMode should be assignable here
+				// @ts-expect-error: timeMode should be assignable here
 				fromDate: moment(fromDate).startOf(timeMode).format("YYYY-MM-DD"),
-				//@ts-expect-error: timeMode should be assignable here
+				// @ts-expect-error: timeMode should be assignable here
 				toDate: moment(toDate).endOf(timeMode).format("YYYY-MM-DD"),
 			}}
 			onSubmit={() => {}}
@@ -191,10 +192,11 @@ const TimeSeriesStatistics = ({
 					{/* download link for a statistic file */}
 					<div className="download">
 						<a
-							className="download-icon"
 							href={exportUrl}
 							download={exportFileName(statTitle)}
-						/>
+						>
+							<LuDownload className="download-icon"/>
+						</a>
 					</div>
 
 					{/* statistics total value */}
@@ -243,7 +245,7 @@ const TimeSeriesStatistics = ({
 						/* year/month selection for statistic via previous and next buttons */
 						<span className="preset">
 							<a
-								className="navigation prev"
+								className="navigation"
 								onClick={() =>
 									selectPrevious(
 										formik.setFieldValue,
@@ -252,7 +254,9 @@ const TimeSeriesStatistics = ({
 										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronLeft />
+							</a>
 							<div>
 								{formatSelectedTimeframeName(
 									formik.values.fromDate,
@@ -269,7 +273,9 @@ const TimeSeriesStatistics = ({
 										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronRight />
+							</a>
 						</span>
 					)}
 

@@ -4,6 +4,7 @@ import { buildGroupBody } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { Group } from "./groupSlice";
+import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of details of a group
@@ -38,7 +39,7 @@ const initialState: GroupDetailsState = {
 export const fetchGroupDetails = createAppAsyncThunk("groupDetails/fetchGroupDetails", async (groupId: GroupDetails["id"]) => {
 	type FetchGroupDetails = Omit<GroupDetails, "users"> & { users: { username: string, name: string }[] };
 	const res = await axios.get<FetchGroupDetails>(`/admin-ng/groups/${groupId}`);
-	const response = await res.data;
+	const response = res.data;
 
 	let users: GroupDetailsState["users"] = [];
 	if (response.users.length > 0) {
@@ -63,10 +64,10 @@ export const fetchGroupDetails = createAppAsyncThunk("groupDetails/fetchGroupDet
 });
 
 // update details of a certain group
-export const updateGroupDetails = createAppAsyncThunk("groupDetails/updateGroupDetails", async (params: {
+export const updateGroupDetails = (params: {
 	values: UpdateGroupDetailsState,
 	groupId: GroupDetails["id"]
-}, { dispatch }) => {
+}): AppThunk => dispatch => {
 	const { values, groupId } = params;
 
 	// get URL params used for put request
@@ -87,7 +88,7 @@ export const updateGroupDetails = createAppAsyncThunk("groupDetails/updateGroupD
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));
 			}
 		});
-});
+};
 
 const groupDetailsSlice = createSlice({
 	name: "groupDetails",

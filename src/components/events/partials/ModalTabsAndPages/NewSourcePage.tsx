@@ -48,6 +48,7 @@ import SchedulingLocation from "../wizards/scheduling/SchedulingLocation";
 import SchedulingInputs from "../wizards/scheduling/SchedulingInputs";
 import SchedulingConflicts from "../wizards/scheduling/SchedulingConflicts";
 import { ParseKeys } from "i18next";
+import { LuCircleX } from "react-icons/lu";
 
 /**
  * This component renders the source page for new events in the new event wizard.
@@ -109,7 +110,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 	return (
 		<>
 			<ModalContentTable>
-				{/*Show notifications with context events-form*/}
+				{/* Show notifications with context events-form*/}
 				<Notifications context="not_corner" />
 				{
 					<SchedulingConflicts
@@ -259,10 +260,10 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				<div className="obj-container">
 					<table className="main-tbl">
 						<tbody>
-							{/*File upload button for each upload asset*/}
+							{/* File upload button for each upload asset */}
 							<FieldArray
 								name="uploadAssetsTrack"
-								render={arrayHelpers => (
+								render={_arrayHelpers => (
 									formik.values.uploadAssetsTrack &&
 									formik.values.uploadAssetsTrack.length > 0 &&
 									formik.values.uploadAssetsTrack.map((asset, key) => (
@@ -294,7 +295,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											<td className="fit">
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
-													extraClassName="remove"
+													className="action-cell-button remove"
 													onClick={() => {
 														formik.setFieldValue(
 															`uploadAssetsTrack.${key}.file`,
@@ -302,7 +303,9 @@ const Upload = <T extends RequiredFormPropsUpload>({
 														);
 														(document.getElementById(asset.id) as HTMLInputElement).value = "";
 													}}
-												/>
+												>
+													<LuCircleX />
+												</ButtonLikeAnchor>
 											</td>
 										</tr>
 									))

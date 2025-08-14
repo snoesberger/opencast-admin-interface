@@ -24,7 +24,6 @@ import { hasAccess } from "../../../../utils/utils";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
-import { fetchAclDefaults } from "../../../../slices/aclSlice";
 import { getAclDefaults } from "../../../../selectors/aclSelectors";
 
 /**
