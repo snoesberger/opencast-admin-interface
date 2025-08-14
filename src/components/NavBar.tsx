@@ -114,10 +114,9 @@ const NavBar = ({
 						<BaseButton
 							className="add"
 							onClick={showNewResourceModal}
+							style={{ display: "flex", alignItems: "center" }}
 						>
-							<LuPlus style={{
-								marginRight: "10px",
-							}}/>
+							<LuPlus className="btn-group-icon"/>
 							<span>{t(create.text)}</span>
 						</BaseButton>
 					)}

@@ -207,6 +207,10 @@
          margin-right: variables.$side-margin;
          align-self: center;
 
+        .btn-group-icon {
+            margin-right: 10px;
+        }
+
         // btn specific styles
         .add {
             @include button.btn(green-dark-bg);
