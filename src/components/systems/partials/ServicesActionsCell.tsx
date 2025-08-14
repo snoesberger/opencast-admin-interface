@@ -24,7 +24,7 @@ const ServicesActionCell = ({
 		row.status !== "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
 			<ButtonLikeAnchor
 				onClick={() => onClickRestart()}
-				className={"sanitize"}
+				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_SERVICES_STATUS_EDIT"}
 				tooltipText={"SYSTEMS.SERVICES.TABLE.SANITIZE"}
 			>
