@@ -42,16 +42,16 @@ const NewAclSummaryPage = <T extends RequiredFormProps>({
 					<table className="main-tbl">
 						<thead>
 							<tr>
-								<th className="fit">
+								<th>
 									{t("USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.ROLE")}
 								</th>
-								<th className="fit">
+								<th>
 									{t("USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.READ")}
 								</th>
-								<th className="fit">
+								<th>
 									{t("USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.WRITE")}
 								</th>
-								<th className="fit">
+								<th>
 									{t(
 										"USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.ADDITIONAL_ACTIONS",
 									)}
@@ -61,10 +61,10 @@ const NewAclSummaryPage = <T extends RequiredFormProps>({
 								formik.values.policies.map((acl, key) => (
 									<tr key={key}>
 										<td>{acl.role}</td>
-										<td className="fit">
+										<td>
 											<input type="checkbox" disabled checked={acl.read} />
 										</td>
-										<td className="fit">
+										<td>
 											<input type="checkbox" disabled checked={acl.write} />
 										</td>
 										<td>
