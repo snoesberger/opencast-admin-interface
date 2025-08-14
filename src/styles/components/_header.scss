@@ -243,7 +243,10 @@
             height: 100%;
             font-size: 22px;
             color: #9badbb;
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
             &:hover {
                 color: #b9c6d0;
             }
