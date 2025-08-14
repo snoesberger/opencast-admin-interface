@@ -25,6 +25,7 @@ import { Resource } from "../../slices/tableSlice";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "./modals/ModalContentTable";
 import BaseButton from "./BaseButton";
+import { LuCirclePlus, LuCircleX, LuGrip } from "react-icons/lu";
 
 /**
  * This component renders the modal for editing which columns are shown in the table
@@ -193,12 +194,15 @@ const EditTableViewModalContent = ({
 								{deactivatedCols.map((column, key) =>
 									column ? (
 										<li className="drag-item" key={key}>
+											<LuGrip />
 											<div className="title">{t(column.label)}</div>
 											<ButtonLikeAnchor
 												className="move-item add"
 												onClick={() => changeColumn(column, false)}
+												tooltipText={"PREFERENCES.TABLE.ADD_COLUMN"}
+												aria-label={t("PREFERENCES.TABLE.ADD_COLUMN")}
 											>
-												<span className="sr-only">{t("PREFERENCES.TABLE.ADD_COLUMN")}</span>
+												<LuCirclePlus />
 											</ButtonLikeAnchor>
 										</li>
 									) : null,
@@ -242,14 +246,17 @@ const EditTableViewModalContent = ({
 																		style={{ ...provided.draggableProps.style }}
 																		className="drag-item"
 																	>
+																		<LuGrip />
 																		<div className="title">
 																			{t(column.label)}
 																		</div>
 																		<ButtonLikeAnchor
 																			className="move-item remove"
 																			onClick={() => changeColumn(column, true)}
+																			tooltipText="PREFERENCES.TABLE.REMOVE_COLUMN"
+																			aria-label={t("PREFERENCES.TABLE.REMOVE_COLUMN")}
 																		>
-																			<span className="sr-only">{t("PREFERENCES.TABLE.REMOVE_COLUMN")}</span>
+																			<LuCircleX />
 																		</ButtonLikeAnchor>
 																	</div>
 																)}

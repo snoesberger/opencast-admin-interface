@@ -6,6 +6,7 @@ import { ActionCellDelete } from "../../shared/ActionCellDelete";
 import { ModalHandle } from "../../shared/modals/Modal";
 import RecordingDetailsModal from "./modal/RecordingDetailsModal";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuFileText } from "react-icons/lu";
 
 /**
  * This component renders the action cells of recordings in the table view
@@ -34,10 +35,12 @@ const RecordingsActionCell = ({
 			{/* view details location/recording */}
 			<ButtonLikeAnchor
 				onClick={() => showRecordingDetails()}
-				className={"more"}
+				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_LOCATIONS_DETAILS_VIEW"}
 				tooltipText={"RECORDINGS.RECORDINGS.TABLE.TOOLTIP.DETAILS"}
-			/>
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
 			<RecordingDetailsModal
 				recordingId={row.name}

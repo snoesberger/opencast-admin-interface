@@ -17,6 +17,7 @@ import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import { LuCheck, LuEllipsis, LuLoader, LuPause, LuRotateCcw, LuX } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
+import { LuChevronRight } from "react-icons/lu";
 
 /**
  * This component manages the workflow operations for the workflows tab of the event details modal
@@ -186,6 +187,7 @@ export const Operation = ({
 					}
 				>
 					{t("EVENTS.EVENTS.DETAILS.MEDIA.DETAILS") /* Details */}
+					<LuChevronRight className="details-link-icon"/>
 				</ButtonLikeAnchor>
 			</td>
 		</tr>
