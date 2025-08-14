@@ -50,7 +50,7 @@ const UserEffectiveRolesTab = <T extends RequiredFormProps>({
 					clearSearchField={clearSearchField}
 				/>
 
-				<select multiple style={{ height: "26em" }}>
+				<select multiple >
 					{items.map((item, key) => (
 						<option key={key} value={item.name}>
 							{item.name}

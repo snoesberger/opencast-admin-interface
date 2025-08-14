@@ -208,7 +208,6 @@ const TimeSeriesStatistics = ({
 							>
 								<Field
 									type="radio"
-									style={{ display: "none" }}
 									name="timeMode"
 									value={mode.value}
 									id={providerId + "-mode-" + key}

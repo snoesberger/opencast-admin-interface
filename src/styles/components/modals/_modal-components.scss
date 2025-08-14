@@ -302,6 +302,10 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+
+            .edit {
+                padding: 0px 10px;
+            }
         }
 
         .button-container {

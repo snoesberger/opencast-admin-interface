@@ -214,15 +214,6 @@
         .add {
             @include button.btn(green-dark-bg);
         }
-
-        .secondary {
-             @include button.btn(blue-dark-bg);
-             margin-right: 20px;
-
-             &:first-child {
-                margin-right: 0;
-             }
-        }
     }
 
     // Menu top

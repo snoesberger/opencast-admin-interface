@@ -38,6 +38,10 @@
       display: inline;
       border-radius: 0;
       margin: -2px;
+
+      > input[type="radio"] {
+        display: none;
+      }
     }
 
     > label.selected {

@@ -4,17 +4,6 @@ import { Event } from "../slices/eventSlice";
 /**
  * This file contains functions and constants that are needed in the event details modal
  */
-export const styleButtonSpacing = {
-	marginTop: "13px",
-	marginLeft: "15px",
-	marginRight: "15px",
-};
-
-export const errorDetailStyle = {
-	overflow: "auto",
-	width: "750px",
-};
-
 export const formatDuration = (durationInMS: number) => {
 	const duration = moment.duration(durationInMS);
 	if (duration.asHours() > 1) {

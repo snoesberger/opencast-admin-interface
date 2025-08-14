@@ -144,15 +144,12 @@ const EmbeddingCodeModal = ({
 
 			{/* copy button */}
 			<div className="embedded-code-copy-to-clipboard">
-				<div className="btn-container" style={{ marginBottom: "20px" }}>
-					<BaseButton
-						className="cancel-btn"
-						style={{ fontSize: "14px" }}
-						onClick={() => copy()}
-					>
-						{t("COPY")}
-					</BaseButton>
-				</div>
+				<BaseButton
+					className="cancel-btn"
+					onClick={() => copy()}
+				>
+					{t("COPY")}
+				</BaseButton>
 			</div>
 		</>
 	);

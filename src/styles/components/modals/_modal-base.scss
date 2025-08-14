@@ -87,6 +87,28 @@
         text-overflow: ellipsis;
     }
 
+    .single-value {
+        display: flex;
+        justify-content: space-between;
+
+        .single-value-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    .checkmark {
+        float: right;
+        cursor: pointer;
+    }
+
+    .pen {
+        float: right;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 14px;
+    }
+
     // When not focused, make it look like a span
     .single-value:not(:focus){
         background-color: transparent;
@@ -431,4 +453,5 @@
     text-align: center;
     padding-top: 16px;
     padding-bottom: 16px;
+    font-size: 30px;
 }

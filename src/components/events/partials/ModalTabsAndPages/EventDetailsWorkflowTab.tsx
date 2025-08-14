@@ -215,7 +215,6 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "STOP")
 																	}
-																	className="stop"
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.STOP"
 																>
 																	{/* STOP */}
@@ -228,11 +227,10 @@ const EventDetailsWorkflowTab = ({
 																	onClick={() =>
 																		workflowAction(item.id, "NONE")
 																	}
-																	style={{ color: "red" }}
 																	tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.ABORT"
 																>
 																	{/* Abort */}
-																	<HiHandRaised className="workflow-control-icon"/>
+																	<LuHand className="workflow-control-icon red"/>
 																</ButtonLikeAnchor>
 															)}
 															{item.status ===
@@ -419,35 +417,31 @@ const EventDetailsWorkflowTab = ({
 											!!workflowConfiguration &&
 											!!workflowConfiguration.workflowId &&
 											formik.dirty && (
-												<footer style={{ padding: "0 15px" }}>
-													<div className="pull-left">
-														<button
-															type="reset"
-															onClick={() => {
-																formik.resetForm();
-															}}
-															disabled={!formik.isValid}
-															className={`cancel  ${
-																!formik.isValid ? "disabled" : ""
-															}`}
-														>
-															{t("CANCEL") /* Cancel */}
-														</button>
-													</div>
-													<div>
-														<button
-															onClick={() => formik.handleSubmit()}
-															disabled={!(formik.dirty && formik.isValid)}
-															aria-disabled={!(formik.dirty && formik.isValid)}
-															className={`save green  ${
-																!(formik.dirty && formik.isValid)
-																	? "disabled"
-																	: ""
-															}`}
-														>
-															{t("SAVE") /* Save */}
-														</button>
-													</div>
+												<footer>
+													<button
+														onClick={() => formik.handleSubmit()}
+														disabled={!(formik.dirty && formik.isValid)}
+														aria-disabled={!(formik.dirty && formik.isValid)}
+														className={`save green  ${
+															!(formik.dirty && formik.isValid)
+																? "disabled"
+																: ""
+														}`}
+													>
+														{t("SAVE") /* Save */}
+													</button>
+													<button
+														type="reset"
+														onClick={() => {
+															formik.resetForm();
+														}}
+														disabled={!formik.isValid}
+														className={`cancel  ${
+															!formik.isValid ? "disabled" : ""
+														}`}
+													>
+														{t("CANCEL") /* Cancel */}
+													</button>
 												</footer>
 											)}
 									</div>

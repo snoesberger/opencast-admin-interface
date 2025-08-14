@@ -233,7 +233,6 @@ const EditTableViewModalContent = ({
 												<div
 													{...provided.droppableProps}
 													ref={provided.innerRef}
-													// style={}
 												>
 													{activeCols.filter(col => col).map((column, key) =>
 														(
