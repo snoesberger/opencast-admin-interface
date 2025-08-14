@@ -17,6 +17,7 @@ import ModalContent from "./modals/ModalContent";
 import { Modal, ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
 import BaseButton from "./BaseButton";
+import { LuLoaderCircle, LuMessageCircleQuestion } from "react-icons/lu";
 
 /**
  * This component renders the adopter registration modal. This modal has various states.
@@ -211,7 +212,7 @@ const RegistrationModalContent = () => {
 			<ModalContent modalContentClassName="modal-content active">
 				<div>
 					<div className="row spinner-container">
-						<i className="fa fa-spinner fa-spin fa-4x fa-fw" />
+						<LuLoaderCircle className="fa-spin" style={{ fontSize: "60px" }}/>
 					</div>
 				</div>
 			</ModalContent>
@@ -236,7 +237,7 @@ const RegistrationModalContent = () => {
 							<b>
 								(<span>{t("HELP.HELP")}</span>)
 								{" "}
-								<span className="fa fa-question-circle" />
+								<LuMessageCircleQuestion style={{ position: "relative", top: 1 }}/>
 								{" > "}
 								<span>{t("HELP.ADOPTER_REGISTRATION")}</span>
 							</b>

@@ -48,6 +48,7 @@ import SchedulingLocation from "../wizards/scheduling/SchedulingLocation";
 import SchedulingInputs from "../wizards/scheduling/SchedulingInputs";
 import SchedulingConflicts from "../wizards/scheduling/SchedulingConflicts";
 import { ParseKeys } from "i18next";
+import { LuCircleX } from "react-icons/lu";
 
 /**
  * This component renders the source page for new events in the new event wizard.
@@ -294,7 +295,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											<td className="fit">
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
-													className="remove"
+													className="action-cell-button remove"
 													onClick={() => {
 														formik.setFieldValue(
 															`uploadAssetsTrack.${key}.file`,
@@ -302,7 +303,9 @@ const Upload = <T extends RequiredFormPropsUpload>({
 														);
 														(document.getElementById(asset.id) as HTMLInputElement).value = "";
 													}}
-												/>
+												>
+													<LuCircleX />
+												</ButtonLikeAnchor>
 											</td>
 										</tr>
 									))

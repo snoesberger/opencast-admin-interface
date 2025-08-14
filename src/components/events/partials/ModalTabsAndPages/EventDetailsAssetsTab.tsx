@@ -34,6 +34,7 @@ import EventDetailsAssetPublicationDetails from "./EventDetailsAssetPublicationD
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { LuChevronRight } from "react-icons/lu";
 
 /**
  * This component manages the main assets tab of event details modal
@@ -174,6 +175,7 @@ const EventDetailsAssetsTab = ({
 															}
 														>
 															{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.ADD")}
+															<LuChevronRight className="details-link-icon"/>
 														</ButtonLikeAnchor>
 													)}
 											</th>
@@ -202,6 +204,7 @@ const EventDetailsAssetsTab = ({
 																"EVENTS.EVENTS.DETAILS.ASSETS.DETAILS",
 															) /* Details */
 														}
+														<LuChevronRight className="details-link-icon"/>
 													</ButtonLikeAnchor>
 												)}
 											</td>
@@ -228,6 +231,7 @@ const EventDetailsAssetsTab = ({
 																"EVENTS.EVENTS.DETAILS.ASSETS.DETAILS",
 															) /* Details */
 														}
+														<LuChevronRight className="details-link-icon"/>
 													</ButtonLikeAnchor>
 												)}
 											</td>
@@ -252,6 +256,7 @@ const EventDetailsAssetsTab = ({
 																"EVENTS.EVENTS.DETAILS.ASSETS.DETAILS",
 															) /* Details */
 														}
+														<LuChevronRight className="details-link-icon"/>
 													</ButtonLikeAnchor>
 												)}
 											</td>
@@ -278,6 +283,7 @@ const EventDetailsAssetsTab = ({
 																"EVENTS.EVENTS.DETAILS.ASSETS.DETAILS",
 															) /* Details */
 														}
+														<LuChevronRight className="details-link-icon"/>
 													</ButtonLikeAnchor>
 												)}
 											</td>
