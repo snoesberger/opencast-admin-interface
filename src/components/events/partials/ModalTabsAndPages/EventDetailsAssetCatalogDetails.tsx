@@ -120,8 +120,8 @@ const EventDetailsAssetCatalogDetails = () => {
 										}
 									</td>
 									<td>
-										<a href={catalog.url} target="_blank" rel="noreferrer">
-											<LuExternalLink style={{ fontSize: "20px", verticalAlign: "middle" }}/>
+										<a href={catalog.url} target="_blank" rel="noreferrer" className="action-cell-button">
+											<LuExternalLink/>
 										</a>
 									</td>
 								</tr>
