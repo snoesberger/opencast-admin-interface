@@ -133,6 +133,8 @@
     font-weight: 600;
     padding: 0 15px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
 
     &.sticky {
         margin: 10px 0 20px;
