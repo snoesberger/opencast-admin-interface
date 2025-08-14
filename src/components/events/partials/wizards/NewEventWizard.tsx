@@ -66,7 +66,6 @@ const NewEventWizard = ({
 	);
 
 	const [page, setPage] = useState(0);
-	const [snapshot, setSnapshot] = useState(initialValues);
 	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
 
 	type StepName = "metadata" | "metadata-extended" | "source" | "upload-asset" | "processing" | "access" | "summary";
@@ -129,8 +128,6 @@ const NewEventWizard = ({
 	}
 
 	const nextPage = (values: typeof initialValues) => {
-		setSnapshot(values);
-
 		// set page as completely filled out
 		const updatedPageCompleted = pageCompleted;
 		updatedPageCompleted[page] = true;
@@ -148,8 +145,6 @@ const NewEventWizard = ({
 	};
 
 	const previousPage = (values: typeof initialValues) => {
-		setSnapshot(values);
-
 		let newPage = page;
 		newPage = newPage - 1;
 		// Skip asset upload step when scheduling
@@ -169,7 +164,7 @@ const NewEventWizard = ({
 	return (
 		<>
 			<Formik
-				initialValues={snapshot}
+				initialValues={initialValues}
 				validationSchema={currentValidationSchema}
 				onSubmit={values => handleSubmit(values)}
 			>
