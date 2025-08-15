@@ -69,16 +69,11 @@ $color-white:               #fff;
 
 // Primary color with light/medium/darker shades
 $prim-color:                   color.adjust(#fff, $lightness: -50%);
-$light-prim-color:             color.adjust($prim-color, $lightness: 15%);
-$medium-prim-color:            color.adjust($prim-color, $lightness: -10%);
-$dark-prim-color:              color.adjust($prim-color, $lightness: -30%);
+$light-prim-color:             color.adjust($prim-color, $lightness: 15%);  //#a6a6a6
+$medium-prim-color:            color.adjust($prim-color, $lightness: -10%); //#666666
+$dark-prim-color:              color.adjust($prim-color, $lightness: -30%); //#333333
 
 $global-text-color:            $medium-prim-color;
-
-// Alpha Channel
-$light-black-alpha:            rgba($black, 0.04);
-
-
 
 // Element Colors
 // ----------------------------------------
@@ -147,8 +142,8 @@ $modal-nav-bg-color:            #eeeff0;
 $modal-nav-border-color:        #d6d6d6;
 $modal-nav-link-color:          #646E75;
 $modal-nav-link-active-color:   $header-link-color;
-$subpage-navigation-link-color: color.adjust($header-link-color, $lightness: 25%);
-$subpage-navigation-link-hover-color: color.adjust($header-link-color, $lightness: 35%);
+$subpage-navigation-link-color: color.adjust($header-link-color, $lightness: 25%);    //#fafafa
+$subpage-navigation-link-hover-color: color.adjust($header-link-color, $lightness: 35%);    //#9cabbc
 
 // Stats
 // ----------------------------------------
