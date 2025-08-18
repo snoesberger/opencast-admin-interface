@@ -30,15 +30,13 @@ import cn from "classnames";
 
 import EditTableViewModal from "../shared/EditTableViewModal";
 
-import sortIcon from "../../img/tbl-sort.png";
-import sortUpIcon from "../../img/tbl-sort-up.png";
-import sortDownIcon from "../../img/tbl-sort-down.png";
 import Notifications from "./Notifications";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
+import { LuChevronDown, LuChevronLeft, LuChevronRight, LuChevronUp, LuLoaderCircle } from "react-icons/lu";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
@@ -148,7 +146,7 @@ const Table = ({
 		}
 	};
 
-	const showEditTableViewModal = async () => {
+	const showEditTableViewModal = () => {
 		editTableViewModalRef.current?.open();
 	};
 
@@ -218,19 +216,20 @@ const Table = ({
 								>
 									<span>
 										<span>{t(column.label)}</span>
-										<i style={{
-											float: "right",
-											margin: "12px 0 0 5px",
-											top: "auto",
-											left: "auto",
-											width: 8,
-											height: 13,
-											backgroundImage: `url(${column.name === sortBy
-												? reverse === "ASC"
-													? sortUpIcon
-													: sortDownIcon
-												: sortIcon})`,
-										}} />
+										<div style={{
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "center",
+										}}>
+											<LuChevronUp style={{
+												position: "relative",
+												top: "3px",
+												color: reverse === "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
+											<LuChevronDown style={{
+												position: "relative",
+												top: "-3px",
+												color: reverse !== "ASC" && column.name === sortBy ? "#378dd4" : "#8c939b" }}/>
+										</div>
 									</span>
 								</th>
 							) : (
@@ -245,7 +244,7 @@ const Table = ({
 					{table.status === "loading" && rows.length === 0 ? (
 						<tr>
 							<td colSpan={table.columns.length} style={loadingTdStyle}>
-								<i className="fa fa-spinner fa-spin fa-2x fa-fw" />
+								<LuLoaderCircle className="fa-spin" style={{ fontSize: "30px" }}/>
 							</td>
 						</tr>
 					) : !(table.status === "loading") && rows.length === 0 ? (
@@ -312,6 +311,7 @@ const Table = ({
 					tabIndex={0}
 				>
 					<span>{pagination.limit}</span>
+					<LuChevronDown className="chevron-down" style={{ top: "7px" }}/>
 					{/* Drop down menu for selection of page size */}
 					{showPageSizes && (
 						<ul className="dropdown-ul">
@@ -337,8 +337,10 @@ const Table = ({
 							dispatch(goToPage(pageOffset - 1));
 							forceDeselectAll();
 						}}
+						tooltipText="TABLE_PREVIOUS"
+						aria-label={t("TABLE_PREVIOUS")}
 					>
-						<span className="sr-only">{t("TABLE_PREVIOUS")}</span>
+						<LuChevronLeft />
 					</ButtonLikeAnchor>
 					{directAccessible.map((page, key) =>
 						page.active ? (
@@ -368,8 +370,10 @@ const Table = ({
 							dispatch(goToPage(pageOffset + 1));
 							forceDeselectAll();
 						}}
+						tooltipText="TABLE_NEXT"
+						aria-label={t("TABLE_NEXT")}
 					>
-						<span className="sr-only">{t("TABLE_NEXT")}</span>
+						<LuChevronRight />
 					</ButtonLikeAnchor>
 				</div>
 			</div>

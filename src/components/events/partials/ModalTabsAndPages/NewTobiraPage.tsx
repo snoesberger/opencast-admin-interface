@@ -12,6 +12,7 @@ import { SaveEditFooter } from "../../../shared/SaveEditFooter";
 import { Tooltip } from "../../../shared/Tooltip";
 import ModalContent from "../../../shared/modals/ModalContent";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import { LuChevronRight, LuCircleX } from "react-icons/lu";
 
 /**
  * This component renders the theme page for new series in the new series wizard.
@@ -312,6 +313,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 												onClick={() => goto(page)}
 											>
 												{t("EVENTS.SERIES.NEW.TOBIRA.SUBPAGES")}
+												<LuChevronRight className="details-link-icon"/>
 											</ButtonLikeAnchor>}
 										</td>
 										{editing && <td>
@@ -326,8 +328,10 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 													select(undefined);
 												}}
 												title={t("EVENTS.SERIES.NEW.TOBIRA.CANCEL")}
-												className="remove"
-											/>}
+												className="action-cell-button remove"
+											>
+												<LuCircleX />
+											</ButtonLikeAnchor>}
 										</td>}
 									</tr>)}
 									{!editing && <tr>

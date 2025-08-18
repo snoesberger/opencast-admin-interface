@@ -20,6 +20,7 @@ import {
 } from "../../../slices/seriesSlice";
 import { ModalHandle } from "../../shared/modals/Modal";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuCircleX, LuFileText } from "react-icons/lu";
 
 /**
  * This component renders the action cells of series in the table view
@@ -68,10 +69,12 @@ const SeriesActionsCell = ({
 			{/* series details */}
 			<ButtonLikeAnchor
 				onClick={() => showSeriesDetailsModal()}
-				className={"more-series"}
+				className={"action-cell-button more-series"}
 				editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
 				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
-			/>
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
 			<SeriesDetailsModal
 				seriesId={row.id}
@@ -82,10 +85,12 @@ const SeriesActionsCell = ({
 			{/* delete series */}
 			<ButtonLikeAnchor
 				onClick={() => showDeleteConfirmation()}
-				className={"remove"}
+				className={"action-cell-button remove"}
 				editAccessRole={"ROLE_UI_SERIES_DELETE"}
 				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"}
-			/>
+			>
+				<LuCircleX />
+			</ButtonLikeAnchor>
 
 			<ConfirmModal
 				close={hideDeleteConfirmation}
