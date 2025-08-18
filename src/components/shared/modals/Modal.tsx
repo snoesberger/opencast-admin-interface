@@ -11,6 +11,7 @@ import { availableHotkeys } from "../../../configs/hotkeysConfig";
 import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { FocusTrap } from "focus-trap-react";
+import { LuX } from "react-icons/lu";
 
 export type ModalProps = {
   open?: boolean;
@@ -66,23 +67,27 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(
       [ref],
     );
 
-    return ReactDOM.createPortal(
-      isOpen && (
-        <FocusTrap>
-          <div>
-            <div className="modal-animation modal-overlay" />
-            <section
-              id={classId}
-              className={className ? className : "modal wizard modal-animation"}
-            >
-              <header>
-                <ButtonLikeAnchor
-                  className="fa fa-times close-modal"
-                  onClick={close}
-                  tabIndex={0}
-                />
-                <h2>{header}</h2>
-              </header>
+	return ReactDOM.createPortal(
+		isOpen &&
+			<FocusTrap>
+				<div>
+					<div className="modal-animation modal-overlay" />
+					<section
+						id={classId}
+						className={className ? className : "modal wizard modal-animation"}
+					>
+						<header>
+							<ButtonLikeAnchor
+								className="close-modal"
+								onClick={close}
+								tabIndex={0}
+							>
+								<LuX />
+							</ButtonLikeAnchor>
+							<h2>
+								{header}
+							</h2>
+						</header>
 
               {children}
             </section>

@@ -13,7 +13,6 @@ import { loadEventsIntoTable } from "../../thunks/tableThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
 import { ParseKeys } from "i18next";
-import { Tooltip } from "./Tooltip";
 import BaseButton from "./BaseButton";
 
 /**
