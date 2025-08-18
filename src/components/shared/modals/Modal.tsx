@@ -89,12 +89,11 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(
 							</h2>
 						</header>
 
-              {children}
-            </section>
-          </div>
-        </FocusTrap>
-      ),
-      document.body,
-    );
-  },
-);
+							{children}
+					</section>
+				</div>
+			</FocusTrap>,
+		document.body,
+	);
+
+});
