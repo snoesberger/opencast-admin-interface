@@ -211,15 +211,16 @@ const ShowValue = ({
 }) => {
 	return (
 	<div
-  		tabIndex={0}
-  		onClick={() => setEditMode(true)}
+		tabIndex={0}
+		onClick={() => setEditMode(true)}
 		onFocus={() => setEditMode(true)}  // <-- activate edit mode on focus
-  		onKeyDown={e => {
-    	if (e.key === "Enter" || e.key === " ") {
-      	setEditMode(true);
-      	e.preventDefault();
-    	}
-      }}
+		onKeyDown={e => {
+			if (e.key === "Enter" || e.key === " ") {
+				setEditMode(true);
+				e.preventDefault();
+			}
+		}}
+
 	  onBlur={onBlur}
   		className="show-edit"
 			>
