@@ -85,6 +85,7 @@ const Table = ({
 	const [showPageSizes, setShowPageSizes] = useState(false);
 	const editTableViewModalRef = useRef<ModalHandle>(null);
 	const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
+	const isNewEventAdded = table.flags?.events?.isNewEventAdded;
 
 	useEffect(() => {
 		// Function for handling clicks outside of an open dropdown menu
@@ -103,6 +104,12 @@ const Table = ({
 			window.removeEventListener("mousedown", handleClickOutside);
 		};
 	});
+	useEffect(() => {
+  	if (isNewEventAdded && multiSelect) {
+      forceDeselectAll();
+	  }
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isNewEventAdded, multiSelect]);
 
 	// Select or deselect all rows on a page
 	const onChangeAllSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
