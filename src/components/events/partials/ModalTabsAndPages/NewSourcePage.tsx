@@ -423,7 +423,7 @@ const Schedule = <T extends {
 									dateFormat="P"
 									popperClassName="datepicker-custom"
 									className="datepicker-custom-input"
-									portalId="root"
+									wrapperClassName="datepicker-custom-wrapper"
 									locale={currentLanguage?.dateLocale}
 									strictParsing
 								/>
@@ -454,7 +454,7 @@ const Schedule = <T extends {
 											dateFormat="P"
 											popperClassName="datepicker-custom"
 											className="datepicker-custom-input"
-											portalId="root"
+											wrapperClassName="datepicker-custom-wrapper"
 											locale={currentLanguage?.dateLocale}
 											strictParsing
 										/>
