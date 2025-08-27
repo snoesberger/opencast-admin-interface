@@ -923,9 +923,10 @@ export const checkConflicts = (values: {
 			0,
 			0,
 		);
-
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
 		// If start date of event is smaller than today --> Event is in past
-		if (values.sourceMode === "SCHEDULE_SINGLE" && startDate < new Date()) {
+		if (values.sourceMode === "SCHEDULE_SINGLE" && startDate < today) {
 			dispatch(
 				addNotification({
 					type: "error",
@@ -953,6 +954,19 @@ export const checkConflicts = (values: {
 			);
 			check = false;
 		}
+
+		// check if the event has already been started and still is in the process
+		if ((values.sourceMode === "SCHEDULE_SINGLE" || values.sourceMode === "SCHEDULE_MULTIPLE") && startDate.getHours() < new Date().getHours() && new Date().getHours() < endDate.getHours()) {
+          	dispatch(
+				addNotification({
+					type: "error",
+					key: "CONFLICT_STILL_DID_NOT_FINISH",
+					duration: -1,
+					context: NOTIFICATION_CONTEXT,
+				}),
+			);
+			check = false;
+		 }
 
 		// transform duration into milliseconds (needed for API request)
 		const duration =
