@@ -146,7 +146,7 @@ export const translateOverrideFallback = (asset: UploadOption, t: TFunction, suf
 	}
 
 	return result;
-}
+};
 
 /**
  * Have the browser show a warning dialog for unsaved changes
