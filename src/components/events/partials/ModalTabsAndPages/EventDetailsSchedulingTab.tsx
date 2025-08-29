@@ -306,7 +306,7 @@ const EventDetailsSchedulingTab = ({
 															dateFormat="P"
 															popperClassName="datepicker-custom"
 															className="datepicker-custom-input"
-															portalId="root"
+															wrapperClassName="datepicker-custom-wrapper"
 															locale={currentLanguage?.dateLocale}
 															strictParsing
 														/>
