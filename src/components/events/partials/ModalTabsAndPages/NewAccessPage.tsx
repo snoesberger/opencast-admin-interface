@@ -29,7 +29,7 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
  * This component renders the access page for new events and series in the wizards.
  */
 interface RequiredFormProps {
-	isPartOf: string,
+	'dublincore/episode_isPartOf': string,
 	acls: TransformedAcl[],
 	aclTemplate: string,
 	// theme: string,
@@ -77,14 +77,14 @@ const NewAccessPage = <T extends RequiredFormProps>({
 
 	// If we have to use series ACL, fetch it
 	useEffect(() => {
-		if (initEventAclWithSeriesAcl && formik.values.isPartOf) {
-			dispatch(fetchSeriesDetailsAcls(formik.values.isPartOf));
+		if (initEventAclWithSeriesAcl && formik.values['dublincore/episode_isPartOf']) {
+			dispatch(fetchSeriesDetailsAcls(formik.values['dublincore/episode_isPartOf']));
 		}
-	}, [formik.values.isPartOf, initEventAclWithSeriesAcl, dispatch]);
+	}, [formik.values, initEventAclWithSeriesAcl, dispatch]);
 
 	// If we have to use series ACL, overwrite existing rules
 	useEffect(() => {
-		if (initEventAclWithSeriesAcl && formik.values.isPartOf && seriesAcl) {
+		if (initEventAclWithSeriesAcl && formik.values['dublincore/episode_isPartOf'] && seriesAcl) {
 			formik.setFieldValue("acls", seriesAcl)
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
