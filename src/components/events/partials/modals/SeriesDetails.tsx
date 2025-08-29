@@ -149,7 +149,6 @@ const SeriesDetails = ({
 						editAccessRole="ROLE_UI_SERIES_DETAILS_METADATA_EDIT"
 						formikRef={formikRef}
 						header={tabs[page].tabNameTranslation}
-						formikRef={formikRef}
 					/>
 				)}
 				{page === 1 && (
