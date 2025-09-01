@@ -24,7 +24,7 @@ import { TransformedAcl } from "../../../../slices/aclDetailsSlice";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import { hasAccess } from "../../../../utils/utils";
-import { getAclDefaults } from "../../../../selectors/aclSelectors";
+import { getAclDefaultActions } from "../../../../selectors/aclSelectors";
 
 /**
  * This component manages the pages of the new series wizard and the submission of values
@@ -42,7 +42,7 @@ const NewSeriesWizard = ({
 	const tobiraError = useAppSelector(state => getSeriesTobiraPageError(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
-	const aclDefaults = useAppSelector(state => getAclDefaults(state));
+	const aclDefaultActions = useAppSelector(state => getAclDefaultActions(state));
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
@@ -59,7 +59,7 @@ const NewSeriesWizard = ({
 
 	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
 
-	const initialValues = getInitialValues(metadataFields, extendedMetadata, user, aclDefaults);
+	const initialValues = getInitialValues(metadataFields, extendedMetadata, user, aclDefaultActions);
 
 	const [page, setPage] = useState(0);
 	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
@@ -237,7 +237,7 @@ const getInitialValues = (
 	metadataFields: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[],
 	user: UserInfoState,
-	aclDefaults: { [key: string]: string },
+	aclDefaultActions: string[],
 ) => {
 	let initialValues = initialFormValuesNewSeries;
 
@@ -259,7 +259,7 @@ const getInitialValues = (
 			role: user.userRole,
 			read: true,
 			write: true,
-			actions: aclDefaults && aclDefaults["default_actions"] ? aclDefaults["default_actions"].split(",") : [],
+			actions: aclDefaultActions ? aclDefaultActions : [],
 			user: user.user,
 		},
 	];
