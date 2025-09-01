@@ -28,6 +28,7 @@ import { Modal, ModalHandle } from "../shared/modals/Modal";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import { resetTableProperties } from "../../slices/tableSlice";
+import { fetchAclDefaults } from "../../slices/aclSlice";
 
 /**
  * This component renders the table view of series
@@ -83,6 +84,7 @@ const Series = () => {
 			dispatch(fetchSeriesMetadata()),
 			dispatch(fetchSeriesThemes()),
 			dispatch(fetchSeriesDetailsTobiraNew("/")),
+			dispatch(fetchAclDefaults()),
 		]);
 
 		newSeriesModalRef.current?.open();

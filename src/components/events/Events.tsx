@@ -39,6 +39,7 @@ import { eventsLinks } from "./partials/EventsNavigation";
 import { Modal, ModalHandle } from "../shared/modals/Modal";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import { resetTableProperties } from "../../slices/tableSlice";
+import { fetchAclDefaults } from "../../slices/aclSlice";
 
 /**
  * This component renders the table view of events
@@ -102,6 +103,7 @@ const Events = () => {
 		await Promise.all([
 			dispatch(fetchEventMetadata()),
 			dispatch(fetchAssetUploadOptions()),
+			dispatch(fetchAclDefaults()),
 		]);
 
 		newEventModalRef.current?.open();
