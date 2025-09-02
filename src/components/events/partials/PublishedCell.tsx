@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Event } from "../../../slices/eventSlice";
-import { Tooltip } from "../../shared/Tooltip";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 import { enrichPublications } from "../../../thunks/assetsThunks";
 import { useAppDispatch } from "../../../store";
@@ -9,6 +8,7 @@ import { Publication } from "../../../slices/eventDetailsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
 import { LuCirclePlay } from "react-icons/lu";
+import { Tooltip } from "@mui/material";
 
 // References for detecting a click outside of the container of the popup listing publications of an event
 const containerPublications = React.createRef<HTMLDivElement>();
@@ -77,19 +77,17 @@ const PublishCell = ({
 		&& publications[0].id === "engage-player";
 
 	return (
-		<div className="popover-wrapper">
+		<>
 			{onlyEngage && publications.length > 0 && (
 				<Tooltip title={t("EVENTS.EVENTS.TABLE.TOOLTIP.PLAYER")}>
-					<a href={publications[0].url} rel="noreferrer" target="_blank">
-						<ButtonLikeAnchor>
-							{t("YES")}
-						</ButtonLikeAnchor>
+					<a className="crosslink" href={publications[0].url} rel="noreferrer" target="_blank">
+						{t("YES")}
 					</a>
 				</Tooltip>
 			)}
 			{!onlyEngage && publications.length > 0 && (
 				<>
-					<ButtonLikeAnchor className="popover-wrapper__trigger">
+					<ButtonLikeAnchor className="crosslink">
 						<span onClick={() => setShowPopup(!showPopup)}>{t("YES")}</span>
 					</ButtonLikeAnchor>
 					{showPopup && (
@@ -124,7 +122,7 @@ const PublishCell = ({
 					)}
 				</>
 			)}
-		</div>
+		</>
 	);
 };
 
