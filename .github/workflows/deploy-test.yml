@@ -117,6 +117,10 @@ jobs:
             | sed 's/^\(.*\)$/<li><a href=\1>\1<\/a><\/li>/' >> index.html
           echo '</ul></body></html>' >> index.html
 
+      - name: update CSS and other assets
+        if: github.ref == 'refs/heads/develop'
+        run: cp -r .github/assets admin-interface-test/
+
       - name: commit new version
         working-directory: admin-interface-test
         run: |
