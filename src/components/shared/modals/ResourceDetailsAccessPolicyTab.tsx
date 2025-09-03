@@ -543,11 +543,6 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
 																				: []
 																		}
-																		fetchOptions={() =>
-																			roles.length > 0
-																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
-																				: []
-																		}
 																		required={true}
 																		creatable={true}
 																		handleChange={element => {
