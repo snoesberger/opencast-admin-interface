@@ -188,7 +188,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 					...kind === "title"
 						? { title: e.target.value }
 						: {
-							path: updatePath(p, e.target.value),
+							path: updatePath({ ...p, segment: e.target.value }, e.target.value),
 							segment: e.target.value,
 						},
 				};
