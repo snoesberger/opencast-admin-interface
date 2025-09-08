@@ -24,7 +24,8 @@ import { TransformedAcl } from "../../../../slices/aclDetailsSlice";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import { hasAccess } from "../../../../utils/utils";
-import { getAclDefaultActions } from "../../../../selectors/aclSelectors";
+import { getAclDefaultActions, getAclDefaultTemplate } from "../../../../selectors/aclSelectors";
+import { AclTemplate } from "../../../../slices/aclSlice";
 
 /**
  * This component manages the pages of the new series wizard and the submission of values
@@ -43,6 +44,7 @@ const NewSeriesWizard = ({
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
 	const aclDefaultActions = useAppSelector(state => getAclDefaultActions(state));
+	const aclDefaultTemplate = useAppSelector(state => getAclDefaultTemplate(state));
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
@@ -59,7 +61,13 @@ const NewSeriesWizard = ({
 
 	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
 
-	const initialValues = getInitialValues(metadataFields, extendedMetadata, user, aclDefaultActions);
+	const initialValues = getInitialValues(
+		metadataFields,
+		extendedMetadata,
+		user,
+		aclDefaultActions,
+		aclDefaultTemplate,
+	);
 
 	const [page, setPage] = useState(0);
 	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
@@ -149,7 +157,6 @@ const NewSeriesWizard = ({
 			{/* Initialize overall form */}
 			<Formik
 				initialValues={initialValues}
-				enableReinitialize
 				validationSchema={currentValidationSchema}
 				onSubmit={values => handleSubmit(values)}
 			>
@@ -238,6 +245,7 @@ const getInitialValues = (
 	extendedMetadata: MetadataCatalog[],
 	user: UserInfoState,
 	aclDefaultActions: string[],
+	aclDefaultTemplate?: AclTemplate,
 ) => {
 	let initialValues = initialFormValuesNewSeries;
 
@@ -263,6 +271,12 @@ const getInitialValues = (
 			user: user.user,
 		},
 	];
+
+
+	if (aclDefaultTemplate) {
+		initialValues["aclTemplate"] = aclDefaultTemplate.id.toString();
+		initialValues["policies"] = [...aclDefaultTemplate.acl, ...initialValues["policies"]];
+	}
 
 	return initialValues;
 };
