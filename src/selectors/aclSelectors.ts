@@ -11,3 +11,4 @@ export const getAclDefaultActions = createSelector(
 	[getAclDefaults],
 	aclDefaults => aclDefaults["default_actions"] ? aclDefaults["default_actions"].split(",") : [], // derived value
 );
+export const getAclDefaultTemplate = (state: RootState) => state.acls.aclDefaultTemplate;
