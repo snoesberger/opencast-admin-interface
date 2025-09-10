@@ -95,7 +95,7 @@ const EventActionCell = ({
 				onClick={onClickEventDetails}
 				className={"more"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_VIEW"}
-				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DETAILS"}
+				// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 			/>
 
 			{/* If event belongs to a series then the corresponding series details can be opened */}
@@ -104,14 +104,14 @@ const EventActionCell = ({
 					onClick={onClickSeriesDetails}
 					className={"more-series"}
 					editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
-					tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
+					// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 				/>
 			)}
 
 			{/* Delete an event */}
 			<ActionCellDelete
 				editAccessRole={"ROLE_UI_EVENTS_DELETE"}
-				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DELETE"}
+				// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 				resourceId={row.id}
 				resourceName={row.title}
 				resourceType={"EVENT"}
@@ -120,13 +120,13 @@ const EventActionCell = ({
 
 			{/* If the event has an preview then the editor can be opened and status if it needs to be cut is shown */}
 			{!!row.has_preview && hasAccess("ROLE_UI_EVENTS_EDITOR_VIEW", user) && (
-				<Tooltip
-					title={
-						row.needs_cutting
-							? t("EVENTS.EVENTS.TABLE.TOOLTIP.EDITOR_NEEDS_CUTTING")
-							: t("EVENTS.EVENTS.TABLE.TOOLTIP.EDITOR")
-					}
-				>
+				// <Tooltip // Disabled due to performance concerns
+				// 	title={
+				// 		row.needs_cutting
+				// 			? t("EVENTS.EVENTS.TABLE.TOOLTIP.EDITOR_NEEDS_CUTTING")
+				// 			: t("EVENTS.EVENTS.TABLE.TOOLTIP.EDITOR")
+				// 	}
+				// >
 					<a
 						href={`/editor-ui/index.html?id=${row.id}`}
 						className="cut"
@@ -134,7 +134,7 @@ const EventActionCell = ({
 					>
 						{row.needs_cutting && <span id="badge" className="badge" />}
 					</a>
-				</Tooltip>
+				// </Tooltip>
 			)}
 
 			{/* If the event has comments and no open comments then the comment tab of event details can be opened directly */}
@@ -142,7 +142,7 @@ const EventActionCell = ({
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
 					className={"comments"}
-					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
+					// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"} // Disabled due to performance concerns
 				/>
 			)}
 
@@ -151,7 +151,7 @@ const EventActionCell = ({
 				<ButtonLikeAnchor
 					onClick={() => onClickComments()}
 					className={"comments-open"}
-					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"}
+					// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.COMMENTS"} // Disabled due to performance concerns
 				/>
 			)}
 
@@ -162,7 +162,7 @@ const EventActionCell = ({
 					onClick={() => onClickWorkflow()}
 					className={"fa fa-warning"}
 					editAccessRole={"ROLE_UI_EVENTS_DETAILS_WORKFLOWS_EDIT"}
-					tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.PAUSED_WORKFLOW"}
+					// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.PAUSED_WORKFLOW"} // Disabled due to performance concerns
 				/>
 			}
 
@@ -171,7 +171,7 @@ const EventActionCell = ({
 				onClick={() => onClickAssets()}
 				className={"fa fa-folder-open"}
 				editAccessRole={"ROLE_UI_EVENTS_DETAILS_ASSETS_VIEW"}
-				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.ASSETS"}
+				// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.ASSETS"} // Disabled due to performance concerns
 			/>
 
 			{/* Open dialog for embedded code*/}
@@ -179,7 +179,7 @@ const EventActionCell = ({
 				onClick={() => showEmbeddingCodeModal()}
 				className={"fa fa-link"}
 				editAccessRole={"ROLE_UI_EVENTS_EMBEDDING_CODE_VIEW"}
-				tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.EMBEDDING_CODE"}
+				// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.EMBEDDING_CODE"} // Disabled due to performance concerns
 			/>
 
 			{/* Embedding Code Modal */}
