@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useField } from "formik";
+import { ParseKeys } from "i18next";
+import SearchContainer from "../SearchContainer";
+import BaseButton from "../BaseButton";
+import { LuArrowRightLeft } from "react-icons/lu";
 
 type Item = {
 	name: string
+	id?: string
 	[key: string]: unknown
 }
 
@@ -14,7 +19,7 @@ type Item = {
 const SelectContainer = ({
 	resource,
 	formikField,
-	manageable = true
+	manageable = true,
 }: {
 	resource: {
 		searchable: boolean,
@@ -28,18 +33,18 @@ const SelectContainer = ({
 
 	// Formik hook for getting data of specific form field
 	// DON'T delete field and meta, hook works with indices not variable names
-	const [field, , helpers] = useField(formikField);
+	const [field, , helpers] = useField<Item[]>(formikField);
 
 	// Search field for filter options/items
 	const [searchField, setSearchField] = useState("");
 	const [defaultItems, setDefaultItems] = useState<Item[]>([]);
 	// arrays an item can be part of depending on its state
 	const [items, setItems] = useState<Item[]>([]);
-	const [selectedItems, setSelectedItems] = useState(field.value);
+	const [selectedItems, setSelectedItems] = useState<Item[]>(field.value);
 	const [markedForAddition, setMarkedForAddition] = useState<string[]>([]);
 	const [markedForRemoval, setMarkedForRemoval] = useState<string[]>([]);
 
-	let initialItems = resource.items;
+	const initialItems = resource.items;
 
 	useEffect(() => {
 		// Makes sure that options user already chosen are only shown in right select
@@ -47,7 +52,16 @@ const SelectContainer = ({
 		// no field value yet --> skip for loop and use all provided items for left
 		if (selectedItems.length > 0) {
 			for (let i = 0; i < selectedItems.length; i++) {
-				remove(selectedItems[i].name, initialItems);
+				// In case we are dealing with Users,
+				// we have to also check the combination of "name (id)" as for the key!
+				const namesArray = [];
+				// Pushing the usual name of selected item into the array, in order to work with other fields like roles etc.
+				namesArray.push(selectedItems[i].name);
+				// Make sure it is "users" field and then add the combination.
+				if (field.name === "users" && selectedItems[i]?.id) {
+					namesArray.push(`${selectedItems[i].name} (${selectedItems[i].id})`);
+				}
+				remove(namesArray, initialItems);
 			}
 		}
 
@@ -55,10 +69,6 @@ const SelectContainer = ({
 		setDefaultItems(initialItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const disabledStyle = {
-		backgroundColor: "#eeeff0",
-	};
 
 	const disabledSelectStyle = {
 		backgroundColor: "#eeeff0",
@@ -69,8 +79,8 @@ const SelectContainer = ({
 		setItems(defaultItems);
 	};
 
-	const handleChangeSearch = async (input: string) => {
-		const filtered = defaultItems.filter((item) => {
+	const handleChangeSearch = (input: string) => {
+		const filtered = defaultItems.filter(item => {
 			return item.name.toLowerCase().includes(input.toLowerCase());
 		});
 		setSearchField(input);
@@ -78,8 +88,8 @@ const SelectContainer = ({
 	};
 
 	const handleChangeAdd = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		let options = e.target.options;
-		let selectedOptions = [];
+		const options = e.target.options;
+		const selectedOptions = [];
 
 		// put marked options in array
 		for (let i = 0; i < options.length; i++) {
@@ -93,8 +103,8 @@ const SelectContainer = ({
 	};
 
 	const handleChangeRemove = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		let options = e.target.options;
-		let deselectedOptions = [];
+		const options = e.target.options;
+		const deselectedOptions = [];
 
 		// put all marked options in array
 		for (let i = 0; i < options.length; i++) {
@@ -108,16 +118,19 @@ const SelectContainer = ({
 	};
 
 	const handleClickAdd = () => {
-		let editableItems = [...items];
-		let editableSelectedItems = [...selectedItems];
-		let editableDefaultItems = [...defaultItems];
+		const editableItems = [...items];
+		const editableSelectedItems = [...selectedItems];
+		const editableDefaultItems = [...defaultItems];
 
 		// move marked items to selected items
 		for (let i = 0; i < markedForAddition.length; i++) {
 			move(markedForAddition[i], editableItems, editableSelectedItems);
 
-			// remove marked item from items considered for search bar
-			remove(markedForAddition[i], editableDefaultItems);
+			// Since we are using array of strings as for the remove method!
+			const array = [
+				markedForAddition[i],
+			];
+			remove(array, editableDefaultItems);
 		}
 
 		// update state with current values
@@ -126,14 +139,14 @@ const SelectContainer = ({
 		setMarkedForAddition([]);
 		// update items considered for search bar
 		setDefaultItems(editableDefaultItems);
-		//update formik field
+		// update formik field
 		helpers.setValue(editableSelectedItems);
 	};
 
 	const handleClickRemove = () => {
-		let editableItems = [...items];
-		let editableSelectedItems = [...selectedItems];
-		let editableDefaultItems = [...defaultItems];
+		const editableItems = [...items];
+		const editableSelectedItems = [...selectedItems];
+		const editableDefaultItems = [...defaultItems];
 
 		// move marked items from selected items back to items
 		for (let i = 0; i < markedForRemoval.length; i++) {
@@ -141,7 +154,7 @@ const SelectContainer = ({
 
 			// add marked item to items considered for search bar if not already containing
 			if (
-				!editableDefaultItems.some((item) => item.name === markedForRemoval[i])
+				!editableDefaultItems.some(item => item.name === markedForRemoval[i])
 			) {
 				editableDefaultItems.push({
 					name: markedForRemoval[i],
@@ -170,10 +183,10 @@ const SelectContainer = ({
 		}
 	};
 
-	// remove item from array when matching key
-	const remove = (key: string, compare: Item[]) => {
+	// remove item from array when matching items in keys array
+	const remove = (keys: string[], compare: Item[]) => {
 		for (let i = 0; i < compare.length; i++) {
-			if (compare[i].name === key) {
+			if (keys.includes(compare[i].name)) {
 				compare.splice(i, 1);
 				return;
 			}
@@ -186,34 +199,27 @@ const SelectContainer = ({
 				<div className="multi-select-col">
 					<div className="row">
 						<label>
-							{t(resource.label + ".LEFT")}
+							{t(`${resource.label}.LEFT` as ParseKeys)}
 							<i className="required" />
 						</label>
-						{/*Search*/}
+						{/* Search*/}
 						{resource.searchable && (
-							<>
-								{/* search bar */}
-								<button className="button-like-anchor clear" onClick={() => clearSearchField()} />
-								<input
-									type="text"
-									id="search"
-									className="search"
-									disabled={!manageable}
-									style={manageable ? {} : disabledStyle}
-									placeholder={t("TABLE_FILTERS.PLACEHOLDER")}
-									onChange={(e) => handleChangeSearch(e.target.value)}
-									value={searchField}
-								/>
-							</>
+							<SearchContainer
+								value={searchField}
+								handleChange={handleChangeSearch}
+								clearSearchField={clearSearchField}
+								isDisabled={!manageable}
+								style={{ marginTop: "10px" }}
+							/>
 						)}
-						{/*Select with options provided by backend*/}
+						{/* Select with options provided by backend*/}
 						<select
 							multiple
 							className="available"
 							disabled={!manageable}
 							style={manageable ? { minHeight: "11em" } : disabledSelectStyle}
 							value={markedForAddition}
-							onChange={(e) => handleChangeAdd(e)}
+							onChange={e => handleChangeAdd(e)}
 						>
 							{items.map((item, key) => (
 								<option key={key} value={item.name}>
@@ -224,33 +230,33 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("submit", {
 									disabled: !markedForAddition.length || !manageable,
 								})}
+								aria-disabled={!markedForAddition.length || !manageable}
 								onClick={() => handleClickAdd()}
 							>
-								{t(resource.label + ".ADD")}
-							</button>
+								{t(`${resource.label}.ADD` as ParseKeys)}
+							</BaseButton>
 						</div>
 					</div>
 				</div>
 
-				<div className="exchange-icon" />
+				<LuArrowRightLeft className="exchange-icon"/>
 
-				{/*Select with options chosen by user*/}
+				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">
 					<div className="row">
-						<label>{t(resource.label + ".RIGHT")}</label>
+						<label>{t(`${resource.label}.RIGHT` as ParseKeys)}</label>
 						<select
 							multiple
 							className="selected"
 							disabled={!manageable}
 							style={manageable ? { minHeight: "11em" } : disabledSelectStyle}
-							onChange={(e) => handleChangeRemove(e)}
+							onChange={e => handleChangeRemove(e)}
 							value={markedForRemoval}
 						>
-{/* @ts-expect-error TS(7006): Parameter 'item' implicitly has an 'any' type. */}
 							{selectedItems.map((item, key) => (
 								<option key={key} value={item.name}>
 									{item.name}
@@ -260,14 +266,15 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("remove", {
 									disabled: !markedForRemoval.length || !manageable,
 								})}
+								aria-disabled={!markedForRemoval.length || !manageable}
 								onClick={() => handleClickRemove()}
 							>
-								{t(resource.label + ".REMOVE")}
-							</button>
+								{t(`${resource.label}.REMOVE` as ParseKeys)}
+							</BaseButton>
 						</div>
 					</div>
 				</div>

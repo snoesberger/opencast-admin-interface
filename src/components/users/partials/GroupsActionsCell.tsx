@@ -1,84 +1,67 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import ConfirmModal from "../../shared/ConfirmModal";
-import GroupDetailsModal from "./modal/GroupDetailsModal";
-import { getUserInformation } from "../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../utils/utils";
-import { useAppDispatch, useAppSelector  } from "../../../store";
-import { deleteGroup } from "../../../slices/groupSlice";
+import { useRef } from "react";
+import { Group, deleteGroup } from "../../../slices/groupSlice";
 import { fetchGroupDetails } from "../../../slices/groupDetailsSlice";
-import { Tooltip } from "../../shared/Tooltip";
+import { ActionCellDelete } from "../../shared/ActionCellDelete";
+import { useAppDispatch } from "../../../store";
+import { ModalHandle } from "../../shared/modals/Modal";
+import GroupDetailsModal from "./modal/GroupDetailsModal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuFileText } from "react-icons/lu";
 
 /**
  * This component renders the action cells of groups in the table view
  */
 const GroupsActionsCell = ({
 	row,
-}: any) => {
-	const { t } = useTranslation();
+}: {
+	row: Group
+}) => {
 	const dispatch = useAppDispatch();
 
-	const [displayDeleteConfirmation, setDeleteConfirmation] = useState(false);
-	const [displayGroupDetails, setGroupDetails] = useState(false);
+	const detailsModalRef = useRef<ModalHandle>(null);
 
-	const user = useAppSelector(state => getUserInformation(state));
-
-	const hideDeleteConfirmation = () => {
-		setDeleteConfirmation(false);
-	};
-
-// @ts-expect-error TS(7006): Parameter 'id' implicitly has an 'any' type.
-	const deletingGroup = (id) => {
+	const deletingGroup = (id: string) => {
 		dispatch(deleteGroup(id));
 	};
 
 	const hideGroupDetails = () => {
-		setGroupDetails(false);
+		detailsModalRef.current?.close?.();
 	};
 
 	const showGroupDetails = async () => {
 		await dispatch(fetchGroupDetails(row.id));
 
-		setGroupDetails(true);
+		detailsModalRef.current?.open();
 	};
 
 	return (
 		<>
-			{/*edit/show group */}
-			{hasAccess("ROLE_UI_GROUPS_EDIT", user) && (
-				<Tooltip title={t("USERS.GROUPS.TABLE.TOOLTIP.DETAILS")}>
-					<button
-						onClick={() => showGroupDetails()}
-						className="button-like-anchor more"
-					/>
-				</Tooltip>
-			)}
+			{/* edit/show group */}
+			<ButtonLikeAnchor
+				onClick={() => showGroupDetails()}
+				className={"action-cell-button"}
+				editAccessRole={"ROLE_UI_GROUPS_EDIT"}
+				tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DETAILS"}
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
-			{/*modal displaying details about group*/}
-			{displayGroupDetails && (
-				<GroupDetailsModal close={hideGroupDetails} groupName={row.name} />
-			)}
+			{/* modal displaying details about group */}
+			<GroupDetailsModal
+				close={hideGroupDetails}
+				groupName={row.name}
+				modalRef={detailsModalRef}
+			/>
 
 			{/* delete group */}
-			{hasAccess("ROLE_UI_GROUPS_DELETE", user) && (
-				<Tooltip title={t("USERS.GROUPS.TABLE.TOOLTIP.DETAILS")}>
-					<button
-						onClick={() => setDeleteConfirmation(true)}
-						className="button-like-anchor remove"
-					/>
-				</Tooltip>
-			)}
-
-			{/*Confirmation for deleting a group*/}
-			{displayDeleteConfirmation && (
-				<ConfirmModal
-					close={hideDeleteConfirmation}
-					resourceId={row.id}
-					resourceName={row.name}
-					deleteMethod={deletingGroup}
-					resourceType="GROUP"
-				/>
-			)}
+			<ActionCellDelete
+				editAccessRole={"ROLE_UI_GROUPS_DELETE"}
+				tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DELETE"}
+				resourceId={row.id}
+				resourceName={row.name}
+				resourceType={"GROUP"}
+				deleteMethod={deletingGroup}
+			/>
 		</>
 	);
 };

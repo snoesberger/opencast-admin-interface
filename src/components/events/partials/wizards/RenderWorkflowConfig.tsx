@@ -1,10 +1,12 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Field, FormikProps } from "formik";
+import { FormikProps } from "formik";
+import { Field } from "../../../shared/Field";
 import {
 	getWorkflowDefById,
 } from "../../../../selectors/workflowSelectors";
 import { useAppSelector } from "../../../../store";
+import { FieldSetField } from "../../../../slices/workflowSlice";
 
 /**
  * This component renders the configuration panel for the selected workflow in the processing step of the new event
@@ -17,7 +19,7 @@ interface RequiredFormProps {
 const RenderWorkflowConfig = <T extends RequiredFormProps>({
 	workflowId,
 	formik,
-	displayDescription
+	displayDescription,
 }: {
 	workflowId: string
 	formik: FormikProps<T>
@@ -27,8 +29,8 @@ const RenderWorkflowConfig = <T extends RequiredFormProps>({
 	const workflowDef = useAppSelector(state => getWorkflowDefById(state, workflowId));
 
 	// Get html for configuration panel
-	const configPanel = !!workflowDef && workflowDef.configuration_panel_json
-		? workflowDef.configuration_panel_json
+	const configPanel = !!workflowDef && workflowDef.configurationPanelJson
+		? workflowDef.configurationPanelJson
 		: [];
 	const description = !!workflowDef && workflowDef.description
 		? workflowDef.description
@@ -71,9 +73,8 @@ const RenderWorkflowConfig = <T extends RequiredFormProps>({
 									<p>{configOption.description}</p>
 								)}
 								<ul>
-{/* @ts-expect-error TS(7006): Parameter 'field' implicitly has an 'any' type. */}
 									{configOption.fieldset?.map((field, keys) =>
-										renderInputByType(field, keys, formik)
+										renderInputByType(field, keys, formik),
 									)}
 								</ul>
 							</fieldset>
@@ -87,7 +88,7 @@ const RenderWorkflowConfig = <T extends RequiredFormProps>({
 
 // render input depending on field type
 const renderInputByType = <T extends RequiredFormProps>(
-	field: any,
+	field: FieldSetField,
 	key: React.Key | null | undefined,
 	formik: FormikProps<T>,
 ) => {
@@ -108,26 +109,26 @@ const renderInputByType = <T extends RequiredFormProps>(
 };
 
 const RenderDatetimeLocal = <T extends RequiredFormProps>(
-	{ field, formik } : { field: any, formik: FormikProps<T> }) => {
+	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
 		return <RenderField field={field} formik={formik} />;
 };
 
 const RenderCheckbox = <T extends RequiredFormProps>(
-	{ field, formik } : { field: any, formik: FormikProps<T> }) => {
+	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
 		return <RenderField field={field} formik={formik} />;
 };
 
 const RenderRadio = <T extends RequiredFormProps>(
-	{ field, formik } : { field: any, formik: FormikProps<T> }) => {
+	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
 		return <RenderField field={field} formik={formik} />;
 };
 
 const RenderNumber = <T extends RequiredFormProps>(
-	{ field, formik } : { field: any, formik: FormikProps<T> }) => {
+	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
 	// validate that value of number is between max and min
 	const validate = (value: string) => {
 		let error;
-		if (parseInt(value) > field.max || parseInt(value) < field.min) {
+		if (field.max && field.min && (parseInt(value) > field.max || parseInt(value) < field.min)) {
 			error = "out of range";
 		}
 		return error;
@@ -138,9 +139,9 @@ const RenderNumber = <T extends RequiredFormProps>(
 
 const RenderText = <T extends RequiredFormProps>({
 	field,
-	formik
+	formik,
 }: {
-	field: any,
+	field: FieldSetField,
 	formik: FormikProps<T>,
 }) => {
 		return <RenderField field={field} formik={formik} />;
@@ -149,18 +150,18 @@ const RenderText = <T extends RequiredFormProps>({
 const RenderField = <T extends RequiredFormProps>({
 	field,
 	formik,
-	validate = undefined
+	validate = undefined,
 }: {
-	field: any,
+	field: FieldSetField,
 	formik: FormikProps<T>,
 	validate?: (value: any) => string | undefined,
 }) => {
 	// id used for Field and label
 	const uuid = uuidv4();
-	const disabled = !!field.disabled ? field.disabled : false;
+	const disabled = field.disabled ? field.disabled : false;
 
 	const renderField = () => {
-			return(
+			return (
 				<Field
 					id={uuid}
 					defaultValue={field.defaultValue}
@@ -172,23 +173,22 @@ const RenderField = <T extends RequiredFormProps>({
 					min={field.min}
 					max={field.max}
 				/>
-			)
-	}
+			);
+	};
 
 	return (
 		<li>
 			{renderField()}
-			<label htmlFor={uuid}>{field.label}</label>
+			<label htmlFor={uuid}>{field.label as string}</label>
 			{/* if input has an additional fieldset or further configuration inputs
 						then render again by input type*/}
 			{!!field.fieldset && !!formik.values.configuration && !!formik.values.configuration[field.name] && (
 				<ul className="workflow-configuration-subpanel">
-{/* @ts-expect-error TS(7006): Parameter 'f' implicitly has an 'any' type. */}
 					{field.fieldset?.map((f, keys) => renderInputByType(f, keys, formik))}
 				</ul>
 			)}
 		</li>
 	);
-}
+};
 
 export default RenderWorkflowConfig;

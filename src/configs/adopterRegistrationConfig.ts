@@ -1,5 +1,19 @@
+import { ParseKeys } from "i18next";
+
 // states contains the different states and their configurations of the adapter registration modal
-export const states = {
+export const states: {
+	[key in "information" | "form" | "save" | "update" | "deleteSubmit" | "delete" | "summary" | "thankYou" | "error" | "skip" | "legalInfo"]: {
+		nextState: { [key: number]: string }
+		buttons: {
+			submit: boolean,
+			back: boolean,
+			skip: boolean,
+			close: boolean,
+			delete?: boolean,
+			submitButtonText?: ParseKeys
+		}
+	}
+} = {
 	information: {
 		nextState: {
 			0: "close",
@@ -16,11 +30,11 @@ export const states = {
 	},
 	form: {
 		nextState: {
-			0: "thank_you",
-			1: "error",
-			2: "legal_info",
+			0: "close",
+			1: "summary",
+			2: "legalInfo",
 			3: "update",
-			4: "delete_submit",
+			4: "deleteSubmit",
 			5: "information",
 		},
 		buttons: {
@@ -29,12 +43,12 @@ export const states = {
 			skip: false,
 			close: true,
 			delete: false,
-			submitButtonText: "SUBMIT",
+			submitButtonText: "ADOPTER_REGISTRATION.MODAL.CONTINUE",
 		},
 	},
 	save: {
 		nextState: {
-			0: "thank_you",
+			0: "thankYou",
 			1: "error",
 		},
 		buttons: {
@@ -42,7 +56,6 @@ export const states = {
 			back: false,
 			skip: false,
 			close: false,
-			submitButtonText: null,
 		},
 	},
 	update: {
@@ -55,12 +68,11 @@ export const states = {
 			back: false,
 			skip: false,
 			close: false,
-			submitButtonText: null,
 		},
 	},
-	delete_submit: {
+	deleteSubmit: {
 		nextState: {
-			0: "thank_you",
+			0: "thankYou",
 			1: "error",
 			5: "form",
 		},
@@ -69,7 +81,7 @@ export const states = {
 			back: true,
 			skip: false,
 			close: true,
-			submitButtonText: "CONFIRM",
+			submitButtonText: "ADOPTER_REGISTRATION.MODAL.CONFIRM",
 		},
 	},
 	delete: {
@@ -82,10 +94,23 @@ export const states = {
 			back: false,
 			skip: false,
 			close: false,
-			submitButtonText: null,
 		},
 	},
-	thank_you: {
+	summary: {
+		nextState: {
+			0: "thankYou",
+			1: "error",
+			5: "form",
+		},
+		buttons: {
+			submit: true,
+			back: true,
+			skip: false,
+			close: true,
+			submitButtonText: "ADOPTER_REGISTRATION.MODAL.SUBMIT",
+		},
+	},
+	thankYou: {
 		nextState: {
 			0: "close",
 			1: "error",
@@ -95,19 +120,18 @@ export const states = {
 			back: false,
 			skip: false,
 			close: true,
-			submitButtonText: null,
 		},
 	},
 	error: {
 		nextState: {
 			0: "close",
+			1: "error",
 		},
 		buttons: {
 			submit: false,
 			back: false,
 			skip: false,
 			close: true,
-			submitButtonText: null,
 		},
 	},
 	skip: {
@@ -120,10 +144,9 @@ export const states = {
 			back: false,
 			skip: false,
 			close: true,
-			submitButtonText: null,
 		},
 	},
-	legal_info: {
+	legalInfo: {
 		nextState: {
 			0: "close",
 			1: "error",
@@ -134,10 +157,23 @@ export const states = {
 			back: true,
 			skip: false,
 			close: true,
-			submitButtonText: null,
 		},
 	},
 };
+
+export const systemTypes: {
+	value: string,
+	name: ParseKeys,
+}[] = [
+	{
+		value: "production",
+		name: "ADOPTER_REGISTRATION.MODAL.FORM_STATE.SYSTEM_TYPE_PRODUCTION",
+	},
+	{
+		value: "test",
+		name: "ADOPTER_REGISTRATION.MODAL.FORM_STATE.SYSTEM_TYPE_TEST",
+	},
+];
 
 // countries that an adopter can choose as country of origin
 export const countries = [

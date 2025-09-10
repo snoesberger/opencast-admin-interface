@@ -1,28 +1,34 @@
 import axios from "axios";
 import { addNotification } from "../slices/notificationSlice";
+import { AppDispatch } from "../store";
+import { Event } from "../slices/eventSlice";
 
-export const postTasks = (values: any) => async (dispatch: any) => {
-	let configuration = {};
-	Object.keys(values.configuration).forEach((config) => {
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+export const postTasks = (
+	values: {
+		events: Event[]
+		configuration: { [key: string] : string }
+		workflow: string
+	},
+) => (dispatch: AppDispatch) => {
+	const configuration: { [key: string] : string } = {};
+	Object.keys(values.configuration).forEach(config => {
 		configuration[config] = String(values.configuration[config]);
 	});
 
-	let workflowConfig = {};
+	const workflowConfig: { [key: string] : { [key: string] : string } } = {};
 	for (let i = 0; i < values.events.length; i++) {
 		if (values.events[i].selected) {
-			let eventId = values.events[i].id;
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+			const eventId = values.events[i].id;
 			workflowConfig[eventId] = configuration;
 		}
 	}
 
-	let metadataJson = {
+	const metadataJson = {
 		workflow: values.workflow,
 		configuration: workflowConfig,
 	};
 
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("metadata", JSON.stringify(metadataJson));
 
 	axios
@@ -31,12 +37,12 @@ export const postTasks = (values: any) => async (dispatch: any) => {
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
 		})
-		.then((response) => {
+		.then(response => {
 			console.info(response);
-			dispatch(addNotification({type: "success", key: "TASK_CREATED"}));
+			dispatch(addNotification({ type: "success", key: "TASK_CREATED" }));
 		})
-		.catch((response) => {
+		.catch(response => {
 			console.error(response);
-			dispatch(addNotification({type: "error", key: "TASK_NOT_CREATED"}));
+			dispatch(addNotification({ type: "error", key: "TASK_NOT_CREATED" }));
 		});
 };

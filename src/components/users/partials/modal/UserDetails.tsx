@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
-import cn from "classnames";
 import { EditUserSchema } from "../../../../utils/validate";
 import UserRolesTab from "../wizard/UserRolesTab";
 import { getUserDetails } from "../../../../selectors/userDetailsSelectors";
@@ -9,7 +7,10 @@ import EditUserGeneralTab from "../wizard/EditUserGeneralTab";
 import UserEffectiveRolesTab from "../wizard/UserEffectiveRolesTab";
 import ModalNavigation from "../../../shared/modals/ModalNavigation";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { updateUserDetails } from "../../../../slices/userDetailsSlice";
+import { UpdateUser, updateUserDetails } from "../../../../slices/userDetailsSlice";
+import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
+import { ParseKeys } from "i18next";
+import { UserRole } from "../../../../slices/userSlice";
 
 /**
  * This component manages the pages of the user details
@@ -19,20 +20,26 @@ const UserDetails: React.FC<{
 }> = ({
 	close,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const [page, setPage] = useState(0);
 
 	const userDetails = useAppSelector(state => getUserDetails(state));
+	const assignedRoles = userDetails.roles.filter(role => role.type === "GROUP" || role.type === "INTERNAL");
 
 	const initialValues = {
 		...userDetails,
+		assignedRoles,
 		password: "",
+		passwordConfirmation: "",
 	};
 
 	// information about tabs
-	const tabs = [
+	const tabs: {
+		tabTranslation: ParseKeys
+		accessRole: string
+		name: string
+	}[] = [
 		{
 			tabTranslation: "USERS.USERS.DETAILS.TABS.USER",
 			accessRole: "ROLE_UI_USERS_EDIT",
@@ -50,14 +57,27 @@ const UserDetails: React.FC<{
 		},
 	];
 
-// @ts-expect-error TS(7006): Parameter 'tabNr' implicitly has an 'any' type.
-	const openTab = (tabNr) => {
+	const openTab = (tabNr: number) => {
 		setPage(tabNr);
 	};
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		dispatch(updateUserDetails({values: values, username: userDetails.username}));
+	const handleSubmit = (values: {
+		username: string,
+		name?: string,
+		email?: string,
+		password?: string,
+		roles?: UserRole[],
+		assignedRoles?: UserRole[],
+	}) => {
+		const newValues: UpdateUser = {
+			username: values.username,
+			name: values.name,
+			email: values.email,
+			password: values.password,
+			roles: values.assignedRoles,
+		};
+
+		dispatch(updateUserDetails({ values: newValues, username: userDetails.username }));
 		close();
 	};
 
@@ -70,9 +90,9 @@ const UserDetails: React.FC<{
 			<Formik
 				initialValues={initialValues}
 				validationSchema={EditUserSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
-				{(formik) => (
+				{formik => (
 					<>
 						{page === 0 && <EditUserGeneralTab formik={formik} />}
 						{page === 1 && <UserRolesTab formik={formik} />}
@@ -80,22 +100,13 @@ const UserDetails: React.FC<{
 
 						{/* Navigation buttons and validation */}
 						{page !== 2 && (
-							<footer>
-								<button
-									className={cn("submit", {
-										active: formik.dirty && formik.isValid,
-										inactive: !(formik.dirty && formik.isValid),
-									})}
-									disabled={!(formik.dirty && formik.isValid)}
-									onClick={() => formik.handleSubmit()}
-									type="submit"
-								>
-									{t("SUBMIT")}
-								</button>
-								<button className="cancel" onClick={() => close()}>
-									{t("CANCEL")}
-								</button>
-							</footer>
+							<WizardNavigationButtons
+								formik={formik}
+								previousPage={close}
+								createTranslationString="SUBMIT"
+								cancelTranslationString="CANCEL"
+								isLast
+							/>
 						)}
 					</>
 				)}

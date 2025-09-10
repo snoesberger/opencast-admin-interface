@@ -1,9 +1,23 @@
-import { FlatCompat } from "@eslint/eslintrc";
+import opencastConfig from "@opencast/eslint-config-ts-react";
 
-const config = [
-    { ignores: ["build"] },
-    ...new FlatCompat({ baseDirectory: import.meta.dirname })
-        .extends("eslint-config-react-app"),
+export default [
+    ...opencastConfig,
+
+    // Fully ignore some files
+    {
+        ignores: ["build/"],
+    },
+
+    {
+        rules: {
+            // TODO: We want to turn these on eventually
+            "indent": "off",
+            "max-len": "off",
+            "no-tabs": "off",
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-floating-promises": "off",
+            "@typescript-eslint/no-misused-promises": "off",
+        },
+    },
 ];
 
-export default config;

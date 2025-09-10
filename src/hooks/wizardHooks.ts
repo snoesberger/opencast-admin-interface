@@ -1,6 +1,7 @@
 import { FormikProps } from "formik";
 import { useEffect, useState } from "react";
 import { Event } from "../slices/eventSlice";
+import { isEvent } from "../slices/tableSlice";
 
 export const usePageFunctions = <initialValuesType>(initialPage: number, initialValues: initialValuesType) => {
 	const [page, setPage] = useState(initialPage);
@@ -11,7 +12,7 @@ export const usePageFunctions = <initialValuesType>(initialPage: number, initial
 		setSnapshot(values);
 
 		// set page as completely filled out
-		let updatedPageCompleted = pageCompleted;
+		const updatedPageCompleted = pageCompleted;
 		updatedPageCompleted[page] = true;
 		setPageCompleted(updatedPageCompleted);
 
@@ -40,22 +41,22 @@ interface RequiredFormProps {
 
 export const useSelectionChanges = <T extends RequiredFormProps>(
 	formik: FormikProps<T>,
-	selectedRows: Event[]
+	selectedRows: Event[],
 ) => {
 	const [selectedEvents, setSelectedEvents] = useState(
-		formik.values.events.length === 0 ? selectedRows : formik.values.events
+		formik.values.events.length === 0 ? selectedRows : formik.values.events,
 	);
 	const [allChecked, setAllChecked] = useState(
 		formik.values.events.length === 0
 			? true
-			: formik.values.events.every((event) => event.selected === true)
+			: formik.values.events.every(event => event.selected === true),
 	);
 
 	// Select or deselect all rows in table
 	const onChangeAllSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selected = e.target.checked;
 		setAllChecked(selected);
-		let changedSelection = selectedEvents.map((event) => {
+		const changedSelection = selectedEvents.map(event => {
 			return {
 				...event,
 				selected: selected,
@@ -68,8 +69,8 @@ export const useSelectionChanges = <T extends RequiredFormProps>(
 	// Handle change of checkboxes indicating which events to consider further
 	const onChangeSelected = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
 		const selected = e.target.checked;
-		let changedEvents = selectedEvents.map((event) => {
-			if (event.id === id) {
+		const changedEvents = selectedEvents.map(event => {
+			if (isEvent(event) && event.id === id) {
 				return {
 					...event,
 					selected: selected,
@@ -84,7 +85,7 @@ export const useSelectionChanges = <T extends RequiredFormProps>(
 		if (!selected) {
 			setAllChecked(false);
 		}
-		if (changedEvents.every((event) => event.selected === true)) {
+		if (changedEvents.every(event => event.selected === true)) {
 			setAllChecked(true);
 		}
 	};
@@ -93,12 +94,12 @@ export const useSelectionChanges = <T extends RequiredFormProps>(
 		selectedEvents,
 		allChecked,
 		onChangeSelected,
-		onChangeAllSelected
+		onChangeAllSelected,
 	};
 };
 
 export const useClickOutsideField = (
-	childRef: React.RefObject<HTMLDivElement>,
+	childRef: React.RefObject<HTMLDivElement | null>,
 	isFirstField?: boolean,
 ) => {
 	// Indicator if currently edit mode is activated
@@ -126,5 +127,5 @@ export const useClickOutsideField = (
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editMode]);
 
-	return {editMode, setEditMode};
+	return { editMode, setEditMode };
 };

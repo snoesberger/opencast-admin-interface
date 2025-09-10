@@ -1,3 +1,5 @@
+@use "../../base/variables";
+
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for additional
@@ -23,7 +25,7 @@
     // Main Properties
     // ----------------------------------------
 
-    padding: $modal-container-padding;
+    padding: variables.$modal-container-padding;
 
     .obj-container {
         padding: 0;
@@ -36,7 +38,7 @@
         p {
             width: 70%;
             font-size: 11px;
-            color: $medium-prim-color;
+            color: variables.$medium-prim-color;
         }
 
         .description {
@@ -49,7 +51,7 @@
             margin: 0;
             line-height: 16px;
             font-size: 11px;
-            color: $medium-prim-color;
+            color: variables.$medium-prim-color;
         }
 
     }
@@ -87,7 +89,8 @@
     }
 
     .video-icon {
-        @include fa-icon($fa-var-play-circle, before, inherit, 0, 0, $primary-color-green-light-2, 24px);
+        color: variables.$primary-color-green-light-2;
+        font-size: 24px;
     }
 
 
@@ -98,11 +101,12 @@
         display: inline-block;
         float: right;
         margin-left: auto;
-        @include fa-icon($fa-var-play-circle-o, before, inherit, 0, 0, $primary-color-green-light-2, 24px);
+        color: variables.$primary-color-green-light-2;
+        font-size: 24px;
 
         &:active:before,
         &:hover:before {
-            color: $primary-color-green;
+            color: variables.$primary-color-green;
         }
     }
 

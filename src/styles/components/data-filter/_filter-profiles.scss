@@ -1,3 +1,7 @@
+@use "sass:color";
+@use "../../base/variables";
+@use "../../mixins/button";
+
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for additional
@@ -28,22 +32,22 @@
 @mixin filter-dd-content-mixin ($width) {
     // Base styles
     position: absolute;
-    top: 52px; left: 0;
-    z-index: $max-z;
+    top: 52px; right: 0;
+    z-index: variables.$max-z;
     visibility: hidden;
     opacity: 0;
     pointer-events: auto;
     background: #fff;
-    border: $thin-border-stroke $main-border-color;
-    border-radius: $main-border-radius;
+    border: variables.$thin-border-stroke variables.$main-border-color;
+    border-radius: variables.$main-border-radius;
     width: $width;
 
     // Common Elements
     header {
         background: linear-gradient(#fff, #f7f7f7);
-        border-top-left-radius: $main-border-radius;
-        border-top-right-radius: $main-border-radius;
-        border-bottom: 1px solid $main-border-color;
+        border-top-left-radius: variables.$main-border-radius;
+        border-top-right-radius: variables.$main-border-radius;
+        border-bottom: 1px solid variables.$main-border-color;
         height: 30px;
         > h4 {
             line-height: 30px;
@@ -53,14 +57,15 @@
             float: right;
             padding-right: 5px;
             padding-top: 5px;
-            @include fa-icon($fa-var-close, before, inline-block, 0, 0, $medium-prim-color, 17px);
+            color: variables.$medium-prim-color;
+            font-size: 17px;
         }
     } // header
     .footer-btn {
         background: linear-gradient(#fafafa, #f0f2f5);
-        border-top: 1px solid darken(#f0f2f5, 10%);
-        border-bottom-left-radius: $main-border-radius;
-        border-bottom-right-radius: $main-border-radius;
+        border-top: 1px solid color.adjust(#f0f2f5, $lightness: -10%);
+        border-bottom-left-radius: variables.$main-border-radius;
+        border-bottom-right-radius: variables.$main-border-radius;
         display: block;
         line-height: 30px;
         text-align: center;
@@ -72,45 +77,12 @@
 
     display: inline-block;
 
-    border: $thin-border-stroke $main-border-color;
+    border: variables.$thin-border-stroke variables.$main-border-color;
     border-radius: 4px;
     font-weight: 600;
     font-size: 12px;
     color: black 40%;
     text-shadow: 0px 1px 0px #fff;
-
-    .df-profile-button {
-        display: block;
-        position: absolute;
-        top: 11px;
-        right: 8px;
-        cursor: pointer;
-        pointer-events: auto;
-        @include fa-icon($fa-var-cogs, before, inline-block, 0, 0, $medium-prim-color, 10px);
-        font-family: "Open Sans", sans-serif;
-        color: #555;
-
-        transition-property: visibility, opacity;
-        transition-duration: 300ms;
-        transition-timing-function: ease-in-out;
-        transition-delay: 160ms;
-
-        &:before {
-            transition: color 250ms ease-in-out;
-        }
-
-        &:hover {
-            @include fa-icon-color(before, $alt-red);
-        }
-    }
-
-    &.disabled .df-profile-button {
-        @include fa-icon-color(before, $light-prim-color);
-
-        &:hover {
-            @include fa-icon-color(before, $light-prim-color);
-        }
-    }
 
     .filters-list {
         @include filter-dd-mixin();
@@ -122,25 +94,31 @@
         } // ul
 
         li {
+            display: flex;
             border-top: 1px solid #e2e2e2;
             border-bottom: 1px solid #e2e2e2;
-            padding: 0px 10px 0px 10px;
+            padding: 7px 10px;
 
             .remove {
-                @include fa-icon($fa-var-close, before, inline-block, 0, 0, $medium-prim-color, 17px);
+                color: variables.$medium-prim-color;
+                font-size: 17px;
+                vertical-align: middle;
             }
 
             .edit {
-                @include fa-icon($fa-var-cog, before, inline-block, 0, 0, $medium-prim-color, 17px);
-                padding-left: 5px;
-                padding-right: 5px;
+                color: variables.$medium-prim-color;
+                font-size: 17px;
+                vertical-align: middle;
             }
 
             > button {
-              word-wrap: break-word;
-              font-size: inherit;
+                overflow-wrap: anywhere;
+                font-size: inherit;
+                text-align: start;
 
-              &.active { color: $l-blue; }
+              &.active { color: variables.$l-blue; }
+
+              &:first-child { flex-grow: 1; }
             }
 
         } // li
@@ -208,20 +186,21 @@
             width: 100%;
             float: right;
             padding: 5px;
-            @include border-bottom-radius($main-border-radius);
-            background: darken($body-background, 3%);
-            border-top: 1px solid $main-border-color;
+            border-bottom-left-radius: variables.$main-border-radius;
+            border-bottom-right-radius: variables.$main-border-radius;
+            background: color.adjust(variables.$body-background, $lightness: -3%);
+            border-top: 1px solid variables.$main-border-color;
         }
 
         .cancel {
-            @include btn(white);
+            @include button.btn(white);
             margin-right: 3px;
             float: left;
             height: 28px;
         } // cancel
 
         .save {
-            @include btn(green);
+            @include button.btn(green);
             text-shadow: none;
             float: right;
             height: 28px;

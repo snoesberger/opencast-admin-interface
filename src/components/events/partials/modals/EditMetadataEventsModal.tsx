@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Field } from "formik";
+import { Formik } from "formik";
+import { Field } from "../../../shared/Field";
 import { useTranslation } from "react-i18next";
 import { getSelectedRows } from "../../../../selectors/tableSelectors";
-import { connect } from "react-redux";
 import {
 	hasAccess,
 } from "../../../../utils/utils";
@@ -17,22 +17,25 @@ import {
 	updateBulkMetadata,
 } from "../../../../slices/eventSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useHotkeys } from "react-hotkeys-hook";
-import { availableHotkeys } from "../../../../configs/hotkeysConfig";
+import { isEvent } from "../../../../slices/tableSlice";
+import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
+import { ParseKeys } from "i18next";
+import ModalContent from "../../../shared/modals/ModalContent";
+import { LuLoaderCircle } from "react-icons/lu";
 
 /**
  * This component manges the edit metadata bulk action
  */
 const EditMetadataEventsModal = ({
-// @ts-expect-error TS(7031): Binding element 'close' implicitly has an 'any' ty... Remove this comment to see the full error message
 	close,
-// @ts-expect-error TS(7031): Binding element 'selectedRows' implicitly has an '... Remove this comment to see the full error message
-	selectedRows,
+}: {
+	close: () => void
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const [selectedEvents] = useState(selectedRows);
+	const selectedEvents = useAppSelector(state => getSelectedRows(state));
+
 	const [metadataFields, setMetadataFields] = useState<{
 		merged: string[],
 		mergedMetadata: MetadataFieldSelected[],
@@ -40,51 +43,39 @@ const EditMetadataEventsModal = ({
 		runningWorkflow?: string[],
 	}>({
 		merged: [],
-		mergedMetadata: []
+		mergedMetadata: [],
 	});
 	const [loading, setLoading] = useState(true);
-	const [fatalError, setFatalError] = useState({});
-	const [fetchedValues, setFetchedValues] = useState(null);
+	const [fatalError, setFatalError] = useState<string | undefined>(undefined);
+	const [fetchedValues, setFetchedValues] = useState<{ [key: string]: string | string[] }>({});
 
 	const user = useAppSelector(state => getUserInformation(state));
-
-	useHotkeys(
-		availableHotkeys.general.CLOSE_MODAL.sequence,
-		() => close(),
-		{ description: t(availableHotkeys.general.CLOSE_MODAL.description) ?? undefined },
-		[close],
-  	);
 
 	useEffect(() => {
 		async function fetchData() {
 			setLoading(true);
 
-// @ts-expect-error TS(7034): Variable 'eventIds' implicitly has type 'any[]' in... Remove this comment to see the full error message
-			let eventIds = [];
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-			selectedEvents.forEach((event) => eventIds.push(event.id));
+			const eventIds: string[] = [];
+			selectedEvents.forEach(event => isEvent(event) && eventIds.push(event.id));
 
 			// Get merged metadata from backend
-// @ts-expect-error TS(7005): Variable 'eventIds' implicitly has an 'any[]' type... Remove this comment to see the full error message
 			// const responseMetadataFields = await dispatch(postEditMetadata(eventIds))
 			await dispatch(postEditMetadata(eventIds))
 			.then(unwrapResult)
-			.then((result) => {
-				// Set fatal error if response contains error
-				if (!!result.fatalError) {
-					setFatalError(result);
-				} else {
-					// Set initial values and save metadata field infos in state
-					let initialValues = getInitialValues(result);
-	// @ts-expect-error TS(2345): Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
-					setFetchedValues(initialValues);
-					setMetadataFields({
-						merged: result.merged,
-						mergedMetadata: result.mergedMetadata,
-						notFound: result.notFound,
-						runningWorkflow: result.runningWorkflow,
-					});
-				}
+			.then(result => {
+				// Set initial values and save metadata field infos in state
+				const initialValues = getInitialValues(result.mergedMetadata);
+				setFetchedValues(initialValues);
+				setMetadataFields({
+					merged: result.merged,
+					mergedMetadata: result.mergedMetadata,
+					notFound: result.notFound,
+					runningWorkflow: result.runningWorkflow,
+				});
+			})
+			// Set fatal error if response contains error
+			.catch((e: Error) => {
+				setFatalError(e.message);
 			});
 			setLoading(false);
 		}
@@ -92,18 +83,16 @@ const EditMetadataEventsModal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		const response = dispatch(updateBulkMetadata({metadataFields, values}));
+	const handleSubmit = (values: { [key: string]: unknown }) => {
+		const response = dispatch(updateBulkMetadata({ metadataFields, values }));
 		console.info(response);
 		close();
 	};
 
-// @ts-expect-error TS(7006): Parameter 'e' implicitly has an 'any' type.
-	const onChangeSelected = (e, fieldId) => {
-		let selected = e.target.checked;
-		let fields = metadataFields;
-		fields.mergedMetadata = metadataFields.mergedMetadata.map((field) => {
+	const onChangeSelected = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string) => {
+		const selected = e.target.checked;
+		const fields = metadataFields;
+		fields.mergedMetadata = metadataFields.mergedMetadata.map(field => {
 			if (field.id === fieldId) {
 				return {
 					...field,
@@ -118,16 +107,22 @@ const EditMetadataEventsModal = ({
 	};
 
 	// Check if value of metadata field is changed
-// @ts-expect-error TS(7006): Parameter 'field' implicitly has an 'any' type.
-	const isTouchedOrSelected = (field, formikValues) => {
+	const isTouchedOrSelected = (field: MetadataFieldSelected, formikValues: { [key: string]: string | string[] }) => {
 		if (field.selected) {
 			return true;
 		}
 
-// @ts-expect-error TS(2531): Object is possibly 'null'.
-		if (fetchedValues[field.id] !== formikValues[field.id]) {
-			let fields = metadataFields;
-			fields.mergedMetadata = metadataFields.mergedMetadata.map((f) => {
+		const fetched = fetchedValues[field.id];
+		const inForm = formikValues[field.id];
+		let same = false;
+		if (fetched === inForm) {
+			same = true;
+		} else if (Array.isArray(fetched) && Array.isArray(inForm)) {
+			same = fetched.length === inForm.length && fetched.every((e, i) => e === inForm[i]);
+		}
+		if (!same) {
+			const fields = metadataFields;
+			fields.mergedMetadata = metadataFields.mergedMetadata.map(f => {
 				if (f.id === field.id) {
 					return {
 						...f,
@@ -147,220 +142,169 @@ const EditMetadataEventsModal = ({
 
 	return (
 		<>
-			<div className="modal-animation modal-overlay" />
-			<section className="modal wizard modal-animation">
-				<header>
-					<button className="button-like-anchor fa fa-times close-modal" onClick={() => close()} />
-					<h2>{t("BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION")}</h2>
-				</header>
+			{/* Loading spinner */}
+			{loading && (
+				<ModalContent>
+					<div className="loading">
+						<LuLoaderCircle className="fa-spin" style={{ fontSize: "30px" }}/>
+					</div>
+				</ModalContent>
+			)}
 
-				{/* Loading spinner */}
-				{loading && (
-					<div className="modal-content">
-						<div className="modal-body">
-							<div className="loading">
-								<i className="fa fa-spinner fa-spin fa-2x fa-fw" />
-							</div>
+			{/* Fatal error view */}
+			{!!fatalError && (
+				<ModalContent>
+					<div className="row">
+						<div className="alert sticky error">
+							<p>
+								{t("BULK_ACTIONS.EDIT_EVENTS_METADATA.FATAL_ERROR", {
+									fatalError: fatalError,
+								})}
+							</p>
 						</div>
 					</div>
-				)}
+				</ModalContent>
+			)}
 
-				{/* Fatal error view */}
-{/* @ts-expect-error TS(2339): Property 'fatalError' does not exist on type '{}'. */}
-				{!!fatalError.fatalError && (
-					<div className="modal-content">
-						<div className="modal-body">
-							<div className="row">
-								<div className="alert sticky error">
-									<p>
-										{t("BULK_ACTIONS.EDIT_EVENTS_METADATA.FATAL_ERROR", {
-// @ts-expect-error TS(2339): Property 'fatalError' does not exist on type '{}'.
-											fatalError: fatalError.fatalError,
-										})}
-									</p>
+			{/* todo: Request Errors View and Update Errors View (not quite sure what this is used for) */}
+
+			{!loading && fatalError === undefined && (
+				<Formik
+					initialValues={fetchedValues}
+					onSubmit={values => handleSubmit(values)}
+				>
+					{formik => (
+						<>
+							<ModalContent>
+								<div className="obj header-description">
+									<span>
+										{t(
+											"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.DESCRIPTION",
+										)}
+									</span>
 								</div>
-							</div>
-						</div>
-					</div>
-				)}
-
-				{/* todo: Request Errors View and Update Errors View (not quite sure what this is used for) */}
-
-{/* @ts-expect-error TS(2339): Property 'fatalError' does not exist on type '{}'. */}
-				{!loading && fatalError.fatalError === undefined && (
-					<Formik
-// @ts-expect-error TS(2322): Type 'null' is not assignable to type 'FormikValue... Remove this comment to see the full error message
-						initialValues={fetchedValues}
-						onSubmit={(values) => handleSubmit(values)}
-					>
-						{(formik) => (
-							<>
-								<div className="modal-content">
-									<div className="modal-body">
-										<div className="full-col">
-											<div className="obj header-description">
-												<span>
-													{t(
-														"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.DESCRIPTION"
-													)}
-												</span>
-											</div>
-											<div className="obj tbl-details">
-												<header>
-													<span>
+								<div className="obj tbl-details">
+									<header>
+										<span>
+											{t(
+												"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.CAPTION",
+											)}
+										</span>
+									</header>
+									<div className="obj-container">
+										<table className="main-tbl">
+											<thead>
+												<tr>
+													<th className="small" />
+													<th>
 														{t(
-															"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.CAPTION"
+															"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.FIELDS",
 														)}
-													</span>
-												</header>
-												<div className="obj-container">
-													<table className="main-tbl">
-														<thead>
-															<tr>
-																<th className="small" />
-																<th>
-																	{t(
-																		"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.FIELDS"
+													</th>
+													<th>
+														{t(
+															"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.VALUES",
+														)}
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{metadataFields.mergedMetadata.map(
+													(metadata, key) =>
+														!metadata.readOnly && (
+															<tr
+																key={key}
+																className={cn({
+																	info: metadata.differentValues,
+																})}
+															>
+																<td>
+																	<input
+																		type="checkbox"
+																		name="changes"
+																		checked={isTouchedOrSelected(
+																			metadata,
+																			formik.values,
+																		)}
+																		disabled={
+																			(!metadata.differentValues &&
+																				!metadata.selected) ||
+																			(metadata.required &&
+																				!metadata.selected)
+																		}
+																		onChange={e =>
+																			onChangeSelected(e, metadata.id)
+																		}
+																		className="child-cbox"
+																	/>
+																</td>
+																<td>
+																	<span>{t(metadata.label as ParseKeys)}</span>
+																	{metadata.required && (
+																		<i className="required">*</i>
 																	)}
-																</th>
-																<th>
-																	{t(
-																		"BULK_ACTIONS.EDIT_EVENTS_METADATA.EDIT.TABLE.VALUES"
+																</td>
+																<td className="editable ng-isolated-scope">
+																	{/* Render single value or multi value input */}
+																	{metadata.type === "mixed_text" ? (
+																		<Field
+																			name={metadata.id}
+																			fieldInfo={metadata}
+																			showCheck
+																			component={RenderMultiField}
+																		/>
+																	) : (
+																		<Field
+																			name={metadata.id}
+																			metadataField={metadata}
+																			showCheck
+																			component={RenderField}
+																		/>
 																	)}
-																</th>
+																</td>
 															</tr>
-														</thead>
-														<tbody>
-															{metadataFields.mergedMetadata.map(
-																(metadata, key) =>
-																	!metadata.readOnly && (
-																		<tr
-																			key={key}
-																			className={cn({
-																				info: metadata.differentValues,
-																			})}
-																		>
-																			<td>
-																				<input
-																					type="checkbox"
-																					name="changes"
-																					checked={isTouchedOrSelected(
-																						metadata,
-																						formik.values
-																					)}
-																					disabled={
-																						(!metadata.differentValues &&
-																							!metadata.selected) ||
-																						(metadata.required &&
-																							!metadata.selected)
-																					}
-																					onChange={(e) =>
-																						onChangeSelected(e, metadata.id)
-																					}
-																					className="child-cbox"
-																				/>
-																			</td>
-																			<td>
-																				<span>{t(metadata.label)}</span>
-																				{metadata.required && (
-																					<i className="required">*</i>
-																				)}
-																			</td>
-																			<td className="editable ng-isolated-scope">
-																				{/* Render single value or multi value input */}
-																				{metadata.type === "mixed_text" &&
-																				!!metadata.collection &&
-																				metadata.collection.length !== 0 ? (
-																					<Field
-																						name={metadata.id}
-																						fieldInfo={metadata}
-																						showCheck
-																						component={RenderMultiField}
-																					/>
-																				) : (
-																					<Field
-																						name={metadata.id}
-																						metadataField={metadata}
-																						showCheck
-																						component={RenderField}
-																					/>
-																				)}
-																			</td>
-																		</tr>
-																	)
-															)}
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
+														),
+												)}
+											</tbody>
+										</table>
 									</div>
 								</div>
+							</ModalContent>
 
-								{/* Buttons for cancel and submit */}
-								<footer>
-									<button
-										type="submit"
-										onClick={() => formik.handleSubmit()}
-										disabled={!(formik.dirty && formik.isValid)}
-										className={cn("submit", {
-											active:
-												formik.dirty &&
-												formik.isValid &&
-												hasAccess(
-													"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",
-													user
-												),
-											inactive: !(
-												formik.dirty &&
-												formik.isValid &&
-												hasAccess(
-													"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",
-													user
-												)
-											),
-										})}
-									>
-										{t("WIZARD.UPDATE")}
-									</button>
-									<button onClick={() => close()} className="cancel">
-										{t("CLOSE")}
-									</button>
-								</footer>
-
-								<div className="btm-spacer" />
-							</>
-						)}
-					</Formik>
-				)}
-			</section>
+							{/* Buttons for cancel and submit */}
+							<WizardNavigationButtons
+								formik={formik}
+								customValidation={
+									!(
+										formik.dirty &&
+										formik.isValid &&
+										hasAccess(
+											"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",
+											user,
+										)
+									)
+								}
+								previousPage={() => close()}
+								createTranslationString="WIZARD.UPDATE"
+								cancelTranslationString="CLOSE"
+								isLast
+							/>
+						</>
+					)}
+				</Formik>
+			)}
 		</>
 	);
 };
 
-// @ts-expect-error TS(7006): Parameter 'metadataFields' implicitly has an 'any'... Remove this comment to see the full error message
-const getInitialValues = (metadataFields) => {
+const getInitialValues = (metadataFields: MetadataFieldSelected[]) => {
 	// Transform metadata fields provided by backend (saved in redux)
-	let initialValues = {};
-// @ts-expect-error TS(7006): Parameter 'field' implicitly has an 'any' type.
-	metadataFields.mergedMetadata.forEach((field) => {
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+	const initialValues: { [key: string]: string | string[] } = {};
+	metadataFields.forEach(field => {
 		initialValues[field.id] = field.value;
 	});
 
 	return initialValues;
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-	selectedRows: getSelectedRows(state),
-});
-
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-});
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(EditMetadataEventsModal);
+export default EditMetadataEventsModal;

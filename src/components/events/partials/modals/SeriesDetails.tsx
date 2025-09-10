@@ -1,60 +1,65 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import {
 	getSeriesDetailsExtendedMetadata,
-	getSeriesDetailsFeeds,
 	getSeriesDetailsMetadata,
 	getSeriesDetailsTheme,
 	getSeriesDetailsThemeNames,
+	getSeriesDetailsTobiraDataError,
+	getSeriesDetailsTobiraStatus,
 	hasStatistics as seriesHasStatistics,
 } from "../../../../selectors/seriesDetailsSelectors";
 import { getOrgProperties, getUserInformation } from "../../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../../utils/utils";
+import { confirmUnsaved, hasAccess } from "../../../../utils/utils";
 import SeriesDetailsAccessTab from "../ModalTabsAndPages/SeriesDetailsAccessTab";
 import SeriesDetailsThemeTab from "../ModalTabsAndPages/SeriesDetailsThemeTab";
 import SeriesDetailsStatisticTab from "../ModalTabsAndPages/SeriesDetailsStatisticTab";
-import SeriesDetailsFeedsTab from "../ModalTabsAndPages/SeriesDetailsFeedsTab";
-import DetailsMetadataTab from "../ModalTabsAndPages/DetailsMetadataTab";
-import DetailsExtendedMetadataTab from "../ModalTabsAndPages/DetailsExtendedMetadataTab";
+import DetailsExtendedMetadataTab from "../ModalTabsAndPages/DetailsMetadataTab";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
+	fetchSeriesDetailsTobira,
 	fetchSeriesStatistics,
+	setTobiraTabHierarchy,
 	updateExtendedSeriesMetadata,
 	updateSeriesMetadata,
 } from "../../../../slices/seriesDetailsSlice";
+import DetailsTobiraTab from "../ModalTabsAndPages/DetailsTobiraTab";
+import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import { removeNotificationWizardTobira } from "../../../../slices/notificationSlice";
+import { ParseKeys } from "i18next";
+import { FormikProps } from "formik";
 
 /**
  * This component manages the tabs of the series details modal
  */
 const SeriesDetails = ({
-// @ts-expect-error TS(7031): Binding element 'seriesId' implicitly has an 'any'... Remove this comment to see the full error message
 	seriesId,
-// @ts-expect-error TS(7031): Binding element 'policyChanged' implicitly has an ... Remove this comment to see the full error message
 	policyChanged,
-// @ts-expect-error TS(7031): Binding element 'setPolicyChanged' implicitly has ... Remove this comment to see the full error message
 	setPolicyChanged,
+	formikRef,
+}: {
+	seriesId: string
+	policyChanged: boolean
+	setPolicyChanged: (policyChanged: boolean) => void
+	formikRef: React.RefObject<FormikProps<any> | null>
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const extendedMetadata = useAppSelector(state => getSeriesDetailsExtendedMetadata(state));
-	const feeds = useAppSelector(state => getSeriesDetailsFeeds(state));
 	const metadataFields = useAppSelector(state => getSeriesDetailsMetadata(state));
 	const theme = useAppSelector(state => getSeriesDetailsTheme(state));
 	const themeNames = useAppSelector(state => getSeriesDetailsThemeNames(state));
 	const hasStatistics = useAppSelector(state => seriesHasStatistics(state));
-
-	// TODO: Get rid of the wrappers when modernizing redux is done
-	const updateSeriesMetadataWrapper = (id: any, values: any) => {
-		dispatch(updateSeriesMetadata({id, values}));
-	}
-	const updateExtendedSeriesMetadataWrapper = (id: any, values: any, catalog: any) => {
-		dispatch(updateExtendedSeriesMetadata({id, values, catalog}));
-	}
+	const tobiraStatus = useAppSelector(state => getSeriesDetailsTobiraStatus(state));
+	const tobiraError = useAppSelector(state => getSeriesDetailsTobiraDataError(state));
 
 	useEffect(() => {
+		dispatch(removeNotificationWizardTobira());
 		dispatch(fetchSeriesStatistics(seriesId));
+		dispatch(fetchSeriesDetailsTobira(seriesId));
+		dispatch(setTobiraTabHierarchy("main"));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -62,10 +67,15 @@ const SeriesDetails = ({
 
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
-	const themesEnabled = (orgProperties['admin.themes.enabled'] || 'true').toLowerCase() === 'true';
+	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
 
 	// information about each tab
-	const tabs = [
+	const tabs: {
+		tabNameTranslation: ParseKeys,
+		accessRole: string,
+		name: string,
+		hidden?: boolean,
+	}[] = [
 		{
 			tabNameTranslation: "EVENTS.SERIES.DETAILS.TABS.METADATA",
 			accessRole: "ROLE_UI_SERIES_DETAILS_METADATA_VIEW",
@@ -86,7 +96,13 @@ const SeriesDetails = ({
 			tabNameTranslation: "EVENTS.SERIES.DETAILS.TABS.THEME",
 			accessRole: "ROLE_UI_SERIES_DETAILS_THEMES_VIEW",
 			name: "theme",
-			hidden: !theme && !themesEnabled
+			hidden: !theme && !themesEnabled,
+		},
+		{
+			tabNameTranslation: "EVENTS.SERIES.DETAILS.TABS.TOBIRA",
+			accessRole: "ROLE_UI_SERIES_DETAILS_TOBIRA_VIEW",
+			name: "tobira",
+			hidden: tobiraStatus === "failed" && tobiraError?.message?.includes("503"),
 		},
 		{
 			tabNameTranslation: "EVENTS.SERIES.DETAILS.TABS.STATISTICS",
@@ -96,64 +112,52 @@ const SeriesDetails = ({
 		},
 	];
 
-// @ts-expect-error TS(7006): Parameter 'tabNr' implicitly has an 'any' type.
-	const openTab = (tabNr) => {
-		setPage(tabNr);
+	const openTab = (tabNr: number) => {
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
+		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
+			setPage(tabNr);
+		}
 	};
 
 	return (
 		<>
 			{/* navigation for navigating between tabs */}
 			<nav className="modal-nav" id="modal-nav">
-				{hasAccess(tabs[0].accessRole, user) && (
-					<button className={"button-like-anchor " + cn({ active: page === 0 })} onClick={() => openTab(0)}>
-						{t(tabs[0].tabNameTranslation)}
-					</button>
-				)}
-				{!tabs[1].hidden && hasAccess(tabs[1].accessRole, user) && (
-					<button className={"button-like-anchor " + cn({ active: page === 1 })} onClick={() => openTab(1)}>
-						{t(tabs[1].tabNameTranslation)}
-					</button>
-				)}
-				{hasAccess(tabs[2].accessRole, user) && (
-					<button className={"button-like-anchor " + cn({ active: page === 2 })} onClick={() => openTab(2)}>
-						{t(tabs[2].tabNameTranslation)}
-					</button>
-				)}
-				{!tabs[3].hidden && hasAccess(tabs[3].accessRole, user) && (
-					<button className={"button-like-anchor " + cn({ active: page === 3 })} onClick={() => openTab(3)}>
-						{t(tabs[3].tabNameTranslation)}
-					</button>
-				)}
-				{!tabs[4].hidden && hasAccess(tabs[4].accessRole, user) && (
-					<button className={"button-like-anchor " + cn({ active: page === 4 })} onClick={() => openTab(4)}>
-						{t(tabs[4].tabNameTranslation)}
-					</button>
-				)}
-				{feeds.length > 0 && (
-					<button className={"button-like-anchor " + cn({ active: page === 5 })} onClick={() => openTab(5)}>
-						{"Feeds"}
-					</button>
-				)}
+				{tabs.map((tab, index) => !tab.hidden && hasAccess(tab.accessRole, user) && (
+					<ButtonLikeAnchor
+						key={tab.name}
+						className={cn({ active: page === index })}
+						onClick={() => openTab(index)}
+					>
+						{t(tab.tabNameTranslation)}
+					</ButtonLikeAnchor>
+				))}
 			</nav>
 
 			{/* render modal content depending on current page */}
 			<div>
 				{page === 0 && (
-					<DetailsMetadataTab
-						metadataFields={metadataFields}
+					<DetailsExtendedMetadataTab
 						resourceId={seriesId}
-						header={tabs[page].tabNameTranslation}
-						updateResource={updateSeriesMetadataWrapper}
+						metadata={[metadataFields]}
+						updateResource={updateSeriesMetadata}
 						editAccessRole="ROLE_UI_SERIES_DETAILS_METADATA_EDIT"
+						formikRef={formikRef}
+						header={tabs[page].tabNameTranslation}
 					/>
 				)}
 				{page === 1 && (
 					<DetailsExtendedMetadataTab
 						resourceId={seriesId}
 						metadata={extendedMetadata}
-						updateResource={updateExtendedSeriesMetadataWrapper}
+						updateResource={updateExtendedSeriesMetadata}
 						editAccessRole="ROLE_UI_SERIES_DETAILS_METADATA_EDIT"
+						formikRef={formikRef}
 					/>
 				)}
 				{page === 2 && (
@@ -172,12 +176,17 @@ const SeriesDetails = ({
 					/>
 				)}
 				{page === 4 && (
+					<DetailsTobiraTab
+						kind="series"
+						id={seriesId}
+					/>
+				)}
+				{page === 5 && (
 					<SeriesDetailsStatisticTab
 						seriesId={seriesId}
 						header={tabs[page].tabNameTranslation}
 					/>
 				)}
-				{page === 5 && <SeriesDetailsFeedsTab feeds={feeds} />}
 			</div>
 		</>
 	);

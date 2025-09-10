@@ -1,14 +1,21 @@
 // All fields for new event form that are fix and not depending on response of backend
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
+import { TransformedAcl } from "../slices/aclDetailsSlice";
+import { TobiraPage } from "../slices/seriesSlice";
 import { initArray } from "../utils/utils";
 import { EditedEvents, Event, UploadAssetsTrack } from "../slices/eventSlice";
-import { TransformedAcl } from "../slices/aclDetailsSlice";
+import { Role } from "../slices/aclSlice";
+import { ParseKeys } from "i18next";
+import { UserRole } from "../slices/userSlice";
 
 // Context for notifications shown in modals
 export const NOTIFICATION_CONTEXT = "modal-form";
 
 // Context for notifications shown in wizard access page
 export const NOTIFICATION_CONTEXT_ACCESS = "wizard-access";
+
+// Context for notifications shown in tobira tabs.
+export const NOTIFICATION_CONTEXT_TOBIRA = "tobira";
 
 export const initialFormValuesNewEvents: {
 	sourceMode: string,
@@ -20,14 +27,14 @@ export const initialFormValuesNewEvents: {
 	scheduleDurationMinutes: string,
 	scheduleEndHour: string,
 	scheduleEndMinute: string,
-	repeatOn: string[],
+	repeatOn: ("MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU")[],
 	location: string,
 	processingWorkflow: string,
 	configuration: { [key: string]: string },
 	aclTemplate: string,
-	acls: TransformedAcl[],
+	policies: TransformedAcl[],
 	uploadAssetsTrack?: UploadAssetsTrack[]
-	[key: string]: unknown,	// Metadata fields that are getting added later
+	[key: string]: unknown,  // Metadata fields that are getting added later
 } = {
 	sourceMode: "UPLOAD",
 	scheduleStartDate: new Date().toISOString(),
@@ -40,11 +47,11 @@ export const initialFormValuesNewEvents: {
 	scheduleEndMinute: "",
 	repeatOn: [],
 	location: "",
-	//deviceInputs: [],
+	// deviceInputs: [],
 	processingWorkflow: "",
 	configuration: {},
 	aclTemplate: "",
-	acls: [],
+	policies: [],
 };
 
 // constants for hours and minutes (used in selection for start/end time and duration)
@@ -52,7 +59,10 @@ export const hours = initArray(24);
 export const minutes = initArray(60);
 
 // sorted weekdays and their translation key
-export const weekdays = [
+export const weekdays: {
+	name: "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU"
+	label: ParseKeys
+}[] = [
 	{
 		name: "MO",
 		label: "EVENTS.EVENTS.NEW.WEEKDAYS.MO",
@@ -89,12 +99,24 @@ export const WORKFLOW_UPLOAD_ASSETS_NON_TRACK = "publish-uploaded-assets";
 // All fields for new series form that are fix and not depending on response of backend
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
 export const initialFormValuesNewSeries: {
-	acls: TransformedAcl[],
+	policies: TransformedAcl[],
 	theme: string,
-	[key: string]: any,	// Metadata fields that are getting added later
+
+	breadcrumbs: TobiraPage[],
+	selectedPage?: TobiraPage,
+	[key: string]: unknown,  // Metadata fields that are getting added later
 } = {
-	acls: [],
+	policies: [
+		{
+			role: "ROLE_USER_ADMIN",
+			read: true,
+			write: true,
+			actions: [],
+		},
+	],
 	theme: "",
+	breadcrumbs: [],
+	selectedPage: undefined,
 };
 
 // All fields for new theme form that are fix and not depending on response of backend
@@ -117,18 +139,35 @@ export const initialFormValuesNewThemes = {
 	watermarkFile: "",
 	watermarkFileName: "",
 	watermarkPosition: "topRight",
+
+	// Don't care about these, but they are required by type
+	creationDate: "",
+	creator: "",
+	default: false,
+	id: 0,
+	licenseSlideBackground: "",
+	licenseSlideDescription: "",
+	titleSlideMetadata: "",
 };
 
 // All fields for new acl form that are fix and not depending on response of backend
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
-export const initialFormValuesNewAcl = {
+export const initialFormValuesNewAcl: {
+	name: string,
+	policies: TransformedAcl[],
+} = {
 	name: "",
-	acls: [],
+	policies: [],
 };
 
 // All fields for new group form that are fix and not depending on response of backend
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
-export const initialFormValuesNewGroup = {
+export const initialFormValuesNewGroup: {
+	name: string,
+	description: string,
+	roles: { name: string }[],
+	users: { id: string, name: string }[],
+} = {
 	name: "",
 	description: "",
 	roles: [],
@@ -143,7 +182,9 @@ export const initialFormValuesNewUser: {
 	email: string,
 	password: string,
 	passwordConfirmation: string,
-	roles: string[],
+	roles: Role[],
+	assignedRoles: UserRole[],
+	manageable: boolean,
 } = {
 	username: "",
 	name: "",
@@ -151,11 +192,17 @@ export const initialFormValuesNewUser: {
 	password: "",
 	passwordConfirmation: "",
 	roles: [],
+	assignedRoles: [],
+	manageable: true,
 };
 
 // All fields for start task form that are fix and not depending on response of backend
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
-export const initialFormValuesStartTask = {
+export const initialFormValuesStartTask: {
+	events: Event[],
+	workflow: string,
+	configuration: { [key: string]: string },
+} = {
 	events: [],
 	workflow: "",
 	configuration: {},

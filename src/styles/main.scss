@@ -26,25 +26,29 @@
 $disable-warnings: true !default; // disables deprecation warnings
 
 // Imports
-@import "../../node_modules/bourbon/core/bourbon";
+@use "sass:meta";
 
 // Foundation
 // ----------------------------------------
 
 // Base
-@import "base/base-config";
+@use "base/base-config";
 
 // Mixins
-@import "mixins/_mixins-config";
+@use "mixins/_mixins-config";
+@use "mixins/mixins-bourbon";
 
 // Components
-@import "components/components-config";
+@use "components/components-config";
 
 // Views
-@import "views/views-config";
+@use "views/views-config";
 
 // Extensions
-@import "extensions/extensions-config";
+@use "extensions/extensions-config";
+@use "base/variables";
+@use "components/alerts";
+@use "mixins/button";
 
 
 // Template Files
@@ -84,9 +88,11 @@ $disable-warnings: true !default; // disables deprecation warnings
   }
 }
 
-@import "vendor/chosen";
+@include meta.load-css("vendor/chosen");
 
 .filters-container {
+  display: flex;
+
   div.chosen-container {
     width: 230px !important;
     ul.chosen-choices {
@@ -128,6 +134,9 @@ a {
 
 .modal {
   top: 30px;
+  position: fixed;
+  max-height: 90vh;
+  overflow: auto;
   input[readonly] {
     border: none;
   }
@@ -145,6 +154,56 @@ a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  // When not focused, make it look like a span
+  .single-value:not(:focus){
+    background-color: transparent;
+    padding: 0px;
+    border: initial;
+    font: inherit;
+    margin: 0px;
+
+    // border-radius: 0;
+    // border-bottom: 1px dashed #999;
+
+    width: auto;
+  }
+  .single-value:focus{
+    width: 98%;
+  }
+
+  .single-value-textarea:not(:focus){
+    background-color: transparent;
+    padding: 0px;
+    border: initial;
+    font: inherit;
+    margin: 0px;
+    resize: none;
+    overflow: hidden;
+
+    // border-radius: 0;
+    // border-bottom: 1px dashed #999;
+
+    width: auto;
+    // height: auto;
+  }
+  .single-value-textarea:focus{
+    resize: vertical;
+
+    width: 98%;
+    // height: auto;
+  }
+
+  .datepicker-custom-input:not(:focus) {
+    background: transparent;
+    padding: 0px;
+    border: initial;
+    font: inherit;
+    margin: 0px;
+    &:hover {
+      border: initial;
+    }
   }
 
   .editable {
@@ -181,7 +240,7 @@ a.disabled, button.disabled, div.disabled {
   padding: 0px 5px;
   margin: 1px 5px 1px 0;
   font-size: 11px;
-  background: $l-blue;
+  background: variables.$l-blue;
   color: #fff;
   border-radius: 4px;
 
@@ -253,10 +312,6 @@ td.editable {
     resize: vertical;
   }
 
-  span {
-    border-bottom: 1px dashed #999;
-  }
-
   i.saved, i.edit {
     float: right;
     cursor: pointer;
@@ -278,11 +333,11 @@ textarea.editable {
 }
 
 button.red {
-  @include btn(red);
+  @include button.btn(red);
 }
 
 button.green {
-  @include btn(green-dark-bg);
+  @include button.btn(green-dark-bg);
 }
 
 div[data-modal-tab-content="metadata"], div[data-modal-tab-content="extended-metadata"] {
@@ -331,7 +386,7 @@ div[data-modal-tab-content="metadata"], div[data-modal-tab-content="extended-met
       color: #919FA5;
     }
     button.cancel {
-      @include btn(grey);
+      @include button.btn(grey);
       height: 40px;
     }
     button.save{
@@ -359,6 +414,7 @@ input[type="text"].small-search {
 }
 
 div.table-filter {
+  display: flex;
   float: right;
   border: 1px solid #c9d0d3;
   border-radius: 4px;
@@ -366,11 +422,12 @@ div.table-filter {
   position: inherit;
 
   .filters {
+    font-size: 12px;
+    line-height: normal;
     display: flex;
+    gap: 4px;
     border: 0;
     border-radius: 4px;
-    float: left;
-    background: #fff;
     background-color: #fafafa;
     min-height: 23px;
     min-width: 150px;
@@ -388,35 +445,25 @@ div.table-filter {
       color: white;
     }
 
-    select, input, div {
-      display: inline-block;
-    }
-
-    select, input {
+    input {
+      height: auto;
       border: 1px solid #c9d0d3;
       border-radius: 3px;
       background-color: white;
     }
 
-    select {
-      height: 24px;
-    }
-
     .ng-multi-value {
-      align-self: center;
-    }
-
-    .MuiInputBase-root {
-      height: 24px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin: 0;
     }
 
     .MuiInputBase-input {
-      height: 24px;
       box-sizing: border-box;
     }
 
     .MuiButtonBase-root {
-      height: 24px;
       padding: 0;
     }
 
@@ -425,20 +472,20 @@ div.table-filter {
     }
   }
 
+  .fa {
+    font-size: 13px;
+  }
+
   i {
-    color: #8a8f99;
+    color: variables.$global-text-color;
     cursor: pointer;
 
     &.clear {
-      font-size: 20px;
-      float: left;
-      padding: 8px 8px 8px 0;
+      padding: 0 8px 0 0;
     }
 
     &.settings {
-      font-size: 20px;
-      float: left;
-      padding: 8px 8px 8px 0;
+      padding: 0 8px 0 0;
     }
   }
 
@@ -494,7 +541,7 @@ input.disabled, select.disabled {
 // Notification alias error to danger
 .alert {
   &.error {
-    @include alert-variant($state-danger-bg, $state-danger-border, $state-danger-text);
+    @include alerts.alert-variant(variables.$state-danger-bg, variables.$state-danger-border, variables.$state-danger-text);
   }
   & .autonomous {
     padding-right: 20px; /* fixes a design bug */
@@ -530,16 +577,6 @@ main.main-view {
         background: -moz-linear-gradient(0% 0% 270deg, #fefefe, #f0f0f0);
       }
 
-      &.prev {
-        //override right margin with 0
-        @include fa-icon($fa-var-chevron-left, before, inline-block, 0 0 0 0, 0, inherit, 10px);
-      }
-
-      &.next {
-        //override left margin with 0
-        @include fa-icon($fa-var-chevron-right, after, inline-block, 0 0 0 0, 0, inherit, 10px);
-      }
-
       .active {
         border: 1px solid #616161;
       }
@@ -569,13 +606,12 @@ table.main-tbl {
 
   td {
     max-width: 800px;
-    word-wrap: anywhere;
   }
 
   td {
     .fa-check {
       float: right;
-      color: $green;
+      color: variables.$green;
       margin-top: 3px;
       font-size: 18px;
       opacity: 0;
@@ -604,15 +640,15 @@ table.main-tbl {
 }
 
 tr.error {
-  background: $state-warning-bg !important;
+  background: variables.$state-warning-bg !important;
 }
 
 tr.info {
-  background: $state-info-bg !important;
+  background: variables.$state-info-bg !important;
 }
 
 .video-player {
-  @include clearfix();
+  @include mixins-bourbon.clearfix;
   width: 100%;
   margin: 0 auto;
   background: #1e1e1e;
@@ -624,4 +660,11 @@ tr.info {
       max-width: 100%;
       height: auto;
   }
+}
+
+.table-filter-blue-box {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -5,6 +5,9 @@ import { getAssetUploadOptions } from "../../../../selectors/eventSelectors";
 import { translateOverrideFallback } from "../../../../utils/utils";
 import { useAppSelector } from "../../../../store";
 import { FormikProps } from "formik";
+import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import { LuCircleX } from "react-icons/lu";
 
 /**
  * This component renders the asset upload page of the new event wizard
@@ -12,13 +15,13 @@ import { FormikProps } from "formik";
  */
 interface RequiredFormProps {
 	sourceMode: string,
-	[key: string]: any,
+	[key: string]: unknown,
 }
 
 const NewAssetUploadPage = <T extends RequiredFormProps>({
 	formik,
 	nextPage,
-	previousPage
+	previousPage,
 }: {
 	formik: FormikProps<T>,
 	nextPage: (values: T) => void,
@@ -28,85 +31,82 @@ const NewAssetUploadPage = <T extends RequiredFormProps>({
 
 	const uploadAssetOptions = useAppSelector(state => getAssetUploadOptions(state));
 
-	// Get upload assets that are not of type track
-	const uploadAssets = uploadAssetOptions.filter(
-		(asset) => asset.type !== "track"
-	);
-
-	// if user not chose upload in step before, the skip this step
-	if (formik.values.sourceMode !== "UPLOAD") {
-		nextPage(formik.values);
-		return null;
-	}
-
-// @ts-expect-error TS(7006): Parameter 'e' implicitly has an 'any' type.
-	const handleChange = (e, assetId) => {
-		if (e.target.files.length === 0) {
-			formik.setFieldValue(assetId, null);
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>, assetId: string) => {
+		if (e.target.files) {
+			if (e.target.files.length === 0) {
+				formik.setFieldValue(assetId, null);
+			} else {
+				formik.setFieldValue(assetId, e.target.files[0]);
+			}
 		} else {
-			formik.setFieldValue(assetId, e.target.files[0]);
+			console.warn("File event did not contain any files");
 		}
 	};
+
 	return (
 		<>
-			<div className="modal-content">
-				<div className="modal-body">
-					<div className="full-col">
-						<div className="obj tbl-details">
-							<header>{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.SELECT_TYPE")}</header>
-							<div className="obj-container">
-								<table className="main-tbl">
-									<tbody>
-										{uploadAssets.length === 0 ? (
-											<tr>
-												<td>
-													{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.NO_OPTIONS")}
-												</td>
-											</tr>
-										) : (
-											uploadAssets.map((asset, key) => (
-												<tr key={key}>
-													<td>
-														{" "}
-														{translateOverrideFallback(asset, t)}
-													</td>
-													<td>
-														<div className="file-upload">
-															<input
-																id={asset.id}
-																className="blue-btn file-select-btn"
-																accept={asset.accept}
-																onChange={(e) => handleChange(e, asset.id)}
-																type="file"
-																tabIndex={0}
-															/>
-															{formik.values[asset.id] && (
+			<ModalContentTable>
+				<div className="obj tbl-details">
+					<header>{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.SELECT_TYPE")}</header>
+					<div className="obj-container">
+						<table className="main-tbl">
+							<tbody>
+								{uploadAssetOptions.length === 0 ? (
+									<tr>
+										<td>
+											{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.NO_OPTIONS")}
+										</td>
+									</tr>
+								) : (
+									uploadAssetOptions.map((asset, key) => (
+										<tr key={key}>
+											<td>
+												{" "}
+												{translateOverrideFallback(asset, t)}
+											</td>
+											<td>
+												<div className="file-upload">
+													<input
+														id={asset.id}
+														className="blue-btn file-select-btn"
+														accept={asset.accept}
+														onChange={e => handleChange(e, asset.id)}
+														type="file"
+														tabIndex={0}
+													/>
+													{(() => {
+														const val = formik.values[asset.id];
+														if (val instanceof File) {
+															return (
 																<span className="ui-helper">
-																	{formik.values[asset.id].name.substr(0, 50)}
+																	{val.name.substring(0, 50)}
 																</span>
-															)}
-														</div>
-													</td>
-													{/*Button to remove asset*/}
-													<td className="fit">
-														<button
-															className="button-like-anchor remove"
-															onClick={() => {
-																formik.setFieldValue(asset.id, null);
-																(document.getElementById(asset.id) as HTMLInputElement).value = "";
-															}}
-														/>
-													</td>
-												</tr>
-											))
-										)}
-									</tbody>
-								</table>
-							</div>
-						</div>
+															);
+														}
+														return null;
+													})()}
+												</div>
+											</td>
+											{/* Button to remove asset*/}
+											<td className="fit">
+												<ButtonLikeAnchor
+													className="action-cell-button remove"
+													onClick={() => {
+														formik.setFieldValue(asset.id, null);
+														(document.getElementById(asset.id) as HTMLInputElement).value = "";
+													}}
+												>
+													<LuCircleX />
+												</ButtonLikeAnchor>
+											</td>
+										</tr>
+									))
+								)}
+							</tbody>
+						</table>
 					</div>
 				</div>
-			</div>
+			</ModalContentTable>
 
 			{/* Button for navigation to next page */}
 			<WizardNavigationButtons

@@ -1,3 +1,11 @@
+@use "sass:color";
+@use "../mixins/mixins-bourbon";
+@use "../base/variables";
+@use "../mixins/button";
+@use "../mixins/mixins-config";
+@use "../mixins/triangle-point";
+@use "_menu-dropdown.scss";
+
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for additional
@@ -27,7 +35,7 @@
     $height: 50px;
     width: 100%;
     height: $height;
-    box-shadow: 0 1px 3px 1px rgba($black, 0.3);
+    box-shadow: 0 1px 3px 1px rgba(variables.$black, 0.3);
     position: relative;
     border-bottom: 1px solid #1d3041;
     background: linear-gradient(to bottom, #388ed6, #2075b1);
@@ -40,8 +48,8 @@
             padding: 14px 20px 13px;
 
             img {
-                width: $logo-width;
-                height: $logo-height;
+                width: variables.$logo-width;
+                height: variables.$logo-height;
             }
         }
     }
@@ -53,30 +61,48 @@
 
 .header-nav {
     position: absolute;
-    right: $side-margin;
+    right: variables.$side-margin;
     top: 5px;
+
+    display: flex;
+    align-items: center;
 
     // Nav items
     .nav-dd {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 37px;
+        height: 39px;
         color: #fff;
-        display: inline-block;
-        vertical-align: middle;
-        font-size: 12px;
-        position: relative;
-        margin-left: -10px;
-        min-width: 50px;
-        text-align: center;
         cursor: pointer;
+
+        // For dropdowns
+        position: relative;
+        font-size: 12px;
 
         &.active .dropdown-ul {
             opacity: 1;
             visibility: visible;
         }
+
+        .nav-dd-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 39px;
+
+            .header-icon {
+                font-size: 20px;
+                color: variables.$white;
+            }
+        }
     }
 
     .dropdown-ul {
         position: absolute;
-        z-index: $max-z + 10;
+        z-index: variables.$max-z + 10;
         opacity: 1;
         visibility: visible;
         @extend %menu-dropdown-base;
@@ -102,35 +128,32 @@
     }
 
     // Menu Icon Settings
-    $icon-color: $medium-prim-color;
+    $icon-color: variables.$medium-prim-color;
     $icon-font-size: 15px;
     $icon-display-value: inline-block;
     $icon-pesudo-position: before;
-
-    .cogs-icon {
-        @include fa-icon($fa-var-cogs, $icon-pesudo-position, $icon-display-value, 0 10px 0 0, 0, $icon-color, $icon-font-size);
-    }
-
-    .logout-icon {
-        @include fa-icon($fa-var-power-off, $icon-pesudo-position, $icon-display-value, 0 14px 0 0, 0, $icon-color, $icon-font-size);
-    }
-
-    .fa {
-        color: #fff;
-        font-size: 20px;
-    }
 
     button {
         background-color: transparent;
         border: none;
         border-radius: 0;
+        cursor: pointer;
     }
 
     // Language Dropdown
     // ----------------------------------------
 
     .lang-dd .dropdown-ul {
-        width: 120px;
+        .selected-icon {
+            color: variables.$primary-color-green;
+            font-size: 15px;
+            margin: 0 7px 0 0;
+            vertical-align: middle;
+        }
+
+        button:not(.selected) {
+            padding-left: 37px;
+        }
     }
 
     // RestService Dropdown
@@ -139,9 +162,6 @@
         .dropdown-ul{
             width: auto;
             right: 8px;
-        }
-        .fa-bell-o{
-            float: right;
         }
         #error-count{
             min-width: 10px;
@@ -164,7 +184,10 @@
 // ----------------------------------------
 
 .dropdown-icon {
-    @include fa-icon($fa-var-chevron-down, after, inline-block, 0 0 0 5px);
+    color: "inherit";
+    font-size: 12px;
+    margin: 0 0 0 5px;
+    vertical-align: middle;
 }
 
 
@@ -178,68 +201,28 @@
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    background: $d-blue;
+    background: variables.$d-blue;
 
     .btn-group {
-         margin-right: $side-margin;
+         margin-right: variables.$side-margin;
          align-self: center;
+
+        .btn-group-icon {
+            margin-right: 10px;
+        }
 
         // btn specific styles
         .add {
-            @include btn(green-dark-bg);
-
-            &.plus-icon {
-                @include fa-icon($fa-var-plus, before, inline-block, 0 10px 0 0);
-            }
-
-            &.user-icon {
-                @include fa-icon($fa-var-user, before, inline-block, 0 10px 0 0);
-            }
-
-            &.group-icon {
-                @include fa-icon($fa-var-users, before, inline-block, 0 10px 0 0);
-            }
+            @include button.btn(green-dark-bg);
         }
 
         .secondary {
-             @include btn(blue-dark-bg);
+             @include button.btn(blue-dark-bg);
              margin-right: 20px;
 
              &:first-child {
                 margin-right: 0;
              }
-        }
-
-        .export {
-
-            // Overide DD container
-            line-height: 0;
-            padding: 0;
-            text-shadow: none;
-            color: #fff;
-
-            // Overide size
-            width: 115px;
-            height: 39px;
-
-            > i {
-                vertical-align: middle;
-
-                &:first-child {
-                    @include build-icon(auto, auto, export, 19px, 16px);
-                }
-
-                &.fa-chevron-down {
-                    margin-right: 0;
-                    font-size: 10px;
-                    position: static;
-                }
-            }
-        }
-
-        .upload > i {
-            vertical-align: middle;
-            @include build-icon(auto, auto, upload, 19px, 16px);
         }
     }
 
@@ -248,10 +231,11 @@
         width: 80px;
         height: 42px;
         background: #243e55;
-        @include border-top-radius(4px);
-        border: $thin-border-stroke darken(#1e364b, 3%);
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border: variables.$thin-border-stroke color.adjust(#1e364b, $lightness: -3%);
         border-bottom: none;
-        margin: 0 $side-margin;
+        margin: 0 variables.$side-margin;
         position: relative;
 
         > button {
@@ -259,7 +243,10 @@
             height: 100%;
             font-size: 22px;
             color: #9badbb;
-            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
             &:hover {
                 color: #b9c6d0;
             }
@@ -272,184 +259,26 @@
 
         a {
             display: inline-block;
-            color: $subpage-navigation-link-color;
+            color: variables.$subpage-navigation-link-color;
             text-align: center;
             position: relative;
             padding: 0 20px;
             margin-bottom: 16px;
 
             &:hover {
-                color: $subpage-navigation-link-hover-color;
+                color: variables.$subpage-navigation-link-hover-color;
             }
 
             &.active {
                 font-weight: 600;
-                color: $off-white;
+                color: variables.$off-white;
 
-                @include triangle-point(bottom, 7px, 7px, 50%, $off-white, 0, transparent, 9px);
+                @include triangle-point.triangle-point(bottom, 7px, 7px, 50%, variables.$off-white, 0, transparent, 9px);
                 &:before,
                 &:after {
                     margin-right: -7px;
                 }
             }
         }
-    }
-}
-
-
-
-// Page Navigation Bar
-// ----------------------------------------
-
-// Markup Example: https://gist.github.com/mattmischuk/5dc55fd276efe3ae6949
-
-.page-nav-bar {
-
-    $dark-blue: #24425d;
-    $mid-blue: #2b77b9;
-
-    margin-bottom: 20px;
-
-    nav {
-
-        // Grey and Default
-        // ------------------------------
-
-        &.grey a,
-        a {
-            @include btn(white);
-            border: 1px solid $main-border-color;
-
-            &:not(:last-child) {
-                border-right: 1px solid $main-border-color;
-            }
-        }
-
-
-        // Dark Blue
-        // ------------------------------
-
-        &.dark-blue a {
-            @include btn(blue);
-            border: $thin-border-stroke darken($dark-blue, 5%);
-            display: inline-block;
-            padding: 12px 15px;
-            text-shadow: 0 1px 1px rgba($black, 0.15);
-            border-radius: 0;
-
-            &.active {
-                border: darken($mid-blue, 50%);
-
-                &:not(:first-child) {
-                    border-left: 1px solid $dark-blue;
-                }
-            }
-
-            &:not(:last-child) {
-                border-right: 1px solid $dark-blue;
-            }
-        }
-
-
-        // Global
-        // ------------------------------
-
-        a,
-        .grey a,
-        .dark-blue a {
-            display: inline-block;
-            font-size: 13px;
-            border-radius: 0;
-            padding: 12px 15px;
-            margin: 0;
-
-            &:not(:first-child) {
-                margin-left: -5px;
-            }
-
-            &:first-child {
-                border-top-left-radius: $main-border-radius;
-                border-bottom-left-radius: $main-border-radius;
-            }
-
-            &:last-child {
-                border-top-right-radius: $main-border-radius;
-                border-bottom-right-radius: $main-border-radius;
-            }
-
-            // Active Page
-            // ----------------------------------------
-
-            &.active {
-                color: #fff !important;
-                text-shadow: 0 1px 0 rgba($black, 0.2);
-                border: 1px solid $l-blue;
-
-                background: linear-gradient(to bottom, lighten($mid-blue, 20%), lighten($mid-blue, 10%));
-                box-shadow: inset 0 1px 0 0 rgba($white, 0.2), 0 2px 3px 1px rgba($black, 0.05);
-
-                &:hover {
-                    background: linear-gradient(to bottom, lighten($mid-blue, 20%), lighten($mid-blue, 10%));
-                }
-
-                &:active {
-                    box-shadow: none;
-                }
-            }
-        }
-    }
-}
-
-
-// Page Navigation Bar Layout Options
-// ----------------------------------------
-
-// Floats Bar to Right when within ".action-nav-bar" container
-
-.action-nav-bar .page-nav-bar {
-    display: inline-block;
-    float: right;
-    margin-top: 20px;
-    margin-right: 20px;
-}
-
-
-// Page nav container is used when you are creating a new row that includes the page title
-// Example: https://gist.github.com/mattmischuk/b4dcb1e245f00b21c6a6
-
-.page-nav-container {
-    @include clearfix();
-    width: 100%;
-
-    .page-nav-bar {
-        margin: 20px auto 0;
-        width: 100%;
-        text-align: center;
-
-        a {
-            box-shadow: none;
-        }
-
-        &.span-5 a {
-            width: 20%;
-            padding: 12px 0;
-
-            &:nth-child(even) {
-                margin-left: -6px;
-            }
-
-            &:nth-child(odd) {
-                margin-left: -7px;
-            }
-
-            &:first-child {
-                margin-left: 0;
-            }
-        }
-    }
-
-    .active {
-        position: relative;
-        z-index: 10;
     }
 }

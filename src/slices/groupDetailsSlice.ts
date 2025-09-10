@@ -1,26 +1,31 @@
-import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios';
-import { buildGroupBody } from '../utils/resourceUtils';
-import { addNotification } from './notificationSlice';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
+import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
+import axios, { AxiosError } from "axios";
+import { buildGroupBody } from "../utils/resourceUtils";
+import { addNotification } from "./notificationSlice";
+import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
+import { Group } from "./groupSlice";
+import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of details of a group
  */
-type GroupDetailsState = {
-	status: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
-	error: SerializedError | null,
-  role: string,
+
+export type GroupDetails = Group & {
 	roles: string[],
-	name: string,
-	description: string,
-	id: string,
-	users: {id: string, name: string}[],
+}
+
+export type GroupDetailsState = GroupDetails & {
+	status: "uninitialized" | "loading" | "succeeded" | "failed",
+	error: SerializedError | null,
+}
+
+export interface UpdateGroupDetailsState extends Omit<GroupDetailsState, "roles"> {
+  roles: { name: string}[]
 }
 
 // initial redux state
 const initialState: GroupDetailsState = {
-	status: 'uninitialized',
+	status: "uninitialized",
 	error: null,
 	role: "",
 	roles: [],
@@ -31,14 +36,14 @@ const initialState: GroupDetailsState = {
 };
 
 // fetch details about certain group from server
-export const fetchGroupDetails = createAppAsyncThunk('groupDetails/fetchGroupDetails', async (groupName: string) => {
-	const res = await axios.get(`/admin-ng/groups/${groupName}`);
-	const response = await res.data;
+export const fetchGroupDetails = createAppAsyncThunk("groupDetails/fetchGroupDetails", async (groupId: GroupDetails["id"]) => {
+	type FetchGroupDetails = Omit<GroupDetails, "users"> & { users: { username: string, name: string }[] };
+	const res = await axios.get<FetchGroupDetails>(`/admin-ng/groups/${groupId}`);
+	const response = res.data;
 
 	let users: GroupDetailsState["users"] = [];
 	if (response.users.length > 0) {
-// @ts-expect-error TS(7006): Parameter 'user' implicitly has an 'any' type.
-		users = response.users.map((user) => {
+		users = response.users.map(user => {
 			return {
 				id: user.username,
 				name: user.name,
@@ -59,41 +64,41 @@ export const fetchGroupDetails = createAppAsyncThunk('groupDetails/fetchGroupDet
 });
 
 // update details of a certain group
-export const updateGroupDetails = createAppAsyncThunk('groupDetails/updateGroupDetails', async (params: {
-	values: GroupDetailsState,
-	groupId: string
-}, {dispatch}) => {
-	const { values, groupId } = params
+export const updateGroupDetails = (params: {
+	values: UpdateGroupDetailsState,
+	groupId: GroupDetails["id"]
+}): AppThunk => dispatch => {
+	const { values, groupId } = params;
 
 	// get URL params used for put request
-	let data = buildGroupBody(values);
+	const data = buildGroupBody(values);
 
 	// PUT request
 	axios
 		.put(`/admin-ng/groups/${groupId}`, data)
-		.then((response) => {
+		.then(response => {
 			console.info(response);
-			dispatch(addNotification({type: "success", key: "GROUP_UPDATED"}));
+			dispatch(addNotification({ type: "success", key: "GROUP_UPDATED" }));
 		})
-		.catch((response) => {
-			console.error(response);
-			if (response.status === 409) {
-				dispatch(addNotification({type: "error", key: "GROUP_CONFLICT"}));
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
+				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
-				dispatch(addNotification({type: "error", key: "GROUP_NOT_SAVED"}));
+				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));
 			}
 		});
-});
+};
 
 const groupDetailsSlice = createSlice({
-	name: 'groupDetails',
+	name: "groupDetails",
 	initialState,
 	reducers: {},
 	// These are used for thunks
 	extraReducers: builder => {
 		builder
-			.addCase(fetchGroupDetails.pending, (state) => {
-				state.status = 'loading';
+			.addCase(fetchGroupDetails.pending, state => {
+				state.status = "loading";
 			})
 			.addCase(fetchGroupDetails.fulfilled, (state, action: PayloadAction<{
 				role: GroupDetailsState["role"],
@@ -103,7 +108,7 @@ const groupDetailsSlice = createSlice({
 				id: GroupDetailsState["id"],
 				users: GroupDetailsState["users"],
 			}>) => {
-				state.status = 'succeeded';
+				state.status = "succeeded";
 				const groupDetails = action.payload;
 				state.role = groupDetails.role;
 				state.roles = groupDetails.roles;
@@ -113,7 +118,7 @@ const groupDetailsSlice = createSlice({
 				state.users = groupDetails.users;
 			})
 			.addCase(fetchGroupDetails.rejected, (state, action) => {
-				state.status = 'failed';
+				state.status = "failed";
 				state.role = "";
 				state.roles = [];
 				state.name = "";
@@ -122,7 +127,7 @@ const groupDetailsSlice = createSlice({
 				state.users = [];
 				state.error = action.error;
 			});
-	}
+	},
 });
 
 // export const {} = groupDetailsSlice.actions;

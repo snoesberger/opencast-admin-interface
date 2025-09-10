@@ -1,34 +1,98 @@
+import { UploadAssetsTrack } from "./../slices/eventSlice";
 import * as Yup from "yup";
+import { MetadataCatalog } from "../slices/eventSlice";
 
 /**
  * This File contains all schemas used for validation with yup in the context of events and series
  */
 
-const today = new Date();
-today.setHours(0, 0, 0, 0);
+/**
+ * Dynamically create a schema for a required metadata field
+ */
+export function createMetadataSchema(
+	schema: { [key: string]: unknown; },
+	config: { id: string; required: boolean; type: string; },
+) {
+	const { id, required, type } = config;
+	if (!required) {
+		return schema;
+	}
+
+	let validationType: "string" | "array" | "date" = "string";
+	const validations: {
+		type: string,
+		params: any[],
+	}[] = [
+		{
+			type: "required",
+			params: ["this field is required"],
+		},
+	];
+
+	if (type === "mixed_text") {
+		validationType = "array";
+		validations.push({
+			type: "min",
+			params: [1, "there should be atleast one entry"],
+		});
+	}
+
+	if (type === "date" || type === "start_date") {
+		validationType = "date";
+	}
+
+	if (!Yup[validationType as keyof typeof Yup]) {
+		return schema;
+	}
+	let validator = Yup[validationType as "string"]();
+	validations.forEach(validation => {
+		const { params, type } = validation;
+		// @ts-expect-error: Yup needs to fix their typing?
+		if (!validator[type]) {
+			return;
+		}
+		// @ts-expect-error: Yup needs to fix their typing?
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+		validator = validator[type](...params);
+	});
+	schema[id] = validator;
+	return schema;
+}
+
+/**
+ * Dynamically create a schema for required metadata fields
+ */
+export const MetadataSchema = (catalog: MetadataCatalog) => {
+	const schema = catalog.fields.reduce(createMetadataSchema, {});
+	const schemaKeyReplace: { [key: string]: any} = {};
+	for (const [key, value] of Object.entries(schema)) {
+		schemaKeyReplace[catalog.flavor + "_" + key] = value;
+	}
+	const validateSchema = Yup.object().shape(schemaKeyReplace);
+
+	return validateSchema;
+};
+
 
 // Validation Schema used in new event wizard (each step has its own yup validation object)
-export const NewEventSchema = [
-	Yup.object().shape({
-		title: Yup.string().required("Required"),
-	}),
-	Yup.object().shape({}),
-	Yup.object().shape({
+
+export const NewEventSchema = {
+	// For metadata validation see MetadataSchema
+	"metadata": Yup.object().shape({}),
+	"metadata-extended": Yup.object().shape({}),
+	"source": Yup.object().shape({
 		uploadAssetsTrack: Yup.array().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) => value === "UPLOAD",
+			is: (value: string) => value === "UPLOAD",
 			then: () => Yup.array().test(
 				"at-least-one-uploaded",
 				"at least one uploaded",
-				(uploadAssetsTrack) => {
-// @ts-expect-error TS(2532): Object is possibly 'undefined'.
-					return uploadAssetsTrack.some((asset) => !!asset.file);
-				}
+				(uploadAssetsTrack: UploadAssetsTrack[] | undefined) => {
+					return uploadAssetsTrack && uploadAssetsTrack.some(asset => !!asset.file);
+				},
 			),
 		}),
 		scheduleStartDate: Yup.date().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.date().required("Required"),
 		}),
@@ -41,108 +105,117 @@ export const NewEventSchema = [
 			then: () => Yup.array().min(1).required("Required"),
 		}),
 		scheduleStartHour: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		scheduleStartMinute: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		scheduleDurationHours: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		scheduleDurationMinutes: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		scheduleEndHour: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		scheduleEndMinute: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 		location: Yup.string().when("sourceMode", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-			is: (value) =>
+			is: (value: string) =>
 				value === "SCHEDULE_SINGLE" || value === "SCHEDULE_MULTIPLE",
 			then: () => Yup.string().required("Required"),
 		}),
 	}),
-	Yup.object().shape({
+	"upload-asset": Yup.object().shape({}),
+	"processing": Yup.object().shape({
 		processingWorkflow: Yup.string().required("Required"),
 	}),
-];
+	"access": Yup.object().shape({}),
+	"summary": Yup.object().shape({}),
+};
 
 // Validation Schema used in new series wizard (each step has its own yup validation object)
-export const NewSeriesSchema = [
-	Yup.object().shape({
+export const NewSeriesSchema = {
+	// For metadata validation see MetadataSchema
+	"metadata": Yup.object().shape({
 		title: Yup.string().required("Required"),
 	}),
-];
+	"metadata-extended": Yup.object().shape({}),
+	"access": Yup.object().shape({}),
+	"theme": Yup.object().shape({}),
+	"tobira": Yup.object().shape({}),
+	"summary": Yup.object().shape({}),
+};
 
 // Validation Schema used in new themes wizard (each step has its own yup validation object)
-export const NewThemeSchema = [
-	Yup.object().shape({
+export const NewThemeSchema = {
+	"generalForm": Yup.object().shape({
 		name: Yup.string().required("Required"),
 	}),
-	Yup.object().shape({
+	"bumperForm": Yup.object().shape({
 		bumperFile: Yup.string().when("bumperActive", {
 			is: true,
 			then: () => Yup.string().required("Required"),
 		}),
 	}),
-	Yup.object().shape({
+	"trailerForm": Yup.object().shape({
 		trailerFile: Yup.string().when("trailerActive", {
 			is: true,
 			then: () => Yup.string().required("Required"),
 		}),
 	}),
-	Yup.object().shape({
+	"titleSlideForm": Yup.object().shape({
 		titleSlideBackground: Yup.string().when("titleSlideMode", {
 			is: "upload",
 			then: () => Yup.string().required("Required"),
 		}),
 	}),
-	Yup.object().shape({
+	"watermarkForm": Yup.object().shape({
 		watermarkFile: Yup.string().when("watermarkActive", {
 			is: true,
 			then: () => Yup.string().required("Required"),
 		}),
 	}),
-];
+	"summary": Yup.object().shape({}),
+	// Theme details tabs
+	"usage": Yup.object().shape({}),
+};
 
 // Validation Schema used in new ACL wizard (each step has its own yup validation object)
-export const NewAclSchema = [
-	Yup.object().shape({
+export const NewAclSchema = {
+	"metadata": Yup.object().shape({
 		name: Yup.string().required("Required"),
 	}),
-];
+	"access": Yup.object().shape({}),
+	"summary": Yup.object().shape({}),
+};
 
 // Validation Schema used in new groups wizard (each step has its own yup validation object)
-export const NewGroupSchema = [
-	Yup.object().shape({
+export const NewGroupSchema = {
+	"metadata": Yup.object().shape({
 		name: Yup.string().required("Required"),
 	}),
-];
+	"roles": Yup.object().shape({}),
+	"users": Yup.object().shape({}),
+	"summary": Yup.object().shape({}),
+};
 
 // Validation Schema used in new user wizard
-// @ts-expect-error TS(7006): Parameter 'usernames' implicitly has an 'any' type... Remove this comment to see the full error message
-export const NewUserSchema = (usernames) =>
+export const NewUserSchema = (usernames: string[]) =>
 	Yup.object().shape({
 		username: Yup.string()
 			.required("Required")
@@ -151,8 +224,7 @@ export const NewUserSchema = (usernames) =>
 		email: Yup.string().email().required("Required"),
 		password: Yup.string().required("Required"),
 		passwordConfirmation: Yup.string()
-// @ts-expect-error TS(2769): No overload matches this call.
-			.oneOf([Yup.ref("password"), null], "Passwords must match")
+			.oneOf([Yup.ref("password"), undefined], "Passwords must match")
 			.required("Required"),
 	});
 
@@ -161,11 +233,9 @@ export const EditUserSchema = Yup.object().shape({
 	name: Yup.string().required("Required"),
 	email: Yup.string().email().required("Required"),
 	passwordConfirmation: Yup.string().when("password", {
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-		is: (value) => !!value,
+		is: (value: any) => !!value,
 		then: () => Yup.string()
-// @ts-expect-error TS(2769): No overload matches this call.
-			.oneOf([Yup.ref("password"), null], "Passwords must match")
+			.oneOf([Yup.ref("password"), undefined], "Passwords must match")
 			.required("Required"),
 	}),
 });

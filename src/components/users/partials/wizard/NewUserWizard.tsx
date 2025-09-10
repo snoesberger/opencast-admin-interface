@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -7,9 +7,11 @@ import UserRolesTab from "./UserRolesTab";
 import { initialFormValuesNewUser } from "../../../../configs/modalConfig";
 import { getUsernames } from "../../../../selectors/userSelectors";
 import { NewUserSchema } from "../../../../utils/validate";
-import { postNewUser } from "../../../../slices/userSlice";
+import { NewUser, postNewUser, UserRole } from "../../../../slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { Tooltip } from "../../../shared/Tooltip";
+import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
+import { Role } from "../../../../slices/aclSlice";
 
 /**
  * This component renders the new user wizard
@@ -36,41 +38,53 @@ const NewUserWizard = ({
 		setTab(tabNr);
 	};
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		const response = dispatch(postNewUser(values));
+	const handleSubmit = (values: {
+			username: string,
+			name: string,
+			email: string,
+			password: string,
+			roles: Role[],
+			assignedRoles: UserRole[],
+	}) => {
+		const newValues: NewUser = {
+			username: values.username,
+			name: values.name,
+			email: values.email,
+			password: values.password,
+			roles: values.assignedRoles,
+		};
+		const response = dispatch(postNewUser(newValues));
 		console.info(response);
 		close();
 	};
 
 	return (
 		<>
-			{/*Head navigation*/}
+			{/* Head navigation*/}
 			<nav className="modal-nav" id="modal-nav" style={navStyle}>
-				<button
-					className={"button-like-anchor " + cn("wider", { active: tab === 0 })}
+				<ButtonLikeAnchor
+					className={cn("wider", { active: tab === 0 })}
 					onClick={() => openTab(0)}
 				>
 					{t("USERS.USERS.DETAILS.TABS.USER")}
-				</button>
-				<Tooltip title={t("USERS.USERS.DETAILS.DESCRIPTION.ROLES")}>
-					<button
-						className={"button-like-anchor " + cn("wider", { active: tab === 1 })}
-						onClick={() => openTab(1)}
-					>
-						{t("USERS.USERS.DETAILS.TABS.ROLES")}
-					</button>
-				</Tooltip>
+				</ButtonLikeAnchor>
+				<ButtonLikeAnchor
+					className={cn("wider", { active: tab === 1 })}
+					onClick={() => openTab(1)}
+					tooltipText="USERS.USERS.DETAILS.DESCRIPTION.ROLES"
+				>
+					{t("USERS.USERS.DETAILS.TABS.ROLES")}
+				</ButtonLikeAnchor>
 			</nav>
 
 			{/* Initialize overall form */}
 			<Formik
 				initialValues={initialFormValuesNewUser}
 				validationSchema={NewUserSchema(usernames)}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
 				{/* Render wizard tabs depending on current value of tab variable */}
-				{(formik) => {
+				{formik => {
 					// eslint-disable-next-line react-hooks/rules-of-hooks
 					useEffect(() => {
 						formik.validateForm();
@@ -83,21 +97,13 @@ const NewUserWizard = ({
 							{tab === 1 && <UserRolesTab formik={formik} />}
 
 							{/* Navigation buttons and validation */}
-							<footer>
-								<button
-									className={cn("submit", {
-										active: formik.dirty && formik.isValid,
-										inactive: !(formik.dirty && formik.isValid),
-									})}
-									disabled={!(formik.dirty && formik.isValid)}
-									onClick={() => formik.handleSubmit()}
-								>
-									{t("SUBMIT")}
-								</button>
-								<button className="cancel" onClick={() => close()}>
-									{t("CANCEL")}
-								</button>
-							</footer>
+							<WizardNavigationButtons
+								isLast
+								formik={formik}
+								nextPage={() => formik.handleSubmit()}
+								previousPage={() => close()}
+								cancelTranslationString={"CANCEL"}
+							/>
 						</>
 					);
 				}}

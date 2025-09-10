@@ -1,27 +1,22 @@
 /* this file contains syles as javascript objects for syled components */
 
-import { DropDownType } from "../components/shared/DropDown";
+import { StylesConfig, Theme } from "react-select";
 
 // colors
 const colorDropDownMain = "#aaa";
 const colorDropDownNormalFocus = "#5897fb";
 const colorDropDownDarkerFocus = "#2a62bc";
 
-export const dropDownStyle = (type: DropDownType) => {
-	const width =
-		type === "theme" || type === "newTheme" || type === "workflow"
-			? "100%"
-			: type === "time"
-			? 70
-			: type === "aclRole"
-			? 360
-			: type === "aclTemplate" || type === "comment"
-			? 200
-			: 250;
+export function dropDownStyle(customCss: {
+	isMetadataStyle?: boolean,
+	width?: number | string,
+	optionPaddingTop?: number,
+	optionLineHeight?: string,
+}): StylesConfig {
+	const width = customCss.width ?? 250;
 
 	return {
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		container: (provided, state) => ({
+		container: (provided, _state) => ({
 			...provided,
 			width: width,
 			position: "relative",
@@ -34,18 +29,19 @@ export const dropDownStyle = (type: DropDownType) => {
 			marginBottom: 0,
 			marginRight: 1,
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
 		control: (provided, state) => ({
 			...provided,
 			marginBottom: 0,
-			border: `1px solid ${colorDropDownMain}`,
+			border: customCss.isMetadataStyle ? 0 : `1px solid ${colorDropDownMain}`,
 			borderColor: state.selectProps.menuIsOpen
 				? colorDropDownNormalFocus
 				: colorDropDownMain,
 			hoverBorderColor: state.selectProps.menuIsOpen
 				? colorDropDownNormalFocus
 				: colorDropDownMain,
-			boxShadow: state.selectProps.menuIsOpen
+			boxShadow: customCss.isMetadataStyle
+				? "0 0 0 0px"
+				: state.selectProps.menuIsOpen
 				? `0 0 0 1px ${colorDropDownNormalFocus}`
 				: `0 0 0 1px ${colorDropDownMain}`,
 			borderRadius: 4,
@@ -54,8 +50,15 @@ export const dropDownStyle = (type: DropDownType) => {
 			"&:hover": {
 				borderColor: colorDropDownMain,
 			},
+
+			...customCss.isMetadataStyle && {
+				backgroundColor: "transparent",
+				"& div": {
+					padding: "0 !important",
+					paddingLeft: "0 !important",
+				},
+			},
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
 		dropdownIndicator: (provided, state) => ({
 			...provided,
 			transform: state.selectProps.menuIsOpen
@@ -67,14 +70,15 @@ export const dropDownStyle = (type: DropDownType) => {
 			"&:hover": {
 				color: colorDropDownNormalFocus,
 			},
+			...customCss.isMetadataStyle && {
+				display: "none",
+			},
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		indicatorSeparator: (provided, state) => ({
+		indicatorSeparator: (provided, _state) => ({
 			...provided,
 			display: "none",
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		input: (provided, state) => ({
+		input: (provided, _state) => ({
 			...provided,
 			position: "relative",
 			zIndex: 1010,
@@ -85,38 +89,28 @@ export const dropDownStyle = (type: DropDownType) => {
 			paddingTop: 0,
 			paddingBottom: 0,
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		menu: (provided, state) => ({
+		menu: (provided, _state) => ({
 			...provided,
 			zIndex: 9000,
 			marginTop: 1,
 			border: "none",
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		menuList: (provided, state) => ({
+		menuList: (provided, _state) => ({
 			...provided,
 			marginTop: 0,
 			border: `1px solid ${colorDropDownMain}`,
 			borderRadius: 4,
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		noOptionsMessage: (provided, state) => ({
+		noOptionsMessage: (provided, _state) => ({
 			...provided,
 			textAlign: "left",
 			paddingTop: 0,
 			paddingBottom: 0,
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
 		option: (provided, state) => ({
 			...provided,
-			paddingTop:
-				type === "aclRole" || type === "aclTemplate" || type === "comment"
-					? 5
-					: 0,
-			paddingBottom:
-				type === "aclRole" || type === "aclTemplate" || type === "comment"
-					? 5
-					: 0,
+			paddingTop: customCss.optionPaddingTop ?? 0,
+			paddingBottom: customCss.optionPaddingTop ?? 0,
 			backgroundColor: state.isSelected
 				? colorDropDownDarkerFocus
 				: state.isFocused
@@ -125,18 +119,16 @@ export const dropDownStyle = (type: DropDownType) => {
 			color: state.isFocused || state.isSelected ? "white" : provided.color,
 			cursor: "pointer",
 			overflowWrap: "normal",
-			lineHeight: type === "comment" ? "105%" : "inherit",
+			lineHeight: customCss.optionLineHeight ?? "inherit", // type === "comment" ? "105%" : "inherit",
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		singleValue: (provided, state) => ({
+		singleValue: (provided, _state) => ({
 			...provided,
 			marginTop: 0,
 			marginBottom: 0,
 			paddingTop: 0,
 			paddingBottom: 0,
 		}),
-// @ts-expect-error TS(7006): Parameter 'provided' implicitly has an 'any' type.
-		valueContainer: (provided, state) => ({
+		valueContainer: (provided, _state) => ({
 			...provided,
 			marginTop: 0,
 			marginBottom: 0,
@@ -147,8 +139,7 @@ export const dropDownStyle = (type: DropDownType) => {
 	};
 };
 
-// @ts-expect-error TS(7006): Parameter 'theme' implicitly has an 'any' type.
-export const dropDownSpacingTheme = (theme) => ({
+export const dropDownSpacingTheme = (theme: Theme) => ({
 	...theme,
 	spacing: {
 		...theme.spacing,
@@ -156,8 +147,3 @@ export const dropDownSpacingTheme = (theme) => ({
 		baseUnit: 2,
 	},
 });
-
-export const overflowStyle = {
-	overflow: "auto",
-	overflowWrap: "normal" as const,
-};

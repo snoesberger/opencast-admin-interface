@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Formik } from "formik";
-import WizardStepper from "../../../shared/wizard/WizardStepper";
+import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
 import AclMetadataPage from "./AclMetadataPage";
 import NewAclSummaryPage from "./NewAclSummaryPage";
 import { postNewAcl } from "../../../../slices/aclSlice";
@@ -20,7 +20,10 @@ const NewAclWizard = ({
 }) => {
 	const dispatch = useAppDispatch();
 
-	const initialValues = initialFormValuesNewAcl;
+	const initialValues = {
+		...initialFormValuesNewAcl,
+		aclTemplate: "",
+	};
 
 	const {
 		snapshot,
@@ -32,7 +35,12 @@ const NewAclWizard = ({
 		setPageCompleted,
 	} = usePageFunctions(0, initialValues);
 
-	const steps = [
+	type StepName = "metadata" | "access" | "summary";
+	type Step = WizardStep & {
+		name: StepName,
+	}
+
+	const steps: Step[] = [
 		{
 			name: "metadata",
 			translation: "USERS.ACLS.NEW.TABS.METADATA",
@@ -47,10 +55,9 @@ const NewAclWizard = ({
 		},
 	];
 
-	const currentValidationSchema = NewAclSchema[page];
+	const currentValidationSchema = NewAclSchema[steps[page].name];
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
+	const handleSubmit = (values: typeof initialFormValuesNewAcl) => {
 		const response = dispatch(postNewAcl(values));
 		console.info(response);
 		close();
@@ -62,10 +69,10 @@ const NewAclWizard = ({
 			<Formik
 				initialValues={snapshot}
 				validationSchema={currentValidationSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
 				{/* Render wizard pages depending on current value of page variable */}
-				{(formik) => {
+				{formik => {
 					// eslint-disable-next-line react-hooks/rules-of-hooks
 					useEffect(() => {
 						formik.validateForm();
@@ -77,31 +84,28 @@ const NewAclWizard = ({
 							{/* Stepper that shows each step of wizard as header */}
 							<WizardStepper
 								steps={steps}
-								page={page}
-								setPage={setPage}
+								activePageIndex={page}
+								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
-								hasAccessPage
+								isValid={formik.isValid}
+								acls={formik.values.policies}
 							/>
 							<div>
-								{page === 0 && (
+								{steps[page].name === "metadata" && (
 									<AclMetadataPage
 										formik={formik}
 										nextPage={nextPage}
 									/>
 								)}
-								{page === 1 && (
+								{steps[page].name === "access" && (
 									<AclAccessPage
-									// @ts-expect-error: Type-checking gets confused by redux-connect in the child
 										formik={formik}
-										// @ts-expect-error: Type-checking gets confused by redux-connect in the child
 										nextPage={nextPage}
-										// @ts-expect-error: Type-checking gets confused by redux-connect in the child
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 2 && (
+								{steps[page].name === "summary" && (
 									<NewAclSummaryPage
 										formik={formik}
 										previousPage={previousPage}

@@ -1,8 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import moment from "moment";
 import { getCurrentLanguageInformation } from "../../utils/utils";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Field, Formik } from "formik";
+import DatePicker from "react-datepicker";
+import { Formik, FormikErrors } from "formik";
+import { Field } from "./Field";
 import BarChart from "./BarChart";
 import {
 	availableCustomStatisticDataResolutions,
@@ -11,45 +12,54 @@ import {
 	statisticTimeModes,
 } from "../../configs/statisticsConfig";
 import { localizedMoment } from "../../utils/dateUtils";
-import { parseISO } from "date-fns";
+import { useTranslation } from "react-i18next";
+import type { ChartOptions } from "chart.js";
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useAppDispatch } from "../../store";
+import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSlice";
+import { ParseKeys } from "i18next";
+import { LuChevronLeft, LuChevronRight, LuDownload } from "react-icons/lu";
+
 
 /**
  * This component visualizes statistics with data of type time series
  */
 const TimeSeriesStatistics = ({
-// @ts-expect-error TS(7031): Binding element 't' implicitly has an 'any' type.
-	t,
-// @ts-expect-error TS(7031): Binding element 'resourceId' implicitly has an 'an... Remove this comment to see the full error message
 	resourceId,
-// @ts-expect-error TS(7031): Binding element 'statTitle' implicitly has an 'any... Remove this comment to see the full error message
 	statTitle,
-// @ts-expect-error TS(7031): Binding element 'providerId' implicitly has an 'an... Remove this comment to see the full error message
 	providerId,
-// @ts-expect-error TS(7031): Binding element 'fromDate' implicitly has an 'any'... Remove this comment to see the full error message
 	fromDate,
-// @ts-expect-error TS(7031): Binding element 'toDate' implicitly has an 'any' t... Remove this comment to see the full error message
 	toDate,
-// @ts-expect-error TS(7031): Binding element 'timeMode' implicitly has an 'any'... Remove this comment to see the full error message
 	timeMode,
-// @ts-expect-error TS(7031): Binding element 'dataResolution' implicitly has an... Remove this comment to see the full error message
 	dataResolution,
-// @ts-expect-error TS(7031): Binding element 'statDescription' implicitly has a... Remove this comment to see the full error message
 	statDescription,
-// @ts-expect-error TS(7031): Binding element 'onChange' implicitly has an 'any'... Remove this comment to see the full error message
 	onChange,
-// @ts-expect-error TS(7031): Binding element 'exportUrl' implicitly has an 'any... Remove this comment to see the full error message
 	exportUrl,
-// @ts-expect-error TS(7031): Binding element 'exportFileName' implicitly has an... Remove this comment to see the full error message
 	exportFileName,
-// @ts-expect-error TS(7031): Binding element 'totalValue' implicitly has an 'an... Remove this comment to see the full error message
 	totalValue,
-// @ts-expect-error TS(7031): Binding element 'sourceData' implicitly has an 'an... Remove this comment to see the full error message
 	sourceData,
-// @ts-expect-error TS(7031): Binding element 'chartLabels' implicitly has an 'a... Remove this comment to see the full error message
 	chartLabels,
-// @ts-expect-error TS(7031): Binding element 'chartOptions' implicitly has an '... Remove this comment to see the full error message
 	chartOptions,
+}: {
+	resourceId: string,
+	statTitle: string,
+	providerId: string,
+	fromDate: string,
+	toDate: string,
+	timeMode: TimeMode,
+	dataResolution: DataResolution,
+	statDescription: string,
+	onChange: AsyncThunk<Statistics[], { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
+	exportUrl: string,
+	exportFileName: (statsTitle: string) => string,
+	totalValue: number,
+	sourceData: number[],
+	chartLabels: string[],
+	chartOptions: ChartOptions<"bar">,
 }) => {
+	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
+
 	// Style for radio buttons
 	const radioButtonStyle = {
 		backgroundColor: "whitesmoke",
@@ -72,117 +82,90 @@ const TimeSeriesStatistics = ({
 	// Get info about the current language and its date locale
 	const currentLanguage = getCurrentLanguageInformation();
 
+	// Set the date for the react-datepicker
+	const [startDatepicker, setStartDatepicker] = useState(fromDate ? new Date(fromDate) : null);
+	const [endDatepicker, setEndDatepicker] = useState(toDate ? new Date(toDate) : null);
+
 	// change formik values and get new statistic values from API
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-	const change = (setFormikValue, timeMode, from, to, dataResolution) => {
+	const change = (
+		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		timeMode: TimeMode,
+		from: string,
+		to: string,
+		dataResolution: DataResolution,
+	) => {
 		if (timeMode === "year" || timeMode === "month") {
 			from = moment(from).clone().startOf(timeMode).format("YYYY-MM-DD");
 			to = moment(from).clone().endOf(timeMode).format("YYYY-MM-DD");
+			setStartDatepicker(new Date(from));
+			setEndDatepicker(new Date(to));
 			setFormikValue("fromDate", from);
 			setFormikValue("toDate", to);
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			setFormikValue("dataResolution", fixedDataResolutions[timeMode]);
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			dataResolution = fixedDataResolutions[timeMode];
+			setFormikValue("dataResolution", fixedDataResolutions(timeMode));
+			dataResolution = fixedStatisticDataResolutions(timeMode);
 		}
-
-		onChange(resourceId, providerId, from, to, dataResolution, timeMode);
+		dispatch(onChange({ id: resourceId, providerId, from, to, dataResolution, timeMode }));
 	};
 
 	// change time mode in formik and get new values from API
-	const changeTimeMode = async (
-// @ts-expect-error TS(7006): Parameter 'newTimeMode' implicitly has an 'any' ty... Remove this comment to see the full error message
-		newTimeMode,
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-		setFormikValue,
-// @ts-expect-error TS(7006): Parameter 'from' implicitly has an 'any' type.
-		from,
-// @ts-expect-error TS(7006): Parameter 'to' implicitly has an 'any' type.
-		to,
-// @ts-expect-error TS(7006): Parameter 'dataResolution' implicitly has an 'any'... Remove this comment to see the full error message
-		dataResolution
+	const changeTimeMode = (
+		newTimeMode: TimeMode,
+		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		from: string,
+		to: string,
+		dataResolution: DataResolution,
 	) => {
 		setFormikValue("timeMode", newTimeMode);
 		change(setFormikValue, newTimeMode, from, to, dataResolution);
 	};
 
-	// change custom from date in formik and get new values from API
-	const changeFrom = async (
-// @ts-expect-error TS(7006): Parameter 'newFrom' implicitly has an 'any' type.
-		newFrom,
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-		setFormikValue,
-// @ts-expect-error TS(7006): Parameter 'timeMode' implicitly has an 'any' type.
-		timeMode,
-// @ts-expect-error TS(7006): Parameter 'to' implicitly has an 'any' type.
-		to,
-// @ts-expect-error TS(7006): Parameter 'dataResolution' implicitly has an 'any'... Remove this comment to see the full error message
-		dataResolution
-	) => {
-		setFormikValue("fromDate", newFrom);
-		change(setFormikValue, timeMode, newFrom, to, dataResolution);
-	};
-
-	// change custom to date in formik and get new values from API
-	const changeTo = async (
-// @ts-expect-error TS(7006): Parameter 'newTo' implicitly has an 'any' type.
-		newTo,
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-		setFormikValue,
-// @ts-expect-error TS(7006): Parameter 'timeMode' implicitly has an 'any' type.
-		timeMode,
-// @ts-expect-error TS(7006): Parameter 'from' implicitly has an 'any' type.
-		from,
-// @ts-expect-error TS(7006): Parameter 'dataResolution' implicitly has an 'any'... Remove this comment to see the full error message
-		dataResolution
-	) => {
-		setFormikValue("toDate", newTo);
-		change(setFormikValue, timeMode, from, newTo, dataResolution);
-	};
-
 	// change custom time granularity in formik and get new values from API
-	const changeGranularity = async (
-// @ts-expect-error TS(7006): Parameter 'granularity' implicitly has an 'any' ty... Remove this comment to see the full error message
-		granularity,
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-		setFormikValue,
-// @ts-expect-error TS(7006): Parameter 'timeMode' implicitly has an 'any' type.
-		timeMode,
-// @ts-expect-error TS(7006): Parameter 'from' implicitly has an 'any' type.
-		from,
-// @ts-expect-error TS(7006): Parameter 'to' implicitly has an 'any' type.
-		to
+	const changeGranularity = (
+		granularity: DataResolution,
+		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		timeMode: TimeMode,
+		from: string,
+		to: string,
 	) => {
 		setFormikValue("dataResolution", granularity);
 		change(setFormikValue, timeMode, from, to, granularity);
 	};
 
 	// format selected time to display as name of timeframe
-// @ts-expect-error TS(7006): Parameter 'from' implicitly has an 'any' type.
-	const formatSelectedTimeframeName = (from, timeMode) => {
-		return localizedMoment(from, currentLanguage).format(
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			formatStrings[timeMode]
+	const formatSelectedTimeframeName = (
+		from: string,
+		timeMode: keyof typeof formatStrings,
+	) => {
+		return localizedMoment(from, currentLanguage ? currentLanguage.dateLocale.code : "en").format(
+			formatStrings[timeMode],
 		);
 	};
 
 	// change to and from dates in formik to previous timeframe and get new values from API
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-	const selectPrevious = (setFormikValue, from, timeMode, dataResolution) => {
+	const selectPrevious = (
+		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		from: string,
+		timeMode: TimeMode,
+		dataResolution: DataResolution,
+	) => {
 		const newFrom = moment(from)
-			// @ts-expect-error TS(2769): No overload matches this call.
-			.subtract(1, timeMode + "s")
+			// According to the moment.js docs, string is supported as a second argument here
+			.subtract(1, timeMode + "s" as moment.unitOfTime.DurationConstructor)
 			.format("YYYY-MM-DD");
 		const to = newFrom;
 		change(setFormikValue, timeMode, newFrom, to, dataResolution);
 	};
 
 	// change to and from dates in formik to next timeframe and get new values from API
-// @ts-expect-error TS(7006): Parameter 'setFormikValue' implicitly has an 'any'... Remove this comment to see the full error message
-	const selectNext = (setFormikValue, from, timeMode, dataResolution) => {
+	const selectNext = (
+		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		from: string,
+		timeMode: TimeMode,
+		dataResolution: DataResolution,
+	) => {
 		const newFrom = moment(from)
-			// @ts-expect-error TS(2769): No overload matches this call.
-			.add(1, timeMode + "s")
+			// According to the moment.js docs, string is supported as a second argument here
+			.add(1, timeMode + "s" as moment.unitOfTime.DurationConstructor)
 			.format("YYYY-MM-DD");
 		const to = newFrom;
 		change(setFormikValue, timeMode, newFrom, to, dataResolution);
@@ -195,21 +178,31 @@ const TimeSeriesStatistics = ({
 			initialValues={{
 				timeMode: timeMode,
 				dataResolution: dataResolution,
+				// Typescript complains that the method "startOf" cannot take "custom" as a parameter, but in practice
+				// this does not seem to be a problem
+				// @ts-expect-error: timeMode should be assignable here
 				fromDate: moment(fromDate).startOf(timeMode).format("YYYY-MM-DD"),
+				// @ts-expect-error: timeMode should be assignable here
 				toDate: moment(toDate).endOf(timeMode).format("YYYY-MM-DD"),
 			}}
-			onSubmit={(values) => {}}
+			onSubmit={() => {}}
 		>
-			{(formik) => (
+			{formik => (
 				<div className="statistics-graph">
 					{/* download link for a statistic file */}
 					<div className="download">
-						{/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
 						<a
-							className="download-icon"
 							href={exportUrl}
 							download={exportFileName(statTitle)}
-						/>
+						>
+							<LuDownload className="download-icon"/>
+						</a>
+					</div>
+
+					{/* statistics total value */}
+					<div className="total">
+						<span>{t("STATISTICS.TOTAL") /* Total */}</span>
+						<span>{": " + totalValue}</span>
 					</div>
 
 					{/* radio buttons for selecting the mode of choosing the timeframe of statistic */}
@@ -230,26 +223,19 @@ const TimeSeriesStatistics = ({
 									name="timeMode"
 									value={mode.value}
 									id={providerId + "-mode-" + key}
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-									onChange={(event) =>
+									onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
 										changeTimeMode(
-											event.target.value,
+											event.target.value as TimeMode, // see type of "mode.value"
 											formik.setFieldValue,
 											formik.values.fromDate,
 											formik.values.toDate,
-											formik.values.dataResolution
+											formik.values.dataResolution,
 										)
 									}
 								/>
-								{t("STATISTICS.TIME_MODES." + mode.translation)}
+								{t(`STATISTICS.TIME_MODES.${mode.translation}` as ParseKeys)}
 							</label>
 						))}
-					</div>
-
-					{/* statistics total value */}
-					<div className="total">
-						<span>{t("STATISTICS.TOTAL") /* Total */}</span>
-						<span>{": " + totalValue}</span>
 					</div>
 
 					{/* timeframe selection */}
@@ -258,25 +244,25 @@ const TimeSeriesStatistics = ({
 						formik.values.timeMode === "month") && (
 						/* year/month selection for statistic via previous and next buttons */
 						<span className="preset">
-							{/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
 							<a
-								className="navigation prev"
+								className="navigation"
 								onClick={() =>
 									selectPrevious(
 										formik.setFieldValue,
 										formik.values.fromDate,
 										formik.values.timeMode,
-										formik.values.dataResolution
+										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronLeft />
+							</a>
 							<div>
 								{formatSelectedTimeframeName(
 									formik.values.fromDate,
-									formik.values.timeMode
+									formik.values.timeMode,
 								)}
 							</div>
-							{/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
 							<a
 								className="navigation next"
 								onClick={() =>
@@ -284,10 +270,12 @@ const TimeSeriesStatistics = ({
 										formik.setFieldValue,
 										formik.values.fromDate,
 										formik.values.timeMode,
-										formik.values.dataResolution
+										formik.values.dataResolution,
 									)
 								}
-							/>
+							>
+								<LuChevronRight />
+							</a>
 						</span>
 					)}
 
@@ -296,53 +284,47 @@ const TimeSeriesStatistics = ({
 						<span className="custom">
 							{/* time range selection */}
 							<div className="range">
+							<span>
+								{t("STATISTICS.TIMERANGE") /* Time range */}{" "}
+							</span>
 								{/* date picker for selecting start date of the statistic */}
-								<span>{t("STATISTICS.FROM") /* From */}</span>
-								<div className="chosen-container">
-									<DatePicker
-										name="fromDate"
-										value={typeof formik.values.fromDate === "string" ? parseISO(formik.values.fromDate) : formik.values.fromDate}
-										slotProps={{ textField: { placeholder: t(
-											"EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.START_DATE"
-										) } }}
-										onChange={(value) =>
-											changeFrom(
-												value,
-												formik.setFieldValue,
-												formik.values.timeMode,
-												formik.values.toDate,
-												formik.values.dataResolution
-											)
-										}
-									/>
-								</div>
-
-								{/* date picker for selecting end date of the statistic */}
-								<span>{t("STATISTICS.TO") /* To */}</span>
-								<div className="chosen-container">
-									<DatePicker
-										name="toDate"
-										value={typeof formik.values.toDate === "string" ? parseISO(formik.values.toDate) : formik.values.toDate}
-										slotProps={{ textField: { placeholder: t(
-											"EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.END_DATE"
-										) } }}
-										onChange={(value) =>
-											changeTo(
-												value,
-												formik.setFieldValue,
-												formik.values.timeMode,
-												formik.values.fromDate,
-												formik.values.dataResolution
-											)
-										}
-									/>
-								</div>
+								<DatePicker
+									selected={new Date(formik.values.fromDate)}
+									onChange={dates => {
+										const [startDate, endDate] = dates;
+										setStartDatepicker(startDate);
+										setEndDatepicker(endDate);
+										const newStartDate = startDate ? moment(startDate).format("YYYY-MM-DD") : formik.values.fromDate;
+										const newEndDate = endDate ? moment(endDate).format("YYYY-MM-DD") : formik.values.toDate;
+										change(
+											formik.setFieldValue,
+											formik.values.timeMode,
+											newStartDate,
+											newEndDate,
+											formik.values.dataResolution,
+										);
+									}}
+									startDate={startDatepicker}
+									endDate={endDatepicker}
+									selectsRange
+									showYearDropdown
+									showMonthDropdown
+									yearDropdownItemNumber={2}
+									swapRange
+									allowSameDay
+									dateFormat="P"
+									popperPlacement="bottom"
+									popperClassName="datepicker-custom"
+									className="datepicker-custom-input"
+									locale={getCurrentLanguageInformation()?.dateLocale}
+									strictParsing
+								/>
 							</div>
 
 							{/* time granularity selection */}
 							<div>
 								<span>
-									{t("STATISTICS.GRANULARITY") + " " /* Granularity */}
+									{t("STATISTICS.GRANULARITY")/* Granularity */}{" "}
 								</span>
 								<div className="chosen-container chosen-container-single">
 									{/* drop-down for selecting the time granularity of the statistic */}
@@ -351,24 +333,23 @@ const TimeSeriesStatistics = ({
 										name="dataResolution"
 										as="select"
 										data-width="'100px'"
-// @ts-expect-error TS(7006): Parameter 'event' implicitly has an 'any' type.
-										onChange={(event) =>
+										onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
 											changeGranularity(
-												event.target.value,
+												event.target.value as DataResolution,
 												formik.setFieldValue,
 												formik.values.timeMode,
 												formik.values.fromDate,
-												formik.values.toDate
+												formik.values.toDate,
 											)
 										}
 										placeholder={t(
-											"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.MINUTE"
+											"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.MINUTE",
 										)}
 									>
 										<option value="" hidden />
 										{availableCustomDataResolutions.map((option, key) => (
 											<option value={option.value} key={key}>
-												{t("STATISTICS.TIME_GRANULARITIES." + option.label)}
+												{t(`STATISTICS.TIME_GRANULARITIES.${option.label}` as ParseKeys)}
 											</option>
 										))}
 									</Field>
@@ -386,7 +367,7 @@ const TimeSeriesStatistics = ({
 					/>
 
 					{/* statistic description */}
-					<p>{t(statDescription)}</p>
+					<p>{t(statDescription as ParseKeys)}</p>
 				</div>
 			)}
 		</Formik>

@@ -1,59 +1,37 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
 import { loadServicesIntoTable } from "../../../thunks/tableThunks";
-import { getUserInformation } from "../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../utils/utils";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { fetchServices, restartService } from "../../../slices/serviceSlice";
-import { Tooltip } from "../../shared/Tooltip";
+import { useAppDispatch } from "../../../store";
+import { Service, fetchServices, restartService } from "../../../slices/serviceSlice";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuRotateCcw } from "react-icons/lu";
 
 /**
  * This component renders the action cells of services in the table view
  */
 const ServicesActionCell = ({
-// @ts-expect-error TS(7031): Binding element 'row' implicitly has an 'any' type... Remove this comment to see the full error message
 	row,
-// @ts-expect-error TS(7031): Binding element 'loadServices' implicitly has an '... Remove this comment to see the full error message
-	loadServices,
-// @ts-expect-error TS(7031): Binding element 'loadServicesIntoTable' implicitly... Remove this comment to see the full error message
-	loadServicesIntoTable,
+}: {
+	row: Service
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const user = useAppSelector(state => getUserInformation(state));
-
 	const onClickRestart = async () => {
-		await dispatch(restartService({host: row.hostname, serviceType: row.name}));
+		restartService({ host: row.hostname, serviceType: row.name });
 		await dispatch(fetchServices());
-		loadServicesIntoTable();
+		dispatch(loadServicesIntoTable());
 	};
 
 	return (
-		row.status !== "SYSTEMS.SERVICES.STATUS.NORMAL" &&
-		hasAccess("ROLE_UI_SERVICES_STATUS_EDIT", user) && (
-			<Tooltip title={t("SYSTEMS.SERVICES.TABLE.SANITIZE")}>
-				<button
-					className="button-like-anchor sanitize fa fa-undo"
-					onClick={() => onClickRestart()}
-				/>
-			</Tooltip>
-		)
+		row.status !== "SYSTEMS.SERVICES.STATUS.NORMAL" ? (
+			<ButtonLikeAnchor
+				onClick={() => onClickRestart()}
+				className={"action-cell-button"}
+				editAccessRole={"ROLE_UI_SERVICES_STATUS_EDIT"}
+				tooltipText={"SYSTEMS.SERVICES.TABLE.SANITIZE"}
+			>
+				<LuRotateCcw style={{ fontSize: "18px", color: "#444" }}/>
+			</ButtonLikeAnchor>
+		) : <></>
 	);
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-
-});
-
-// mapping actions to dispatch
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-	loadServicesIntoTable: () => dispatch(loadServicesIntoTable()),
-});
-
-// @ts-expect-error TS(2345): Argument of type '({ row, loadServices, loadServic... Remove this comment to see the full error message
-export default connect(mapStateToProps, mapDispatchToProps)(ServicesActionCell);
+export default ServicesActionCell;

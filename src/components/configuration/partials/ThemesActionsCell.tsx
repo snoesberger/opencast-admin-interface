@@ -1,45 +1,41 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import ConfirmModal from "../../shared/ConfirmModal";
-import ThemeDetailsModal from "./wizard/ThemeDetailsModal";
+import { useRef } from "react";
 import {
 	fetchThemeDetails,
 	fetchUsage,
 } from "../../../slices/themeDetailsSlice";
-import { getUserInformation } from "../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../utils/utils";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { deleteTheme } from "../../../slices/themeSlice";
-import { Tooltip } from "../../shared/Tooltip";
+import { useAppDispatch } from "../../../store";
+import { deleteTheme, ThemeDetailsType } from "../../../slices/themeSlice";
+import ThemeDetails from "./wizard/ThemeDetails";
+import { ActionCellDelete } from "../../shared/ActionCellDelete";
+import { Modal, ModalHandle } from "../../shared/modals/Modal";
+import { useTranslation } from "react-i18next";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuFileText } from "react-icons/lu";
 
 /**
  * This component renders the action cells of themes in the table view
  */
 const ThemesActionsCell = ({
-// @ts-expect-error TS(7031): Binding element 'row' implicitly has an 'any' type... Remove this comment to see the full error message
 	row,
+}: {
+	row: ThemeDetailsType
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const [displayDeleteConfirmation, setDeleteConfirmation] = useState(false);
-	const [displayThemeDetails, setThemeDetails] = useState(false);
-
-	const user = useAppSelector(state => getUserInformation(state));
-
-	const hideDeleteConfirmation = () => {
-		setDeleteConfirmation(false);
-	};
+	const detailsModalRef = useRef<ModalHandle>(null);
 
 	const hideThemeDetails = () => {
-		setThemeDetails(false);
+		detailsModalRef.current?.close?.();
 	};
 
 	const showThemeDetails = async () => {
-		await dispatch(fetchThemeDetails(row.id));
-		await dispatch(fetchUsage(row.id));
+		await Promise.all([
+			dispatch(fetchThemeDetails(row.id)),
+			dispatch(fetchUsage(row.id)),
+		]);
 
-		setThemeDetails(true);
+		detailsModalRef.current?.open();
 	};
 
 	const deletingTheme = (id: number) => {
@@ -49,42 +45,34 @@ const ThemesActionsCell = ({
 	return (
 		<>
 			{/* edit themes */}
-			{hasAccess("ROLE_UI_THEMES_EDIT", user) && (
-				<Tooltip title={t("CONFIGURATION.THEMES.TABLE.TOOLTIP.DETAILS")}>
-					<button
-						onClick={() => showThemeDetails()}
-						className="button-like-anchor more"
-					/>
-				</Tooltip>
-			)}
+			<ButtonLikeAnchor
+				onClick={() => showThemeDetails()}
+				className={"action-cell-button"}
+				editAccessRole={"ROLE_UI_THEMES_EDIT"}
+				tooltipText={"CONFIGURATION.THEMES.TABLE.TOOLTIP.DETAILS"}
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
-			{displayThemeDetails && (
-				<ThemeDetailsModal
-					handleClose={hideThemeDetails}
-					themeId={row.id}
-					themeName={row.name}
-				/>
-			)}
+			{/* themes details modal */}
+			<Modal
+				header={t("CONFIGURATION.THEMES.DETAILS.EDITCAPTION", { name: row.name })}
+				classId="theme-details-modal"
+				ref={detailsModalRef}
+			>
+				{/* component that manages tabs of theme details modal*/}
+				<ThemeDetails close={hideThemeDetails} />
+			</Modal>
 
 			{/* delete themes */}
-			{hasAccess("ROLE_UI_THEMES_DELETE", user) && (
-				<Tooltip title={t("CONFIGURATION.THEMES.TABLE.TOOLTIP.DELETE")}>
-					<button
-						onClick={() => setDeleteConfirmation(true)}
-						className="button-like-anchor remove ng-scope ng-isolate-scope"
-					/>
-				</Tooltip>
-			)}
-
-			{displayDeleteConfirmation && (
-				<ConfirmModal
-					close={hideDeleteConfirmation}
-					resourceName={row.name}
-					resourceId={row.id}
-					deleteMethod={deletingTheme}
-					resourceType="THEME"
-				/>
-			)}
+			<ActionCellDelete
+				editAccessRole={"ROLE_UI_THEMES_DELETE"}
+				tooltipText={"CONFIGURATION.THEMES.TABLE.TOOLTIP.DELETE"}
+				resourceId={row.id}
+				resourceName={row.name}
+				resourceType={"THEME"}
+				deleteMethod={deletingTheme}
+			/>
 		</>
 	);
 };

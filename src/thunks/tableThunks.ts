@@ -1,13 +1,4 @@
-import { eventsTableConfig } from "../configs/tableConfigs/eventsTableConfig";
-import { seriesTableConfig } from "../configs/tableConfigs/seriesTableConfig";
-import { recordingsTableConfig } from "../configs/tableConfigs/recordingsTableConfig";
-import { jobsTableConfig } from "../configs/tableConfigs/jobsTableConfig";
-import { serversTableConfig } from "../configs/tableConfigs/serversTableConfig";
-import { servicesTableConfig } from "../configs/tableConfigs/servicesTableConfig";
-import { usersTableConfig } from "../configs/tableConfigs/usersTableConfig";
-import { groupsTableConfig } from "../configs/tableConfigs/groupsTableConfig";
-import { aclsTableConfig } from "../configs/tableConfigs/aclsTableConfig";
-import { themesTableConfig } from "../configs/tableConfigs/themesTableConfig";
+import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
 import {
 	deselectAll,
 	loadResourceIntoTable,
@@ -16,7 +7,7 @@ import {
 	setOffset,
 	setPageActive,
 	setPages,
-} from "../actions/tableActions";
+} from "../slices/tableSlice";
 import {
 	setEventColumns,
 	setShowActions as showEventsActions,
@@ -43,23 +34,21 @@ import { fetchThemes, setThemeColumns } from "../slices/themeSlice";
 import { fetchRecordings, setRecordingsColumns } from "../slices/recordingSlice";
 import { setGroupColumns } from "../slices/groupSlice";
 import { fetchAcls, setAclColumns } from "../slices/aclSlice";
+import { AppDispatch, AppThunk, RootState } from "../store";
 
 /**
  * This file contains methods/thunks used to manage the table in the main view and its state changes
  * */
 
 // Method to load events into the table
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadEventsIntoTable = () => async (dispatch, getState) => {
+export const loadEventsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { events, table } = getState();
 	const total = events.total;
 
 	const pagination = table.pagination;
 	// check which events are currently selected
-// @ts-expect-error TS(7006): Parameter 'result' implicitly has an 'any' type.
-	const resource = events.results.map((result) => {
-// @ts-expect-error TS(7006): Parameter 'row' implicitly has an 'any' type.
-		const current = table.rows.find((row) => row.id === result.id);
+	const resource = events.results.map(result => {
+		const current = table.rows.find(row => "id" in row && row.id === result.id);
 
 		if (!!current && table.resource === "events") {
 			return {
@@ -76,42 +65,29 @@ export const loadEventsIntoTable = () => async (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "events",
+	const tableData = {
+		resource: "events" as const,
 		rows: resource,
 		columns: events.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["events"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["events"],
+		reverse: table.reverse["events"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "events") {
-		const multiSelect = eventsTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "date",
-			reverse: "DESC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
 // Method to load series into the table
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadSeriesIntoTable = () => (dispatch, getState) => {
+export const loadSeriesIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { series, table } = getState();
 	const total = series.total;
 	const pagination = table.pagination;
 
 	// check which events are currently selected
-// @ts-expect-error TS(7006): Parameter 'result' implicitly has an 'any' type.
-	const resource = series.results.map((result) => {
-// @ts-expect-error TS(7006): Parameter 'row' implicitly has an 'any' type.
-		const current = table.rows.find((row) => row.id === result.id);
+	const resource = series.results.map(result => {
+		const current = table.rows.find(row => "id" in row && row.id === result.id);
 
 		if (!!current && table.resource === "series") {
 			return {
@@ -128,32 +104,21 @@ export const loadSeriesIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "series",
+	const tableData = {
+		resource: "series" as const,
 		rows: resource,
 		columns: series.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["series"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["series"],
+		reverse: table.reverse["series"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "series") {
-		const multiSelect = seriesTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "title",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadRecordingsIntoTable = () => (dispatch, getState) => {
+export const loadRecordingsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { recordings, table } = getState();
 	const pagination = table.pagination;
 	const resource = recordings.results;
@@ -161,33 +126,23 @@ export const loadRecordingsIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "recordings",
+	const tableData = {
+		resource: "recordings" as const,
 		columns: recordings.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["recordings"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
-		rows: resource,
+		sortBy: table.sortBy["recordings"],
+		reverse: table.reverse["recordings"],
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		totalItems: total,
 	};
-
-	if (table.resource !== "recordings") {
-		const multiSelect = recordingsTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "status",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadJobsIntoTable = () => (dispatch, getState) => {
+export const loadJobsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { jobs, table } = getState();
 	const pagination = table.pagination;
 	const resource = jobs.results;
@@ -195,32 +150,23 @@ export const loadJobsIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "jobs",
-		rows: resource,
+	const tableData = {
+		resource: "jobs" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: jobs.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["jobs"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["jobs"],
+		reverse: table.reverse["jobs"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "jobs") {
-		const multiSelect = jobsTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "id",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadServersIntoTable = () => (dispatch, getState) => {
+export const loadServersIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { servers, table } = getState();
 	const pagination = table.pagination;
 	const resource = servers.results;
@@ -228,32 +174,23 @@ export const loadServersIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "servers",
-		rows: resource,
+	const tableData = {
+		resource: "servers" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: servers.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["servers"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["servers"],
+		reverse: table.reverse["servers"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "servers") {
-		const multiSelect = serversTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "online",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadServicesIntoTable = () => (dispatch, getState) => {
+export const loadServicesIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { services, table } = getState();
 	const pagination = table.pagination;
 	const resource = services.results;
@@ -261,33 +198,23 @@ export const loadServicesIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		rows: resource,
+	const tableData = {
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		pages: pages,
 		totalItems: total,
-		resource: "services",
+		resource: "services" as const,
 		columns: services.columns,
-		multiSelect: table.multiSelect,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		multiSelect: table.multiSelect["services"],
+		sortBy: table.sortBy["services"],
+		reverse: table.reverse["services"],
 	};
-
-	if (table.resource !== "services") {
-		const multiSelect = servicesTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "status",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadUsersIntoTable = () => (dispatch, getState) => {
+export const loadUsersIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { users, table } = getState();
 	const pagination = table.pagination;
 	const resource = users.results;
@@ -295,32 +222,23 @@ export const loadUsersIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "users",
-		rows: resource,
+	const tableData = {
+		resource: "users" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: users.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["users"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["users"],
+		reverse: table.reverse["users"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "users") {
-		const multiSelect = usersTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "name",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadGroupsIntoTable = () => (dispatch, getState) => {
+export const loadGroupsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { groups, table } = getState();
 	const pagination = table.pagination;
 	const resource = groups.results;
@@ -328,32 +246,23 @@ export const loadGroupsIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "groups",
-		rows: resource,
+	const tableData = {
+		resource: "groups" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: groups.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["groups"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["groups"],
+		reverse: table.reverse["groups"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "groups") {
-		const multiSelect = groupsTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "name",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadAclsIntoTable = () => (dispatch, getState) => {
+export const loadAclsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { acls, table } = getState();
 	const pagination = table.pagination;
 	const resource = acls.results;
@@ -361,31 +270,23 @@ export const loadAclsIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "acls",
-		rows: resource,
+	const tableData = {
+		resource: "acls" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: acls.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["acls"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["acls"],
+		reverse: table.reverse["acls"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "acls") {
-		const multiSelect = aclsTableConfig.multiSelect;
-		tableData = {
-			...tableData,
-			sortBy: "name",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const loadThemesIntoTable = () => (dispatch, getState) => {
+export const loadThemesIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { themes, table } = getState();
 	const pagination = table.pagination;
 	const resource = themes.results;
@@ -393,33 +294,24 @@ export const loadThemesIntoTable = () => (dispatch, getState) => {
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
-		resource: "themes",
-		rows: resource,
+	const tableData = {
+		resource: "themes" as const,
+		rows: resource.map(obj => {
+			return { ...obj, selected: false };
+		}),
 		columns: themes.columns,
-		multiSelect: table.multiSelect,
+		multiSelect: table.multiSelect["themes"],
 		pages: pages,
-		sortBy: table.sortBy,
-		reverse: table.reverse,
+		sortBy: table.sortBy["themes"],
+		reverse: table.reverse["themes"],
 		totalItems: total,
 	};
 
-	if (table.resource !== "themes") {
-		const multiSelect = themesTableConfig.multiSelect;
-
-		tableData = {
-			...tableData,
-			sortBy: "name",
-			reverse: "ASC",
-			multiSelect: multiSelect,
-		};
-	}
 	dispatch(loadResourceIntoTable(tableData));
 };
 
 // Navigate between pages
-// @ts-expect-error TS(7006): Parameter 'pageNumber' implicitly has an 'any' typ... Remove this comment to see the full error message
-export const goToPage = (pageNumber) => async (dispatch, getState) => {
+export const goToPage = (pageNumber: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	dispatch(deselectAll());
 	dispatch(setOffset(pageNumber));
 
@@ -427,10 +319,11 @@ export const goToPage = (pageNumber) => async (dispatch, getState) => {
 	const offset = getPageOffset(state);
 	const pages = getTablePages(state);
 
-	dispatch(setPageActive(pages[offset].number));
+	if (pages) {
+		dispatch(setPageActive(offset ? pages[offset].number : pageNumber));
+	}
 
 	// Get resources of page and load them into table
-	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
 		case "events": {
 			await dispatch(fetchEvents());
@@ -486,21 +379,19 @@ export const goToPage = (pageNumber) => async (dispatch, getState) => {
 };
 
 // Update pages for example if page size was changed
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-export const updatePages = () => async (dispatch, getState) => {
+export const updatePages = () => async (dispatch: AppDispatch, getState: () => RootState) => {
 	const state = getState();
 
 	const pagination = getTablePagination(state);
 
 	const pages = calculatePages(
 		pagination.totalItems / pagination.limit,
-		pagination.offset
+		pagination.offset,
 	);
 
 	dispatch(setPages(pages));
 
 	// Get resources of page and load them into table
-	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
 		case "events": {
 			await dispatch(fetchEvents());
@@ -556,12 +447,10 @@ export const updatePages = () => async (dispatch, getState) => {
 };
 
 // Select all rows on table page
-// @ts-expect-error TS(7006): Parameter 'selected' implicitly has an 'any' type.
-export const changeAllSelected = (selected) => (dispatch, getState) => {
+export const changeAllSelected = (selected: boolean): AppThunk => (dispatch, getState) => {
 	const state = getState();
 
 	if (selected) {
-		// eslint-disable-next-line default-case
 		switch (getResourceType(state)) {
 			case "events": {
 				dispatch(showEventsActions(true));
@@ -574,7 +463,6 @@ export const changeAllSelected = (selected) => (dispatch, getState) => {
 		}
 		dispatch(selectAll());
 	} else {
-		// eslint-disable-next-line default-case
 		switch (getResourceType(state)) {
 			case "events": {
 				dispatch(showEventsActions(false));
@@ -590,19 +478,14 @@ export const changeAllSelected = (selected) => (dispatch, getState) => {
 };
 
 // Select certain columns
-// @ts-expect-error TS(7006): Parameter 'updatedColumns' implicitly has an 'any'... Remove this comment to see the full error message
-export const changeColumnSelection = (updatedColumns) => async (
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-	dispatch,
-// @ts-expect-error TS(7006): Parameter 'getState' implicitly has an 'any' type.
-	getState
+export const changeColumnSelection = (updatedColumns: TableConfig["columns"]) => async (
+	dispatch: AppDispatch, getState: () => RootState,
 ) => {
 	const state = getState();
 
-	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
 		case "events": {
-			await dispatch(setEventColumns(updatedColumns));
+			dispatch(setEventColumns(updatedColumns));
 
 			if (getSelectedRows(state).length > 0) {
 				dispatch(showEventsActions(true));
@@ -618,7 +501,7 @@ export const changeColumnSelection = (updatedColumns) => async (
 			break;
 		}
 		case "series": {
-			await dispatch(setSeriesColumns(updatedColumns));
+			dispatch(setSeriesColumns(updatedColumns));
 
 			if (getSelectedRows(state).length > 0) {
 				dispatch(showActionsSeries(true));
@@ -630,42 +513,42 @@ export const changeColumnSelection = (updatedColumns) => async (
 			break;
 		}
 		case "recordings": {
-			await dispatch(setRecordingsColumns(updatedColumns));
+			dispatch(setRecordingsColumns(updatedColumns));
 			dispatch(loadRecordingsIntoTable());
 			break;
 		}
 		case "jobs": {
-			await dispatch(setJobColumns(updatedColumns));
+			dispatch(setJobColumns(updatedColumns));
 			dispatch(loadJobsIntoTable());
 			break;
 		}
 		case "servers": {
-			await dispatch(setServerColumns(updatedColumns));
+			dispatch(setServerColumns(updatedColumns));
 			dispatch(loadServersIntoTable());
 			break;
 		}
 		case "services": {
-			await dispatch(setServiceColumns(updatedColumns));
+			dispatch(setServiceColumns(updatedColumns));
 			dispatch(loadServicesIntoTable());
 			break;
 		}
 		case "users": {
-			await dispatch(setUserColumns(updatedColumns));
+			dispatch(setUserColumns(updatedColumns));
 			dispatch(loadUsersIntoTable());
 			break;
 		}
 		case "groups": {
-			await dispatch(setGroupColumns(updatedColumns));
+			dispatch(setGroupColumns(updatedColumns));
 			dispatch(loadGroupsIntoTable());
 			break;
 		}
 		case "acls": {
-			await dispatch(setAclColumns(updatedColumns));
+			dispatch(setAclColumns(updatedColumns));
 			dispatch(loadAclsIntoTable());
 			break;
 		}
 		case "themes": {
-			await dispatch(setThemeColumns(updatedColumns));
+			dispatch(setThemeColumns(updatedColumns));
 			dispatch(loadThemesIntoTable());
 			break;
 		}
@@ -673,13 +556,11 @@ export const changeColumnSelection = (updatedColumns) => async (
 };
 
 // Select certain row
-// @ts-expect-error TS(7006): Parameter 'id' implicitly has an 'any' type.
-export const changeRowSelection = (id, selected) => (dispatch, getState) => {
-	dispatch(selectRow(id, selected));
+export const changeRowSelection = (id: number | string): AppThunk => (dispatch, getState) => {
+	dispatch(selectRow(id));
 
 	const state = getState();
 
-	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
 		case "events": {
 			if (getSelectedRows(state).length > 0) {
@@ -700,8 +581,7 @@ export const changeRowSelection = (id, selected) => (dispatch, getState) => {
 	}
 };
 
-// @ts-expect-error TS(7006): Parameter 'numberOfPages' implicitly has an 'any' ... Remove this comment to see the full error message
-const calculatePages = (numberOfPages, offset) => {
+const calculatePages = (numberOfPages: number, offset: number) => {
 	const pages = [];
 
 	for (let i = 0; i < numberOfPages || (i === 0 && numberOfPages === 0); i++) {

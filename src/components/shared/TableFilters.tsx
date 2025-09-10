@@ -1,7 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import DatePicker from "react-datepicker";
 import {
 	getFilters,
 	getSecondFilter,
@@ -23,106 +22,123 @@ import {
 } from "../../thunks/tableThunks";
 import TableFilterProfiles from "./TableFilterProfiles";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
-import { getResourceType } from "../../selectors/tableSelectors";
 import { useHotkeys } from "react-hotkeys-hook";
 import moment from "moment";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { renderValidDate } from "../../utils/dateUtils";
-import { Tooltip } from "./Tooltip";
+import { getCurrentLanguageInformation } from "../../utils/utils";
+import DropDown from "./DropDown";
+import { AsyncThunk } from "@reduxjs/toolkit";
+import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { ParseKeys } from "i18next";
+import SearchContainer from "./SearchContainer";
+import { Resource } from "../../slices/tableSlice";
+import { HiFunnel } from "react-icons/hi2";
+import { LuSettings, LuX } from "react-icons/lu";
 
 /**
  * This component renders the table filters in the upper right corner of the table
  */
 const TableFilters = ({
-// @ts-expect-error TS(7031): Binding element 'loadResource' implicitly has an '... Remove this comment to see the full error message
 	loadResource,
-// @ts-expect-error TS(7031): Binding element 'loadResourceIntoTable' implicitly... Remove this comment to see the full error message
 	loadResourceIntoTable,
-// @ts-expect-error TS(7031): Binding element 'resource' implicitly has an 'any'... Remove this comment to see the full error message
 	resource,
+}: {
+	loadResource: AsyncThunk<any, void, any>,
+	loadResourceIntoTable: () => AppThunk,
+	resource: Resource,
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const filterMap = useAppSelector(state => getFilters(state));
+	const filterMap = useAppSelector(state => getFilters(state, resource));
 	const secondFilter = useAppSelector(state => getSecondFilter(state));
 	const selectedFilter = useAppSelector(state => getSelectedFilter(state));
-	const textFilter = useAppSelector(state => getTextFilter(state));
+	const textFilter = useAppSelector(state => getTextFilter(state, resource));
 
 	// Variables for showing different dialogs depending on what was clicked
 	const [showFilterSelector, setFilterSelector] = useState(false);
 	const [showFilterSettings, setFilterSettings] = useState(false);
 	const [itemValue, setItemValue] = React.useState("");
+	const [openSecondFilterMenu, setOpenSecondFilterMenu] = useState(false);
 
 	// Variables containing selected start date and end date for date filter
 	const [startDate, setStartDate] = useState<Date | undefined>(undefined);
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+
+	const filter = filterMap.find(({ name }) => name === selectedFilter);
 
 	// Remove all selected filters, no filter should be "active" anymore
 	const removeFilters = async () => {
 		// Clear state
 		setStartDate(undefined);
 		setEndDate(undefined);
+		setFilterSelector(false);
 
-		dispatch(removeTextFilter());
+		dispatch(removeTextFilter(resource));
 		dispatch(removeSelectedFilter());
 		dispatch(removeSelectedFilter());
 
 		// Set all values of the filters in filterMap back to ""
-		dispatch(resetFilterValues())
+		dispatch(resetFilterValues());
 
 		// Reload resources when filters are removed
-		await loadResource();
-		loadResourceIntoTable();
+		await dispatch(loadResource());
+		dispatch(loadResourceIntoTable());
 	};
 
 	// Remove a certain filter
-// @ts-expect-error TS(7006): Parameter 'filter' implicitly has an 'any' type.
-	const removeFilter = async (filter) => {
+	const removeFilter = async (filter: FilterData) => {
 		if (filter.name === "startDate") {
 			// Clear state
 			setStartDate(undefined);
 			setEndDate(undefined);
 		}
 
-		dispatch(editFilterValue({filterName: filter.name, value: ""}));
+		dispatch(editFilterValue({ filterName: filter.name, value: "", resource }));
 
 		// Reload resources when filter is removed
-		await loadResource();
-		loadResourceIntoTable();
+		await dispatch(loadResource());
+		dispatch(loadResourceIntoTable());
+	};
+
+	const handleSearchChange = (value: string) => {
+		handleChange("textFilter", value);
+	};
+
+	const clearSearchField = () => {
+		dispatch(removeTextFilter(resource));
 	};
 
 	// Handle changes when an item of the component is changed
-	// @ts-expect-error TS(7006): Parameter 'e' implicitly has an 'any' type.
-	const handleChange = (e) => {
-		let targetName = e.target.name;
-		let targetValue = e.target.value;
-
+	const handleChange = (name: string, value: string) => {
 		let mustApplyChanges = false;
-		if (targetName === "textFilter") {
-			dispatch(editTextFilter(targetValue));
+		if (name === "textFilter") {
+			dispatch(editTextFilter({ text: value, resource: resource }));
 			mustApplyChanges = true;
 		}
 
-		if (targetName === "selectedFilter") {
-			dispatch(editSelectedFilter(targetValue));
+		if (name === "selectedFilter") {
+			dispatch(editSelectedFilter(value));
+			setOpenSecondFilterMenu(true);
 		}
 
 		// If the change is in secondFilter (filter is picked) then the selected value is saved in filterMap
 		// and the filter selections are cleared
-		if (targetName === "secondFilter") {
-			let filter = filterMap.find(({ name }) => name === selectedFilter);
-			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: targetValue}));
+		if (name === "secondFilter") {
+			const filter = filterMap.find(({ name }) => name === selectedFilter);
+			if (filter) {
+				dispatch(editFilterValue({ filterName: filter.name, value: value, resource }));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				dispatch(removeSecondFilter());
+				setOpenSecondFilterMenu(false);
 				mustApplyChanges = true;
 			}
 		}
 
 		if (mustApplyChanges) {
-			setItemValue(e.target.value);
+			setItemValue(value);
 		}
 	};
 
@@ -131,200 +147,177 @@ const TableFilters = ({
 	// This helps increase performance by reducing the number of calls to load resources.
 	const applyFilterChangesDebounced = async () => {
 		// No matter what, we go to page one.
-		dispatch(goToPage(0)).then(async () => {
-			// Reload of resource
-			await loadResource();
-			loadResourceIntoTable();
-		});
+		dispatch(goToPage(0));
+		// Reload of resource
+		await dispatch(loadResource());
+		dispatch(loadResourceIntoTable());
 	};
 
 	useEffect(() => {
-		// Call to apply filter changes with 500MS debounce!
-		let applyFilterChangesDebouncedTimeoutId = setTimeout(applyFilterChangesDebounced, 500);
+		if (itemValue) {
+			// Call to apply filter changes with 500MS debounce!
+			const applyFilterChangesDebouncedTimeoutId = setTimeout(applyFilterChangesDebounced, 500);
 
-		return () => clearTimeout(applyFilterChangesDebouncedTimeoutId);
+			return () => clearTimeout(applyFilterChangesDebouncedTimeoutId);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [itemValue]);
 
-	// Set the sate of startDate and endDate picked with datepicker
-	const handleDatepickerChange = async (date: Date | null, isStart = false) => {
-		if (date === null) {
-			return;
-		}
+	const handleDatepicker = (dates?: [Date | undefined | null, Date | undefined | null]) => {
+		if (dates != null) {
+			const [start, end] = dates;
 
-		if (isStart) {
-			date.setHours(0);
-			date.setMinutes(0);
-			date.setSeconds(0);
-			setStartDate(date);
-		} else {
-			date.setHours(23);
-			date.setMinutes(59);
-			date.setSeconds(59);
-			setEndDate(date);
+			start?.setHours(0);
+			start?.setMinutes(0);
+			start?.setSeconds(0);
+			end?.setHours(23);
+			end?.setMinutes(59);
+			end?.setSeconds(59);
+
+			submitDateFilter(start, end);
+
+			if (start) {
+				setStartDate(start);
+			}
+			if (end) {
+				setEndDate(end);
+			}
 		}
 	};
 
-	// If both dates are set, set the value for the startDate filter
-	// If the just changed, it can be passed here so we don't have wait a render
-	// cycle for the useState state to update
-	const handleDatepickerConfirm = async (date?: Date | null, isStart = false) => {
-		if (date === null) {
-			return;
-		}
+	// Workaround for entering a date range by only entering one date
+	// (e.g. 01/01/2025 results in a range of 01/01/2025 - 01/01/2025)
+	const handleDatePickerOnKeyDown = (keyEvent: React.KeyboardEvent<HTMLElement>) => {
+		if (keyEvent.key === "Enter") {
+			const end = endDate ?? (startDate ? new Date(startDate) : undefined);
+			end?.setHours(23);
+			end?.setMinutes(59);
+			end?.setSeconds(59);
 
-		let myStartDate = startDate;
-		let myEndDate = endDate;
-		if (date && isStart) {
-			myStartDate = date;
-			myStartDate.setHours(0);
-			myStartDate.setMinutes(0);
-			myStartDate.setSeconds(0);
+			submitDateFilter(
+				startDate,
+				end,
+			);
 		}
-		if (date && !isStart) {
-			myEndDate = date;
-			myEndDate.setHours(23);
-			myEndDate.setMinutes(59);
-			myEndDate.setSeconds(59);
-		}
+	};
 
-		if (myStartDate && myEndDate && moment(myStartDate).isValid() && moment(myEndDate).isValid()) {
-			let filter = filterMap.find(({ name }) => name === selectedFilter);
+	const submitDateFilter = async (start: Date | undefined | null, end: Date | undefined | null) => {
+		if (start && end && moment(start).isValid() && moment(end).isValid()) {
+			const filter = filterMap.find(({ name }) => name === selectedFilter);
 			if (filter) {
 				dispatch(editFilterValue({
 					filterName: filter.name,
-					value: myStartDate.toISOString() + "/" + myEndDate.toISOString()
+					value: start.toISOString() + "/" + end.toISOString(),
+					resource,
 				}));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				// Reload of resource after going to very first page.
-				dispatch(goToPage(0)).then(async () => {
-					await loadResource();
-					loadResourceIntoTable();
-				});
+				dispatch(goToPage(0));
+				await dispatch(loadResource());
+				dispatch(loadResourceIntoTable());
 			}
 		}
-
-		if (myStartDate && isStart && !endDate) {
-			let tmp = new Date(myStartDate.getTime());
-			tmp.setHours(23);
-			tmp.setMinutes(59);
-			tmp.setSeconds(59);
-			setEndDate(tmp);
-		}
-		if (myEndDate && !isStart && !startDate) {
-			let tmp = new Date(myEndDate.getTime());
-			tmp.setHours(0);
-			tmp.setMinutes(0);
-			tmp.setSeconds(0);
-			setStartDate(tmp);
-		}
-	}
+	};
 
 	useHotkeys(
     availableHotkeys.general.REMOVE_FILTERS.sequence,
     () => removeFilters(),
 		{ description: t(availableHotkeys.general.REMOVE_FILTERS.description) ?? undefined },
-    [removeFilters]
+    [removeFilters],
   );
 
-// @ts-expect-error TS(7006): Parameter 'filter' implicitly has an 'any' type.
-	const renderBlueBox = (filter) => {
-// @ts-expect-error TS(7006): Parameter 'opt' implicitly has an 'any' type.
-		let valueLabel = filter.options.find((opt) => opt.value === filter.value)
+	const renderBlueBox = (filter: FilterData) => {
+		const valueLabel = filter.options?.find(opt => opt.value === filter.value)
 			?.label || filter.value;
 		return (
-			<span>
-				{t(filter.label).substr(0, 40)}:
-				{filter.translatable
-					? t(valueLabel).substr(0, 40)
-					: valueLabel.substr(0, 40)}
+			<span className="table-filter-blue-box">
+				{t(filter.label as ParseKeys)}:
+				{filter.translatable ? t(valueLabel as ParseKeys) : valueLabel}
 			</span>
 		);
+	};
+
+	const getSelectedFilterText = () => {
+		return filter?.label ? t(filter.label as ParseKeys) : selectedFilter;
 	};
 
 	return (
 		<>
 			<div className="filters-container">
 				{/* Text filter - Search Query */}
-				<input
-					type="text"
-					className="search expand"
-					placeholder={t("TABLE_FILTERS.PLACEHOLDER")}
-					onChange={(e) => handleChange(e)}
-					name="textFilter"
+				<SearchContainer
 					value={textFilter}
+					handleChange={handleSearchChange}
+					clearSearchField={clearSearchField}
+					isExpand={true}
 				/>
 
 				{/* Selection of filters and management of filter profiles*/}
-				{/*show only if filters.filters contains filters*/}
+				{/* show only if filters.filters contains filters*/}
 				{!!filterMap && (
 					<div className="table-filter">
 						<div className="filters">
-							<Tooltip title={t("TABLE_FILTERS.ADD")}>
-								<button className="button-like-anchor" onClick={() => setFilterSelector(!showFilterSelector)}>
-									<i className="fa fa-filter" />
-								</button>
-							</Tooltip>
+							<ButtonLikeAnchor
+								onClick={() => setFilterSelector(!showFilterSelector)}
+								tooltipText="TABLE_FILTERS.ADD"
+								style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+							>
+								<HiFunnel style={{ fontSize: "13px", color: "#666" }}/>
+							</ButtonLikeAnchor>
 
-							{/*show if icon is clicked*/}
+							{/* show if icon is clicked*/}
 							{showFilterSelector && (
-								<div>
-									{/*Check if filters in filtersMap and show corresponding selection*/}
-									{!filterMap || false ? (
-										// Show if no filters in filtersList
-										<select
-											defaultValue={t(
-												"TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS"
-											)}
-											className="main-filter"
-											aria-label={t("TABLE_FILTERS.FILTER_SELECTION.LABEL")}
-										>
-											<option disabled>
-												{t("TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS")}
-											</option>
-										</select>
-									) : (
-										// Show all filtersMap as selectable options
-										<select
-// @ts-expect-error TS(2322): Type '{ children: any[]; disable_search_threshold:... Remove this comment to see the full error message
-											disable_search_threshold="10"
-											onChange={(e) => handleChange(e)}
-											value={selectedFilter}
-											name="selectedFilter"
-											className="main-filter"
-											aria-label={t("TABLE_FILTERS.FILTER_SELECTION.LABEL")}
-										>
-											<option value="" disabled>
-												{t("TABLE_FILTERS.FILTER_SELECTION.PLACEHOLDER")}
-											</option>
-											{filterMap
-												.filter(
-													(filter) => filter.name !== "presentersBibliographic"
+								/* Show all filtersMap as selectable options*/
+								<DropDown
+									value={selectedFilter}
+									text={getSelectedFilterText()}
+									options={
+										!!filterMap && filterMap.length > 0
+											? filterMap.filter(
+													filter => filter.name !== "presentersBibliographic",
 												)
-												.map((filter, key) => (
-													<option key={key} value={filter.name}>
-														{t(filter.label).substr(0, 40)}
-													</option>
-												))}
-										</select>
-									)}
-								</div>
+												.sort((a, b) => t(a.label as ParseKeys).localeCompare(t(b.label as ParseKeys))) // Sort alphabetically
+												.map(filter => {
+													return {
+														value: filter.name,
+														label: t(filter.label as ParseKeys).substr(0, 40),
+													};
+												})
+											: []
+									}
+									required={true}
+									handleChange={element => handleChange("selectedFilter", element!.value)}
+									placeholder={
+										!!filterMap && filterMap.length > 0
+											? t(
+												"TABLE_FILTERS.FILTER_SELECTION.PLACEHOLDER",
+												)
+											: t(
+												"TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS",
+												)
+									}
+									defaultOpen
+									autoFocus
+									openMenuOnFocus
+									customCSS={{ width: 200, optionPaddingTop: 5 }}
+								/>
 							)}
 
-							{/*Show selection of secondary filter if a main filter is chosen*/}
+							{/* Show selection of secondary filter if a main filter is chosen*/}
 							{!!selectedFilter && (
 								<div>
-									{/*Show the secondary filter depending on the type of main filter chosen (select or period)*/}
+									{/* Show the secondary filter depending on the type of main filter chosen (select or period)*/}
 									<FilterSwitch
-										filterMap={filterMap}
-										selectedFilter={selectedFilter}
+										filter={filter}
 										secondFilter={secondFilter}
 										startDate={startDate}
 										endDate={endDate}
-										handleDate={handleDatepickerChange}
-										handleDateConfirm={handleDatepickerConfirm}
+										handleDate={handleDatepicker}
+										handleDatePickerOnKeyDown={handleDatePickerOnKeyDown}
 										handleChange={handleChange}
+										openSecondFilterMenu={openSecondFilterMenu}
+										setOpenSecondFilterMenu={setOpenSecondFilterMenu}
 									/>
 								</div>
 							)}
@@ -333,53 +326,54 @@ const TableFilters = ({
 							{filterMap.map((filter, key) => {
 								return filter.value && (
 									<span className="ng-multi-value" key={key}>
-										<span>
-											{
-												// Use different representation of name and value depending on type of filter
-												filter.type === "select" ? (
-													renderBlueBox(filter)
-												) : filter.type === "period" ? (
-													<span>
-														<span>
-															{t(filter.label).substr(0, 40)}:
-															{t("dateFormats.date.short", {
-																date: renderValidDate(filter.value.split("/")[0]),
-															})}
-															-
-															{t("dateFormats.date.short", {
-																date: renderValidDate(filter.value.split("/")[1]),
-															})}
-														</span>
-													</span>
-												) : null
-											}
-										</span>
+										{
+											// Use different representation of name and value depending on type of filter
+											filter.type === "period" ? (
+												<span className="table-filter-blue-box">
+													{t(filter.label as ParseKeys)}:
+													{t("dateFormats.date.short", {
+														date: renderValidDate(filter.value.split("/")[0]),
+													})}
+													-
+													{t("dateFormats.date.short", {
+														date: renderValidDate(filter.value.split("/")[1]),
+													})}
+												</span>
+											) : (
+												renderBlueBox(filter)
+											)
+										}
 										{/* Remove icon in blue area around filter */}
-										<Tooltip title={t("TABLE_FILTERS.REMOVE")}>
-											<button
-												onClick={() => removeFilter(filter)}
-												className="button-like-anchor"
-											>
-												<i className="fa fa-times" />
-											</button>
-										</Tooltip>
+										<ButtonLikeAnchor
+											onClick={() => removeFilter(filter)}
+											tooltipText="TABLE_FILTERS.REMOVE"
+											style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+										>
+											<LuX />
+										</ButtonLikeAnchor>
 									</span>
 								);
 							})}
 						</div>
 
 						{/* Remove icon to clear all filters */}
-						<Tooltip title={t("TABLE_FILTERS.CLEAR")}>
-							<button className="button-like-anchor" onClick={removeFilters}>
-								<i className="clear fa fa-times" />
-							</button>
-						</Tooltip>
+						{filterMap.some(e => e.value) &&
+							<ButtonLikeAnchor
+								onClick={removeFilters}
+								tooltipText="TABLE_FILTERS.CLEAR"
+								style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0" }}
+							>
+								<LuX style={{ color: "#666" }}/>
+							</ButtonLikeAnchor>
+						}
 						{/* Settings icon to open filters profile dialog (save and editing filter profiles)*/}
-						<Tooltip title={t("TABLE_FILTERS.PROFILES.FILTERS_HEADER")}>
-							<button className="button-like-anchor" onClick={() => setFilterSettings(!showFilterSettings)}>
-								<i className="settings fa fa-cog fa-times" />
-							</button>
-						</Tooltip>
+						<ButtonLikeAnchor
+							onClick={() => setFilterSettings(!showFilterSettings)}
+							tooltipText="TABLE_FILTERS.PROFILES.FILTERS_HEADER"
+							style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 8px 0 0" }}
+						>
+							<LuSettings className="settings" style={{ color: "#666" }}/>
+						</ButtonLikeAnchor>
 
 						{/* Filter profile dialog for saving and editing filter profiles */}
 						<TableFilterProfiles
@@ -402,148 +396,101 @@ const TableFilters = ({
  * In case of select, a second selection is shown. In case of period, datepicker are shown.
  */
 const FilterSwitch = ({
-	filterMap,
-	selectedFilter,
+	filter,
 	handleChange,
+	handleDatePickerOnKeyDown,
 	startDate,
 	endDate,
 	handleDate,
-	handleDateConfirm,
 	secondFilter,
+	openSecondFilterMenu,
+	setOpenSecondFilterMenu,
 } : {
-	filterMap: FilterData[],
-	selectedFilter: string,
-	handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+	filter: FilterData | undefined,
+	handleChange: (name: string, value: string) => void,
+	handleDatePickerOnKeyDown: (keyEvent: React.KeyboardEvent<HTMLElement>) => void,
 	startDate: Date | undefined,
 	endDate: Date | undefined,
-	handleDate: (date: Date | null, isStart?: boolean) => void,
-	handleDateConfirm: (date: Date | undefined | null, isStart?: boolean) => void,
+	handleDate: (dates: [Date | undefined | null, Date | undefined | null]) => void,
 	secondFilter: string,
+	openSecondFilterMenu: boolean,
+	setOpenSecondFilterMenu: (open: boolean) => void,
 }) => {
 	const { t } = useTranslation();
 
-	const startDateRef = useRef<HTMLInputElement>(null);
-	const endDateRef = useRef<HTMLInputElement>(null);
-
-	let filter = filterMap.find(({ name }) => name === selectedFilter);
 	if (!filter) {
 		return null;
 	}
 
-	// eslint-disable-next-line default-case
 	switch (filter.type) {
 		case "select":
 			return (
 				<div>
-					{/*Show only if selected main filter has translatable options*/}
-					{filter.translatable ? (
-						// Show if the selected main filter has no further options
-						!filter.options || false ? (
-							<select
-								defaultValue={t("TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS")}
-								className="second-filter"
-							>
-								<option disabled>
-									{t("TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS")}
-								</option>
-							</select>
-						) : (
-							// Show further options for a secondary filter
-							<select
-								className="second-filter"
-								onChange={(e) => handleChange(e)}
-								value={secondFilter}
-								name="secondFilter"
-							>
-								<option value="" disabled>
-									{t("TABLE_FILTERS.FILTER_VALUE_SELECTION.PLACEHOLDER")}
-								</option>
-								{filter.options.map((option, key) => (
-									<option key={key} value={option.value}>
-										{t(option.label).substr(0, 40)}
-									</option>
-								))}
-							</select>
-						)
-					) : // Show only if the selected main filter has options that are not translatable (else case from above)
-					!filter.options || false ? (
-						// Show if the selected main filter has no further options
-						<select
-							defaultValue={t("TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS")}
-							className="second-filter"
-						>
-							<option disabled>
-								{t("TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS")}
-							</option>
-						</select>
-					) : (
-						// Show further options for a secondary filter
-						<select
-							className="second-filter"
-							onChange={(e) => handleChange(e)}
-							value={secondFilter}
-							name="secondFilter"
-						>
-							<option value="" disabled>
-								{t("TABLE_FILTERS.FILTER_VALUE_SELECTION.PLACEHOLDER")}
-							</option>
-							{filter.options.map((option, key) => (
-								<option key={key} value={option.value}>
-									{option.label.substr(0, 40)}
-								</option>
-							))}
-						</select>
-					)}
+					{/* Show further options for a secondary filter */}
+					<DropDown
+						value={secondFilter}
+						text={secondFilter}
+						options={
+							!!filter.options && filter.options.length > 0
+								? filter.options.map(option => {
+									if (!filter.translatable) {
+										return {
+											...option,
+											label: option.label.substr(0, 40),
+										};
+									} else {
+										return {
+											...option,
+											label: t(option.label as ParseKeys).substr(0, 40),
+										};
+									}
+								})
+								: []
+						}
+						required={true}
+						handleChange={element => handleChange("secondFilter", element!.value)}
+						placeholder={
+							!!filter.options && filter.options.length > 0
+								? t(
+									"TABLE_FILTERS.FILTER_VALUE_SELECTION.PLACEHOLDER",
+									)
+								: t(
+									"TABLE_FILTERS.FILTER_SELECTION.NO_OPTIONS",
+									)
+						}
+						autoFocus
+						defaultOpen
+						openMenuOnFocus
+						menuIsOpen={openSecondFilterMenu}
+						handleMenuIsOpen={setOpenSecondFilterMenu}
+						skipTranslate={!filter.translatable}
+						customCSS={{ width: 200, optionPaddingTop: 5 }}
+					/>
 				</div>
 			);
 		case "period":
 			return (
 				<div>
-					{/* Show datepicker for start date */}
 					<DatePicker
-						autoFocus={true}
-						inputRef={startDateRef}
-						className="small-search start-date"
-						value={startDate ?? null}
-						format="dd/MM/yyyy"
-						onChange={(date) => handleDate(date as Date | null, true)}
-						// FixMe: onAccept does not trigger if the already set value is the same as the selected value
-						// This prevents us from confirming from confirming our filter, if someone wants to selected the same
-						// day for both start and end date (since we automatically set one to the other)
-						onAccept={(e) => {handleDateConfirm(e as Date | null, true)}}
-						slotProps={{
-							textField: {
-								onKeyDown: (event) => {
-									if (event.key === "Enter") {
-										handleDateConfirm(undefined, true)
-										if (endDateRef.current && startDate && moment(startDate).isValid()) {
-											endDateRef.current.focus();
-										}
-									}
-								},
-							},
-						}}
-					/>
-					<DatePicker
-						inputRef={endDateRef}
-						className="small-search end-date"
-						value={endDate ?? null}
-						format="dd/MM/yyyy"
-						onChange={(date) => handleDate(date as Date | null)}
-						// FixMe: See above
-						onAccept={(e) => handleDateConfirm(e as Date | null, false)}
-						slotProps={{
-							textField: {
-								onKeyDown: (event) => {
-									if (event.key === "Enter") {
-										handleDateConfirm(undefined, false)
-										if (startDateRef.current && endDate && moment(endDate).isValid()) {
-											startDateRef.current.focus();
-										}
-									}
-								},
-							},
-						}}
+						startOpen
+						autoFocus
+						selected={startDate}
+						onChange={dates => handleDate(dates)}
+						onKeyDown={key => handleDatePickerOnKeyDown(key)}
+						startDate={startDate}
+						endDate={endDate}
+						selectsRange
+						showYearDropdown
+						showMonthDropdown
+						yearDropdownItemNumber={2}
+						swapRange
+						allowSameDay
+						dateFormat="P"
+						popperPlacement="bottom"
+						popperClassName="datepicker-custom"
+						className="datepicker-custom-input"
+						locale={getCurrentLanguageInformation()?.dateLocale}
+						strictParsing
 					/>
 				</div>
 			);
@@ -553,16 +500,4 @@ const FilterSwitch = ({
 	}
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-	resourceType: getResourceType(state),
-});
-
-// Mapping actions to dispatch
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TableFilters);
+export default TableFilters;
