@@ -52,7 +52,7 @@ const Header = () => {
 	const errorCounter = useAppSelector(state => getErrorCount(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
-	const displayTerms = (orgProperties['org.opencastproject.admin.display_terms'] || 'false').toLowerCase() === 'true';
+	const displayTerms = (orgProperties["org.opencastproject.admin.display_terms"] || "false").toLowerCase() === "true";
 
 	const loadHealthStatus = async () => {
 		await dispatch(fetchHealthStatus());
