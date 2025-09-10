@@ -26,7 +26,7 @@ const ServicesActionCell = ({
 				onClick={() => onClickRestart()}
 				className={"sanitize fa fa-undo"}
 				editAccessRole={"ROLE_UI_SERVICES_STATUS_EDIT"}
-				tooltipText={"SYSTEMS.SERVICES.TABLE.SANITIZE"}
+				// tooltipText={"SYSTEMS.SERVICES.TABLE.SANITIZE"} // Disabled due to performance concerns
 			/>
 		) : <></>
 	);

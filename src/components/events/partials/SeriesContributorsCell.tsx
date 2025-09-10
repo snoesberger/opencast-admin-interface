@@ -18,7 +18,7 @@ const SeriesContributorsCell = ({
 			filterName="contributors"
 			fetchResource={fetchSeries}
 			loadResourceIntoTable={loadSeriesIntoTable}
-			tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.CONTRIBUTORS"
+			// tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.CONTRIBUTORS" // Disabled due to performance concerns
 		/>
 	);
 };
