@@ -1,14 +1,12 @@
-import React from "react";
-import { getPolicies } from "../../../../selectors/eventDetailsSelectors";
+import { getPolicies, getPolicyTemplateId } from "../../../../selectors/eventDetailsSelectors";
 import ResourceDetailsAccessPolicyTab from "../../../shared/modals/ResourceDetailsAccessPolicyTab";
-import { useAppDispatch, useAppSelector } from "../../../../store";
+import { useAppSelector } from "../../../../store";
 import {
 	fetchAccessPolicies,
 	fetchHasActiveTransactions,
 	saveAccessPolicies,
 } from "../../../../slices/eventDetailsSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { useTranslation } from "react-i18next";
+import { ParseKeys } from "i18next";
 
 /**
  * This component manages the access policy tab of the event details modal
@@ -20,38 +18,33 @@ const EventDetailsAccessPolicyTab = ({
 	setPolicyChanged,
 }: {
 	eventId: string,
-	header: string,
+	header: ParseKeys,
 	policyChanged: boolean,
 	setPolicyChanged: (value: boolean) => void,
 }) => {
-	const { t } = useTranslation();
-	const dispatch = useAppDispatch();
-
-	// TODO: Get rid of the wrappers when modernizing redux is done
-	const fetchAccessPoliciesWrapper = (eventId: any) => {
-		dispatch(fetchAccessPolicies(eventId));
-	}
-	const fetchHasActiveTransactionsWrapper = async(eventId: any) => {
-		return await dispatch(fetchHasActiveTransactions(eventId)).then(unwrapResult);
-	}
-	const saveNewAccessPoliciesWrapper = (eventId: any, policies: any) => {
-		return dispatch(saveAccessPolicies({eventId, policies}));
-	}
-
 	const policies = useAppSelector(state => getPolicies(state));
+	const policyTemplateId = useAppSelector(state => getPolicyTemplateId(state));
 
 	return (
 		<ResourceDetailsAccessPolicyTab
 			resourceId={eventId}
 			header={header}
 			buttonText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.LABEL"}
-			saveButtonText={"SAVE"}
 			policies={policies}
-			fetchAccessPolicies={fetchAccessPoliciesWrapper}
-			fetchHasActiveTransactions={fetchHasActiveTransactionsWrapper}
-			saveNewAccessPolicies={saveNewAccessPoliciesWrapper}
-			descriptionText={t("EVENTS.SERIES.NEW.ACCESS.ACCESS_POLICY.DESCRIPTION")}
+			policyTemplateId={policyTemplateId}
+			fetchAccessPolicies={fetchAccessPolicies}
+			fetchHasActiveTransactions={fetchHasActiveTransactions}
+			saveNewAccessPolicies={saveAccessPolicies}
+			descriptionText={"EVENTS.SERIES.NEW.ACCESS.ACCESS_POLICY.DESCRIPTION"}
+			policyTableHeaderText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NON_USER_ROLES"}
+			policyTableRoleText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.ROLE"}
+			policyTableNewText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NEW"}
+			userPolicyTableHeaderText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.USERS"}
+			userPolicyTableRoleText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.USER"}
+			userPolicyTableNewText={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NEW_USER"}
 			editAccessRole={"ROLE_UI_EVENTS_DETAILS_ACL_EDIT"}
+			viewUsersAccessRole={"ROLE_UI_EVENTS_DETAILS_ACL_USER_ROLES_VIEW"}
+			viewNonUsersAccessRole={"ROLE_UI_EVENTS_DETAILS_ACL_NONUSER_ROLES_VIEW"}
 			policyChanged={policyChanged}
 			setPolicyChanged={setPolicyChanged}
 		/>

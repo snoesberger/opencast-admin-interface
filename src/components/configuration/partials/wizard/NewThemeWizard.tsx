@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Formik } from "formik";
 import GeneralPage from "./GeneralPage";
 import BumperPage from "./BumperPage";
 import TitleSlidePage from "./TitleSlidePage";
 import WatermarkPage from "./WatermarkPage";
 import ThemeSummaryPage from "./ThemeSummaryPage";
-import WizardStepper from "../../../shared/wizard/WizardStepper";
+import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
 import { initialFormValuesNewThemes } from "../../../../configs/modalConfig";
 import { usePageFunctions } from "../../../../hooks/wizardHooks";
 import { NewThemeSchema } from "../../../../utils/validate";
 import { useAppDispatch } from "../../../../store";
-import { postNewTheme } from "../../../../slices/themeSlice";
+import { postNewTheme, ThemeDetailsInitialValues } from "../../../../slices/themeSlice";
 
 /**
  * This component manages the pages of the new theme wizard and the submission of values
  */
-const NewThemeWizard: React.FC<{
-	close: () => void
-}> = ({
+const NewThemeWizard = ({
 	close,
+}: {
+	close: () => void
 }) => {
 	const dispatch = useAppDispatch();
 	const initialValues = initialFormValuesNewThemes;
@@ -33,8 +33,13 @@ const NewThemeWizard: React.FC<{
 		setPageCompleted,
 	 } = usePageFunctions(0, initialValues);
 
+	type StepName = "generalForm" | "bumperForm" | "trailerForm" | "titleSlideForm" | "watermarkForm" | "summary";
+	type Step = WizardStep & {
+		name: StepName,
+	}
+
 	// Caption of steps used by Stepper
-	const steps = [
+	const steps: Step[] = [
 		{
 			name: "generalForm",
 			translation: "CONFIGURATION.THEMES.DETAILS.GENERAL.CAPTION",
@@ -62,9 +67,9 @@ const NewThemeWizard: React.FC<{
 	];
 
 	// Validation schema of current page
-	const currentValidationSchema = NewThemeSchema[page];
+	const currentValidationSchema = NewThemeSchema[steps[page].name];
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: ThemeDetailsInitialValues) => {
 		dispatch(postNewTheme(values));
 		close();
 	};
@@ -75,10 +80,10 @@ const NewThemeWizard: React.FC<{
 			<Formik
 				initialValues={snapshot}
 				validationSchema={currentValidationSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
 				{/* Render wizard pages depending on current value of page variable */}
-				{(formik) => {
+				{formik => {
 					// eslint-disable-next-line react-hooks/rules-of-hooks
 					useEffect(() => {
 						formik.validateForm();
@@ -90,24 +95,24 @@ const NewThemeWizard: React.FC<{
 							{/* Stepper that shows each step of wizard as header */}
 							<WizardStepper
 								steps={steps}
-								page={page}
-								setPage={setPage}
+								activePageIndex={page}
+								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
+								isValid={formik.isValid}
 							/>
 							<div>
-								{page === 0 && (
+								{steps[page].name === "generalForm" && (
 									<GeneralPage formik={formik} nextPage={nextPage} />
 								)}
-								{page === 1 && (
+								{steps[page].name === "bumperForm" && (
 									<BumperPage
 										formik={formik}
 										nextPage={nextPage}
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 2 && (
+								{steps[page].name === "trailerForm" && (
 									<BumperPage
 										formik={formik}
 										nextPage={nextPage}
@@ -115,21 +120,21 @@ const NewThemeWizard: React.FC<{
 										isTrailer
 									/>
 								)}
-								{page === 3 && (
+								{steps[page].name === "titleSlideForm" && (
 									<TitleSlidePage
 										formik={formik}
 										nextPage={nextPage}
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 4 && (
+								{steps[page].name === "watermarkForm" && (
 									<WatermarkPage
 										formik={formik}
 										nextPage={nextPage}
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 5 && (
+								{steps[page].name === "summary" && (
 									<ThemeSummaryPage
 										formik={formik}
 										previousPage={previousPage}

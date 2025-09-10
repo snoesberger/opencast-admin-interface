@@ -1,7 +1,11 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MuiTooltip, { TooltipProps } from "@mui/material/Tooltip";
 
-export const Tooltip = ({ className, placement="top", ...props }: TooltipProps) => {
+export const Tooltip = (
+	{ active = true, className, placement = "top", ...props }: TooltipProps & { active?: boolean },
+) => {
+	const [open, setOpen] = useState(false);
+
 	const positionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const areaRef = useRef<HTMLDivElement>(null);
 
@@ -35,14 +39,23 @@ export const Tooltip = ({ className, placement="top", ...props }: TooltipProps) 
 					 areaRef.current?.getBoundingClientRect().width,
 					 0,
 				 );
-			 default:
-				 return areaRef.current?.getBoundingClientRect()!;
+			default: {
+				const rect = areaRef.current?.getBoundingClientRect();
+				if (!rect) {
+					return new DOMRect();
+				} else {
+					return rect;
+				}
+			}
 		}
 	};
 
 	return (
 		<MuiTooltip
 			{...props}
+			open={open && active}
+			onOpen={() => setOpen(true)}
+			onClose={() => setOpen(false)}
 			classes={{ popper: className }}
 			arrow
 			describeChild
@@ -52,7 +65,7 @@ export const Tooltip = ({ className, placement="top", ...props }: TooltipProps) 
 			placement={placement}
 			ref={areaRef}
 			onMouseOut={() => (positionRef.current = { x: -9999, y: -9999 })}
-			onMouseMove={(event) => (positionRef.current = { x: event.clientX, y: event.clientY })}
+			onMouseMove={event => (positionRef.current = { x: event.clientX, y: event.clientY })}
 			PopperProps={{
 				anchorEl: {
 					getBoundingClientRect,

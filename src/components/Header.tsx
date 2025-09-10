@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import i18n from "../i18n/i18n";
 import languages from "../i18n/languages";
 import opencastLogo from "../img/opencast-white.svg?url";
 import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
-import { loadServicesIntoTable } from "../thunks/tableThunks";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
 import {
 	getOrgProperties,
@@ -23,8 +21,12 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
-import { HiTranslate } from "react-icons/hi";
-import { IconContext } from "react-icons";
+import { HiOutlineTranslate } from "react-icons/hi";
+import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
+import { ModalHandle } from "./shared/modals/Modal";
+import { broadcastLogout } from "../utils/broadcastSync";
+import BaseButton from "./shared/BaseButton";
+import { LuBell, LuCheck, LuChevronDown, LuCirclePlay, LuMessageCircleQuestion, LuVideo } from "react-icons/lu";
 
 // References for detecting a click outside of the container of the dropdown menus
 const containerLang = React.createRef<HTMLDivElement>();
@@ -32,24 +34,10 @@ const containerHelp = React.createRef<HTMLDivElement>();
 const containerUser = React.createRef<HTMLDivElement>();
 const containerNotify = React.createRef<HTMLDivElement>();
 
-function changeLanguage(code: string) {
-	// Load json-file of the language with provided code
-	i18n.changeLanguage(code);
-	// Reload window for updating the flag of the language dropdown menu
-	window.location.reload();
-}
-
-function logout() {
-	window.location.href = "/j_spring_security_logout";
-}
-
 /**
  * Component that renders the header and the navigation in the upper right corner.
  */
-const Header = ({
-// @ts-expect-error TS(7031): Binding element 'loadingServicesIntoTable' implici... Remove this comment to see the full error message
-	loadingServicesIntoTable,
-}) => {
+const Header = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 	// State for opening (true) and closing (false) the dropdown menus for language, notification, help and user
@@ -57,8 +45,8 @@ const Header = ({
 	const [displayMenuUser, setMenuUser] = useState(false);
 	const [displayMenuNotify, setMenuNotify] = useState(false);
 	const [displayMenuHelp, setMenuHelp] = useState(false);
-	const [displayRegistrationModal, setRegistrationModal] = useState(false);
-	const [displayHotKeyCheatSheet, setHotKeyCheatSheet] = useState(false);
+	const registrationModalRef = useRef<ModalHandle>(null);
+	const hotKeyCheatSheetModalRef = useRef<ModalHandle>(null);
 
 	const healthStatus = useAppSelector(state => getHealthStatus(state));
 	const errorCounter = useAppSelector(state => getErrorCount(state));
@@ -75,40 +63,35 @@ const Header = ({
 	};
 
 	const showRegistrationModal = () => {
-		setRegistrationModal(true);
-	};
-
-	const hideRegistrationModal = () => {
-		setRegistrationModal(false);
-	};
-
-	const redirectToServices = async () => {
-		// Load services into table
-		await loadingServicesIntoTable();
-
-		// set the action filter value of services to true
-		await dispatch(setSpecificServiceFilter({ filter: "actions", filterValue: "true" }));
+		registrationModalRef.current?.open();
 	};
 
 	const showHotKeyCheatSheet = () => {
-		setHotKeyCheatSheet(true);
-	};
-
-	const hideHotKeyCheatSheet = () => {
-		setHotKeyCheatSheet(false);
+		hotKeyCheatSheetModalRef.current?.open();
 	};
 
 	const toggleHotKeyCheatSheet = () => {
-		setHotKeyCheatSheet(!displayHotKeyCheatSheet);
+		if (hotKeyCheatSheetModalRef.current?.isOpen?.()) {
+			hotKeyCheatSheetModalRef.current?.close?.();
+		} else {
+			hotKeyCheatSheetModalRef.current?.open();
+		}
+	};
+
+	const handleChangeLanguage = (code: string) => {
+		// Load json-file of the language with provided code
+		i18n.changeLanguage(code);
+		// Close the language dropdown menu
+		setMenuLang(false);
 	};
 
 	useHotkeys(
     availableHotkeys.general.HOTKEY_CHEATSHEET.sequence,
     () => toggleHotKeyCheatSheet(),
 		{
-			description: t(availableHotkeys.general.HOTKEY_CHEATSHEET.description) ?? undefined
+			description: t(availableHotkeys.general.HOTKEY_CHEATSHEET.description) ?? undefined,
 		},
-    [toggleHotKeyCheatSheet]
+    [toggleHotKeyCheatSheet],
   );
 
 	useEffect(() => {
@@ -135,14 +118,15 @@ const Header = ({
 		};
 
 		// Fetching health status information at mount
-		loadHealthStatus().then((r) => console.info(r));
+		loadHealthStatus().then(r => console.info(r));
 		// Fetch health status every minute
-		setInterval(() => dispatch(fetchHealthStatus()), 5000);
+		const interval = setInterval(() => dispatch(fetchHealthStatus()), 5000);
 
 		// Event listener for handle a click outside of dropdown menu
 		window.addEventListener("mousedown", handleClickOutside);
 
 		return () => {
+			clearInterval(interval);
 			window.removeEventListener("mousedown", handleClickOutside);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,14 +146,12 @@ const Header = ({
 				<nav className="header-nav nav-dd-container" id="nav-dd-container">
 					{/* Select language */}
 					<div className="nav-dd lang-dd" id="lang-dd" ref={containerLang}>
-						<Tooltip title={t("LANGUAGE")}>
-							<button className="lang" onClick={() => setMenuLang(!displayMenuLang)}>
-								<IconContext.Provider value={{ style: {fontSize: "20px"} }}>
-									<HiTranslate />
-								</IconContext.Provider>
-							</button>
+						<Tooltip active={!displayMenuLang} title={t("LANGUAGE")}>
+							<BaseButton className="lang nav-dd-element" onClick={() => setMenuLang(!displayMenuLang)}>
+									<HiOutlineTranslate className="header-icon"/>
+							</BaseButton>
 						</Tooltip>
-						{displayMenuLang && <MenuLang />}
+						{displayMenuLang && <MenuLang handleChangeLanguage={handleChangeLanguage}/>}
 					</div>
 
 					{/* Media Module */}
@@ -179,14 +161,15 @@ const Header = ({
 					{!!orgProperties &&
 						!!orgProperties["org.opencastproject.admin.mediamodule.url"] && (
 							<div className="nav-dd">
-								<Tooltip  title={t("MEDIAMODULE")}>
+								<Tooltip title={t("MEDIAMODULE")}>
 									<a
 										href={
 											orgProperties["org.opencastproject.admin.mediamodule.url"]
 										}
 										target="_blank" rel="noreferrer"
+										className="nav-dd-element"
 									>
-										<span className="fa fa-play-circle" />
+										<LuCirclePlay className="header-icon"/>
 									</a>
 								</Tooltip>
 							</div>
@@ -195,38 +178,39 @@ const Header = ({
 					{/* Opencast Studio */}
 					{hasAccess("ROLE_STUDIO", user) && (
 						<div className="nav-dd">
-							<Tooltip  title={t("STUDIO")}>
-								<a href={studioURL} target="_blank" rel="noreferrer">
-									<span className="fa fa-video-camera" />
+							<Tooltip title={t("STUDIO")}>
+								<a href={studioURL} target="_blank" rel="noreferrer" className="nav-dd-element">
+									<LuVideo className="header-icon"/>
 								</a>
 							</Tooltip>
 						</div>
 					)}
 
 					{/* System warnings and notifications */}
-					{hasAccess("ROLE_ADMIN", user) && (
+					{user.isAdmin && (
 						<div
 							className="nav-dd info-dd"
 							id="info-dd"
 							ref={containerNotify}
 						>
-							<Tooltip title={t("SYSTEM_NOTIFICATIONS")}>
-								<button onClick={() => setMenuNotify(!displayMenuNotify)}>
-									<i className="fa fa-bell" aria-hidden="true" />
+							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
+								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
+									<LuBell style={{
+										fontSize: "20px",
+									}}/>
 									{errorCounter !== 0 && (
 										<span id="error-count" className="badge">
 											{errorCounter}
 										</span>
 									)}
-									{/* Click on the bell icon, a dropdown menu with all services in serviceList and their status opens */}
-									{displayMenuNotify && (
-										<MenuNotify
-											healthStatus={healthStatus}
-											redirectToServices={redirectToServices}
-										/>
-									)}
-								</button>
+								</BaseButton>
 							</Tooltip>
+							{/* Click on the bell icon, a dropdown menu with all services in serviceList and their status opens */}
+							{displayMenuNotify && (
+								<MenuNotify
+									healthStatus={healthStatus}
+								/>
+							)}
 						</div>
 					)}
 
@@ -246,12 +230,13 @@ const Header = ({
 								id="help-dd"
 								ref={containerHelp}
 							>
-								<Tooltip title={t("HELP.HELP")}>
-									<button
+								<Tooltip active={!displayMenuHelp} title={t("HELP.HELP")}>
+									<BaseButton
 										onClick={() => setMenuHelp(!displayMenuHelp)}
+										className="nav-dd-element"
 									>
-										<span className="fa fa-question-circle"></span>
-									</button>
+										<LuMessageCircleQuestion className="header-icon"/>
+									</BaseButton>
 								</Tooltip>
 								{/* Click on the help icon, a dropdown menu with documentation, REST-docs and shortcuts (if available) opens */}
 								{displayMenuHelp && (
@@ -267,14 +252,14 @@ const Header = ({
 						)}
 
 					{/* Username */}
-					<div className="nav-dd user-dd" id="user-dd" ref={containerUser}>
-						<button
+					<div className="user-dd" id="user-dd" ref={containerUser}>
+						<BaseButton
 							className="h-nav"
 							onClick={() => setMenuUser(!displayMenuUser)}
 						>
 							{user.user.name || user.user.username}
-							<span className="dropdown-icon" />
-						</button>
+							<LuChevronDown className="dropdown-icon" />
+						</BaseButton>
 						{/* Click on username, a dropdown menu with the option to logout opens */}
 						{displayMenuUser && <MenuUser />}
 					</div>
@@ -282,30 +267,34 @@ const Header = ({
 			</header>
 
 			{/* Adopters Registration Modal */}
-			{displayRegistrationModal && (
-				<RegistrationModal close={hideRegistrationModal} />
-			)}
+			<RegistrationModal modalRef={registrationModalRef}/>
 
 			{/* Terms of use for all non-admin users */}
 			{displayTerms && !user.roles.includes("ROLE_ADMIN") && <TermsOfUseModal />}
 
 			{/* Hotkey Cheat Sheet */}
-			{displayHotKeyCheatSheet && (
-				<HotKeyCheatSheet close={hideHotKeyCheatSheet} />
-			)}
+			<HotKeyCheatSheet modalRef={hotKeyCheatSheetModalRef}/>
 		</>
 	);
 };
 
-const MenuLang = () => {
+const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: string) => void }) => {
+	// const handleChangeLanguage = (code: string) => {
+	// 	handleChangeLanguage(code);
+	// };
+
 	return (
 		<ul className="dropdown-ul">
 			{/* one list item for each available language */}
 			{languages.map((language, key) => (
 				<li key={key}>
-					<button className="button-like-anchor" onClick={() => changeLanguage(language.code)}>
+					<ButtonLikeAnchor
+						className={(i18n.language === language.code ? "selected" : "")}
+						onClick={() => handleChangeLanguage(language.code)}
+					>
+						{i18n.language === language.code && <LuCheck className="selected-icon" />}
 						{language.long}
-					</button>
+					</ButtonLikeAnchor>
 				</li>
 			))}
 		</ul>
@@ -314,20 +303,26 @@ const MenuLang = () => {
 
 const MenuNotify = ({
 	healthStatus,
-	redirectToServices
 }: {
 	healthStatus: HealthStatus[],
-	redirectToServices: () => Promise<void>,
 }) => {
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	const redirectToServices = async () => {
+		// set the action filter value of services to true
+		await dispatch(setSpecificServiceFilter({ filter: "actions", filterValue: "true" }));
+		navigate("/systems/services");
+	};
+
 	return (
 		<ul className="dropdown-ul">
 			{/* For each service in the serviceList (Background Services) one list item */}
 			{healthStatus.map((service, key) => (
 				<li key={key}>
 					{!!service.status && (
-						<Link
-							to="/systems/services"
-							onClick={async () => await redirectToServices()}
+						<ButtonLikeAnchor
+							onClick={() => redirectToServices()}
 						>
 							<span> {service.name} </span>
 							{service.error ? (
@@ -339,7 +334,7 @@ const MenuNotify = ({
 									{service.status}
 								</span>
 							)}
-						</Link>
+						</ButtonLikeAnchor>
 					)}
 				</li>
 			))}
@@ -395,8 +390,7 @@ const MenuHelp = ({
 					</li>
 				)}
 				{/* Show only if restUrl is set */}
-				{!!orgProperties["org.opencastproject.admin.help.restdocs.url"] &&
-					hasAccess("ROLE_ADMIN", user) && (
+				{!!orgProperties["org.opencastproject.admin.help.restdocs.url"] && user.isAdmin && (
 						<li>
 							<a
 								target="_blank" rel="noreferrer"
@@ -409,16 +403,16 @@ const MenuHelp = ({
 						</li>
 					)}
 				<li>
-					<button className="button-like-anchor" onClick={() => showHotKeys()}>
+					<ButtonLikeAnchor onClick={() => showHotKeys()}>
 						<span>{t("HELP.HOTKEY_CHEAT_SHEET")}</span>
-					</button>
+					</ButtonLikeAnchor>
 				</li>
 				{/* Adoter registration Modal */}
-				{hasAccess("ROLE_ADMIN", user) && (
+				{user.isAdmin && (
 					<li>
-						<button className="button-like-anchor" onClick={() => showAdoptersRegistrationModal()}>
+						<ButtonLikeAnchor onClick={() => showAdoptersRegistrationModal()}>
 							<span>{t("HELP.ADOPTER_REGISTRATION")}</span>
-						</button>
+						</ButtonLikeAnchor>
 					</li>
 				)}
 			</ul>
@@ -428,26 +422,21 @@ const MenuHelp = ({
 
 const MenuUser = () => {
 	const { t } = useTranslation();
+
+	const logout = () => {
+		// Here we broadcast logout, in order to redirect other tabs to login page!
+		broadcastLogout();
+		window.location.href = "/j_spring_security_logout";
+	};
 	return (
 		<ul className="dropdown-ul">
 			<li>
-				<button className="button-like-anchor" onClick={() => logout()}>
+				<ButtonLikeAnchor onClick={() => logout()}>
 					<span className="logout-icon">{t("LOGOUT")}</span>
-				</button>
+				</ButtonLikeAnchor>
 			</li>
 		</ul>
 	);
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-});
-
-// Mapping actions to dispatch
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-	loadingServicesIntoTable: () => dispatch(loadServicesIntoTable()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

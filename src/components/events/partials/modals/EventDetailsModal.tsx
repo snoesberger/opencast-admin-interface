@@ -1,79 +1,63 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EventDetails from "./EventDetails";
-import { useAppDispatch } from "../../../../store";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
-import { useHotkeys } from "react-hotkeys-hook";
-import { availableHotkeys } from "../../../../configs/hotkeysConfig";
+import { getModalEvent } from "../../../../selectors/eventDetailsSelectors";
+import { setModalEvent, setShowModal } from "../../../../slices/eventDetailsSlice";
+import { Modal } from "../../../shared/modals/Modal";
+import { FormikProps } from "formik";
+import { confirmUnsaved } from "../../../../utils/utils";
 
 /**
  * This component renders the modal for displaying event details
  */
-const EventDetailsModal = ({
-	handleClose,
-	tabIndex,
-	eventTitle,
-	eventId,
-}: {
-	handleClose: () => void,
-	tabIndex: number,
-	eventTitle: string,
-	eventId: string,
-}) => {
+const EventDetailsModal = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	// tracks, whether the policies are different to the initial value
 	const [policyChanged, setPolicyChanged] = useState(false);
+	const formikRef = useRef<FormikProps<any>>(null);
 
-	const confirmUnsaved = () => {
-		return window.confirm(t("CONFIRMATIONS.WARNINGS.UNSAVED_CHANGES"));
+	const event = useAppSelector(state => getModalEvent(state))!;
+
+	const hideModal = () => {
+		dispatch(setModalEvent(null));
+		dispatch(setShowModal(false));
 	};
 
 	const close = () => {
-		if (!policyChanged || confirmUnsaved()) {
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
+		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
 			setPolicyChanged(false);
 			dispatch(removeNotificationWizardForm());
-			handleClose();
+			hideModal();
+			return true;
 		}
+		return false;
 	};
 
-	useHotkeys(
-		availableHotkeys.general.CLOSE_MODAL.sequence,
-		() => close(),
-		{ description: t(availableHotkeys.general.CLOSE_MODAL.description) ?? undefined },
-		[close],
-  	);
-
 	return (
-		// todo: add hotkeys
-		<>
-			<div className="modal-animation modal-overlay" />
-			<section
-				id="event-details-modal"
-				tabIndex={tabIndex}
-				className="modal wizard modal-animation"
-			>
-				<header>
-					<button className="button-like-anchor fa fa-times close-modal" onClick={() => close()} />
-					<h2>
-						{
-							t("EVENTS.EVENTS.DETAILS.HEADER", {
-								resourceId: eventTitle,
-							}) /*Event details - {resourceTitle}*/
-						}
-					</h2>
-				</header>
-
-				<EventDetails
-					tabIndex={tabIndex}
-					eventId={eventId}
-					policyChanged={policyChanged}
-					setPolicyChanged={(value) => setPolicyChanged(value)}
-				/>
-			</section>
-		</>
-	)
+		<Modal
+			open
+			closeCallback={close}
+			header={t("EVENTS.EVENTS.DETAILS.HEADER", { name: event.title })}
+			classId="details-modal"
+		>
+			<EventDetails
+				eventId={event.id}
+				policyChanged={policyChanged}
+				setPolicyChanged={value => setPolicyChanged(value)}
+				formikRef={formikRef}
+			/>
+		</Modal>
+	);
 };
 
 export default EventDetailsModal;

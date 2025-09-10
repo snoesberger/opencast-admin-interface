@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Formik } from "formik";
 import { initialFormValuesNewGroup } from "../../../../configs/modalConfig";
-import WizardStepper from "../../../shared/wizard/WizardStepper";
+import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
 import GroupMetadataPage from "./GroupMetadataPage";
 import GroupRolesPage from "./GroupRolesPage";
 import GroupUsersPage from "./GroupUsersPage";
@@ -33,8 +33,13 @@ const NewGroupWizard: React.FC<{
 		setPageCompleted,
 	} = usePageFunctions(0, initialValues);
 
+	type StepName = "metadata" | "roles" | "users" | "summary";
+	type Step = WizardStep & {
+		name: StepName,
+	}
+
 	// Caption of steps used by Stepper
-	const steps = [
+	const steps: Step[] = [
 		{
 			translation: "USERS.GROUPS.DETAILS.TABS.METADATA",
 			name: "metadata",
@@ -54,12 +59,10 @@ const NewGroupWizard: React.FC<{
 	];
 
 	// Validation schema of current page
-	const currentValidationSchema = NewGroupSchema[page];
+	const currentValidationSchema = NewGroupSchema[steps[page].name];
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		const response = dispatch(postNewGroup(values));
-		console.info(response);
+	const handleSubmit = (values: typeof initialFormValuesNewGroup) => {
+		dispatch(postNewGroup(values));
 		close();
 	};
 
@@ -69,10 +72,10 @@ const NewGroupWizard: React.FC<{
 			<Formik
 				initialValues={snapshot}
 				validationSchema={currentValidationSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
 				{/* Render wizard pages depending on current value of page variable */}
-				{(formik) => {
+				{formik => {
 					// eslint-disable-next-line react-hooks/rules-of-hooks
 					useEffect(() => {
 						formik.validateForm();
@@ -84,34 +87,34 @@ const NewGroupWizard: React.FC<{
 							{/* Stepper that shows each step of wizard as header */}
 							<WizardStepper
 								steps={steps}
-								page={page}
-								setPage={setPage}
+								activePageIndex={page}
+								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
+								isValid={formik.isValid}
 							/>
 							<div>
-								{page === 0 && (
+								{steps[page].name === "metadata" && (
 									<GroupMetadataPage
 										formik={formik}
 										nextPage={nextPage}
 									/>
 								)}
-								{page === 1 && (
+								{steps[page].name === "roles" && (
 									<GroupRolesPage
 										formik={formik}
 										nextPage={nextPage}
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 2 && (
+								{steps[page].name === "users" && (
 									<GroupUsersPage
 										formik={formik}
 										nextPage={nextPage}
 										previousPage={previousPage}
 									/>
 								)}
-								{page === 3 && (
+								{steps[page].name === "summary" && (
 									<NewGroupSummaryPage
 										formik={formik}
 										previousPage={previousPage}

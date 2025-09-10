@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import { Formik } from "formik";
-import cn from "classnames";
 import AclAccessPage from "../wizard/AclAccessPage";
 import AclMetadataPage from "../wizard/AclMetadataPage";
 import { getAclDetails } from "../../../../selectors/aclDetailsSelectors";
@@ -9,7 +7,9 @@ import { NewAclSchema } from "../../../../utils/validate";
 import ModalNavigation from "../../../shared/modals/ModalNavigation";
 import { checkAcls } from "../../../../slices/aclSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { updateAclDetails } from "../../../../slices/aclDetailsSlice";
+import { TransformedAcl, updateAclDetails } from "../../../../slices/aclDetailsSlice";
+import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
+import { ParseKeys } from "i18next";
 
 /**
  * This component manages the pages of the acl details modal
@@ -19,7 +19,6 @@ const AclDetails = ({
 } : {
 	close: () => void,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const [page, setPage] = useState(0);
@@ -30,11 +29,15 @@ const AclDetails = ({
 	const initialValues = {
 		name: aclDetails.name,
 		aclTemplate: "",
-		acls: aclDetails.acl,
+		policies: aclDetails.acl,
 	};
 
 	// information about tabs
-	const tabs = [
+	const tabs: {
+		tabTranslation: ParseKeys,
+		accessRole: string,
+		name: string,
+	}[] = [
 		{
 			tabTranslation: "USERS.ACLS.DETAILS.TABS.METADATA",
 			accessRole: "ROLE_UI_ACLS_EDIT",
@@ -47,14 +50,17 @@ const AclDetails = ({
 		},
 	];
 
-// @ts-expect-error TS(7006): Parameter 'tabNr' implicitly has an 'any' type.
-	const openTab = (tabNr) => {
+	const openTab = (tabNr: number) => {
 		setPage(tabNr);
 	};
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		dispatch(updateAclDetails({values: values, aclId: aclDetails.id}));
+	const handleSubmit = (
+		values: {
+			name: string,
+			policies: TransformedAcl[],
+		},
+	) => {
+		dispatch(updateAclDetails({ values: values, aclId: aclDetails.id }));
 		close();
 	};
 
@@ -66,10 +72,10 @@ const AclDetails = ({
 			{/* formik form used in entire modal */}
 			<Formik
 				initialValues={initialValues}
-				validationSchema={NewAclSchema[0]}
-				onSubmit={(values) => handleSubmit(values)}
+				validationSchema={NewAclSchema["metadata"]}
+				onSubmit={values => handleSubmit(values)}
 			>
-				{(formik) => (
+				{formik => (
 					<>
 						{page === 0 && <AclMetadataPage formik={formik} isEdit />}
 						{page === 1 && (
@@ -80,26 +86,20 @@ const AclDetails = ({
 						)}
 
 						{/* Navigation buttons and validation */}
-						<footer>
-							<button
-								className={cn("submit", {
-									active: formik.dirty && formik.isValid,
-									inactive: !(formik.dirty && formik.isValid),
-								})}
-								disabled={!(formik.dirty && formik.isValid)}
-								onClick={async () => {
-									if (await dispatch(checkAcls(formik.values.acls))) {
+						<WizardNavigationButtons
+							formik={formik}
+							previousPage={close}
+							submitPage={
+								() => {
+									if (dispatch(checkAcls(formik.values.policies))) {
 										formik.handleSubmit();
 									}
-								}}
-								type="submit"
-							>
-								{t("SUBMIT")}
-							</button>
-							<button className="cancel" onClick={() => close()}>
-								{t("CANCEL")}
-							</button>
-						</footer>
+								}
+							}
+							createTranslationString="SUBMIT"
+							cancelTranslationString="CANCEL"
+							isLast
+						/>
 					</>
 				)}
 			</Formik>

@@ -1,11 +1,10 @@
-import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios';
-import { relativeDateSpanToFilterValue } from '../utils/dateUtils';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
-import { setOffset } from '../actions/tableActions';
-import { fetchEvents } from './eventSlice';
-import { fetchServices } from './serviceSlice';
-import { FilterProfile } from './tableFilterProfilesSlice';
+import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { isRelativeDateSpanValue, relativeDateSpanToFilterValue } from "../utils/dateUtils";
+import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
+import { FilterProfile } from "./tableFilterProfilesSlice";
+import { Resource } from "./tableSlice";
+import { FetchEvents } from "./eventSlice";
 
 /**
  * This file contains redux reducer for actions affecting the state of table filters
@@ -15,116 +14,169 @@ import { FilterProfile } from './tableFilterProfilesSlice';
 export type FilterData = {
 	label: string,
 	name: string,
-	options: {
+	options?: {
 		label: string,
 		value: string,
 	}[],
-	translatable: boolean,
+	translatable?: boolean,
 	type: string,
+	resource: string, // Not from the backend. We set this to keep track of which table this filter belongs to
 	value: string,
 }
 
+export type TextFilter = {
+	text: string,
+	resource: string // Not from the backend. We set this to keep track of which table this filter belongs to
+}
+
+export type Stats = {
+	count: number,
+	description: string,
+	filters: {
+		filter: string,
+		name: string,
+		value: string,
+	}[],
+	name: string,
+	order: number,
+}
+
 type TableFilterState = {
-	status: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	status: "uninitialized" | "loading" | "succeeded" | "failed",
 	error: SerializedError | null,
-	statusStats: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	statusStats: "uninitialized" | "loading" | "succeeded" | "failed",
 	errorStats: SerializedError | null,
 	currentResource: string,
 	data: FilterData[],
 	filterProfiles: FilterProfile[],
-	textFilter: string,
+	textFilter: TextFilter[],
 	selectedFilter: string,
 	secondFilter: string,
-	stats: {
-		count: number,
-		description: string,
-		filters: {
-			filter: string,
-			name: string,
-			value: string,
-		}[],
-		name: string,
-		order: number,
-	}[],
+	stats: Stats[],
 }
 
 // Initial state of table filters in redux store
 const initialState: TableFilterState = {
-	status: 'uninitialized',
+	status: "uninitialized",
 	error: null,
-	statusStats: 'uninitialized',
+	statusStats: "uninitialized",
 	errorStats: null,
 	currentResource: "",
 	data: [],
 	filterProfiles: [],
-	textFilter: "",
+	textFilter: [],
 	selectedFilter: "",
 	secondFilter: "",
 	stats: [],
 };
 
 // Fetch table filters from opencast instance and transform them for further use
-export const fetchFilters = createAppAsyncThunk('tableFilters/fetchFilters', async (resource: any, { getState }) => {
-	const data = await axios.get(
-		`/admin-ng/resources/${resource}/filters.json`
+export const fetchFilters = createAppAsyncThunk("tableFilters/fetchFilters", async (resource: TableFilterState["currentResource"], { getState }) => {
+	type FetchFilters = {
+		[key: string]: {
+			label: string,
+			type: string,
+			translatable?: boolean,
+			options?: { [key: string]: string },
+		}
+	};
+	const data = await axios.get<FetchFilters>(
+		`/admin-ng/resources/${resource}/filters.json`,
 	);
-	const resourceData = await data.data;
+	const resourceData = data.data;
 
 	const filters = transformResponse(resourceData);
-	const filtersList = Object.keys(filters.filters).map((key) => {
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-		let filter = filters.filters[key];
-		filter.name = key;
-		return filter;
+	const filtersList: TableFilterState["data"] = Object.keys(filters.filters).map(key => {
+		const filter = filters.filters[key];
+		return {
+			...filter,
+			name: key,
+			resource: resource,
+		};
 	});
 
 	if (resource === "events") {
-		filtersList.push({ name: "presentersBibliographic" });
+		filtersList.push({
+			label: "FILTERS.EVENTS.PRESENTERS_BIBLIOGRAPHIC.LABEL",
+			name: "presentersBibliographic",
+			translatable: false,
+			type: "select",
+			resource: "events",
+			value: "",
+		});
 	}
+
+	// Do all this purely to keep set filter values saved if the tab gets switched
+	let oldData = getState().tableFilters.data;
+
+	for (const oldFilter of oldData) {
+		const foundIndex = filtersList.findIndex(x => x.name === oldFilter.name && x.resource === oldFilter.resource);
+		if (foundIndex >= 0) {
+			filtersList[foundIndex].value = oldFilter.value;
+		}
+	}
+
+	oldData = oldData.filter(filter => filter.resource !== resource);
+	filtersList.push(...oldData);
 
 	return { filtersList, resource };
 });
 
-export const fetchStats = createAppAsyncThunk('tableFilters/fetchStats', async () => {
+export const fetchStats = createAppAsyncThunk("tableFilters/fetchStats", async () => {
+	type FetchStats = { [key: string]: string }
+	type Stat = {
+		filters: {
+			filter: string,
+			name: string,
+			value: string,
+		}[],
+		description: string,
+		order: number,
+	}
 	// fetch information about possible status an event can have
-	let data = await axios.get("/admin-ng/resources/STATS.json");
-	let response = await data.data;
+	const data = await axios.get<FetchStats>("/admin-ng/resources/STATS.json");
+	const response = data.data;
 
 	// transform response
-	const statsResponse = Object.keys(response).map((key) => {
-		let stat = JSON.parse(response[key]);
-		stat.name = key;
-		return stat;
+	const statsResponse = Object.keys(response).map(key => {
+		// TODO: Handle JSON parsing errors
+		const stat = JSON.parse(response[key]) as Stat;
+		return {
+			...stat,
+			name: key,
+			count: 0,
+		};
 	});
 
-	let stats = [];
+	const stats: TableFilterState["stats"] = [];
 
 	// fetch for each status the corresponding count of events having this status
-	for (let i in statsResponse) {
-		let filter = [];
-		for (let j in statsResponse[i].filters) {
+	for (const [i, _] of statsResponse.entries()) {
+		const filter: string[] = [];
+		statsResponse[i].filters.forEach((_, j) => {
 			let value = statsResponse[i].filters[j].value;
-			let name = statsResponse[i].filters[j].name;
+			const name = statsResponse[i].filters[j].name;
 
-			if (Object.prototype.hasOwnProperty.call(value, "relativeDateSpan")) {
+			// If not string
+			if (isRelativeDateSpanValue(value)) {
 				value = relativeDateSpanToFilterValue(
 					value.relativeDateSpan.from,
 					value.relativeDateSpan.to,
-					value.relativeDateSpan.unit
+					value.relativeDateSpan.unit,
 				);
 				// set date span as filter value
 				statsResponse[i].filters[j].value = value;
 			}
 			filter.push(name + ":" + value);
-		}
-		let data = await axios.get("/admin-ng/event/events.json", {
+		});
+		const data = await axios.get<FetchEvents>("/admin-ng/event/events.json", {
 			params: {
 				filter: filter.join(","),
 				limit: 1,
 			},
 		});
 
-		let response = await data.data;
+		const response = data.data;
 
 		// add count to status information fetched before
 		statsResponse[i] = {
@@ -141,66 +193,87 @@ export const fetchStats = createAppAsyncThunk('tableFilters/fetchStats', async (
 	return stats;
 });
 
-export const setSpecificEventFilter = createAppAsyncThunk('tableFilters/setSpecificEventFilter', async (params: { filter: any, filterValue: any }, { dispatch, getState }) => {
+export const setSpecificEventFilter = createAppAsyncThunk("tableFilters/setSpecificEventFilter", async (params: { filter: string, filterValue: string }, { dispatch, getState }) => {
 	const { filter, filterValue } = params;
-	await dispatch(fetchFilters("events"));
-
 	const { tableFilters } = getState();
 
-	let filterToChange = tableFilters.data.find(({ name }) => name === filter);
+	const filterToChange = tableFilters.data.find(({ name }) => name === filter);
 
-	if (!!filterToChange) {
-		await dispatch(editFilterValue({
-			filterName: filterToChange.name,
-			value: filterValue
-		}));
+	if (!filterToChange) {
+		await dispatch(fetchFilters("events"));
 	}
 
-	dispatch(setOffset(0));
-
-	dispatch(fetchStats());
-
-	dispatch(fetchEvents());
+	if (filterToChange) {
+		dispatch(editFilterValue({
+			filterName: filterToChange.name,
+			value: filterValue,
+			resource: "events",
+		}));
+	}
 });
 
-export const setSpecificServiceFilter = createAppAsyncThunk('tableFilters/setSpecificServiceFilter', async (params: { filter: any, filterValue: any }, { dispatch, getState }) => {
+export const setSpecificServiceFilter = createAppAsyncThunk("tableFilters/setSpecificServiceFilter", async (params: { filter: string, filterValue: string }, { dispatch, getState }) => {
 	const { filter, filterValue } = params;
-	await dispatch(fetchFilters("services"));
-
 	const { tableFilters } = getState();
 
 	let filterToChange = tableFilters.data.find(({ name }) => name === filter);
 
-	if (!!filterToChange) {
-		await dispatch(editFilterValue({
-			filterName: filterToChange.name,
-			value: filterValue
-		}));
+	if (!filterToChange) {
+		const fetchedFilters = await dispatch(fetchFilters("services")) as {
+			payload: { filtersList: FilterData[] }
+		};
+		filterToChange = fetchedFilters.payload.filtersList.find(({ name }: { name: string }) => name === filter);
 	}
 
-	dispatch(setOffset(0));
-
-	dispatch(fetchServices());
+	if (filterToChange) {
+		dispatch(editFilterValue({
+			filterName: filterToChange.name,
+			value: filterValue,
+			resource: "services",
+		}));
+	}
 });
 
 // Transform received filter.json to a structure that can be used for filtering
-// @ts-expect-error TS(7006): Parameter 'data' implicitly has an 'any' type.
-function transformResponse(data) {
-	let filters = {};
-	try {
-		filters = data;
+function transformResponse(data: {
+	[key: string]: {
+		label: string,
+		options?: { [key: string]: string },
+		translatable?: boolean,
+		type: string,
+	}
+}) {
+	type ParsedFilters = {
+		[key: string]: {
+			value: string
+			label: string
+			options?: { value: string, label: string }[]
+			translatable?: boolean,
+			type: string,
+		}
+	}
 
-		for (let key in filters) {
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			filters[key].value = "";
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			if (!filters[key].options) {
+	const filters = Object.keys(data).reduce((acc, key) => {
+		const newOptions: {
+			label: string,
+			value: string,
+		}[] = [];
+		acc[key] = {
+			...data[key],
+			value: "",
+			options: newOptions,
+		};
+		return acc;
+	}, {} as ParsedFilters);
+
+	try {
+		for (const key in data) {
+			if (!data[key].options) {
 				continue;
 			}
-			let filterArr = [];
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-			let options = filters[key].options;
-			for (let subKey in options) {
+			let filterArr: { value: string, label: string }[] = [];
+			const options = data[key].options;
+			for (const subKey in options) {
 				filterArr.push({ value: subKey, label: options[subKey] });
 			}
 			filterArr = filterArr.sort(function (a, b) {
@@ -212,20 +285,23 @@ function transformResponse(data) {
 				}
 				return 0;
 			});
-// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
 			filters[key].options = filterArr;
 		}
 	} catch (e) {
-// @ts-expect-error TS(2571): Object is of type 'unknown'.
-		console.error(e.message);
+		let errorMessage;
+		if (e instanceof Error) {
+			errorMessage = e.message;
+		} else {
+			errorMessage = String(e);
+		}
+		console.error(errorMessage);
 	}
 
 	return { filters: filters };
 }
 
 // compare function for sort stats array by order property
-// @ts-expect-error TS(7006): Parameter 'a' implicitly has an 'any' type.
-const compareOrder = (a, b) => {
+const compareOrder = (a: { order: number }, b: { order: number }) => {
 	if (a.order < b.order) {
 		return -1;
 	}
@@ -237,33 +313,48 @@ const compareOrder = (a, b) => {
 
 
 const tableFilterSlice = createSlice({
-	name: 'tableFilters',
+	name: "tableFilters",
 	initialState,
 	reducers: {
 		editFilterValue(state, action: PayloadAction<{
 			filterName: TableFilterState["data"][0]["name"],
 			value: TableFilterState["data"][0]["value"],
+			resource: Resource
 		}>) {
-			const { filterName, value } = action.payload;
-			state.data = state.data.map((filter) => {
-				return filter.name === filterName
+			const { filterName, value, resource } = action.payload;
+			state.data = state.data.map(filter => {
+				return filter.name === filterName && filter.resource === resource
 					? { ...filter, value: value }
 					: filter;
-			})
+			});
 		},
 		resetFilterValues(state) {
-			state.data = state.data.map((filter) => {
+			state.data = state.data.map(filter => {
 				return { ...filter, value: "" };
-			})
+			});
 		},
 		editTextFilter(state, action: PayloadAction<
-			TableFilterState["textFilter"]
+			TableFilterState["textFilter"][0]
 		>) {
 			const textFilter = action.payload;
-			state.textFilter = textFilter;
+
+			const existingIndex = state.textFilter.findIndex(obj => obj.resource === textFilter.resource);
+
+			let updatedItems;
+			if (existingIndex !== -1) {
+				updatedItems = state.textFilter.map((filter, index) =>
+					index === existingIndex ? { ...filter, ...textFilter } : filter,
+				);
+			} else {
+				updatedItems = [...state.textFilter, textFilter];
+			}
+
+			state.textFilter = updatedItems;
 		},
-		removeTextFilter(state) {
-			state.textFilter = "";
+		removeTextFilter(state, action: PayloadAction<
+			TableFilterState["textFilter"][0]["resource"]
+		>) {
+			state.textFilter = state.textFilter.filter(fil => fil.resource !== action.payload);
 		},
 		loadFilterProfile(state, action: PayloadAction<
 			TableFilterState["data"]
@@ -289,41 +380,56 @@ const tableFilterSlice = createSlice({
 		removeSecondFilter(state) {
 			state.secondFilter = "";
 		},
+		resetCorruptedState(state) {
+			// Reset corrupted localStorage state to initial values
+			if (!Array.isArray(state.data)) {
+				console.warn("Resetting corrupted tableFilters.data to empty array");
+				state.data = [];
+			}
+			if (!Array.isArray(state.textFilter)) {
+				console.warn("Resetting corrupted tableFilters.textFilter to empty array");
+				state.textFilter = [];
+			}
+			if (!Array.isArray(state.stats)) {
+				console.warn("Resetting corrupted tableFilters.stats to empty array");
+				state.stats = [];
+			}
+		},
 	},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchFilters.pending, (state) => {
-				state.status = 'loading';
+			.addCase(fetchFilters.pending, state => {
+				state.status = "loading";
 			})
 			.addCase(fetchFilters.fulfilled, (state, action: PayloadAction<{
 				filtersList: TableFilterState["data"],
 				resource: TableFilterState["currentResource"],
 			}>) => {
-				state.status = 'succeeded';
+				state.status = "succeeded";
 				const tableFilters = action.payload;
 				state.data = tableFilters.filtersList;
 				state.currentResource = tableFilters.resource;
 
 			})
 			.addCase(fetchFilters.rejected, (state, action) => {
-				state.status = 'failed';
+				state.status = "failed";
 				state.error = action.error;
 			})
-			.addCase(fetchStats.pending, (state) => {
-				state.statusStats = 'loading';
+			.addCase(fetchStats.pending, state => {
+				state.statusStats = "loading";
 			})
 			.addCase(fetchStats.fulfilled, (state, action: PayloadAction<
 				TableFilterState["stats"]
 			>) => {
-				state.statusStats = 'succeeded';
+				state.statusStats = "succeeded";
 				const stats = action.payload;
 				state.stats = stats;
 			})
 			.addCase(fetchStats.rejected, (state, action) => {
-				state.statusStats = 'failed';
+				state.statusStats = "failed";
 				state.errorStats = action.error;
 			});
-	}
+	},
 });
 
 export const {
@@ -335,7 +441,8 @@ export const {
 	editSelectedFilter,
 	removeSelectedFilter,
 	editSecondFilter,
-	removeSecondFilter
+	removeSecondFilter,
+	resetCorruptedState,
 } = tableFilterSlice.actions;
 
 // Export the slice reducer as the default export

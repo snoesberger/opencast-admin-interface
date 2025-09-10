@@ -1,16 +1,20 @@
+import { ParseKeys } from "i18next";
+
 export type TableConfig = {
-	columns: {
-		name: string,
-		label: string,
-		template?: string,
-		sortable?: boolean,
-		translate?: boolean,
-		deactivated?: boolean,
-	}[],
+	columns: TableColumn[],
 	caption: string,
 	resource: string,
 	category: string,
 	multiSelect: boolean,
+}
+
+export type TableColumn = {
+	name: string,
+	label: ParseKeys,
+	template?: string,
+	sortable?: boolean,
+	translate?: boolean,
+	deactivated?: boolean,
 }
 
 /**

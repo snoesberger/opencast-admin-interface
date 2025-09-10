@@ -1,7 +1,7 @@
-import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios';
-import { WritableDraft } from 'immer';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
+import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { WritableDraft } from "immer";
+import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 
 /**
  * This file contains redux reducer for actions affecting the state of information about health status
@@ -20,7 +20,7 @@ export type HealthStatus = {
 }
 
 type HealthState = {
-	statusHealth: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	statusHealth: "uninitialized" | "loading" | "succeeded" | "failed",
 	errorHealth: SerializedError | null,
   service: HealthStatus[],
   error: boolean,
@@ -29,7 +29,7 @@ type HealthState = {
 
 // Initial state of health status in redux store
 const initialState: HealthState = {
-	statusHealth: 'uninitialized',
+	statusHealth: "uninitialized",
 	errorHealth: null,
 	service: [
 		{
@@ -56,13 +56,13 @@ type FetchHealthStatusResponse = {
 }
 
 // Fetch health status and transform it to further use
-export const fetchHealthStatus = createAppAsyncThunk('health/fetchHealthStatus', async () => {
+export const fetchHealthStatus = createAppAsyncThunk("health/fetchHealthStatus", async () => {
 	const res = await axios.get<FetchHealthStatusResponse>("/services/health.json");
 	return res.data;
 });
 
 const healthSlice = createSlice({
-	name: 'health',
+	name: "health",
 	initialState,
 	reducers: {
 		setError(state, action: PayloadAction<{
@@ -82,23 +82,13 @@ const healthSlice = createSlice({
 	// These are used for thunks
 	extraReducers: builder => {
 		builder
-			.addCase(fetchHealthStatus.pending, (state) => {
-				state.statusHealth = 'loading';
-
-				// Reset state of health status
-				let healthStatus = {
-					name: STATES_NAMES,
-					status: "",
-					error: false,
-				};
-				state.service = mapHealthStatus(state, healthStatus);
-				state.numErr = 0;
-				state.error = false;
+			.addCase(fetchHealthStatus.pending, state => {
+				state.statusHealth = "loading";
 			})
 			.addCase(fetchHealthStatus.fulfilled, (state, action: PayloadAction<
 				FetchHealthStatusResponse
 			>) => {
-				state.statusHealth = 'succeeded';
+				state.statusHealth = "succeeded";
 
 				const health = action.payload.health;
 				let healthStatus;
@@ -121,6 +111,7 @@ const healthSlice = createSlice({
 							error: false,
 						};
 						state.service = mapHealthStatus(state, healthStatus);
+						state.error = false;
 					} else {
 						healthStatus = {
 							name: BACKEND_NAMES,
@@ -128,16 +119,15 @@ const healthSlice = createSlice({
 							error: true,
 						};
 						state.service = mapHealthStatus(state, healthStatus);
-
 						state.error = true;
-						state.numErr += 1;
 					}
+					state.numErr = abnormal;
 				}
 			})
 			.addCase(fetchHealthStatus.rejected, (state, action) => {
-				state.statusHealth = 'failed';
+				state.statusHealth = "failed";
 
-				let healthStatus = {
+				const healthStatus = {
 					name: STATES_NAMES,
 					status: action.error.message ?? "",
 					error: true,
@@ -148,17 +138,17 @@ const healthSlice = createSlice({
 
 				state.errorHealth = action.error;
 			});
-	}
+	},
 });
 
 const mapHealthStatus = (state: WritableDraft<HealthState>, updatedHealthStatus: HealthStatus) => {
-	return state.service.map((healthStatus) => {
+	return state.service.map(healthStatus => {
 		if (healthStatus.name === updatedHealthStatus.name) {
 			return updatedHealthStatus;
 		}
 		return healthStatus;
 	});
-}
+};
 
 export const { setError } = healthSlice.actions;
 

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
-import cn from "classnames";
 import GroupMetadataPage from "../wizard/GroupMetadataPage";
 import GroupRolesPage from "../wizard/GroupRolesPage";
 import GroupUsersPage from "../wizard/GroupUsersPage";
@@ -9,7 +7,9 @@ import { EditGroupSchema } from "../../../../utils/validate";
 import { getGroupDetails } from "../../../../selectors/groupDetailsSelectors";
 import ModalNavigation from "../../../shared/modals/ModalNavigation";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { updateGroupDetails } from "../../../../slices/groupDetailsSlice";
+import { UpdateGroupDetailsState, updateGroupDetails } from "../../../../slices/groupDetailsSlice";
+import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
+import { ParseKeys } from "i18next";
 
 /**
  * This component manages the pages of the group details
@@ -19,30 +19,28 @@ const GroupDetails: React.FC<{
 }> = ({
 	close,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
-
-	const [page, setPage] = useState(0);
 
 	const groupDetails = useAppSelector(state => getGroupDetails(state));
 
-	// transform roles for use in SelectContainer
-	let roleNames = [];
-	for (let i = 0; i < groupDetails.roles.length; i++) {
-		if (!groupDetails.roles[i].startsWith("ROLE_GROUP")) {
-			roleNames.push({
-				name: groupDetails.roles[i],
-			});
-		}
-	}
+	const [page, setPage] = useState(0);
 
+	// Since we are using the initialValues to be consumed by SelectContainer via Formik later on,
+	// we should not use useState because the asynchronous nature! which has no use here,
+	// and in fact prevents the "roles" to get the data properly!
 	const initialValues = {
-		...groupDetails,
-		roles: roleNames,
+	...groupDetails,
+	roles: groupDetails.roles
+		.filter(role => !role.startsWith("ROLE_GROUP"))
+		.map(role => ({ name: role })),
 	};
 
 	// information about tabs
-	const tabs = [
+	const tabs: {
+		tabTranslation: ParseKeys
+		accessRole: string
+		name: string
+	}[] = [
 		{
 			tabTranslation: "USERS.GROUPS.DETAILS.TABS.GROUP",
 			accessRole: "ROLE_UI_GROUPS_EDIT",
@@ -60,14 +58,12 @@ const GroupDetails: React.FC<{
 		},
 	];
 
-// @ts-expect-error TS(7006): Parameter 'tabNr' implicitly has an 'any' type.
-	const openTab = (tabNr) => {
+	const openTab = (tabNr: number) => {
 		setPage(tabNr);
 	};
 
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = (values) => {
-		dispatch(updateGroupDetails({values: values, groupId: groupDetails.id}));
+	const handleSubmit = (values: UpdateGroupDetailsState) => {
+		dispatch(updateGroupDetails({ values: values, groupId: groupDetails.id }));
 		close();
 	};
 
@@ -80,31 +76,22 @@ const GroupDetails: React.FC<{
 			<Formik
 				initialValues={initialValues}
 				validationSchema={EditGroupSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
-				{(formik) => (
+				{formik => (
 					<>
 						{page === 0 && <GroupMetadataPage formik={formik} isEdit />}
 						{page === 1 && <GroupRolesPage formik={formik} isEdit />}
 						{page === 2 && <GroupUsersPage formik={formik} isEdit />}
 
 						{/* Navigation buttons and validation */}
-						<footer>
-							<button
-								className={cn("submit", {
-									active: formik.dirty && formik.isValid,
-									inactive: !(formik.dirty && formik.isValid),
-								})}
-								disabled={!(formik.dirty && formik.isValid)}
-								onClick={() => formik.handleSubmit()}
-								type="submit"
-							>
-								{t("SUBMIT")}
-							</button>
-							<button className="cancel" onClick={() => close()}>
-								{t("CANCEL")}
-							</button>
-						</footer>
+						<WizardNavigationButtons
+							formik={formik}
+							previousPage={close}
+							createTranslationString="SUBMIT"
+							cancelTranslationString="CANCEL"
+							isLast
+						/>
 					</>
 				)}
 			</Formik>

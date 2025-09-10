@@ -9,75 +9,84 @@ import {
 import CustomStepIcon from "./CustomStepIcon";
 import { checkAcls } from "../../../slices/aclSlice";
 import { useAppDispatch } from "../../../store";
-import { FormikProps } from "formik/dist/types";
+import { ParseKeys } from "i18next";
+import { TransformedAcl } from "../../../slices/aclDetailsSlice";
+
+export type WizardStep = {
+	translation: ParseKeys,
+	name: string,
+}
 
 /**
  * This components renders the stepper navigation of new resource wizards
  */
 const WizardStepper = ({
 	steps,
-	page,
-	setPage,
-	formik,
+	activePageIndex,
+	setActivePage,
 	completed,
 	setCompleted,
-	hasAccessPage = false,
+	acls,
+	isValid = false,
 }: {
-	steps: {
-		name: string,
-		translation: string,
-		hidden?: boolean,
-	}[],
-	page: number,
-	setPage: (num: number) => void,
-	formik: FormikProps<any>,
+	steps: WizardStep[],
+	activePageIndex: number,
+	setActivePage: (num: number) => void,
 	completed: Record<number, boolean>,
 	setCompleted: (rec: Record<number, boolean>) => void,
-	hasAccessPage?: boolean,
+	acls?: TransformedAcl[], // If there is an acl page
+	isValid: boolean,
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const handleOnClick = async (key: number) => {
+	const handleOnClick = (key: number) => {
 		if (isSummaryReachable(key, steps, completed)) {
-			if (hasAccessPage) {
-				let check = await dispatch(checkAcls(formik.values.acls));
+			if (acls) {
+				const check = dispatch(checkAcls(acls));
 				if (!check) {
 					return;
 				}
 			}
 
-			if (formik.isValid) {
-				let updatedCompleted = completed;
-				updatedCompleted[page] = true;
+			if (isValid) {
+				const updatedCompleted = completed;
+				updatedCompleted[activePageIndex] = true;
 				setCompleted(updatedCompleted);
-				setPage(key);
+				// If all previous pages have been completed
+				if (Object.values(updatedCompleted)
+						.filter((_, index) => index > key)
+						.every(value => value)
+				) {
+					setActivePage(key);
+				}
+			}
+
+			if (!isValid) {
+				if (completed[key]) {
+					setActivePage(key);
+				}
 			}
 		}
 	};
 
-	const disabled = !(formik.dirty && formik.isValid);
-
 	return (
 		<Stepper
-			activeStep={page}
+			activeStep={activePageIndex}
 			nonLinear
 			alternativeLabel
-// @ts-expect-error TS(2322): Type 'boolean' is not assignable to type 'ReactEle... Remove this comment to see the full error message
-			connector={false}
-			sx={stepperStyle.root }
+			connector={<></>}
+			sx={stepperStyle.root}
 			className={cn("step-by-step")}
 		>
 			{steps.map((label, key) =>
-				!label.hidden ? (
-					<Step key={label.translation} completed={completed[key]}>
-						<StepButton onClick={() => handleOnClick(key)} disabled={disabled}>
-							<StepLabel sx={stepLabelStyle.root} StepIconComponent={CustomStepIcon}>
-								{t(label.translation)}
-							</StepLabel>
-						</StepButton>
-					</Step>
-				) : <></>
+				<Step key={label.translation} completed={completed[key]}>
+					<StepButton onClick={() => handleOnClick(key)}>
+						<StepLabel sx={stepLabelStyle.root} StepIconComponent={CustomStepIcon}>
+							{t(label.translation)}
+						</StepLabel>
+					</StepButton>
+				</Step>,
 			)}
 		</Stepper>
 	);

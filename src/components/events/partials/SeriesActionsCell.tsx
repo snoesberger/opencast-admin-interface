@@ -1,122 +1,112 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useRef } from "react";
 import ConfirmModal from "../../shared/ConfirmModal";
 import SeriesDetailsModal from "./modals/SeriesDetailsModal";
 import {
 	fetchSeriesDetailsThemeNames,
 	fetchSeriesDetailsAcls,
-	fetchSeriesDetailsFeeds,
 	fetchSeriesDetailsMetadata,
 	fetchSeriesDetailsTheme,
+	fetchSeriesDetailsTobira,
 } from "../../../slices/seriesDetailsSlice";
-import { getUserInformation } from "../../../selectors/userInfoSelectors";
-import { hasAccess } from "../../../utils/utils";
 import {
 	getSeriesHasEvents,
 	isSeriesDeleteAllowed,
 } from "../../../selectors/seriesSeletctor";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import {
+	Series,
 	checkForEventsDeleteSeriesModal,
 	deleteSeries,
 } from "../../../slices/seriesSlice";
-
-import { Tooltip } from "../../shared/Tooltip";
+import { ModalHandle } from "../../shared/modals/Modal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuCircleX, LuFileText } from "react-icons/lu";
 
 /**
  * This component renders the action cells of series in the table view
  */
 const SeriesActionsCell = ({
-// @ts-expect-error TS(7031): Binding element 'row' implicitly has an 'any' type... Remove this comment to see the full error message
 	row,
+}: {
+	row: Series
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const [displayDeleteConfirmation, setDeleteConfirmation] = useState(false);
-	const [displaySeriesDetailsModal, setSeriesDetailsModal] = useState(false);
+	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
+	const detailsModalRef = useRef<ModalHandle>(null);
 
-	const user = useAppSelector(state => getUserInformation(state));
 	const hasEvents = useAppSelector(state => getSeriesHasEvents(state));
 	const deleteAllowed = useAppSelector(state => isSeriesDeleteAllowed(state));
 
 	const hideDeleteConfirmation = () => {
-		setDeleteConfirmation(false);
+		deleteConfirmationModalRef.current?.close?.();
 	};
 
 	const showDeleteConfirmation = async () => {
 		await dispatch(checkForEventsDeleteSeriesModal(row.id));
 
-		setDeleteConfirmation(true);
+		deleteConfirmationModalRef.current?.open();
 	};
 
-// @ts-expect-error TS(7006): Parameter 'id' implicitly has an 'any' type.
-	const deletingSeries = (id) => {
+	const deletingSeries = (id: string) => {
 		dispatch(deleteSeries(id));
 	};
 
-	const hideSeriesDetailsModal = () => {
-		setSeriesDetailsModal(false);
-	};
-
 	const showSeriesDetailsModal = async () => {
-		await dispatch(fetchSeriesDetailsMetadata(row.id));
-		await dispatch(fetchSeriesDetailsAcls(row.id));
-		await dispatch(fetchSeriesDetailsFeeds(row.id));
-		await dispatch(fetchSeriesDetailsTheme(row.id));
-		await dispatch(fetchSeriesDetailsThemeNames());
+		await Promise.all([
+			dispatch(fetchSeriesDetailsMetadata(row.id)),
+			dispatch(fetchSeriesDetailsAcls(row.id)),
+			dispatch(fetchSeriesDetailsTheme(row.id)),
+			dispatch(fetchSeriesDetailsThemeNames()),
+			dispatch(fetchSeriesDetailsTobira(row.id)),
+		]);
 
-		setSeriesDetailsModal(true);
+		detailsModalRef.current?.open();
 	};
 
 	return (
 		<>
 			{/* series details */}
-			{hasAccess("ROLE_UI_SERIES_DETAILS_VIEW", user) && (
-				<Tooltip title={t("EVENTS.SERIES.TABLE.TOOLTIP.DETAILS")}>
-					<button
-						onClick={() => showSeriesDetailsModal()}
-						className="button-like-anchor more-series"
-					/>
-				</Tooltip>
-			)}
+			<ButtonLikeAnchor
+				onClick={() => showSeriesDetailsModal()}
+				className={"action-cell-button more-series"}
+				editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
+				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
-			{displaySeriesDetailsModal && (
-				<SeriesDetailsModal
-					handleClose={hideSeriesDetailsModal}
-					seriesId={row.id}
-					seriesTitle={row.title}
-				/>
-			)}
+			<SeriesDetailsModal
+				seriesId={row.id}
+				seriesTitle={row.title}
+				modalRef={detailsModalRef}
+			/>
 
 			{/* delete series */}
-			{hasAccess("ROLE_UI_SERIES_DELETE", user) && (
-				<Tooltip title={t("EVENTS.SERIES.TABLE.TOOLTIP.DELETE")}>
-					<button
-						onClick={() => showDeleteConfirmation()}
-						className="button-like-anchor remove"
+			<ButtonLikeAnchor
+				onClick={() => showDeleteConfirmation()}
+				className={"action-cell-button remove"}
+				editAccessRole={"ROLE_UI_SERIES_DELETE"}
+				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"}
+			>
+				<LuCircleX />
+			</ButtonLikeAnchor>
 
-					/>
-				</Tooltip>
-			)}
-
-			{displayDeleteConfirmation && (
-				<ConfirmModal
-					close={hideDeleteConfirmation}
-					resourceName={row.title}
-					resourceType="SERIES"
-					resourceId={row.id}
-					deleteMethod={deletingSeries}
-					deleteAllowed={deleteAllowed}
-					showCautionMessage={hasEvents}
-					deleteNotAllowedMessage={
-						"CONFIRMATIONS.ERRORS.SERIES_HAS_EVENTS"
-					} /* The highlighted series cannot be deleted as they still contain events */
-					deleteWithCautionMessage={
-						"CONFIRMATIONS.WARNINGS.SERIES_HAS_EVENTS"
-					} /* This series does contain events. Deleting the series will not delete the events. */
-				/>
-			)}
+			<ConfirmModal
+				close={hideDeleteConfirmation}
+				resourceName={row.title}
+				resourceType="SERIES"
+				resourceId={row.id}
+				deleteMethod={deletingSeries}
+				deleteAllowed={deleteAllowed}
+				deleteNotAllowedMessage={
+					"CONFIRMATIONS.ERRORS.SERIES_HAS_EVENTS"
+				} /* The highlighted series cannot be deleted as they still contain events */
+				deleteWithCautionMessage={
+					hasEvents ? "CONFIRMATIONS.WARNINGS.SERIES_HAS_EVENTS" : undefined
+				} /* This series does contain events. Deleting the series will not delete the events. */
+				modalRef={deleteConfirmationModalRef}
+			/>
 		</>
 	);
 };

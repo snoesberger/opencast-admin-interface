@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import cn from "classnames";
-import { connect } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
-import TableFilters from "../shared/TableFilters";
-import MainNav from "../shared/MainNav";
+import { useLocation } from "react-router";
 import Stats from "../shared/Stats";
-import Table from "../shared/Table";
-import Notifications from "../shared/Notifications";
-import NewResourceModal from "../shared/NewResourceModal";
 import DeleteEventsModal from "./partials/modals/DeleteEventsModal";
 import StartTaskModal from "./partials/modals/StartTaskModal";
 import EditScheduledEventsModal from "./partials/modals/EditScheduledEventsModal";
@@ -16,24 +9,15 @@ import EditMetadataEventsModal from "./partials/modals/EditMetadataEventsModal";
 import { eventsTemplateMap } from "../../configs/tableConfigs/eventsTableMap";
 import {
 	loadEventsIntoTable,
-	loadSeriesIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchFilters, fetchStats, editTextFilter } from "../../slices/tableFilterSlice";
 import {
 	getTotalEvents,
 	isFetchingAssetUploadOptions as getIsFetchingAssetUploadOptions,
 	isShowActions,
 } from "../../selectors/eventSelectors";
-import { setOffset } from "../../actions/tableActions";
-import Header from "../Header";
-import NavBar from "../NavBar";
-import MainView from "../MainView";
-import Footer from "../Footer";
 import { getUserInformation } from "../../selectors/userInfoSelectors";
 import { hasAccess } from "../../utils/utils";
-import { useHotkeys } from "react-hotkeys-hook";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
-import { getCurrentFilterResource } from "../../selectors/tableFilterSelectors";
 import { fetchAssetUploadOptions } from "../../thunks/assetsThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
@@ -41,303 +25,142 @@ import {
 	fetchEvents,
 	setShowActions,
 } from "../../slices/eventSlice";
-import { fetchSeries } from "../../slices/seriesSlice";
-
-// References for detecting a click outside of the container of the dropdown menu
-const containerAction = React.createRef<HTMLDivElement>();
+import EventDetailsModal from "./partials/modals/EventDetailsModal";
+import { showModal } from "../../selectors/eventDetailsSelectors";
+import { eventsLinks } from "./partials/EventsNavigation";
+import { Modal, ModalHandle } from "../shared/modals/Modal";
+import TableActionDropdown from "../shared/TableActionDropdown";
+import TablePage from "../shared/TablePage";
 
 /**
  * This component renders the table view of events
  */
-const Events = ({
-// @ts-expect-error TS(7031): Binding element 'loadingEventsIntoTable' implicitl... Remove this comment to see the full error message
-	loadingEventsIntoTable,
-// @ts-expect-error TS(7031): Binding element 'loadingSeriesIntoTable' implicitl... Remove this comment to see the full error message
-	loadingSeriesIntoTable,
-// @ts-expect-error TS(7031): Binding element 'resetOffset' implicitly has an 'a... Remove this comment to see the full error message
-	resetOffset,
-}) => {
+const Events = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const currentFilterType = useAppSelector(state => getCurrentFilterResource(state));
+	const displayEventDetailsModal = useAppSelector(state => showModal(state));
 
-	const [displayActionMenu, setActionMenu] = useState(false);
-	const [displayNavigation, setNavigation] = useState(false);
-	const [displayNewEventModal, setNewEventModal] = useState(false);
-	const [displayDeleteModal, setDeleteModal] = useState(false);
-	const [displayStartTaskModal, setStartTaskModal] = useState(false);
-	const [
-		displayEditScheduledEventsModal,
-		setEditScheduledEventsModal,
-	] = useState(false);
-	const [displayEditMetadataEventsModal, setEditMetadataEventsModal] = useState(
-		false
-	);
+	const newEventModalRef = useRef<ModalHandle>(null);
+	const startTaskModalRef = useRef<ModalHandle>(null);
+	const deleteModalRef = useRef<ModalHandle>(null);
+	const editScheduledEventsModalRef = useRef<ModalHandle>(null);
+	const editMetadataEventsModalRef = useRef<ModalHandle>(null);
 
 	const user = useAppSelector(state => getUserInformation(state));
 	const showActions = useAppSelector(state => isShowActions(state));
-	const events = useAppSelector(state => getTotalEvents(state));
 	const isFetchingAssetUploadOptions = useAppSelector(state => getIsFetchingAssetUploadOptions(state));
 
-	let location = useLocation();
-
-	// TODO: Get rid of the wrappers when modernizing redux is done
-	const fetchEventsWrapper = async () => {
-		await dispatch(fetchEvents())
-	}
-
-	const loadEvents = async () => {
-		// Fetching stats from server
-		dispatch(fetchStats());
-
-		// Fetching events from server
-		await dispatch(fetchEvents());
-
-		// Load events into table
-		loadingEventsIntoTable();
-	};
-
-	const loadSeries = () => {
-		// Reset the current page to first page
-		resetOffset();
-
-		//fetching series from server
-		dispatch(fetchSeries());
-
-		//load series into table
-		loadingSeriesIntoTable();
-	};
+	const location = useLocation();
 
 	useEffect(() => {
-		if ("events" !== currentFilterType) {
-			dispatch(fetchFilters("events"))
-		}
-
-		// Reset text filter
-		dispatch(editTextFilter(""));
-
 		// disable actions button
 		dispatch(setShowActions(false));
-
-		// Load events on mount
-		loadEvents().then((r) => console.info(r));
-
-		// Function for handling clicks outside of an open dropdown menu
-		const handleClickOutside = (e: MouseEvent) => {
-			if (
-				containerAction.current &&
-				!containerAction.current.contains(e.target as Node)
-			) {
-				setActionMenu(false);
-			}
-		};
-
-		// Fetch events every minute
-		let fetchEventsInterval = setInterval(loadEvents, 5000);
-
-		// Event listener for handle a click outside of dropdown menu
-		window.addEventListener("mousedown", handleClickOutside);
-
-		return () => {
-			window.removeEventListener("mousedown", handleClickOutside);
-			clearInterval(fetchEventsInterval);
-		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.hash]);
 
-	const toggleNavigation = () => {
-		setNavigation(!displayNavigation);
+	const onNewEventModal = async () => {
+		await Promise.all([
+			dispatch(fetchEventMetadata()),
+			dispatch(fetchAssetUploadOptions()),
+		]);
+
+		newEventModalRef.current?.open();
 	};
-
-	const handleActionMenu = (e: React.MouseEvent) => {
-		e.preventDefault();
-		setActionMenu(!displayActionMenu);
-	};
-
-	const showNewEventModal = async () => {
-		await dispatch(fetchEventMetadata());
-		await dispatch(fetchAssetUploadOptions());
-
-		setNewEventModal(true);
-	};
-
-	const hideNewEventModal = () => {
-		setNewEventModal(false);
-	};
-
-	const hideDeleteModal = () => {
-		setDeleteModal(false);
-	};
-
-	const hideStartTaskModal = () => {
-		setStartTaskModal(false);
-	};
-
-	const hideEditScheduledEventsModal = () => {
-		setEditScheduledEventsModal(false);
-	};
-
-	const hideEditMetadataEventsModal = () => {
-		setEditMetadataEventsModal(false);
-	};
-
-	useHotkeys(
-    availableHotkeys.general.NEW_EVENT.sequence,
-    () => showNewEventModal(),
-		{
-			description: t(availableHotkeys.general.NEW_EVENT.description) ?? undefined
-		},
-    [showNewEventModal]
-  );
 
 	return (
 		<>
-			<Header />
-			<NavBar>
-				{
-					/* Display modal for new event if add event button is clicked */
-					!isFetchingAssetUploadOptions && (
-						<NewResourceModal
-							showModal={displayNewEventModal}
-							handleClose={hideNewEventModal}
-							resource={"events"}
-						/>
+			<TablePage
+				resource={"events"}
+				fetchResource={fetchEvents}
+				loadResourceIntoTable={loadEventsIntoTable}
+				getTotalResources={getTotalEvents}
+				navBarLinks={eventsLinks}
+				navBarCreate={{
+					accessRole: "ROLE_UI_EVENTS_CREATE",
+					onShowModal: onNewEventModal,
+					text: "EVENTS.EVENTS.ADD_EVENT",
+					isDisplay: !isFetchingAssetUploadOptions,
+					resource: "events",
+					hotkeySequence: availableHotkeys.general.NEW_EVENT.sequence,
+					hotkeyDescription: availableHotkeys.general.NEW_EVENT.description,
+				}}
+				navBarChildren={
+					hasAccess("ROLE_UI_EVENTS_COUNTERS_VIEW", user) && (
+						<div className="stats-container">
+							<Stats />
+						</div>
 					)
 				}
+				caption={"EVENTS.EVENTS.TABLE.CAPTION"}
+				templateMap={eventsTemplateMap}
+			>
+				<TableActionDropdown
+					actions={[
+						{
+							accessRole: ["ROLE_UI_EVENTS_DELETE"],
+							handleOnClick: () => deleteModalRef.current?.open(),
+							text: "BULK_ACTIONS.DELETE.EVENTS.CAPTION",
+						},
+						{
+							accessRole: ["ROLE_UI_TASKS_CREATE"],
+							handleOnClick: () => startTaskModalRef.current?.open(),
+							text: "BULK_ACTIONS.SCHEDULE_TASK.CAPTION",
+						},
+						{
+							accessRole: ["ROLE_UI_EVENTS_DETAILS_SCHEDULING_EDIT", "ROLE_UI_EVENTS_DETAILS_METADATA_EDIT"],
+							handleOnClick: () => editScheduledEventsModalRef.current?.open(),
+							text: "BULK_ACTIONS.EDIT_EVENTS.CAPTION",
+						},
+						{
+							accessRole: ["ROLE_UI_EVENTS_DETAILS_METADATA_EDIT"],
+							handleOnClick: () => editMetadataEventsModalRef.current?.open(),
+							text: "BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION",
+						},
+					]}
+					disabled={!showActions}
+				/>
+			</TablePage>
 
-				{/* Display bulk actions modal if one is chosen from dropdown */}
-				{displayDeleteModal && <DeleteEventsModal close={hideDeleteModal} />}
+			{/* NavBar Modals */}
+			<Modal
+				header={t("BULK_ACTIONS.DELETE.EVENTS.CAPTION")}
+				classId="delete-events-status-modal"
+				ref={deleteModalRef}
+			>
+				<DeleteEventsModal close={() => deleteModalRef.current?.close?.()} />
+			</Modal>
 
-				{displayStartTaskModal && <StartTaskModal close={hideStartTaskModal} />}
+			<Modal
+				header={t("BULK_ACTIONS.SCHEDULE_TASK.CAPTION")}
+				classId=""
+				ref={startTaskModalRef}
+			>
+				<StartTaskModal close={() => startTaskModalRef.current?.close?.()} />
+			</Modal>
 
-				{displayEditScheduledEventsModal && (
-					<EditScheduledEventsModal close={hideEditScheduledEventsModal} />
-				)}
+			<Modal
+				header={t("BULK_ACTIONS.EDIT_EVENTS.CAPTION")}
+				classId=""
+				ref={editScheduledEventsModalRef}
+			>
+				<EditScheduledEventsModal close={() => editScheduledEventsModalRef.current?.close?.()} />
+			</Modal>
 
-				{displayEditMetadataEventsModal && (
-					<EditMetadataEventsModal close={hideEditMetadataEventsModal} />
-				)}
+			<Modal
+				header={t("BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION")}
+				classId=""
+				ref={editMetadataEventsModalRef}
+			>
+				<EditMetadataEventsModal close={() => editMetadataEventsModalRef.current?.close?.()} />
+			</Modal>
 
-				{/* Include Burger-button menu */}
-				<MainNav isOpen={displayNavigation} toggleMenu={toggleNavigation} />
-
-				<nav aria-label={t("EVENTS.EVENTS.NAVIGATION.LABEL")}>
-					{hasAccess("ROLE_UI_EVENTS_VIEW", user) && (
-						<Link
-							to="/events/events"
-							className={cn({ active: true })}
-							onClick={() => loadEvents()}
-						>
-							{t("EVENTS.EVENTS.NAVIGATION.EVENTS")}
-						</Link>
-					)}
-					{hasAccess("ROLE_UI_SERIES_VIEW", user) && (
-						<Link
-							to="/events/series"
-							className={cn({ active: false })}
-							onClick={() => loadSeries()}
-						>
-							{t("EVENTS.EVENTS.NAVIGATION.SERIES")}
-						</Link>
-					)}
-				</nav>
-
-				{/* Include status bar component*/}
-				{hasAccess("ROLE_UI_EVENTS_COUNTERS_VIEW", user) && (
-					<div className="stats-container">
-						<Stats />
-					</div>
-				)}
-				
-				<div className="btn-group">
-					{hasAccess("ROLE_UI_EVENTS_CREATE", user) && (
-						<button className="add" onClick={() => showNewEventModal()}>
-							<i className="fa fa-plus" />
-							<span>{t("EVENTS.EVENTS.ADD_EVENT")}</span>
-						</button>
-					)}
-				</div>
-			</NavBar>
-
-			<MainView open={displayNavigation}>
-				{/* Include notifications component */}
-				<Notifications />
-
-				<div className="controls-container">
-					<div className="filters-container">
-						<div
-							className={cn("drop-down-container", { disabled: !showActions })}
-							onClick={(e) => handleActionMenu(e)}
-							ref={containerAction}
-						>
-							<span>{t("BULK_ACTIONS.CAPTION")}</span>
-							{/* show dropdown if actions is clicked*/}
-							{displayActionMenu && (
-								<ul className="dropdown-ul">
-									{hasAccess("ROLE_UI_EVENTS_DELETE", user) && (
-										<li>
-											<button className="button-like-anchor" onClick={() => setDeleteModal(true)}>
-												{t("BULK_ACTIONS.DELETE.EVENTS.CAPTION")}
-											</button>
-										</li>
-									)}
-									{hasAccess("ROLE_UI_TASKS_CREATE", user) && (
-										<li>
-											<button className="button-like-anchor" onClick={() => setStartTaskModal(true)}>
-												{t("BULK_ACTIONS.SCHEDULE_TASK.CAPTION")}
-											</button>
-										</li>
-									)}
-									{hasAccess("ROLE_UI_EVENTS_DETAILS_SCHEDULING_EDIT", user) &&
-										hasAccess("ROLE_UI_EVENTS_DETAILS_METADATA_EDIT", user) && (
-											<li>
-												<button className="button-like-anchor" onClick={() => setEditScheduledEventsModal(true)}>
-													{t("BULK_ACTIONS.EDIT_EVENTS.CAPTION")}
-												</button>
-											</li>
-										)}
-									{hasAccess("ROLE_UI_EVENTS_DETAILS_METADATA_EDIT", user) && (
-										<li>
-											<button className="button-like-anchor" onClick={() => setEditMetadataEventsModal(true)}>
-												{t("BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION")}
-											</button>
-										</li>
-									)}
-								</ul>
-							)}
-						</div>
-
-						{/* Include filters component*/}
-						<TableFilters
-							loadResource={fetchEventsWrapper}
-							loadResourceIntoTable={loadingEventsIntoTable}
-							resource={"events"}
-						/>
-					</div>
-					<h1>{t("EVENTS.EVENTS.TABLE.CAPTION")}</h1>
-					<h4>{t("TABLE_SUMMARY", { numberOfRows: events })}</h4>
-				</div>
-				{/*Include table component*/}
-				{/* <Table templateMap={eventsTemplateMap} resourceType="events" /> */}
-        <Table templateMap={eventsTemplateMap} />
-			</MainView>
-			<Footer />
+			{/* Include table modal */}
+			{displayEventDetailsModal &&
+				<EventDetailsModal />
+			}
 		</>
 	);
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-});
-
-// Mapping actions to dispatch
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-	loadingEventsIntoTable: () => dispatch(loadEventsIntoTable()),
-	loadingSeriesIntoTable: () => dispatch(loadSeriesIntoTable()),
-	resetOffset: () => dispatch(setOffset(0)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Events);
+export default Events;

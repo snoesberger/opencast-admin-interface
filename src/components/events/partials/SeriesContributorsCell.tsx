@@ -1,17 +1,25 @@
-import React from "react";
+import { fetchSeries, Series } from "../../../slices/seriesSlice";
+import { loadSeriesIntoTable } from "../../../thunks/tableThunks";
+import MultiValueCell from "../../shared/MultiValueCell";
 
 /**
  * This component renders the contributors cells of series in the table view
  */
 const SeriesContributorsCell = ({
-    row
-}: any) => {
-// @ts-expect-error TS(7006): Parameter 'contributor' implicitly has an 'any' ty... Remove this comment to see the full error message
-	return row.contributors.map((contributor, key) => (
-		<span key={key} className="metadata-entry">
-			{contributor}
-		</span>
-	));
+	row,
+}: {
+	row: Series
+}) => {
+		return (
+		<MultiValueCell
+			resource="series"
+			values={row.contributors}
+			filterName="contributors"
+			fetchResource={fetchSeries}
+			loadResourceIntoTable={loadSeriesIntoTable}
+			tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.CONTRIBUTORS"
+		/>
+	);
 };
 
 export default SeriesContributorsCell;

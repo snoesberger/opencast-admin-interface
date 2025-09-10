@@ -1,9 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useClickOutsideField } from "../../../hooks/wizardHooks";
 import { FieldInputProps, FieldProps } from "formik";
 import { MetadataField } from "../../../slices/eventSlice";
+import ButtonLikeAnchor from "../ButtonLikeAnchor";
+import { LuCheck, LuSquarePen, LuX } from "react-icons/lu";
 
 const childRef = React.createRef<HTMLDivElement>();
 
@@ -24,11 +26,11 @@ const RenderMultiField = ({
 	showCheck?: boolean,
 }) => {
 	// Indicator if currently edit mode is activated
-	const {editMode, setEditMode} = useClickOutsideField(childRef);
+	const { editMode, setEditMode } = useClickOutsideField(childRef);
 	// Temporary storage for value user currently types in
 	const [inputValue, setInputValue] = useState("");
 
-	let fieldValue = [...field.value];
+	const fieldValue = [...field.value as string[]];
 
 	// Handle change of value user currently types in
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,34 +49,43 @@ const RenderMultiField = ({
 
 	const submitValue = (alternativeInput?: string) => {
 
-		let newInputValue = inputValue
+		let newInputValue = inputValue;
 		if (alternativeInput) {
-			newInputValue = alternativeInput
+			newInputValue = alternativeInput;
 		}
 
 		if (newInputValue !== "") {
-			// Flag if only values of collection are allowed or any value
-			if (onlyCollectionValues) {
-				// add input to formik field value if not already added and input in collection of possible values
-				if (
-					!fieldValue.find((e) => e === newInputValue) &&
-					fieldInfo.collection?.find((e) => e.value === newInputValue)
-				) {
-					fieldValue[fieldValue.length] = newInputValue;
-					form.setFieldValue(field.name, fieldValue);
-				}
+			let splitArray = [];
+			if (fieldInfo.delimiter) {
+				splitArray = newInputValue.split(fieldInfo.delimiter).map(item => item.trim()).filter(Boolean);
 			} else {
-				// add input to formik field value if not already added
-				if (!fieldValue.find((e) => e === newInputValue)) {
-					fieldValue[fieldValue.length] = newInputValue;
-					form.setFieldValue(field.name, fieldValue);
-				}
+				splitArray = [newInputValue];
 			}
+
+			for (const newInput of splitArray) {
+				// Flag if only values of collection are allowed or any value
+				if (onlyCollectionValues) {
+					// add input to formik field value if not already added and input in collection of possible values
+					if (
+						!fieldValue.find(e => e === newInput) &&
+						fieldInfo.collection?.find(e => e.value === newInput)
+					) {
+						fieldValue[fieldValue.length] = newInput;
+						form.setFieldValue(field.name, fieldValue);
+					}
+				} else {
+					// add input to formik field value if not already added
+					if (!fieldValue.find(e => e === newInput)) {
+						fieldValue[fieldValue.length] = newInput;
+						form.setFieldValue(field.name, fieldValue);
+					}
+			}
+		}
 
 			// reset inputValue
 			setInputValue("");
 		}
-	}
+	};
 
 	// Remove item/value from inserted field values
 	const removeItem = (key: number) => {
@@ -87,9 +98,9 @@ const RenderMultiField = ({
 		// (types: see metadata.json retrieved from backend)
 		editMode ? (
 			<>
-				{fieldInfo.type === "mixed_text" && !!fieldInfo.collection ? (
+				{fieldInfo.type === "mixed_text" && (
 					<EditMultiSelect
-						collection={fieldInfo.collection}
+						collection={fieldInfo.collection ? fieldInfo.collection : []}
 						field={field}
 						fieldValue={fieldValue}
 						inputValue={inputValue}
@@ -98,18 +109,6 @@ const RenderMultiField = ({
 						handleKeyDown={handleKeyDown}
 						handleBlur={submitValue}
 					/>
-				) : (
-					fieldInfo.type === "mixed_text" && (
-						<EditMultiValue
-							setEditMode={setEditMode}
-							fieldValue={fieldValue}
-							field={field}
-							inputValue={inputValue}
-							removeItem={removeItem}
-							handleChange={handleChange}
-							handleKeyDown={handleKeyDown}
-						/>
-					)
 				)}
 			</>
 		) : (
@@ -148,13 +147,13 @@ const EditMultiSelect = ({
 	// onBlur does not get called if a component unmounts for some reason
 	// Instead, we achieve the same effect with useEffect
 	const textRef = useRef(inputValue);
-	React.useEffect( () => {
+	React.useEffect(() => {
 		textRef.current = inputValue;
-	}, [inputValue])
-	React.useEffect( () => {
-		return () => handleBlur(textRef.current)
+	}, [inputValue]);
+	React.useEffect(() => {
+		return () => handleBlur(textRef.current);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, []);
 
 	return (
 		<>
@@ -164,8 +163,8 @@ const EditMultiSelect = ({
 						type="text"
 						name={field.name}
 						value={inputValue}
-						onKeyDown={(e) => handleKeyDown(e)}
-						onChange={(e) => handleChange(e)}
+						onKeyDown={e => handleKeyDown(e)}
+						onChange={e => handleChange(e)}
 						placeholder={t("EDITABLE.MULTI.PLACEHOLDER")}
 						list="data-list"
 						autoFocus={true}
@@ -173,7 +172,7 @@ const EditMultiSelect = ({
 					{/* Display possible options for values as some kind of dropdown */}
 					<datalist id="data-list">
 						{collection.map((item, key) => (
-							<option key={key}>{item.value}</option>
+							<option key={key}>{item.value as ReactNode}</option>
 						))}
 					</datalist>
 				</div>
@@ -183,58 +182,14 @@ const EditMultiSelect = ({
 					fieldValue.map((item, key) => (
 						<span className="ng-multi-value" key={key}>
 							{item}
-							<button className="button-like-anchor" onClick={() => removeItem(key)}>
-								<i className="fa fa-times" />
-							</button>
+							<ButtonLikeAnchor
+								onClick={() => removeItem(key)}
+							>
+								<LuX style={{ verticalAlign: "middle" }}/>
+							</ButtonLikeAnchor>
 						</span>
 					))}
 			</div>
-		</>
-	);
-};
-
-// Renders editable field input for multiple values
-const EditMultiValue = ({
-	setEditMode,
-	inputValue,
-	removeItem,
-	handleChange,
-	handleKeyDown,
-	field,
-	fieldValue,
-}: {
-	setEditMode: (e: boolean) => void
-	inputValue: HTMLInputElement["value"]
-	removeItem: (key: number) => void
-	handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-	handleKeyDown: (event: React.KeyboardEvent) => void
-	field: FieldProps["field"]
-	fieldValue: FieldInputProps<unknown>["value"]
-}) => {
-	const { t } = useTranslation();
-
-	return (
-		<>
-			<div onBlur={() => setEditMode(false)} ref={childRef}>
-				<input
-					type="text"
-					name={field.name}
-					onKeyDown={(e) => handleKeyDown(e)}
-					onChange={(e) => handleChange(e)}
-					value={inputValue}
-					placeholder={t("EDITABLE.MULTI.PLACEHOLDER")}
-				/>
-			</div>
-			{fieldValue instanceof Array &&
-				fieldValue.length !== 0 &&
-				fieldValue.map((item, key) => (
-					<span className="ng-multi-value" key={key}>
-						{item}
-						<button className="button-like-anchor" onClick={() => removeItem(key)}>
-							<i className="fa fa-times" />
-						</button>
-					</span>
-				))}
 		</>
 	);
 };
@@ -249,7 +204,7 @@ const ShowValue = ({
   setEditMode: (e: boolean) => void
 	form: FieldProps["form"]
 	field: FieldProps["field"]
-	showCheck: any,
+	showCheck: boolean,
 }) => {
 	return (
 		<div onClick={() => setEditMode(true)} className="show-edit">
@@ -265,12 +220,14 @@ const ShowValue = ({
 				<span className="editable preserve-newlines">{""}</span>
 			)}
 			<div>
-				<i className="edit fa fa-pencil-square" />
+				<LuSquarePen style={{ float: "right", cursor: "pointer", margin: "5px", fontSize: "14px" }}/>
 				{showCheck && (
-					<i
-						className={cn("saved fa fa-check", {
+					<LuCheck
+						className={cn("fa-check", {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: JSON.stringify(initialValues[field.name] ?? []) !== JSON.stringify(field.value ?? []),
 						})}
+						style={{ float: "right", cursor: "pointer" }}
 					/>
 				)}
 			</div>

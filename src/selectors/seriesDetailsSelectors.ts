@@ -6,10 +6,19 @@ import { RootState } from "../store";
 export const getSeriesDetailsMetadata = (state: RootState) => state.seriesDetails.metadata;
 export const getSeriesDetailsExtendedMetadata = (state: RootState) => state.seriesDetails.extendedMetadata;
 export const getSeriesDetailsAcl = (state: RootState) => state.seriesDetails.acl;
-export const getSeriesDetailsFeeds = (state: RootState) => state.seriesDetails.feeds;
+export const getPolicyTemplateId = (state: RootState) => state.seriesDetails.policyTemplateId;
 export const getSeriesDetailsTheme = (state: RootState) => state.seriesDetails.theme;
 export const getSeriesDetailsThemeNames = (state: RootState) =>
 	state.seriesDetails.themeNames;
+
+export const getSeriesDetailsTobiraData = (state: RootState) =>
+	state.seriesDetails.tobiraData;
+export const getSeriesDetailsTobiraStatus = (state: RootState) =>
+	state.seriesDetails.statusTobiraData;
+export const getSeriesDetailsTobiraDataError = (state: RootState) =>
+	state.seriesDetails.errorTobiraData;
+export const getTobiraTabHierarchy = (state: RootState) =>
+	state.seriesDetails.tobiraTab;
 
 /* selectors for statistics */
 export const hasStatistics = (state: RootState) =>

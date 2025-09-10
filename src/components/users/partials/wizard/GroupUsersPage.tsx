@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SelectContainer from "../../../shared/wizard/SelectContainer";
 import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import { fetchUsersAndUsernames } from "../../../../slices/userSlice";
 import { FormikProps } from "formik";
+import ModalContent from "../../../shared/modals/ModalContent";
 
 /**
  * This component renders the user selection page of the new group wizard and group details wizard
  */
-const GroupUsersPage = <T,>({
+const GroupUsersPage = <T, >({
 	formik,
 	nextPage,
 	previousPage,
-	isEdit
+	isEdit,
 }: {
 	formik: FormikProps<T>,
 	nextPage?: (values: T) => void,
@@ -19,7 +20,7 @@ const GroupUsersPage = <T,>({
 	isEdit?: boolean,
 }) => {
 	// users that can be chosen by user
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useState<{ id: string, name: string }[]>([]);
 	// flag for API call
 	const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,7 @@ const GroupUsersPage = <T,>({
 			setLoading(true);
 			const responseUsers = await fetchUsersAndUsernames();
 
-			let userNames = [];
+			const userNames = [];
 			for (let i = 0; i < responseUsers.length; i++) {
 				userNames.push({
 					id: responseUsers[i].id,
@@ -37,7 +38,6 @@ const GroupUsersPage = <T,>({
 				});
 			}
 
-// @ts-expect-error TS(2345): Argument of type '{ id: string; name: any; }[]' is... Remove this comment to see the full error message
 			setUsers(userNames);
 			setLoading(false);
 		}
@@ -47,23 +47,21 @@ const GroupUsersPage = <T,>({
 
 	return (
 		<>
-			<div className="modal-content">
-				<div className="modal-body">
-					<div className="form-container">
-						{/*Select container for roles*/}
-						{!loading && (
-							<SelectContainer
-								resource={{
-									searchable: true,
-									label: "USERS.GROUPS.DETAILS.USERS",
-									items: users,
-								}}
-								formikField="users"
-							/>
-						)}
-					</div>
+			<ModalContent>
+				<div className="form-container">
+					{/* Select container for roles*/}
+					{!loading && (
+						<SelectContainer
+							resource={{
+								searchable: true,
+								label: "USERS.GROUPS.DETAILS.USERS",
+								items: users,
+							}}
+							formikField="users"
+						/>
+					)}
 				</div>
-			</div>
+			</ModalContent>
 
 			{/* Button for navigation to next page */}
 			{!isEdit && (

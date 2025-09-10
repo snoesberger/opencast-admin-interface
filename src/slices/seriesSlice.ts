@@ -1,26 +1,35 @@
-import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit'
-import { seriesTableConfig } from '../configs/tableConfigs/seriesTableConfig';
-import axios from 'axios';
+import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
+import { seriesTableConfig } from "../configs/tableConfigs/seriesTableConfig";
+import axios, { AxiosError } from "axios";
 import {
 	getURLParams,
 	prepareAccessPolicyRulesForPost,
-	prepareSeriesExtendedMetadataFieldsForPost,
-	prepareSeriesMetadataFieldsForPost,
+	prepareMetadataFieldsForPost,
 	transformMetadataCollection,
 } from "../utils/resourceUtils";
 import {
 	transformToIdValueArray,
-	transformToObjectArray,
 } from "../utils/utils";
-import { addNotification } from './notificationSlice';
-import { TableConfig } from '../configs/tableConfigs/aclsTableConfig';
-import { TransformedAcls } from './aclDetailsSlice';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
+import { addNotification } from "./notificationSlice";
+import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
+import { TransformedAcl } from "./aclDetailsSlice";
+import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
+import { MetadataCatalog } from "./eventSlice";
+import { handleTobiraError } from "./shared/tobiraErrors";
+import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of series
  */
-type Series = {
+type FetchSeries = {
+	total: SeriesState["total"],
+	count: SeriesState["count"],
+	limit: SeriesState["limit"],
+	offset: SeriesState["offset"],
+	results: SeriesState["results"],
+};
+
+export type Series = {
 	contributors: string[],
 	createdBy?: string,
 	creation_date?: string,
@@ -33,62 +42,66 @@ type Series = {
 	title: string,
 }
 
-type MetadataCatalog = {
-	title: string,
-	flavor: string,
-	fields: {
-		collection?: {}[],	// different for e.g. languages and presenters
-		id: string,
-		label: string,
-		readOnly: boolean,
-		required: boolean,
-		translatable?: boolean,
-		type: string,
-		value: string | string[],
-	}[]
-}
-
 type Theme = {
 	description: string,
 	id: string,
 	name: string,
 }
 
+export interface TobiraPage {
+	title?: string,
+	path: string,
+	segment: string,
+	children: TobiraPage[],
+	ancestors: TobiraPage[]
+
+	subpages?: string,  // not returned by endpoint
+	new?: boolean,      // not returned by endpoint
+	blocks: {
+		id: string,
+	}[],
+}
+
 type SeriesState = {
-	status: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	status: "uninitialized" | "loading" | "succeeded" | "failed",
 	error: SerializedError | null,
-	statusMetadata: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	statusMetadata: "uninitialized" | "loading" | "succeeded" | "failed",
 	errorMetadata: SerializedError | null,
-	statusThemes: 'uninitialized' | 'loading' | 'succeeded' | 'failed',
+	statusThemes: "uninitialized" | "loading" | "succeeded" | "failed",
 	errorThemes: SerializedError | null,
+	statusTobiraPage: "uninitialized" | "loading" | "succeeded" | "failed",
+	errorTobiraPage: SerializedError | null,
 	results: Series[],
 	columns: TableConfig["columns"],
-  showActions: boolean,
+	showActions: boolean,
 	total: number,
 	count: number,
 	offset: number,
 	limit: number,
-  metadata: MetadataCatalog,
+	metadata: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[],
 	themes: Theme[],
 	deletionAllowed: boolean,
 	hasEvents: boolean,
+	tobiraPage: TobiraPage,
 }
 
 // Fill columns initially with columns defined in seriesTableConfig
-const initialColumns = seriesTableConfig.columns.map((column) => ({
+const initialColumns = seriesTableConfig.columns.map(column => ({
 	...column,
 	deactivated: false,
 }));
 
 // Initial state of series in redux store
 const initialState: SeriesState = {
-	status: 'uninitialized',
+	status: "uninitialized",
 	error: null,
-	statusMetadata: 'uninitialized',
+	statusMetadata: "uninitialized",
 	errorMetadata: null,
-	statusThemes: 'uninitialized',
+	statusThemes: "uninitialized",
 	errorThemes: null,
+	statusTobiraPage: "uninitialized",
+	errorTobiraPage: null,
 	results: [],
 	columns: initialColumns,
 	showActions: false,
@@ -105,57 +118,74 @@ const initialState: SeriesState = {
 	themes: [],
 	deletionAllowed: true,
 	hasEvents: false,
+	tobiraPage: {
+		title: undefined,
+		path: "/",
+		segment: "",
+		children: [],
+		ancestors: [],
+		blocks: [],
+	},
 };
 
 // fetch series from server
-export const fetchSeries = createAppAsyncThunk('series/fetchSeries', async (_, { getState }) => {
+export const fetchSeries = createAppAsyncThunk("series/fetchSeries", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state);
+	const params = getURLParams(state, "series");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	// /series.json?sortorganizer={sortorganizer}&sort={sort}&filter={filter}&offset=0&limit=100
-	const res = await axios.get("/admin-ng/series/series.json", { params: params });
+	const res = await axios.get<FetchSeries>("/admin-ng/series/series.json", { params: params });
 	return res.data;
 });
 
 // fetch series metadata from server
-export const fetchSeriesMetadata = createAppAsyncThunk('series/fetchSeriesMetadata', async () => {
-	const res = await axios.get("/admin-ng/series/new/metadata");
-	const data = await res.data;
+export const fetchSeriesMetadata = createAppAsyncThunk("series/fetchSeriesMetadata", async (_, { rejectWithValue }) => {
+	const res = await axios.get<MetadataCatalog[]>("/admin-ng/series/new/metadata");
+	const data = res.data;
 
 	const mainCatalog = "dublincore/series";
-	let metadata: any = {};
+	let metadata: SeriesState["metadata"] | undefined = undefined;
 	const extendedMetadata = [];
 
 	for (const metadataCatalog of data) {
 		if (metadataCatalog.flavor === mainCatalog) {
-// @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
 			metadata = transformMetadataCollection({ ...metadataCatalog });
 		} else {
 			extendedMetadata.push(
-// @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-				transformMetadataCollection({ ...metadataCatalog })
+				transformMetadataCollection({ ...metadataCatalog }),
 			);
 		}
 	}
 
-	return { metadata, extendedMetadata }
+	if (!metadata) {
+		console.error("Main metadata catalog is missing");
+		return rejectWithValue("Main metadata catalog is missing");
+	}
+
+	return { metadata, extendedMetadata };
 });
 
 // fetch series themes from server
-export const fetchSeriesThemes = createAppAsyncThunk('series/fetchSeriesThemes', async () => {
-	let res = await axios.get("/admin-ng/series/new/themes");
-	const data = await res.data;
-	const themes = transformToObjectArray(data);
+export const fetchSeriesThemes = createAppAsyncThunk("series/fetchSeriesThemes", async () => {
+	const res = await axios.get("/admin-ng/series/new/themes");
+	const data = await res.data as { [key: string]: { name: string, description: string } };
+	// Transform object of objects to array of objects
+	const themes = Object.keys(data).map(key => {
+		return {
+			id: key,
+			...data[key],
+		};
+	});
 	return themes;
 });
 
 // post new series to backend
-export const postNewSeries = createAppAsyncThunk('series/postNewSeries', async (params: {
+export const postNewSeries = (params: {
 	values: {
 		[key: string]: any;
-		acls: TransformedAcls,
+		policies: TransformedAcl[],
 		// contributor: string[],
 		// creator: string[],
 		// description: string,
@@ -166,54 +196,76 @@ export const postNewSeries = createAppAsyncThunk('series/postNewSeries', async (
 		// subject: string,
 		theme: string,
 		// title: string,
+		selectedPage?: TobiraPage,
+		breadcrumbs?: TobiraPage[],
 	},
 	metadataInfo: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[]
-}, {dispatch}) => {
-	const { values, metadataInfo, extendedMetadata } = params
-
-	let metadataFields, extendedMetadataFields, metadata, access;
+}): AppThunk => dispatch => {
+	const { values, metadataInfo, extendedMetadata } = params;
 
 	// prepare metadata provided by user
-	metadataFields = prepareSeriesMetadataFieldsForPost(
-		metadataInfo.fields,
-		values
+	const metadata = prepareMetadataFieldsForPost(
+		[metadataInfo],
+		values,
 	);
-	extendedMetadataFields = prepareSeriesExtendedMetadataFieldsForPost(
+	const extendedMetadataCatalogs = prepareMetadataFieldsForPost(
 		extendedMetadata,
-		values
+		values,
 	);
 
 	// metadata for post request
-	metadata = [
-		{
-			flavor: metadataInfo.flavor,
-			title: metadataInfo.title,
-			fields: metadataFields,
-		},
-	];
-
-	for (const entry of extendedMetadataFields) {
+	for (const entry of extendedMetadataCatalogs) {
 		metadata.push(entry);
 	}
 
-	access = prepareAccessPolicyRulesForPost(values.acls);
+	const access = prepareAccessPolicyRulesForPost(values.policies);
 
-	let jsonData = {
+	// Tobira
+	const tobira: any = {};
+	if (values.selectedPage && values.breadcrumbs) {
+		const existingPages: any[] = [];
+		const newPages: any[] = [];
+		values.breadcrumbs.concat(values.selectedPage).forEach(function (page: TobiraPage) {
+			if (page.new) {
+				newPages.push({
+					name: page.title,
+					pathSegment: page.segment,
+				});
+			} else {
+				existingPages.push(page);
+			}
+		});
+
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+		tobira["parentPagePath"] = existingPages.pop().path;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		tobira["newPages"] = newPages;
+	}
+
+
+	let jsonData: {
+		metadata: typeof metadata,
+		options: unknown,
+		access: typeof access,
+		theme?: number,
+		tobira?: any
+	} = {
 		metadata: metadata,
 		options: {},
 		access: access,
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		tobira: tobira,
 	};
 
 	if (values.theme !== "") {
 		jsonData = {
 			...jsonData,
-// @ts-expect-error TS(2322): Type '{ theme: number; metadata: { flavor: any; ti... Remove this comment to see the full error message
 			theme: parseInt(values.theme),
 		};
 	}
 
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("metadata", JSON.stringify(jsonData));
 
 	// Todo: process bar notification
@@ -223,55 +275,55 @@ export const postNewSeries = createAppAsyncThunk('series/postNewSeries', async (
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
 		})
-		.then((response) => {
+		.then(response => {
 			console.info(response);
-			dispatch(addNotification({type: "success", key: "SERIES_ADDED"}));
+			dispatch(addNotification({ type: "success", key: "SERIES_ADDED" }));
 		})
-		.catch((response) => {
+		.catch(response => {
 			console.error(response);
-			dispatch(addNotification({type: "error", key: "SERIES_NOT_SAVED"}));
+			dispatch(addNotification({ type: "error", key: "SERIES_NOT_SAVED" }));
 		});
-});
+};
 
 // check for events of the series and if deleting the series if it has events is allowed
-export const checkForEventsDeleteSeriesModal = createAppAsyncThunk('series/checkForEventsDeleteSeriesModal', async (id: string, {dispatch}) => {
-	const hasEventsRequest = await axios.get(
-		`/admin-ng/series/${id}/hasEvents.json`
+export const checkForEventsDeleteSeriesModal = createAppAsyncThunk("series/checkForEventsDeleteSeriesModal", async (id: Series["id"], { dispatch }) => {
+	const hasEventsRequest = await axios.get<{ hasEvents: boolean }>(
+		`/admin-ng/series/${id}/hasEvents.json`,
 	);
-	const hasEventsResponse = await hasEventsRequest.data;
+	const hasEventsResponse = hasEventsRequest.data;
 	const hasEvents = hasEventsResponse.hasEvents;
 
-	const deleteWithEventsAllowedRequest = await axios.get(
-		"/admin-ng/series/configuration.json"
+	const deleteWithEventsAllowedRequest = await axios.get<{ deleteSeriesWithEventsAllowed: boolean }>(
+		"/admin-ng/series/configuration.json",
 	);
-	const deleteWithEventsAllowedResponse = await deleteWithEventsAllowedRequest.data;
+	const deleteWithEventsAllowedResponse = deleteWithEventsAllowedRequest.data;
 	const deleteWithEventsAllowed =
 		deleteWithEventsAllowedResponse.deleteSeriesWithEventsAllowed;
 
 	dispatch(
-		setSeriesDeletionAllowed({ deletionAllowed: !hasEvents || deleteWithEventsAllowed, hasEvents: hasEvents })
+		setSeriesDeletionAllowed({ deletionAllowed: !hasEvents || deleteWithEventsAllowed, hasEvents: hasEvents }),
 	);
 });
 
-// delete series with provided id
-export const deleteSeries = createAppAsyncThunk('series/deleteSeries', async (id: string, {dispatch}) => {
+// delete series with provided
+export const deleteSeries = (id: Series["id"]): AppThunk => dispatch => {
 	// API call for deleting a series
 	axios
 		.delete(`/admin-ng/series/${id}`)
-		.then((res) => {
+		.then(res => {
 			console.info(res);
 			// add success notification
-			dispatch(addNotification({type: "success", key: "SERIES_DELETED"}));
+			dispatch(addNotification({ type: "success", key: "SERIES_DELETED" }));
 		})
-		.catch((res) => {
+		.catch(res => {
 			console.error(res);
 			// add error notification
-			dispatch(addNotification({type: "error", key: "SERIES_NOT_DELETED"}));
+			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});
-});
+};
 
 // delete series with provided ids
-export const deleteMultipleSeries = createAppAsyncThunk('series/deleteMultipleSeries', async (
+export const deleteMultipleSeries = (
 	series: {
 		contributors: string[],
 		createdBy: string,
@@ -282,8 +334,8 @@ export const deleteMultipleSeries = createAppAsyncThunk('series/deleteMultipleSe
 		selected: boolean,
 		title: string,
 	}[],
-{dispatch}) => {
-	let data = [];
+): AppThunk => dispatch => {
+	const data = [];
 
 	for (let i = 0; i < series.length; i++) {
 		if (series[i].selected) {
@@ -293,23 +345,36 @@ export const deleteMultipleSeries = createAppAsyncThunk('series/deleteMultipleSe
 
 	axios
 		.post("/admin-ng/series/deleteSeries", data)
-		.then((res) => {
+		.then(res => {
 			console.info(res);
-			//add success notification
-			dispatch(addNotification({type: "success", key: "SERIES_DELETED"}));
+			// add success notification
+			dispatch(addNotification({ type: "success", key: "SERIES_DELETED" }));
 		})
-		.catch((res) => {
-			console.error(res);
-			//add error notification
-			dispatch(addNotification({type: "error", key: "SERIES_NOT_DELETED"}));
+		.catch((error: AxiosError) => {
+			console.error(error);
+			// add error notification
+			dispatch(addNotification({ type: "error", key: "SERIES_NOT_DELETED" }));
 		});
+};
+
+// fetch metadata of certain series from server
+export const fetchSeriesDetailsTobiraNew = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsTobiraNew", async (path: TobiraPage["path"], { dispatch }) => {
+	const res = await axios.get<TobiraPage>("/admin-ng/series/new/tobira/page?path=" + path)
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
+
+	if (!res) {
+		throw new Error();
+	}
+
+	const data = res.data;
+	return data;
 });
 
 // Get names and ids of selectable series
 export const fetchSeriesOptions = async () => {
-	let data = await axios.get("/admin-ng/resources/SERIES.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/SERIES.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	const seriesCollection = [];
 	for (const series of transformToIdValueArray(response)) {
@@ -320,23 +385,23 @@ export const fetchSeriesOptions = async () => {
 };
 
 // Check if a series has events
-export const hasEvents = async (seriesId: string) => {
-	let data = await axios.get(`/admin-ng/series/${seriesId}/hasEvents.json`);
+export const hasEvents = async (seriesId: Series["id"]) => {
+	const data = await axios.get<{ hasEvents: boolean }>(`/admin-ng/series/${seriesId}/hasEvents.json`);
 
-	return (await data.data).hasEvents;
+	return (data.data).hasEvents;
 };
 
 // Get series configuration and flag indicating if series with events is allowed to delete
 export const getSeriesConfig = async () => {
-	let data = await axios.get("/admin-ng/series/configuration.json");
+	const data = await axios.get<{ deleteSeriesWithEventsAllowed: boolean }>("/admin-ng/series/configuration.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return !!response.deleteSeriesWithEventsAllowed;
 };
 
 const seriesSlice = createSlice({
-	name: 'series',
+	name: "series",
 	initialState,
 	reducers: {
 		setSeriesColumns(state, action: PayloadAction<
@@ -356,21 +421,25 @@ const seriesSlice = createSlice({
 			state.deletionAllowed = action.payload.deletionAllowed;
 			state.hasEvents = action.payload.hasEvents;
 		},
+		setTobiraPage(state, action: PayloadAction<
+			SeriesState["tobiraPage"]
+		>) {
+			state.tobiraPage = action.payload;
+		},
+		setErrorTobiraPage(state, action: PayloadAction<
+			SeriesState["errorTobiraPage"]
+		>) {
+			state.errorTobiraPage = action.payload;
+		},
 	},
 	// These are used for thunks
 	extraReducers: builder => {
 		builder
-			.addCase(fetchSeries.pending, (state) => {
-				state.status = 'loading';
+			.addCase(fetchSeries.pending, state => {
+				state.status = "loading";
 			})
-			.addCase(fetchSeries.fulfilled, (state, action: PayloadAction<{
-				total: SeriesState["total"],
-				count: SeriesState["count"],
-				limit: SeriesState["limit"],
-				offset: SeriesState["offset"],
-				results: SeriesState["results"],
-			}>) => {
-				state.status = 'succeeded';
+			.addCase(fetchSeries.fulfilled, (state, action: PayloadAction<FetchSeries>) => {
+				state.status = "succeeded";
 				const series = action.payload;
 				state.total = series.total;
 				state.count = series.count;
@@ -379,47 +448,62 @@ const seriesSlice = createSlice({
 				state.results = series.results;
 			})
 			.addCase(fetchSeries.rejected, (state, action) => {
-				state.status = 'failed';
+				state.status = "failed";
 				state.error = action.error;
 			})
-			.addCase(fetchSeriesMetadata.pending, (state) => {
-				state.statusMetadata = 'loading';
+			.addCase(fetchSeriesMetadata.pending, state => {
+				state.statusMetadata = "loading";
 			})
 			.addCase(fetchSeriesMetadata.fulfilled, (state, action: PayloadAction<{
 				metadata: SeriesState["metadata"],
 				extendedMetadata: SeriesState["extendedMetadata"],
 			}>) => {
-				state.statusMetadata = 'succeeded';
+				state.statusMetadata = "succeeded";
 				const seriesMetadata = action.payload;
 				state.metadata = seriesMetadata.metadata;
 				state.extendedMetadata = seriesMetadata.extendedMetadata;
 			})
 			.addCase(fetchSeriesMetadata.rejected, (state, action) => {
-				state.statusMetadata = 'failed';
+				state.statusMetadata = "failed";
 				state.extendedMetadata = [];
 				state.errorMetadata = action.error;
 			})
-			.addCase(fetchSeriesThemes.pending, (state) => {
-				state.statusThemes = 'loading';
+			.addCase(fetchSeriesThemes.pending, state => {
+				state.statusThemes = "loading";
 			})
 			.addCase(fetchSeriesThemes.fulfilled, (state, action: PayloadAction<
 				SeriesState["themes"]
 			>) => {
-				state.statusThemes = 'succeeded';
+				state.statusThemes = "succeeded";
 				const seriesThemes = action.payload;
 				state.themes = seriesThemes;
 			})
 			.addCase(fetchSeriesThemes.rejected, (state, action) => {
-				state.statusThemes = 'failed';
+				state.statusThemes = "failed";
 				state.errorThemes = action.error;
+			})
+			.addCase(fetchSeriesDetailsTobiraNew.pending, state => {
+				state.statusTobiraPage = "loading";
+			})
+			.addCase(fetchSeriesDetailsTobiraNew.fulfilled, (state, action: PayloadAction<
+				SeriesState["tobiraPage"]
+			>) => {
+				state.statusTobiraPage = "succeeded";
+				state.tobiraPage = action.payload;
+			})
+			.addCase(fetchSeriesDetailsTobiraNew.rejected, (state, action) => {
+				state.statusTobiraPage = "failed";
+				state.errorTobiraPage = action.error;
 			});
-	}
+	},
 });
 
 export const {
 	setSeriesColumns,
 	showActionsSeries,
 	setSeriesDeletionAllowed,
+	setTobiraPage,
+	setErrorTobiraPage,
 } = seriesSlice.actions;
 
 // Export the slice reducer as the default export

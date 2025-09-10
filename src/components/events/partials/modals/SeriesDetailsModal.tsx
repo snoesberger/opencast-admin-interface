@@ -1,60 +1,60 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SeriesDetails from "./SeriesDetails";
-import { useHotkeys } from "react-hotkeys-hook";
-import { availableHotkeys } from "../../../../configs/hotkeysConfig";
+import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
+import { useAppDispatch } from "../../../../store";
+import { Modal, ModalHandle } from "../../../shared/modals/Modal";
+import { confirmUnsaved } from "../../../../utils/utils";
+import { FormikProps } from "formik";
 
 /**
  * This component renders the modal for displaying series details
  */
 const SeriesDetailsModal = ({
-    handleClose,
-    seriesTitle,
-    seriesId
-}: any) => {
+	seriesTitle,
+	seriesId,
+	modalRef,
+}: {
+	seriesTitle: string
+	seriesId: string
+	modalRef: React.RefObject<ModalHandle | null>
+}) => {
 	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
 
 	// tracks, whether the policies are different to the initial value
 	const [policyChanged, setPolicyChanged] = useState(false);
-
-	const confirmUnsaved = () => {
-		return window.confirm(t("CONFIRMATIONS.WARNINGS.UNSAVED_CHANGES"));
-	};
+	const formikRef = useRef<FormikProps<any>>(null);
 
 	const close = () => {
-		if (!policyChanged || confirmUnsaved()) {
-			setPolicyChanged(false);
-			handleClose();
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
 		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
+			setPolicyChanged(false);
+			dispatch(removeNotificationWizardForm());
+			return true;
+		}
+		return false;
 	};
 
-	useHotkeys(
-		availableHotkeys.general.CLOSE_MODAL.sequence,
-		() => close(),
-		{ description: t(availableHotkeys.general.CLOSE_MODAL.description) ?? undefined },
-		[close],
-  	);
-
-	// todo: add hotkeys
 	return (
-		<>
-			<div className="modal-animation modal-overlay" />
-			<section className="modal modal-animation" id="series-details-modal">
-				<header>
-					<button className="button-like-anchor fa fa-times close-modal" onClick={() => close()} />
-					<h2>
-						{t("EVENTS.SERIES.DETAILS.HEADER", { resourceId: seriesTitle })}
-					</h2>
-				</header>
-
-				<SeriesDetails
-					seriesId={seriesId}
-					policyChanged={policyChanged}
-// @ts-expect-error TS(7006): Parameter 'value' implicitly has an 'any' type.
-					setPolicyChanged={(value) => setPolicyChanged(value)}
-				/>
-			</section>
-		</>
+		<Modal
+			closeCallback={close}
+			header={t("EVENTS.SERIES.DETAILS.HEADER", { name: seriesTitle })}
+			classId="details-modal"
+			ref={modalRef}
+		>
+			<SeriesDetails
+				seriesId={seriesId}
+				policyChanged={policyChanged}
+				setPolicyChanged={value => setPolicyChanged(value)}
+				formikRef={formikRef}
+			/>
+		</Modal>
 	);
 };
 

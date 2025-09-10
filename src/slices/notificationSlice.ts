@@ -1,7 +1,8 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
 	NOTIFICATION_CONTEXT,
 	NOTIFICATION_CONTEXT_ACCESS,
+	NOTIFICATION_CONTEXT_TOBIRA,
 } from "../configs/modalConfig";
 import {
 	ADMIN_NOTIFICATION_DURATION_ERROR,
@@ -9,20 +10,21 @@ import {
 	ADMIN_NOTIFICATION_DURATION_SUCCESS,
 	ADMIN_NOTIFICATION_DURATION_WARNING,
 } from "../configs/generalConfig";
-import { getLastAddedNotification } from '../selectors/notificationSelector';
-import { createAppAsyncThunk } from '../createAsyncThunkWithTypes';
+import { getLastAddedNotification } from "../selectors/notificationSelector";
+import { ParseKeys } from "i18next";
+import { AppThunk } from "../store";
 
 /**
  * This file contains redux reducer for actions affecting the state of table
  */
 // Calling this "OurNotification" because "Notification" is reserved by the Notifications Web API
 export type OurNotification = {
-	message: string,
+	message: ParseKeys,
 	id: number,
 	hidden: boolean,
-	duration: number,		// in milliseconds. -1 means stay forever
+	duration: number,  // in milliseconds. -1 means stay forever
 	type: "error" | "success" | "warning" | "info",
-	parameter: any,
+	parameter?: { [key: string]: unknown },
 	key: string,
 	context: string
 }
@@ -42,15 +44,28 @@ const initialState: NotificationState = {
 // Counter for id of notifications
 let nextNotificationId = 0;
 
-export const addNotification = createAppAsyncThunk('notifications/addNotification', async (params: {
+export const addNotification = (params: {
 	type: OurNotification["type"],
 	key: OurNotification["key"],
 	duration?: OurNotification["duration"],
 	parameter?: OurNotification["parameter"],
 	context?: OurNotification["context"],
 	id?: OurNotification["id"]
-}, {dispatch, getState}) => {
-	let { type, key, duration, parameter, context, id } = params
+	noDuplicates?: boolean,   // Do not add this notification if one with the same key already exists (in the same context)
+}): AppThunk => (dispatch, getState) => {
+	let { duration, parameter, context } = params;
+	const { type, key, id, noDuplicates } = params;
+
+	if (noDuplicates) {
+		const state = getState();
+		for (const notif of state.notifications.notifications) {
+			if (notif.key === key && notif.context === context) {
+				console.log("Did not add notification with key " + key + " because a notification with that key already exists.");
+				return;
+			}
+		}
+	}
+
 	if (!duration) {
 		// fall back to defaults
 		switch (type) {
@@ -69,7 +84,9 @@ export const addNotification = createAppAsyncThunk('notifications/addNotificatio
 		}
 	}
 	// default durations are in seconds. duration needs to be in milliseconds
-	if (duration > 0) duration *= 1000;
+	if (duration > 0) {
+		duration *= 1000;
+	}
 
 	if (!context) {
 		context = "global";
@@ -81,24 +98,24 @@ export const addNotification = createAppAsyncThunk('notifications/addNotificatio
 
 	// Create new notification
 	const notification = {
-		id: 0,		// value does not matter, id is set in action
+		id: 0,  // value does not matter, id is set in action
 		type: type,
 		key: key,
-		message: "NOTIFICATIONS." + key,
+		message: "NOTIFICATIONS." + key as ParseKeys,
 		parameter: parameter,
 		duration: duration,
 		hidden: false,
 		context: context,
 	};
-	var dispatchedNotification;
+	let dispatchedNotification;
 	if (!id) {
-		dispatchedNotification = dispatch(createNotification({notification: notification, id: nextNotificationId++}));
+		dispatchedNotification = dispatch(createNotification({ notification: notification, id: nextNotificationId++ }));
 	} else {
-		dispatchedNotification = dispatch(createNotification({notification: notification, id: id}));
+		dispatchedNotification = dispatch(createNotification({ notification: notification, id: id }));
 	}
 
 	// Get newly created notification and its id
-	let latestNotification = getLastAddedNotification(getState());
+	const latestNotification = getLastAddedNotification(getState());
 
 	// Fade out notification if it is not -1 -> -1 means 'stay forever'
 	// Start timeout for fading out after time in duration is over
@@ -108,16 +125,16 @@ export const addNotification = createAppAsyncThunk('notifications/addNotificatio
 	) {
 		setTimeout(
 			() => dispatch(removeNotification(latestNotification.id)),
-			latestNotification.duration
+			latestNotification.duration,
 		);
 	}
 
 	return dispatchedNotification.payload.id;
-});
+};
 
 // Reducer for notifications
 const notificationSlice = createSlice({
-	name: 'notifications',
+	name: "notifications",
 	initialState,
 	reducers: {
 		createNotification(state, action: PayloadAction<{
@@ -126,8 +143,8 @@ const notificationSlice = createSlice({
 		}>) {
 			const { notification, id } = action.payload;
 			if (state.notifications.filter(e => e.id === id).length > 0) {
-				console.log("Notification with id: " + id + " already exists.")
-				state.notifications = state.notifications.map((oldNotification) => {
+				console.log("Notification with id: " + id + " already exists.");
+				state.notifications = state.notifications.map(oldNotification => {
 					if (oldNotification.id === id) {
 						return {
 							...notification,
@@ -135,7 +152,7 @@ const notificationSlice = createSlice({
 						};
 					}
 					return oldNotification;
-				})
+				});
 			} else {
 				state.notifications = [
 					...state.notifications,
@@ -149,7 +166,7 @@ const notificationSlice = createSlice({
 						parameter: notification.parameter,
 						context: notification.context,
 					},
-				]
+				];
 			}
 		},
 		removeNotification(state, action: PayloadAction<
@@ -157,25 +174,39 @@ const notificationSlice = createSlice({
 		>) {
 			const idToRemove = action.payload;
 			state.notifications = state.notifications.filter(
-				(notification) => notification.id !== idToRemove
-			)
+				notification => notification.id !== idToRemove,
+			);
+		},
+		removeNotificationByKey(state, action: PayloadAction<{
+			key: OurNotification["key"],
+			context: OurNotification["context"],
+		}>) {
+			const { key, context } = action.payload;
+			state.notifications = state.notifications.filter(
+				notification => notification.key !== key || notification.context !== context,
+			);
 		},
 		removeNotificationWizardForm(state) {
 			state.notifications = state.notifications.filter(
-				(notification) => notification.context !== NOTIFICATION_CONTEXT
-			)
+				notification => notification.context !== NOTIFICATION_CONTEXT,
+			);
 		},
 		removeNotificationWizardAccess(state) {
 			state.notifications = state.notifications.filter(
-				(notification) => notification.context !== NOTIFICATION_CONTEXT_ACCESS
-			)
+				notification => notification.context !== NOTIFICATION_CONTEXT_ACCESS,
+			);
+		},
+		removeNotificationWizardTobira(state) {
+			state.notifications = state.notifications.filter(
+				notification => notification.context !== NOTIFICATION_CONTEXT_TOBIRA,
+			);
 		},
 		setHidden(state, action: PayloadAction<{
 			id: OurNotification["id"],
 			isHidden: OurNotification["hidden"],
 		}>) {
 			const { id: idToUpdate, isHidden } = action.payload;
-			state.notifications = state.notifications.map((notification) => {
+			state.notifications = state.notifications.map(notification => {
 				if (notification.id === idToUpdate) {
 					return {
 						...notification,
@@ -183,7 +214,7 @@ const notificationSlice = createSlice({
 					};
 				}
 				return notification;
-			})
+			});
 		},
 	},
 });
@@ -191,8 +222,10 @@ const notificationSlice = createSlice({
 export const {
 	createNotification,
 	removeNotification,
+	removeNotificationByKey,
 	removeNotificationWizardForm,
 	removeNotificationWizardAccess,
+	removeNotificationWizardTobira,
 	setHidden,
 } = notificationSlice.actions;
 

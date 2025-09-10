@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	getNotifications,
 	getGlobalPositions,
@@ -8,37 +7,38 @@ import cn from "classnames";
 import {
 	NOTIFICATION_CONTEXT,
 	NOTIFICATION_CONTEXT_ACCESS,
+	NOTIFICATION_CONTEXT_TOBIRA,
 } from "../../configs/modalConfig";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { OurNotification, setHidden } from "../../slices/notificationSlice";
+import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { LuTriangleAlert, LuX } from "react-icons/lu";
+
+type Context = "not_corner" | "tobira" | "above_table" | "other"
 
 /**
  * This component renders notifications about occurred errors, warnings and info
  */
-const Notifications : React.FC<{
-  context?: string,
-}> = ({
+const Notifications = ({
 	context,
+}: {
+	context: Context,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const notifications = useAppSelector(getNotifications);
-	const globalPosition = useAppSelector(getGlobalPositions);
+	const notifications = useAppSelector(state => getNotifications(state));
+	const globalPosition = useAppSelector(state => getGlobalPositions(state));
 
 	const closeNotification = (id: number) => {
-		dispatch(setHidden({id: id, isHidden: true}));
+		dispatch(setHidden({ id: id, isHidden: true }));
 	};
 
 	const renderNotification = (notification: OurNotification, key: number) => (
 		<li key={key}>
-			<div className={cn(notification.type, "alert sticky")}>
-				<button
-					onClick={() => closeNotification(notification.id)}
-					className="button-like-anchor fa fa-times close"
-				/>
-				<p>{t(notification.message, notification.parameter)}</p>
-			</div>
+			<NotificationComponent
+				notification={notification}
+				closeNotification={closeNotification}
+			/>
 		</li>
 	);
 
@@ -46,13 +46,16 @@ const Notifications : React.FC<{
 		// if context is not_corner then render notification without consider global notification position
 		context === "not_corner" ? (
 			<ul>
-				{notifications.map(
-					(notification, key) =>
-						!notification.hidden &&
-						(notification.context === NOTIFICATION_CONTEXT ||
-							notification.context === NOTIFICATION_CONTEXT_ACCESS) &&
-						renderNotification(notification, key)
-				)}
+				{notifications.map((notification, key) => !notification.hidden && (
+					notification.context === NOTIFICATION_CONTEXT
+						|| notification.context === NOTIFICATION_CONTEXT_ACCESS
+				) && renderNotification(notification, key))}
+			</ul>
+		) : context === NOTIFICATION_CONTEXT_TOBIRA ? (
+			<ul>
+				{notifications.map((notification, key) => !notification.hidden && (
+					notification.context === NOTIFICATION_CONTEXT_TOBIRA
+				) && renderNotification(notification, key))}
 			</ul>
 		) : context === "above_table" ? (
 			<ul>
@@ -61,7 +64,7 @@ const Notifications : React.FC<{
 						!notification.hidden &&
 						notification.context === "global" &&
 						notification.type === "error" &&
-						renderNotification(notification, key)
+						renderNotification(notification, key),
 				)}
 			</ul>
 		) : (
@@ -82,10 +85,42 @@ const Notifications : React.FC<{
 					(notification, key) =>
 						!notification.hidden &&
 						notification.context === "global" &&
-						renderNotification(notification, key)
+						renderNotification(notification, key),
 				)}
 			</ul>
 		)
+	);
+};
+
+export const NotificationComponent = ({
+	notification,
+	closeNotification,
+}: {
+	notification: Pick<OurNotification, "type" | "id" | "message" | "parameter">,
+	closeNotification?: (id: number) => unknown
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<div className={cn(notification.type, "alert sticky")}>
+			{closeNotification &&
+				<ButtonLikeAnchor
+					onClick={() => closeNotification(notification.id)}
+					className="close"
+				>
+					<LuX />
+				</ButtonLikeAnchor>
+			}
+			<p>
+				{(notification.type === "warning") &&
+					<LuTriangleAlert className="warning-symbol-warning" />
+				}
+				{(notification.type === "error") &&
+					<LuTriangleAlert className="warning-symbol-error" />
+				}
+				{t(notification.message, notification.parameter)}
+			</p>
+		</div>
 	);
 };
 

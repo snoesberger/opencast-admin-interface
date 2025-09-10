@@ -1,10 +1,9 @@
-import { Ace } from './../slices/aclDetailsSlice';
 import { getFilters, getTextFilter } from "../selectors/tableFilterSelectors";
 import {
 	getPageLimit,
 	getPageOffset,
-	getTableDirection,
-	getTableSorting,
+	getTableDirectionForResource,
+	getTableSortingForResource,
 } from "../selectors/tableSelectors";
 import { TransformedAcl } from "../slices/aclDetailsSlice";
 import { Acl } from "../slices/aclSlice";
@@ -13,7 +12,11 @@ import { Recording } from "../slices/recordingSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { hasAccess, isJson } from "./utils";
 import { RootState } from "../store";
-import { MetadataCatalog } from "../slices/eventSlice";
+import { MetadataCatalog, MetadataField } from "../slices/eventSlice";
+import { initialFormValuesNewGroup } from "../configs/modalConfig";
+import { UpdateUser } from "../slices/userDetailsSlice";
+import { ParseKeys, TFunction } from "i18next";
+import { TableState } from "../slices/tableSlice";
 
 /**
  * This file contains methods that are needed in more than one resource thunk
@@ -30,25 +33,31 @@ export const getHttpHeaders = () => {
 
 // prepare URL params for getting resources
 export const getURLParams = (
-	state: RootState
+	state: RootState,
+	resource: TableState["resource"],
 ) => {
 	// get filter map from state
-	let filters = [];
-	let filterMap = getFilters(state);
-	let textFilter = getTextFilter(state);
+	const filters = [];
+	const filterMap = getFilters(state, resource);
+	const textFilter = getTextFilter(state, resource);
 
 	// check if textFilter has value and transform for use as URL param
 	if (textFilter !== "") {
-		filters.push("textFilter:" + textFilter);
+		filters.push(["textFilter", textFilter]);
 	}
 	// transform filters for use as URL param
-	for (let key in filterMap) {
-		if (!!filterMap[key].value) {
-			filters.push(filterMap[key].name + ":" + filterMap[key].value.toString());
+	for (const [key, _] of filterMap.entries()) {
+		if (filterMap[key].value) {
+			filters.push([filterMap[key].name, filterMap[key].value.toString()]);
 		}
 	}
 
-	let params = {
+	let params: {
+		limit: number,
+		offset: number,
+		filter?: string,
+		sort?: string,
+	} = {
 		limit: getPageLimit(state),
 		offset: getPageOffset(state) * getPageLimit(state),
 	};
@@ -56,16 +65,18 @@ export const getURLParams = (
 	if (filters.length) {
 		params = {
 			...params,
-// @ts-expect-error TS(2322): Type '{ filter: string; limit: any; offset: number... Remove this comment to see the full error message
-			filter: filters.join(","),
+			filter: filters
+				.map(([key, value]) => `${key}:${encodeURIComponent(value)}`)
+				.join(","),
 		};
 	}
 
-	if (getTableSorting(state) !== "") {
+	if (getTableSortingForResource(state, resource)) {
 		params = {
 			...params,
-// @ts-expect-error TS(2322): Type '{ sort: string; limit: any; offset: number; ... Remove this comment to see the full error message
-			sort: getTableSorting(state) + ":" + getTableDirection(state),
+			sort: getTableSortingForResource(state, resource)
+				+ ":"
+				+ getTableDirectionForResource(state, resource),
 		};
 	}
 
@@ -73,26 +84,35 @@ export const getURLParams = (
 };
 
 // used for create URLSearchParams for API requests used to create/update user
-export const buildUserBody = (values: NewUser) => {
-	let data = new URLSearchParams();
+export const buildUserBody = (values: NewUser | UpdateUser) => {
+	const data = new URLSearchParams();
 	// fill form data with user inputs
 	data.append("username", values.username);
-	data.append("name", values.name);
-	data.append("email", values.email);
-	data.append("password", values.password);
-	data.append("roles", JSON.stringify(values.roles));
+	if (values.name) {
+		data.append("name", values.name);
+	}
+	if (values.email) {
+		data.append("email", values.email);
+	}
+	if (values.password) {
+		data.append("password", values.password);
+	}
+	if (values.roles) {
+		data.append("roles", JSON.stringify(values.roles));
+	}
 
 	return data;
 };
 
 // used for create URLSearchParams for API requests used to create/update group
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-export const buildGroupBody = (values) => {
-	let roles = [],
+export const buildGroupBody = (
+	values: typeof initialFormValuesNewGroup,
+) => {
+	const roles = [],
 		users = [];
 
 	// fill form data depending on user inputs
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("name", values.name);
 	data.append("description", values.description);
 
@@ -110,95 +130,61 @@ export const buildGroupBody = (values) => {
 
 // get initial metadata field values for formik in create resources wizards
 export const getInitialMetadataFieldValues = (
-	metadataFields: MetadataCatalog,
-	extendedMetadata: MetadataCatalog[]
+	metadataCatalog: MetadataCatalog,
 ) => {
-	let initialValues: { [key: string]: string | string[] | boolean } = {};
+	const initialValues: { [key: string]: string | string[] | boolean } = {};
 
-	if (!!metadataFields.fields && metadataFields.fields.length > 0) {
-		metadataFields.fields.forEach((field) => {
-			initialValues[field.id] = field.value;
+	if (!!metadataCatalog.fields && metadataCatalog.fields.length > 0) {
+		metadataCatalog.fields.forEach(field => {
+			initialValues[metadataCatalog.flavor + "_" + field.id] = field.value;
 		});
-	}
-
-	if (extendedMetadata.length > 0) {
-		for (const metadataCatalog of extendedMetadata) {
-			if (!!metadataCatalog.fields && metadataCatalog.fields.length > 0) {
-				metadataCatalog.fields.forEach((field) => {
-					let value = false;
-					if (field.value === "true") {
-						value = true;
-					} else if (field.value === "false") {
-						value = false;
-					}
-
-					initialValues[metadataCatalog.flavor + "_" + field.id] = value;
-				});
-			}
-		}
 	}
 
 	return initialValues;
 };
 
 // transform collection of metadata into object with name and value
-export const transformMetadataCollection = (metadata: any, noField: boolean) => {
-	if (noField) {
-		for (let i = 0; metadata.length > i; i++) {
-			if (!!metadata[i].collection) {
-				metadata[i].collection = Object.keys(metadata[i].collection).map(
-					(key) => {
-						return {
-							name: key,
-							value: metadata[i].collection[key],
-						};
-					}
-				);
-			}
-			metadata[i] = {
-				...metadata[i],
-				selected: false,
-			};
-		}
-	} else {
-		for (let i = 0; metadata.fields.length > i; i++) {
-			if (!!metadata.fields[i].collection) {
-				metadata.fields[i].collection = Object.keys(
-					metadata.fields[i].collection
-				).map((key) => {
+export const transformMetadataCollection = (metadata: MetadataCatalog) => {
+	transformMetadataFields(metadata.fields);
+	return metadata;
+};
+
+export const transformMetadataFields = (metadata: MetadataField[]) => {
+	for (const field of metadata) {
+		if (field.collection) {
+			field.collection = Object.entries(field.collection)
+				.map(([key, value]) => {
 					if (isJson(key)) {
-						let collectionParsed = JSON.parse(key);
+						// TODO: Handle JSON parsing errors
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+						const collectionParsed = JSON.parse(key);
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 						return {
-							name: collectionParsed.label ? collectionParsed.label : key,
-							value: metadata.fields[i].collection[key],
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+							name: collectionParsed.label || key,
+							value,
 							...collectionParsed,
 						};
 					} else {
 						return {
 							name: key,
-							value: metadata.fields[i].collection[key],
+							value: value,
 						};
 					}
 				});
-			}
 		}
 	}
-
 	return metadata;
 };
 
 // transform metadata catalog for update via post request
-// @ts-expect-error TS(7006): Parameter 'catalog' implicitly has an 'any' type.
-export const transformMetadataForUpdate = (catalog, values) => {
-// @ts-expect-error TS(7034): Variable 'fields' implicitly has type 'any[]' in s... Remove this comment to see the full error message
-	let fields = [];
-// @ts-expect-error TS(7034): Variable 'updatedFields' implicitly has type 'any[... Remove this comment to see the full error message
-	let updatedFields = [];
+export const transformMetadataForUpdate = (catalog: MetadataCatalog, values: { [key: string]: MetadataCatalog["fields"][0]["value"] }) => {
+	const fields: MetadataCatalog["fields"] = [];
+	const updatedFields: MetadataCatalog["fields"] = [];
 
-// @ts-expect-error TS(7006): Parameter 'field' implicitly has an 'any' type.
-	catalog.fields.forEach((field) => {
+	catalog.fields.forEach(field => {
 		if (field.value !== values[field.id]) {
-			let updatedField = {
+			const updatedField = {
 				...field,
 				value: values[field.id],
 			};
@@ -208,191 +194,90 @@ export const transformMetadataForUpdate = (catalog, values) => {
 			fields.push({ ...field });
 		}
 	});
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append(
 		"metadata",
 		JSON.stringify([
 			{
 				flavor: catalog.flavor,
 				title: catalog.title,
-// @ts-expect-error TS(7005): Variable 'updatedFields' implicitly has an 'any[]'... Remove this comment to see the full error message
 				fields: updatedFields,
 			},
-		])
+		]),
 	);
 	const headers = getHttpHeaders();
 
-// @ts-expect-error TS(7005): Variable 'fields' implicitly has an 'any[]' type.
 	return { fields, data, headers };
 };
 
 // Prepare metadata for post of new events or series
 export const prepareMetadataFieldsForPost = (
-// @ts-expect-error TS(7006): Parameter 'metadataInfo' implicitly has an 'any' t... Remove this comment to see the full error message
-	metadataInfo,
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	values,
-	formikIdPrefix = ""
+	metadataCatalogs: MetadataCatalog[],
+	values: { [key: string]: unknown },
 ) => {
-// @ts-expect-error TS(7034): Variable 'metadataFields' implicitly has type 'any... Remove this comment to see the full error message
-	let metadataFields = [];
+	const preparedMetadataCatalogs = [];
 
-	// fill metadataField with field information send by server previously and values provided by user
-	// Todo: What is hashkey?
-	for (let i = 0; metadataInfo.length > i; i++) {
-		let fieldValue = {
-			id: metadataInfo[i].id,
-			type: metadataInfo[i].type,
-			value: values[formikIdPrefix + metadataInfo[i].id],
-			tabindex: i + 1,
-			$$hashKey: "object:123",
-		};
-		if (!!metadataInfo[i].translatable) {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ translatable: any; id: any; type: any; val... Remove this comment to see the full error message
-				translatable: metadataInfo[i].translatable,
-			};
-		}
-// @ts-expect-error TS(7005): Variable 'metadataFields' implicitly has an 'any[]... Remove this comment to see the full error message
-		metadataFields = metadataFields.concat(fieldValue);
-	}
-
-	return metadataFields;
-};
-
-// Prepare extended metadata for post of new events or series
-export const prepareExtendedMetadataFieldsForPost = (
-// @ts-expect-error TS(7006): Parameter 'extendedMetadata' implicitly has an 'an... Remove this comment to see the full error message
-	extendedMetadata,
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	values
-) => {
-	const extendedMetadataFields = [];
-
-	for (const catalog of extendedMetadata) {
+	for (const catalog of metadataCatalogs) {
 		const catalogPrefix = catalog.flavor + "_";
-		const metadataFields = prepareMetadataFieldsForPost(
-			catalog.fields,
-			values,
-			catalogPrefix
-		);
 
-		// Todo: What is hashkey?
-		const metadataCatalog = {
-			flavor: catalog.flavor,
-			title: catalog.title,
-			fields: metadataFields,
-			$$hashKey: "object:123",
-		};
-
-		extendedMetadataFields.push(metadataCatalog);
-	}
-
-	return extendedMetadataFields;
-};
-
-export const prepareSeriesMetadataFieldsForPost = (
-// @ts-expect-error TS(7006): Parameter 'metadataInfo' implicitly has an 'any' t... Remove this comment to see the full error message
-	metadataInfo,
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	values,
-	formikIdPrefix = ""
-) => {
-// @ts-expect-error TS(7034): Variable 'metadataFields' implicitly has type 'any... Remove this comment to see the full error message
-	let metadataFields = [];
-
-	// fill metadataField with field information sent by server previously and values provided by user
-	for (let i = 0; metadataInfo.length > i; i++) {
-		let fieldValue = {
-			readOnly: metadataInfo[i].readOnly,
-			id: metadataInfo[i].id,
-			label: metadataInfo[i].label,
-			type: metadataInfo[i].type,
-			value: values[formikIdPrefix + metadataInfo[i].id],
-			tabindex: i + 1,
-		};
-		if (!!metadataInfo[i].translatable) {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ translatable: any; readOnly: any; id: any;... Remove this comment to see the full error message
-				translatable: metadataInfo[i].translatable,
-			};
+		type FieldValue = {
+			id: string,
+			type: string,
+			value: unknown,
+			$$hashKey?: string,
+			translatable?: boolean,
 		}
-		if (!!metadataInfo[i].collection) {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ collection: never[]; readOnly: any; id: an... Remove this comment to see the full error message
-				collection: [],
+		let metadataFields: FieldValue[] = [];
+
+		// fill metadataField with field information send by server previously and values provided by user
+		for (const [, info] of catalog.fields.entries()) {
+			let fieldValue: FieldValue = {
+				id: info.id,
+				type: info.type,
+				value: values[catalogPrefix + info.id],
+				$$hashKey: "object:123",
 			};
+			if (info.translatable) {
+				fieldValue = {
+					...fieldValue,
+					translatable: info.translatable,
+				};
+			}
+			metadataFields = metadataFields.concat(fieldValue);
 		}
-		if (!!metadataInfo[i].required) {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ required: any; readOnly: any; id: any; lab... Remove this comment to see the full error message
-				required: metadataInfo[i].required,
-			};
-		}
-		if (metadataInfo[i].type === "mixed_text") {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ presentableValue: any; readOnly: any; id: ... Remove this comment to see the full error message
-				presentableValue: values[formikIdPrefix + metadataInfo[i].id].join(),
-			};
-		} else {
-			fieldValue = {
-				...fieldValue,
-// @ts-expect-error TS(2322): Type '{ presentableValue: any; readOnly: any; id: ... Remove this comment to see the full error message
-				presentableValue: values[formikIdPrefix + metadataInfo[i].id],
-			};
-		}
-// @ts-expect-error TS(7005): Variable 'metadataFields' implicitly has an 'any[]... Remove this comment to see the full error message
-		metadataFields = metadataFields.concat(fieldValue);
-	}
 
-	return metadataFields;
-};
-
-// Prepare extended metadata for post of new events or series
-export const prepareSeriesExtendedMetadataFieldsForPost = (
-// @ts-expect-error TS(7006): Parameter 'extendedMetadata' implicitly has an 'an... Remove this comment to see the full error message
-	extendedMetadata,
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	values
-) => {
-	const extendedMetadataFields = [];
-
-	for (const catalog of extendedMetadata) {
-		const catalogPrefix = catalog.flavor + "_";
-		const metadataFields = prepareSeriesMetadataFieldsForPost(
-			catalog.fields,
-			values,
-			catalogPrefix
-		);
-
-		// Todo: What is hashkey?
 		const metadataCatalog = {
 			flavor: catalog.flavor,
 			title: catalog.title,
 			fields: metadataFields,
 		};
 
-		extendedMetadataFields.push(metadataCatalog);
+		preparedMetadataCatalogs.push(metadataCatalog);
 	}
 
-	return extendedMetadataFields;
+	return preparedMetadataCatalogs;
 };
 
 // returns the name for a field value from the collection
-// @ts-expect-error TS(7006): Parameter 'metadataField' implicitly has an 'any' ... Remove this comment to see the full error message
-export const getMetadataCollectionFieldName = (metadataField, field) => {
+export const getMetadataCollectionFieldName = (metadataField: { collection?: { [key: string]: unknown }[] }, field: { value: unknown }, t: TFunction): string => {
 	try {
-		const collectionField = metadataField.collection.find(
-// @ts-expect-error TS(7006): Parameter 'element' implicitly has an 'any' type.
-			(element) => element.value === field.value
-		);
-		return collectionField.name;
-	} catch (e) {
+		if (metadataField.collection) {
+			const collectionField = metadataField.collection.find(
+				element => element.value === field.value,
+			);
+
+			if (collectionField && collectionField.name && isJson(collectionField.name as string)) {
+				// TODO: Handle JSON parsing errors
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				const name: { label?: ParseKeys } = JSON.parse(collectionField.name as string);
+				return name.label ? t(name.label) : "";
+			}
+
+			return collectionField ? t(collectionField.name as ParseKeys) : "";
+		}
+
+		return "";
+	} catch (_e) {
 		return "";
 	}
 };
@@ -400,10 +285,8 @@ export const getMetadataCollectionFieldName = (metadataField, field) => {
 // Prepare rules of access policies for post of new events or series
 export const prepareAccessPolicyRulesForPost = (policies: TransformedAcl[]) => {
 	// access policies for post request
-	let access : {
-		acl : {
-			ace: Ace[]
-		}
+	const access : {
+		acl : Acl
 	} = {
 		acl: {
 			ace: [],
@@ -445,7 +328,7 @@ export const transformAclTemplatesResponse = (acl: Acl) => {
 	let template: TransformedAcl[] = [];
 
 	for (let i = 0; acl.ace.length > i; i++) {
-		if (template.find((rule) => rule.role === acl.ace[i].role)) {
+		if (template.find(rule => rule.role === acl.ace[i].role)) {
 			for (let j = 0; template.length > j; j++) {
 				// Only update entry for policy if already added with other action
 				if (template[j].role === acl.ace[i].role) {
@@ -549,26 +432,39 @@ export const hasDeviceAccess = (user: UserInfoState, deviceId: Recording["id"]) 
 };
 
 // build body for post/put request in theme context
-// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-export const buildThemeBody = (values) => {
+export const buildThemeBody = (values: {
+	name: string,
+	description: string,
+	bumperActive: boolean,
+	bumperFile: string,
+	trailerActive: boolean,
+	trailerFile: string,
+	titleSlideActive: boolean,
+	titleSlideMode: string,
+	titleSlideBackground: string,
+	licenseSlideActive: boolean,
+	watermarkActive: boolean,
+	watermarkFile: string,
+	watermarkPosition: string,
+}) => {
 	// fill form data depending on user inputs
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("name", values.name);
 	data.append("description", values.description);
-	data.append("bumperActive", values.bumperActive);
+	data.append("bumperActive", values.bumperActive.toString());
 	if (values.bumperActive) {
 		data.append("bumperFile", values.bumperFile);
 	}
-	data.append("trailerActive", values.trailerActive);
+	data.append("trailerActive", values.trailerActive.toString());
 	if (values.trailerActive) {
 		data.append("trailerFile", values.trailerFile);
 	}
-	data.append("titleSlideActive", values.titleSlideActive);
+	data.append("titleSlideActive", values.titleSlideActive.toString());
 	if (values.titleSlideActive && values.titleSlideMode === "upload") {
 		data.append("titleSlideBackground", values.titleSlideBackground);
 	}
-	data.append("licenseSlideActive", values.licenseSlideActive);
-	data.append("watermarkActive", values.watermarkActive);
+	data.append("licenseSlideActive", values.licenseSlideActive.toString());
+	data.append("watermarkActive", values.watermarkActive.toString());
 	if (values.watermarkActive) {
 		data.append("watermarkFile", values.watermarkFile);
 		data.append("watermarkPosition", values.watermarkPosition);
@@ -578,8 +474,7 @@ export const buildThemeBody = (values) => {
 };
 
 // creates an empty policy with the role from the argument
-// @ts-expect-error TS(7006): Parameter 'role' implicitly has an 'any' type.
-export const createPolicy = (role) => {
+export const createPolicy = (role: string): TransformedAcl => {
 	return {
 		role: role,
 		read: false,

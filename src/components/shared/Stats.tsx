@@ -1,45 +1,49 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getFilters, getStats } from "../../selectors/tableFilterSelectors";
 import {
 	editFilterValue,
 	resetFilterValues,
 	fetchStats,
+	Stats as StatsType,
+	editTextFilter,
+	removeTextFilter,
 } from "../../slices/tableFilterSlice";
-import { connect } from "react-redux";
 import { loadEventsIntoTable } from "../../thunks/tableThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
-import { Tooltip } from "./Tooltip";
+import { ParseKeys } from "i18next";
+import BaseButton from "./BaseButton";
 
 /**
  * This component renders the status bar of the event view and filters depending on these
  */
-const Stats = ({
-// @ts-expect-error TS(7031): Binding element 'loadEventsIntoTable' implicitly h... Remove this comment to see the full error message
-	loadEventsIntoTable,
-}) => {
+const Stats = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const filterMap = useAppSelector(state => getFilters(state));
+	const filterMap = useAppSelector(state => getFilters(state, "events"));
 	const stats = useAppSelector(state => getStats(state));
 
 	// Filter with value of clicked status
-// @ts-expect-error TS(7006): Parameter 'stats' implicitly has an 'any' type.
-	const showStatsFilter = async (stats) => {
+	const showStatsFilter = async (stats: StatsType) => {
 		dispatch(resetFilterValues());
 		let filterValue;
-// @ts-expect-error TS(7006): Parameter 'f' implicitly has an 'any' type.
-		await stats.filters.forEach((f) => {
-			let filter = filterMap.find(({ name }) => name === f.name);
+		stats.filters.forEach(f => {
+			if (f.name.toLowerCase() === "textfilter") {
+				dispatch(editTextFilter({ text: f.value, resource: "events" }));
+				return;
+			} else {
+				dispatch(removeTextFilter("events"));
+			}
+			const filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
-			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: filterValue}));
+			if (filter) {
+				dispatch(editFilterValue({ filterName: filter.name, value: filterValue, resource: "events" }));
 			}
 		});
 		await dispatch(fetchEvents());
-		loadEventsIntoTable();
+		dispatch(loadEventsIntoTable());
 	};
 
 	const loadStats = async () => {
@@ -49,7 +53,11 @@ const Stats = ({
 
 	useEffect(() => {
 		// Load stats on mount
-		loadStats().then((r) => console.info(r));
+		loadStats();
+
+		const fetchEventsInterval = setInterval(() => loadStats(), 5000);
+
+		return () => clearInterval(fetchEventsInterval);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -59,25 +67,26 @@ const Stats = ({
 				{/* Show one counter for each status */}
 				{stats.map((st, key) => (
 					<div className="col" key={key}>
-						<Tooltip title={t(st.description)}>
-							<button
-								className="stat"
-								onClick={() => showStatsFilter(st)}
-							>
-								<h1>{st.count}</h1>
-								{/* Show the description of the status, if defined,
-                        	    else show name of filter and its value*/}
-								{!!st.description ? (
-									<span>{t(st.description)}</span>
-								) : (
-									st.filters.map((filter, key) => (
-										<span key={key}>
-											{t(filter.filter)}: {t(filter.value)}
-										</span>
-									))
-								)}
-							</button>
-						</Tooltip>
+						<BaseButton
+							className="stat"
+							tooltipText={"DASHBOARD.BUTTON_TOOLTIP"}
+							tooltipParams={{ filterName: t(st.description as ParseKeys) }}
+							aria-label={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys) })}
+							onClick={() => showStatsFilter(st)}
+						>
+							<div>{st.count}</div>
+							{/* Show the description of the status, if defined,
+								else show name of filter and its value*/}
+							{st.description ? (
+								<span>{t(st.description as ParseKeys)}</span>
+							) : (
+								st.filters.map((filter, key) => (
+									<span key={key}>
+										{t(filter.filter as ParseKeys)}: {t(filter.value as ParseKeys)}
+									</span>
+								))
+							)}
+						</BaseButton>
 					</div>
 				))}
 			</div>
@@ -85,15 +94,4 @@ const Stats = ({
 	);
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-});
-
-// Mapping actions to dispatch
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-	loadEventsIntoTable: () => dispatch(loadEventsIntoTable()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Stats);
+export default Stats;

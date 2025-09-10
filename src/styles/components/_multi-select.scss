@@ -1,3 +1,7 @@
+@use "../mixins/mixins-bourbon";
+@use "../base/variables";
+@use "../mixins/button";
+
 /**
  * Licensed to The Apereo Foundation under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for additional
@@ -21,7 +25,7 @@
 
 
 .multi-select-container {
-    @include clearfix();
+    @include mixins-bourbon.clearfix;
 
     select[multiple] {
         margin-top: 10px;
@@ -39,12 +43,12 @@
 
     p {
         font-size: 12px;
-        color: $medium-prim-color;
+        color: variables.$medium-prim-color;
         line-height: 22px;
     }
 
     strong {
-        color: $medium-prim-color;
+        color: variables.$medium-prim-color;
     }
 
     .button-container {
@@ -56,11 +60,11 @@
         }
 
         .submit {
-            @include btn(white);
+            @include button.btn(white);
         }
 
         .remove {
-            @include btn(red);
+            @include button.btn(red);
         }
     }
 
@@ -69,27 +73,6 @@
         display: block;
         float: left;
         vertical-align: top;
-
-        input.search {
-            border-radius: $main-border-radius 0 0 $main-border-radius;
-            border-right-width: 0;
-            float: left;
-            width: 100% !important;
-        }
-
-        button.clear {
-            height: inherit;
-            margin-top: 10px;
-            float: right;
-            @include btn(white);
-            @include fa-icon($fa-var-times, before, block, 0, 0.45em 0.45em 0.55em 0.45em, inherit, 14px);
-
-            border-radius: 0 $main-border-radius $main-border-radius 0;
-
-            &+input.search {
-                width: calc(100% - 46px) !important;
-            }
-        }
     }
 }
 
@@ -99,17 +82,13 @@
 }
 
 // Used to indicate the correlation between multiple select columns
-.exchange-icon:after {
-    width: 10%;
+.exchange-icon {
+    width: 6%;
     display: block;
     float: left;
     position: relative;
-    top: 60px;
-    content: "\f0ec";
-    font-family: FontAwesome;
     font-size: 18px;
-    color: $medium-prim-color;
-    text-align: center;
+    color: variables.$medium-prim-color;
 }
 
 // Extra Input Offset
@@ -122,7 +101,7 @@
     &.offset-col-1,
     &.offset-col-2 {
 
-        .exchange-icon:after {
+        .exchange-icon {
             top: $icon-top-margin;
         }
     }

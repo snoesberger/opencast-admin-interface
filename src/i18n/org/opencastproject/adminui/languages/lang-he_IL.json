@@ -24,7 +24,9 @@
 	"LOGOUT": "התנתקות",
 	"RESET": "איפוס",
 	"SELECT_NO_OPTION_SELECTED": "לא נבחרה כל אופציה",
+	"SELECT_NO_OPTION_SELECTED_DASHED": "-- No option selected --",
 	"SELECT_NO_OPTIONS_AVAILABLE": "אין אפשרויות זמינות",
+	"SELECT_NO_MATCHING_RESULTS": "No matching results.",
 	"YES": "כן",
 	"COPY": "Copy to clipboard",
 	"LTI": {
@@ -101,12 +103,13 @@
 			"SELECTED_COLUMNS": "עמודות נבחרות",
 			"FOOTER_TEXT": "הסדר והבחירה יישמרו באופן אוטומטי. הקש \"{{resetTranslation}}\" כדי לשחזר את התצוגה המהווה ברירת מחדל.",
 			"ADD_COLUMN": "Add column",
-			"REMOVE_COLUMN": "Remove column"
+			"REMOVE_COLUMN": "Remove column",
+			"DRAG_HANDLE_USAGE_INSTRUCTIONS": "Press space bar to start a drag. When dragging you can use the arrow keys to move the item around and escape to cancel. Some screen readers may require you to be in focus mode or to use your pass through key"
 		}
 	},
 	"CONFIRMATIONS": {
 		"EMBEDDING_CODE": "Embedding code has been copied to the clipboard:",
-		"CONTINUE_ACTION": "האם את/ה בטוח/ה שאת/ה רוצה להמשיך?",
+		"CONTINUE_ACTION": "האם את\/ה בטוח\/ה שאת\/ה רוצה להמשיך?",
 		"METADATA": {
 			"NOTICE": {
 				"UNKNOWN": "הרכיב שלהלן יימחקו",
@@ -116,7 +119,8 @@
 				"GROUP": "הקבוצה הבאה תימחק",
 				"USER": "המשתמש הבא יימחקו",
 				"THEME": "רשימת המשתמשים בחסומים הבאה תמחק",
-				"LOCATION": "המיקום הבא יימחק"
+				"LOCATION": "המיקום הבא יימחק",
+				"TOBIRA_PATH": "The series will be removed from the following path in Tobira:"
 			},
 			"NAME": "שם"
 		},
@@ -167,15 +171,22 @@
 		"GROUP_NOT_DELETED": "לא ניתן למחוק את הקבוצה",
 		"SERIES_ADDED": "הסדרה נוצרה",
 		"SERIES_NOT_SAVED": "לא ניתן לשמור את הסידרה",
+		"SERIES_PATH_UPDATED": "The series path has been updated",
+		"SERIES_PATH_REMOVED": "The series path has been removed",
+		"SERIES_PATH_NOT_UPDATED": "The series path could not be updated",
+		"SERIES_PATH_NOT_REMOVED": "The series path could not be removed",
 		"EVENTS_CREATED": "הארוע נוצר",
-		"EVENTS_UPLOAD_STARTED": "האירוע מועלה לשרת…",
+		"EVENTS_UPLOAD_STARTED": "The event \"{{ title }}\" is being uploaded… {{ progress }}%",
 		"EVENTS_NOT_CREATED": "לא ניתן היה ליצור את האירוע",
+		"EVENTS_UPDATED": "The event has been successfully updated",
 		"EVENTS_UPDATED_ALL": "כל האירועים עודכנו בהצלחה",
 		"EVENTS_NOT_UPDATED": "לא היתה אפשרות לשמור את האירוע",
 		"EVENTS_NOT_UPDATED_ID": "לא היתה אפשרות לשמור את האירוע {{ id }}",
 		"EVENTS_NOT_UPDATED_ALL": "לא הייתה אפשרות לשמור אף אחד מהאירועים",
 		"EVENTS_PROCESSING_DELETE_WORKFLOW": "זרימות שנמחקו.",
 		"EVENTS_PROCESSING_DELETE_WORKFLOW_FAILED": "לא ניתן למחוק את תהליך העבודה.",
+		"EVENTS_PROCESSING_ACTION_STOP": "The event processing has been stopped.",
+		"EVENTS_PROCESSING_ACTION_NON_STOP": "The event processing could not be stopped.",
 		"SERIES_NOT_UPDATED": "לא היתה אפשרות לשמור את הסידרה",
 		"EVENT_DELETED": "הארוע נמחק.",
 		"EVENT_WILL_BE_DELETED": "הארוע נמחק",
@@ -192,12 +203,14 @@
 		"CONFLICT_ALREADY_ENDED": "שגיאה בתזמון: האירוע כבר נגמר.",
 		"CONFLICT_END_BEFORE_START": "שגיאה בתזמון: תזמון הסיום חייב להיות אחרי תזמון ההתחלה.",
 		"CONFLICT_IN_THE_PAST": "לא היתה אפשרות לעדכן את לוח הזמנים: לא ניתן לתזמן אירוע בעבר.",
-		"INVALID_ACL_RULES": "חוקים חייבים להכיל תפקיד חוקי ו/או הרשאות קריאה/כתיבה.",
+		"INVALID_ACL_RULES": "חוקים חייבים להכיל תפקיד חוקי ו\/או הרשאות קריאה\/כתיבה.",
 		"MISSING_ACL_RULES": "לפחות תפקיד אחד עם הרשאות קריאה וכתיבה נדרש!",
 		"SAVED_ACL_RULES": "חוקי הגישה נשמרו.",
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "האירועים הקיימים בסדרה יצטרכו לעבור עיבוד",
 		"SERIES_ACL_LOCKED": "עריכת מדיניות גישה אסורה בזמן שפעולות רצות באירועים שהם חלק מהסדרה",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "המדיניות גישה דורשת תפקיד אחד לפחות עם הרשאות קריאה וכתיבה.",
+		"METADATA_SAVED": "The metadata has been saved.",
+		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "השם אינו יכול להשאר ריק",
 		"BUMPER_UPLOAD_ERROR": "שגיאה בזמן האלעת מדיה",
 		"THEME_CREATED": "ערכת הנושא נוצרה",
@@ -221,7 +234,18 @@
 			"NO_EVENTS_UPDATED": "All updates failed.",
 			"SOME_EVENTS_NOT_UPDATED": "Some events could not be updated."
 		},
-		"PROBLEM_ON_START": "A error occurred on start up. Please contact your OpenCast admin"
+		"PROBLEM_ON_START": "An error occurred on start up. Please contact your Opencast admin",
+		"TOBIRA_OVERRIDE_NAME": "The title of the selected page will be overridden with the title of the series.",
+		"TOBIRA_NO_PATH_SEGMENT": "Page needs a path segment.",
+		"TOBIRA_NOT_MOUNTED": "Series could not be mounted in Tobira.",
+		"TOBIRA_PATH_SEGMENT_INVALID": "Path segment is invalid. A valid path segment is at least 2 characters long, does not contain any whitespace or control characters, none of the characters '<>\"[\\]^`{|}#%\/?]', and doesn't start with any of the characters '-+~@_!$&;:.,=*'()'.",
+		"TOBIRA_PATH_SEGMENT_UNIQUE": "The path segment of a page must be unique among all its sibling pages.",
+		"TOBIRA_PAGE_NOT_FOUND": "The page you tried to navigate to does not or no longer exist. Maybe try starting from the beginning.",
+		"TOBIRA_SERVER_ERROR": " Error talking to Tobira. Contact your system administrator and\/or try again later.",
+		"TOBIRA_COPIED_DIRECT_LINK": "Copied link to clipboard.",
+		"TOBIRA_FAILED_COPYING_DIRECT_LINK": "Couldn't copy link to clipboard.",
+		"TOBIRA_NOT_FOUND": "Tobira doesn't know about this series or event (yet). Try again in a few minutes or contact your system administrator.",
+		"TOBIRA_NOT_CONFIGURED": "Tobira is not configured (correctly)."
 	},
 	"BULK_ACTIONS": {
 		"CAPTION": "פעולות",
@@ -237,7 +261,7 @@
 				"UNAUTHORIZED": "אין לך הרשאה למחוק את האירועים המודגשים. בבקשה הסר את הסימון שלהם על מנת להמשיך."
 			}
 		},
-		"DELETE_EVENTS_WARNING_LINE1": "לאחר מחיקתו, כל המטא נתונים של האירוע, קובצי האודיו והווידאו יימחקו ויהיו בלתי ניתנים לשחזור.",
+		"DELETE_EVENTS_WARNING_LINE1": "Once deleted, all event metadata, audio and video files are irrevocably gone.",
 		"DELETE_EVENTS_WARNING_LINE2": "",
 		"DELETE_SERIES_WARNING_LINE1": "לאחר מחיקה, כל הסידרה של מטא נתונים יהיו בלתי ניתנים לשחזור. אירועים בסדרה לא יימחקו.",
 		"DELETE_SERIES_WARNING_LINE2": "",
@@ -304,7 +328,7 @@
 				}
 			},
 			"EDIT": {
-				"DESCRIPTION": "Edit and/or select the metadata fields you want to update. A field cannot be selected if this doesn't result in a changed value for at least one event, or if the field isn't valid (e.g. required fields cannot be empty). Highlighted metadata fields have diverging values for the selected events.",
+				"DESCRIPTION": "Edit and\/or select the metadata fields you want to update. A field cannot be selected if this doesn't result in a changed value for at least one event, or if the field isn't valid (e.g. required fields cannot be empty). Highlighted metadata fields have diverging values for the selected events.",
 				"TABLE": {
 					"CAPTION": "Metadata of selected events",
 					"FIELDS": "Metadata",
@@ -384,8 +408,16 @@
 			"SKIP": "Not now",
 			"CONTINUE": "Continue",
 			"BACK": "Back",
+			"SUBMIT": "Submit",
+			"CONFIRM": "Confirm",
 			"LEGAL_INFO_STATE": {
 				"HEADER": "Terms of Service and Privacy Policy"
+			},
+			"SUMMARY_STATE": {
+				"HEADER": "This is a JSON summary of exactly what would be sent to Opencast's servers",
+				"GENERAL_HEADER": "Adopter Information",
+				"STATS_HEADER": "Statistical Information",
+				"NO_STATS_HEADER": "No statistics data will be shared"
 			},
 			"INFORMATION_STATE": {
 				"HEADER": "Thank you for using Opencast!",
@@ -393,7 +425,7 @@
 				"INFORMATION_PARAGRAPH_2": "We highly appreciate any feedback, as even some of the data that we gather about the Opencast usage will help us to create better software, have better chances for additional funding and attract more companies to provide services around Opencast."
 			},
 			"FORM_STATE": {
-				"ORGANISATION": "Organisation",
+				"ORGANISATION": "Organization",
 				"DEPARTMENT": "Department",
 				"COUNTRY": "Country",
 				"POSTAL_CODE": "Postal code",
@@ -409,9 +441,13 @@
 				"ADDITIONAL_ADRESS_INFO": "Add. adress information",
 				"MAIL": "Email",
 				"CONTACT_ME": "Contact me for updates and secruity issues",
+				"SYSTEM_TYPE_HEADLINE": "For what purpose do you use this system?",
+				"SYSTEM_TYPE": "System Type",
+				"SYSTEM_TYPE_PRODUCTION": "Production System",
+				"SYSTEM_TYPE_TEST": "Test System",
 				"WHICH_DATA_TO_SHARE": "Which data do you want to share?",
 				"POLICY_HEADLINE": "Privacy policy and terms of use",
-				"USAGE_STATISTICS": "Usage statistcs",
+				"USAGE_STATISTICS": "Usage statistics",
 				"ERROR_REPORTS": "Error reports",
 				"READ_TERMS_OF_USE_BEFORE": "I have read and agree to the",
 				"READ_TERMS_OF_USE_LINK": "privacy policy and terms of use",
@@ -539,7 +575,8 @@
 						"CAPTIONS_WEBVTT": "כתוביות לכבדי שמיעה WebVTT",
 						"PREVIEW_IMAGE": "תמונת תצוגה מקדימה",
 						"SMIL": "קטלוג סימלונים",
-						"TRACK_PARTS": "עקוב אחר חלקים"
+						"TRACK_PARTS": "עקוב אחר חלקים",
+						"SUBTITLES": "Subtitles"
 					}
 				},
 				"ACCESS": {
@@ -607,7 +644,7 @@
 					"ASSETS": "Open asset details",
 					"START": "מסנן עבור תאריך ההתחלה הזה",
 					"SERIES": "מסנן עבור סדרה זו",
-					"STATUS": "מסנן עבור מצב אירוע",
+					"STATUS": "Open event status",
 					"LOCATION": "מסנן עבור מיקום זה",
 					"DETAILS": "הצגת פרטי אירוע",
 					"DELETE": "מחק אירוע",
@@ -616,6 +653,7 @@
 					"EDITOR_NEEDS_CUTTING": "פתח עורך וידאו (הערה מציינת כי חיתוך הווידאו התבקש)",
 					"COMMENTS": "הצגת הערות",
 					"PAUSED_WORKFLOW": "הצגת תהליכי עבודה מושהים",
+					"PLAYER": "Open player",
 					"PRESENTER": "מסנן עבור מציג זה"
 				},
 				"SELECT_ALL": "Select all events",
@@ -632,7 +670,7 @@
 				"PROCESSED": "הסתיים",
 				"RECORDING_FAILURE": "הקלטה נכשלה",
 				"PROCESSING_FAILURE": "עיבוד נכשל",
-				"PROCESSING_CANCELED": "עיבוד בוטל"
+				"PROCESSING_CANCELLED": "Processing canceled"
 			},
 			"STATE_MAPPING": {
 				"RETRACTING": "Retracting",
@@ -644,7 +682,7 @@
 				"UPDATING_PREVIEWS": "Updating previews"
 			},
 			"DETAILS": {
-				"HEADER": "פרטי אירוע - {{resourceId}}",
+				"HEADER": "Event details - {{name}}",
 				"TABS": {
 					"METADATA": "מטא-נתונים",
 					"EXTENDED-METADATA": "מטא-נתונים II",
@@ -654,7 +692,8 @@
 					"WORKFLOWS": "תהליכים",
 					"ACCESS": "מדיניות גישה",
 					"COMMENTS": "הערות",
-					"STATISTICS": "סטטיסטיקות"
+					"STATISTICS": "סטטיסטיקות",
+					"TOBIRA": "Tobira"
 				},
 				"PUBLICATIONS": {
 					"CAPTION": "פרסומים",
@@ -665,7 +704,7 @@
 					"ENGAGE": "צפייה",
 					"ENGAGE_LIVE": "צפייה חיה",
 					"EXTERNAL_API": "פרסום API חיצוני",
-					"YOUTUBE": "יוטיוב",
+					"YOUTUBE": "YouTube",
 					"OAIPMH": "OAI-PMH",
 					"SELECT_WORKFLOW": "בחר מהלך עבודה",
 					"SELECT_WORKFLOW_EMPTY": "לא קיימים מהלכי עבודה"
@@ -858,11 +897,14 @@
 						"ADDITIONAL_ACTIONS": "פעולות נוספות",
 						"ACTION": "פעולות",
 						"NEW": "מדיניות חדשה",
-						"DETAILS": "פרטים"
+						"NON_USER_ROLES": "Roles and Groups authorized for the event",
+						"USER": "User",
+						"USERS": "Users who are authorized for the event",
+						"NEW_USER": "New user",
+						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
 					},
 					"ROLES": {
-						"LABEL": "בחר תפקיד",
-						"EMPTY": "לא נצאו תפקידים"
+						"LABEL": "Select or create a role"
 					}
 				},
 				"COMMENTS": {
@@ -878,9 +920,9 @@
 					"REASONS": {
 						"CUTTING": "חיתוך נדרש",
 						"REVIEW": "סקירת דרישות",
-						"ASYNC": "רצועות שמע/וידאו לא מתואמות",
+						"ASYNC": "רצועות שמע\/וידאו לא מתואמות",
 						"AUDIO_ISSUE": "רצועת שמע חסרה או פגומה",
-						"CANCELLED": "Cancelled event",
+						"CANCELLED": "Canceled event",
 						"CONFLICTING_METADATA": "מטה-נתונים סותרים",
 						"IMPROPER_POINT": "לא נכון או מחוץ נקודה",
 						"MISSING_AGREEMENT": "הסכמה חסרה",
@@ -929,6 +971,13 @@
 						"RUNNING": "עריכת מטא-נתונים אינו מותר כאשר פעולות רצות על אירוע"
 					}
 				},
+				"TOBIRA": {
+					"HOMEPAGE": "(Homepage)",
+					"DIRECT_LINK": "Direct link to event",
+					"COPY_DIRECT_LINK": "Copy to clipboard",
+					"NOT_MOUNTED": "This event is currently not included the page structure, and can only be reached using the direct link above.",
+					"PAGES": "Pages in Tobira that contain this event"
+				},
 				"SCHEDULING": {
 					"CAPTION": "תצורת תיזמון",
 					"PLACEHOLDER": {
@@ -939,7 +988,6 @@
 					"ACTIONS": "פעולות",
 					"DETAILS": "פרטים",
 					"DESCRIPTION": "תאור",
-					"MORE_INFO": "מידע נוסף",
 					"ID": "מזהה",
 					"TYPE": "סוג",
 					"TITLE": "כותרת",
@@ -979,11 +1027,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "פרטי מהלך-עבודה",
-					"CONFIGURATION": "הגדרות מהלך-עבודה"
+					"CONFIGURATION": "הגדרות מהלך-עבודה",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "פעולות מהלך-עבודה",
-					"DETAILS_LINK": "תהליכים",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "כותרת",
 						"STATUS": "מצב",
@@ -1043,7 +1093,8 @@
 						"DATE": "תאריך",
 						"HOST": "מארח מעבד",
 						"TYPE": "סוג שירות",
-						"TECHNICAL_DETAILS": "פרטים טכניים"
+						"TECHNICAL_DETAILS": "פרטים טכניים",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}
@@ -1096,6 +1147,24 @@
 					"LABEL": "אין ערכת נושא",
 					"EMPTY": "לא נמצאו ערכות נושא"
 				},
+				"TOBIRA": {
+					"CAPTION": "Tobira",
+					"DESCRIPTION": "Here you can select where you want the series to show up in the Tobira video portal. You can only select one location here by clicking the name or the check mark next to it. The page needs to be empty (marked in bold). You can also create new pages here, but note that they are only persisted if they are on the path to the selected page. In order to select a new page or create sub pages for one, its path segment needs to have a valid value.",
+					"SELECT_PAGE": "Select a target page",
+					"PAGE_TITLE": "Subpage title",
+					"TITLE_OF_SERIES": "(Title of series)",
+					"PATH_SEGMENT": "Path segment",
+					"SUBPAGES": "Subpages",
+					"ADD_SUBPAGE": "Add subpage",
+					"CANCEL": "Cancel",
+					"HOMEPAGE": "Homepage",
+					"SELECTED_PAGE": "Series will be mounted under the following path",
+					"NO_PAGE_SELECTED": "No page selected. Series will not be mounted in Tobira.",
+					"NO_PAGE_SELECTED_EDIT": "No page selected. Series path will not be changed.",
+					"PATH": "Path",
+					"DIRECT_LINK": "A direct link will be available.",
+					"MOUNT_DISCLAIMER": "Series can only be mounted in empty pages"
+				},
 				"SUMMARY": {
 					"CAPTION": "סיכום"
 				}
@@ -1113,17 +1182,21 @@
 				"TOOLTIP": {
 					"SERIES": "סנן אירועים עבור סדרה זו",
 					"DETAILS": "פתיחת פרטי הסדרה",
-					"DELETE": "מחיקת הסדרה"
+					"DELETE": "מחיקת הסדרה",
+					"CREATION": "Filter for this creation date",
+					"ORGANIZER": "Filter for this organizer",
+					"CONTRIBUTORS": "Filter for this contributor"
 				}
 			},
 			"DETAILS": {
-				"HEADER": "פרטי סידרה - {{resourceId}}",
+				"HEADER": "Series details - {{name}}",
 				"TABS": {
 					"METADATA": "מטא-נתונים",
 					"EXTENDED_METADATA": "מטא-נתונים II",
 					"EVENTS": "אירועים",
 					"PERMISSIONS": "מדיניות גישה",
 					"THEME": "ערכת נושא",
+					"TOBIRA": "Tobira",
 					"STATISTICS": "סטטיסטיקות"
 				},
 				"ACCESS": {
@@ -1143,7 +1216,10 @@
 						"ADDITIONAL_ACTIONS": "פעולות נוספות",
 						"ACTION": "פעולות",
 						"NEW": "מדיניות חדשה",
-						"DETAILS": "פרטים",
+						"NON_USER_ROLES": "Roles and Groups authorized for the series",
+						"USER": "User",
+						"USERS": "Users who are authorized for the series",
+						"NEW_USER": "New user",
 						"REPLACE_EVENT_ACLS": "עדכון הרשאות אירוע",
 						"REPLACE_EVENT_ACLS_HINT": "בדיקה שכל האירועים של סדרה זו יש הרשאות אלה בתוקף",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1170,6 +1246,18 @@
 					"DESCRIPTION": "תאור",
 					"REPLACE_SERIES_METADATA": "Update series metadata",
 					"REPLACE_SERIES_THEME": "Update series theme"
+				},
+				"TOBIRA": {
+					"HOMEPAGE": "(Homepage)",
+					"DIRECT_LINK": "Direct link to series",
+					"COPY_DIRECT_LINK": "Copy to clipboard",
+					"NOT_MOUNTED": "This series is currently not included the page structure, and can only be reached using the direct link above.",
+					"PAGES": "Pages in Tobira that contain this series",
+					"DISCARD": "Discard",
+					"EDIT_PATH": "Edit path",
+					"REMOVE_PATH": "Remove path",
+					"MOUNT_SERIES": "Mount series",
+					"DESCRIPTION": "You may edit the path of pages containing this series if the page has no other content."
 				},
 				"EVENTS": {
 					"TITLE": "כותרת",
@@ -1210,7 +1298,7 @@
 				}
 			},
 			"DETAILS": {
-				"HEADER": "פרטי מיקום - {{resourceId}}",
+				"HEADER": "Location details - {{name}}",
 				"TAB": {
 					"GENERAL": "כללי",
 					"CONFIGURATION": "הגדרות",
@@ -1267,7 +1355,7 @@
 			},
 			"DETAILS": {
 				"NEWCAPTION": "צור משתמש",
-				"EDITCAPTION": "פרטי משתמש - {{username}}",
+				"EDITCAPTION": "User details - {{name}}",
 				"TABS": {
 					"USER": "משתמש",
 					"ROLES": "תפקידים",
@@ -1291,6 +1379,14 @@
 					"RIGHT": "תפקידים שנבחרו",
 					"REMOVE": "הסר תפקיד",
 					"ADD": "הוסף תפקיד"
+				},
+				"STRENGTH": {
+					"BAD": "Bad password",
+					"VERYWEAK": "Very weak password",
+					"WEAK": "Weak password",
+					"GOOD": "Good password",
+					"STRONG": "Strong password",
+					"VERYSTRONG": "Very strong password"
 				}
 			}
 		},
@@ -1382,8 +1478,11 @@
 						"ADDITIONAL_ACTIONS": "פעולות נוספות",
 						"ACTION": "פעולות",
 						"NEW": "מדיניות חדשה",
-						"DETAILS": "פרטים",
-						"DESCRIPTION": "נא לבחור סט מדיניויות מוגדרות מראש או להוסיף מדיניות מותאמת אישית להלן"
+						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
+						"DESCRIPTION": "נא לבחור סט מדיניויות מוגדרות מראש או להוסיף מדיניות מותאמת אישית להלן",
+						"USER": "User",
+						"USERS": "Users who are authorized for the access policy",
+						"NEW_USER": "New user"
 					},
 					"ROLES": {
 						"LABEL": "בחר תפקיד",
@@ -1614,7 +1713,6 @@
 				"HOST_NAME": "שם מחשב מארח",
 				"NODE_NAME": "שם שרת",
 				"CORES": "ליבות",
-				"COMPLETED": "משימות שהושלמו",
 				"RUNNING": "משימות רצות",
 				"QUEUED": "משימות בתור",
 				"MAINTENANCE": "תחזוקה",
@@ -1625,6 +1723,7 @@
 		"SERVICES": {
 			"TABLE": {
 				"CAPTION": "שירותים",
+				"ONLINE": "Online",
 				"STATUS": "מצב",
 				"NAME": "שם שירות",
 				"HOST_NAME": "שם מחשב מארח",
@@ -1645,131 +1744,6 @@
 				"WARNING": "אזהרה",
 				"ERROR": "שגיאה"
 			}
-		}
-	},
-	"VIDEO_TOOL": {
-		"WARNING_UNSAVED": "אזהרה: חלק את מהשינויים שלך לא נשמרו. אם תצא מעורך הוידאו, שינויים אלה עלולה ללכת לאיבוד. אתה באמת רוצה להמשיך?",
-		"TIMELINE": "ציר הזמן",
-		"ZOOMLEVEL": "רמת גודל התצוגה",
-		"PREVIEW_MODE": "מצב תצוגה מקדימה",
-		"PREVIEW_MODE_TOOLTIP": "לנגן קטעים נבחרים בלבד",
-		"ZOOM": "הגדל/הקטן",
-		"BUTTONS": {
-			"CLOSE": "סגור",
-			"SAVE": "שמור",
-			"PROCESS": "שמור והמשך",
-			"ADD_COMMENT": "הוספת הערה"
-		},
-		"TABS": {
-			"EDIT": "עורך",
-			"CAPTIONS": "כותרות",
-			"ANNOTATIONS": "הערות"
-		},
-		"AREAS": {
-			"METADATA": "מטא-נתונים",
-			"THUMBNAIL": "תמונה ממוזערת",
-			"COMMENTS": "הערות",
-			"SEGMENTS": "מקטעים",
-			"TRACKS": "רצועות"
-		},
-		"ACTIONS": {
-			"SPLIT": "פצל",
-			"SPLIT_TOOLTIP": "Split segment at the current cursor position.",
-			"CUT": "הסתר/הצג",
-			"CUT_TOOLTIP": "Hide or show the selected part of the video.",
-			"REPLAY_SEGMENT": "Play Start of Segment",
-			"REPLAY_SEGMENT_TOOLTIP": "Play the current segment from the beginning.",
-			"REPLAY_END_OF_SEGMENT": "Play End of Segment",
-			"REPLAY_END_OF_SEGMENT_TOOLTIP": "Play a few seconds at the end of the current segment.",
-			"REPLAY_SEGMENT_WITH_PREROLL": "Play Transition",
-			"REPLAY_SEGMENT_WITH_PREROLL_TOOLTIP": "Play a few seconds containing the end of the previous and the beginning of the next segment.",
-			"UNDO": "בטל",
-			"REDO": "בצע שוב",
-			"CLEAR_SEGMENTS": "Clear All Segments",
-			"CLEAR_SEGMENTS_TOOLTIP": "Clear all segments, leaving one big segment."
-		},
-		"SEGMENTS": {
-			"REMOVE_SEGMENT": "הסר מקטע",
-			"SHOW_SEGMENT": "Show this Segment",
-			"HIDE_SEGMENT": "Hide this Segment",
-			"START": "התחל",
-			"END": "סוף"
-		},
-		"THUMBNAIL": {
-			"DESCRIPTION": "תמונת ברירת מחדל ממוזערת המשמשת לתצוגה ויזואלית של אירוע מיוצרת באופן אוטומטי. במקרה ובו תרצו תמונה ממוזערת שונה, אתם צריכים לחלץ תמונה ממוזערת מתוך הוידאו במיקום הנוכחי של הסרטון או להעלות תמונה.",
-			"ACTIONS": {
-				"EXTRACT": {
-					"FROM_VIDEO": {
-						"LABEL": "חלץ מתוך הוידאו",
-						"TOOLTIP": "לחלץ את התמונה הממוזערת מהוידאו במיקום הנוכחי בסרטון"
-					},
-					"FROM_LEFT_VIDEO": {
-						"LABEL": "חלץ מתוך הוידאו השמאלי",
-						"TOOLTIP": "לחלץ את התמונה הממוזערת מהוידאו השמאלי במיקום הנוכחי בסרטון"
-					},
-					"FROM_RIGHT_VIDEO": {
-						"LABEL": "חלץ מתוך הוידאו הימני",
-						"TOOLTIP": "לחלץ את התמונה הממוזערת מהוידאו הימני במיקום הנוכחי בסרטון"
-					}
-				},
-				"UPLOAD": {
-					"LABEL": "העלה תמונה",
-					"TOOLTIP": "העלאת תמונה ממוזערת"
-				},
-				"USE_DEFAULT": {
-					"LABEL": "השתמש בתמונת ברירת המחדל הממוזערת",
-					"TOOLTIP": "השתמש בתמונת ברירת המחדל הממוזערת שנוצרה באופן אוטומטי"
-				}
-			},
-			"PREVIEW": {
-				"NOT_AVAILABLE": "תצוגה מקדימה אינה זמינה",
-				"OUTDATED": "התצוגה המקדימה מיושנת מכיוון שישנם מקטעים ששונו. התצוגה המקדימה תתעדכן מייד לאחר שהשינויים שלך ישמרו."
-			},
-			"CURRENT": {
-				"DEFAULT": "אתם משתמשים כרגע בתמונת ברירת מחדל ממוזערת.",
-				"SNAPSHOT": "תמונה ממוזערת זו חולצה מהוידאו.",
-				"UPLOAD": "אתם משתמשים כרגע בתמונה ממוזערת שהועלתה."
-			}
-		},
-		"TRACKS": {
-			"DESCRIPTION": "אתם יכולים לבטל בחירה של רצועות בשביל שלא יכללו בתהליך העיבוד בהמשך. סימו לב שעליכם לפרסם (מחדש) את האירוע בשביל להכיל את השינויים בפועל.",
-			"NOTIFICATION": {
-				"NO_VIDEO_TRACK_SELECTED": "עליך לאפשר לפחות סרטון וידיאו אחד",
-				"NO_AUDIO_TRACK_SELECTED": "עליך לאפשר לפחות רצועת שמע אחת"
-			},
-			"TRACK": {
-				"HEADER": "רצועה"
-			},
-			"VIDEO": {
-				"HEADER": "סרטון הווידיאו",
-				"NOT_AVAILABLE": "אין רצועות וידאו זמינות",
-				"NO_PREVIEW_AVAILABLE": "לא נמצאה תמונה מקדימה",
-				"NO_TRACK_SELECTED": "לא נבחרה רצועת שמע",
-				"TOOLTIPS": {
-					"HIDE": "רצועת וידאו זו כרגע מאופשרת. לחץ לביטול",
-					"UNHIDE": "רצועת וידאו זו כרגע מבוטלת. לחץ לאיפשור."
-				}
-			},
-			"AUDIO": {
-				"HEADER": "רצועת שמע",
-				"NOT_AVAILABLE": "אין רצועות שמע זמינות",
-				"NO_PREVIEW_AVAILABLE": "לא נמצאה תמונה מקדימה",
-				"NO_TRACK_SELECTED": "לא נבחרה רצועת שמע",
-				"TOOLTIPS": {
-					"HIDE": "רצועת שמע זו כרגע מאופשרת. לחץ לביטול",
-					"UNHIDE": "רצועת שמע זו כרגע מבוטלת. לחץ לאיפשור"
-				}
-			}
-		},
-		"PLAYER": {
-			"PLAY": "הפעל",
-			"PAUSE": "השהה",
-			"NEXT_FRAME": "לפריים הבא",
-			"PREVIOUS_FRAME": "פריים קודם",
-			"NEXT_SEGMENT": "קטע הבא / קפיצה אל הסוף",
-			"PREVIOUS_SEGMENT": "המקטע הקודם / קפיצה להתחלה",
-			"MUTE": "השתק",
-			"VOLUME": "עוצמת שמע"
 		}
 	},
 	"TABLE_FILTERS": {
@@ -2020,6 +1994,8 @@
 	"TABLE_EDIT": "ערוך",
 	"TABLE_NEXT": "Next page",
 	"TABLE_PREVIOUS": "Previous page",
+	"TABLE_CURRENT": "Current page {{pageNumber}}",
+	"TABLE_NUMBERED": "Go to page {{pageNumber}}",
 	"DASHBOARD": {
 		"RUNNING": "רץ",
 		"FINISHED": "הסתיים",
@@ -2027,7 +2003,8 @@
 		"FAILED": "נכשל",
 		"FINISHED_WITH_COMMENTS": "משימות",
 		"SCHEDULED": "מתוזמן",
-		"RECORDING": "מקליט"
+		"RECORDING": "מקליט",
+		"BUTTON_TOOLTIP": "Apply filter {{filterName}} to the table"
 	},
 	"HOTKEYS": {
 		"CHEAT_SHEET": {
@@ -2123,12 +2100,11 @@
 	"STATISTICS": {
 		"NOT_AVAILABLE": "סטטיסטיקטות לא ניתנות להצגה ברגע זה. יש לנסות בשלב מאוחר יותר.",
 		"UNSUPPORTED_TYPE": "מצטערים, Opencast לא יכולה לחשב את הנתון הסטטיסטי הזה.",
-		"FROM": "מאת",
-		"TO": "עבור",
 		"TOTAL": "סה\"כ",
+		"TIMERANGE": "Time Range",
 		"GRANULARITY": "גרנולריות",
 		"NAVIGATION": {
-			"ORGANIZATION": "ארגון"
+			"ORGANIZATION": "Organization"
 		},
 		"TIME_MODES": {
 			"Year": "Year",
@@ -2148,7 +2124,7 @@
 			"PUBLISHEDHOURS": "Published Hours of Video"
 		},
 		"DESCRIPTION": {
-			"RANDOM": "מוצג מידע אקראי לצורך הצגת יכולות. ניתן לבטל תצוגת תרשים זה על ידי מחיקת קובץ json המכיל המספק מידע סטטיסטי מתקיית etc/providers",
+			"RANDOM": "מוצג מידע אקראי לצורך הצגת יכולות. ניתן לבטל תצוגת תרשים זה על ידי מחיקת קובץ json המכיל המספק מידע סטטיסטי מתקיית etc\/providers",
 			"VIEWS_SUM": "This displays the total number of views per time unit.",
 			"VIEWS_AVG": "This displays the mean number of daily views per time unit.",
 			"PUBLISHEDHOURS": "This displays the published hours of video"
@@ -2156,13 +2132,13 @@
 	},
 	"dateFormats": {
 		"dateTime": {
-			"short": "{{dateTime, HH:mm DD/MM/YY}}",
-			"medium": "{{dateTime, HH:mm:ss DD/MM/YYYY}}",
+			"short": "{{dateTime, HH:mm DD\/MM\/YY}}",
+			"medium": "{{dateTime, HH:mm:ss DD\/MM\/YYYY}}",
 			"full": "{{dateTime, HH:mm:ss z dddd D MMMM YYYY}}"
 		},
 		"date": {
-			"short": "{{date, DD/MM/YY}}",
-			"medium": "{{date, DD/MM/YYYY}}",
+			"short": "{{date, DD\/MM\/YY}}",
+			"medium": "{{date, DD\/MM\/YYYY}}",
 			"full": "{{date, dddd D MMMM YYYY}}"
 		},
 		"time": {

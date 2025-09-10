@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getSelectedRows } from "../../../../selectors/tableSelectors";
-import { connect } from "react-redux";
 import cn from "classnames";
-import { useAppDispatch } from "../../../../store";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
 	deleteMultipleSeries,
 	getSeriesConfig,
@@ -11,17 +10,30 @@ import {
 } from "../../../../slices/seriesSlice";
 import { useHotkeys } from "react-hotkeys-hook";
 import { availableHotkeys } from "../../../../configs/hotkeysConfig";
+import { isSeries } from "../../../../slices/tableSlice";
+import ModalContent from "../../../shared/modals/ModalContent";
+import NavigationButtons from "../../../shared/NavigationButtons";
+import { NotificationComponent } from "../../../shared/Notifications";
+import { LuCheck } from "react-icons/lu";
 
 /**
  * This component manges the delete series bulk action
  */
-// @ts-expect-error TS(7031): Binding element 'close' implicitly has an 'any' ty... Remove this comment to see the full error message
-const DeleteSeriesModal = ({ close, selectedRows }) => {
+const DeleteSeriesModal = ({
+	close,
+}: {
+	close: () => void
+}) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
+	const selectedRows = useAppSelector(state => getSelectedRows(state));
+	const modifiedSelectedRows = selectedRows.map(row => {
+		return { ...row, hasEvents: false };
+	});
+
 	const [allChecked, setAllChecked] = useState(true);
-	const [selectedSeries, setSelectedSeries] = useState(selectedRows);
+	const [selectedSeries, setSelectedSeries] = useState(modifiedSelectedRows);
 	const [deleteWithSeriesAllowed, setDeleteWithSeriesAllowed] = useState(false);
 
 	useHotkeys(
@@ -34,15 +46,16 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 	useEffect(() => {
 		async function fetchData() {
 			// Query from backend if deletion of series with events allowed
-			let response = await getSeriesConfig();
+			const response = await getSeriesConfig();
 			setDeleteWithSeriesAllowed(response);
 
 			// Check for each selected series if it has events
-			let series = [];
+			const series = [];
 			for (let i = 0; i < selectedSeries.length; i++) {
-				const events = await hasEvents(selectedSeries[i].id);
+				const selectedSeriesInThisLoop = selectedSeries[i];
+				const events = isSeries(selectedSeriesInThisLoop) ? await hasEvents(selectedSeriesInThisLoop.id.toString()) : false;
 				series.push({
-					...selectedSeries[i],
+					...selectedSeriesInThisLoop,
 					hasEvents: events,
 				});
 			}
@@ -53,17 +66,16 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 	}, []);
 
 	const deleteSelectedSeries = () => {
+		// @ts-expect-error TS(7006): Type guarding array is hard
 		dispatch(deleteMultipleSeries(selectedSeries));
 		close();
 	};
 
 	// Select or deselect all rows in table
-// @ts-expect-error TS(7006): Parameter 'e' implicitly has an 'any' type.
-	const onChangeAllSelected = (e) => {
+	const onChangeAllSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selected = e.target.checked;
 		setAllChecked(selected);
-// @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type.
-		let changedSelection = selectedSeries.map((series) => {
+		const changedSelection = selectedSeries.map(series => {
 			return {
 				...series,
 				selected: selected,
@@ -73,12 +85,10 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 	};
 
 	// Handle change of checkboxes indicating which series to consider further
-// @ts-expect-error TS(7006): Parameter 'e' implicitly has an 'any' type.
-	const onChangeSelected = (e, id) => {
+	const onChangeSelected = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
 		const selected = e.target.checked;
-// @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type.
-		let changedSeries = selectedSeries.map((series) => {
-			if (series.id === id) {
+		const changedSeries = selectedSeries.map(series => {
+			if (isSeries(series) && series.id === id) {
 				return {
 					...series,
 					selected: selected,
@@ -92,8 +102,7 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 		if (!selected) {
 			setAllChecked(false);
 		}
-// @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type.
-		if (changedSeries.every((series) => series.selected === true)) {
+		if (changedSeries.every(series => series.selected === true)) {
 			setAllChecked(true);
 		}
 	};
@@ -101,8 +110,7 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 	const isAllowed = () => {
 		let allowed = true;
 		if (!deleteWithSeriesAllowed) {
-// @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type.
-			selectedSeries.forEach((series) => {
+			selectedSeries.forEach(series => {
 				if (allowed && series.selected && series.hasEvents) {
 					allowed = false;
 				}
@@ -114,134 +122,107 @@ const DeleteSeriesModal = ({ close, selectedRows }) => {
 	// Check validity for activating delete button
 	const checkValidity = () => {
 		if (isAllowed()) {
-// @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type.
-			return !!selectedSeries.some((series) => series.selected === true);
+			return !!selectedSeries.some(series => series.selected === true);
 		}
 		return false;
 	};
 
 	return (
 		<>
-			<div className="modal-animation modal-overlay" />
-			<section
-				className="modal active modal-open"
-				id="delete-series-status-modal"
-				style={{ display: "block" }}
-			>
-				<header>
-					<button onClick={() => close()} className="button-like-anchor fa fa-times close-modal" />
-					<h2>{t("BULK_ACTIONS.DELETE.SERIES.CAPTION")}</h2>
-				</header>
+			<ModalContent>
+				<NotificationComponent
+					notification={{
+						type: "error",
+						message: "BULK_ACTIONS.DELETE_SERIES_WARNING_LINE1",
+						id: 0,
+					}}
+				/>
 
-				<div className="modal-content">
-					<div className="modal-body">
-						<div className="modal-alert danger obj">
-							<p>{t("BULK_ACTIONS.DELETE_SERIES_WARNING_LINE1")}</p>
-							<p>{t("BULK_ACTIONS.DELETE_SERIES_WARNING_LINE2")}</p>
-						</div>
+				{/* Only show if series not allowed to be deleted */}
+				{!isAllowed() && (
+					<NotificationComponent
+						notification={{
+							type: "warning",
+							message: "BULK_ACTIONS.DELETE.SERIES.CANNOT_DELETE",
+							id: 0,
+						}}
+					/>
+				)}
 
-						{/* Only show if series not allowed to be deleted */}
-						{!isAllowed() && (
-							<div className="alert sticky warning">
-								<p>{t("BULK_ACTIONS.DELETE.SERIES.CANNOT_DELETE")}</p>
-							</div>
-						)}
-
-						<div className="full-col">
-							<div className="obj">
-								<header>{t("EVENTS.SERIES.TABLE.CAPTION")}</header>
-								<div className="obj-container">
-									<table className="main-tbl">
-										<thead>
-											<tr>
-												<th className="small">
-													<input
-														type="checkbox"
-														checked={allChecked}
-														onChange={(e) => onChangeAllSelected(e)}
-														className="select-all-cbox"
-													/>
-												</th>
-												<th>{t("EVENTS.SERIES.TABLE.TITLE")}</th>
-												<th>{t("EVENTS.SERIES.TABLE.ORGANIZERS")}</th>
-												<th>{t("EVENTS.SERIES.TABLE.HAS_EVENTS")}</th>
-											</tr>
-										</thead>
-										<tbody>
-											{/* Repeat for each marked series */}
-{/* @ts-expect-error TS(7006): Parameter 'series' implicitly has an 'any' type. */}
-											{selectedSeries.map((series, key) => (
-												<tr
-													key={key}
-													className={cn({
-														error:
-															!deleteWithSeriesAllowed &&
-															series.selected &&
-															series.hasEvents,
-													})}
-												>
-													<td>
-														<input
-															type="checkbox"
-															name="selection"
-															checked={series.selected}
-															onChange={(e) => onChangeSelected(e, series.id)}
-															className="child-cbox"
-														/>
-													</td>
-													<td>{series.title}</td>
-													<td>
-														{/*Repeat for each creator*/}
-{/* @ts-expect-error TS(7006): Parameter 'organizer' implicitly has an 'any' type */}
-														{series.organizers.map((organizer, key) => (
-															<span className="metadata-entry" key={key}>
-																{organizer}
-															</span>
-														))}
-													</td>
-													{/* Only show check if row has events, else empty cell*/}
-													<td>
-														{series.hasEvents && <i className="fa fa-check" />}
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-							</div>
+				<div className="full-col">
+					<div className="obj">
+						<header>{t("EVENTS.SERIES.TABLE.CAPTION")}</header>
+						<div className="obj-container">
+							<table className="main-tbl">
+								<thead>
+									<tr>
+										<th className="small">
+											<input
+												type="checkbox"
+												checked={allChecked}
+												onChange={e => onChangeAllSelected(e)}
+												className="select-all-cbox"
+											/>
+										</th>
+										<th>{t("EVENTS.SERIES.TABLE.TITLE")}</th>
+										<th>{t("EVENTS.SERIES.TABLE.ORGANIZERS")}</th>
+										<th>{t("EVENTS.SERIES.TABLE.HAS_EVENTS")}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* Repeat for each marked series */}
+									{selectedSeries.map((series, key) => (
+										<tr
+											key={key}
+											className={cn({
+												error:
+													!deleteWithSeriesAllowed &&
+													series.selected &&
+													series.hasEvents,
+											})}
+										>
+											<td>
+												<input
+													type="checkbox"
+													name="selection"
+													checked={series.selected}
+													onChange={e => onChangeSelected(e, isSeries(series) ? series.id : "")}
+													className="child-cbox"
+												/>
+											</td>
+											<td>{isSeries(series) && series.title}</td>
+											<td>
+												{/* Repeat for each creator*/}
+												{isSeries(series) && series.organizers.map((organizer, key) => (
+													<span className="metadata-entry" key={key}>
+														{organizer}
+													</span>
+												))}
+											</td>
+											{/* Only show check if row has events, else empty cell*/}
+											<td>
+												{series.hasEvents && <LuCheck className={cn("fa-check", { active: true })} />}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
+			</ModalContent>
 
-				<footer>
-					<button
-						onClick={() => deleteSelectedSeries()}
-						disabled={!checkValidity()}
-						className={cn("danger", {
-							active: checkValidity(),
-							inactive: !checkValidity(),
-						})}
-					>
-						{t("BULK_ACTIONS.DELETE.SERIES.BUTTON")}
-					</button>
-					<button className="cancel" onClick={() => close()}>
-						{t("CANCEL")}
-					</button>
-				</footer>
-			</section>
+			<NavigationButtons
+				isLast
+				isSubmitDisabled={!checkValidity()}
+				submitClassName="danger"
+				nextPage={deleteSelectedSeries}
+				previousPage={close}
+				nextTranslationString="BULK_ACTIONS.DELETE.SERIES.BUTTON"
+				previousTranslationString="CANCEL"
+			/>
 		</>
 	);
 };
 
-// Getting state data out of redux store
-// @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
-const mapStateToProps = (state) => ({
-	selectedRows: getSelectedRows(state),
-});
-
-// @ts-expect-error TS(7006): Parameter 'dispatch' implicitly has an 'any' type.
-const mapDispatchToProps = (dispatch) => ({
-
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteSeriesModal);
+export default DeleteSeriesModal;

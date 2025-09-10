@@ -1,32 +1,34 @@
 import React from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
-import { availableHotkeys } from "../../configs/hotkeysConfig";
+import { Modal, ModalHandle } from "./modals/Modal";
+import { NotificationComponent } from "./Notifications";
+import { ParseKeys } from "i18next";
+import BaseButton from "./BaseButton";
 
-const ConfirmModal = ({
-// @ts-expect-error TS(7031): Binding element 'close' implicitly has an 'any' ty... Remove this comment to see the full error message
+export type ResourceType = "EVENT" | "SERIES" | "LOCATION" | "USER" | "GROUP" | "ACL" | "THEME" | "TOBIRA_PATH";
+
+const ConfirmModal = <T, >({
 	close,
-// @ts-expect-error TS(7031): Binding element 'resourceType' implicitly has an '... Remove this comment to see the full error message
 	resourceType,
-// @ts-expect-error TS(7031): Binding element 'resourceName' implicitly has an '... Remove this comment to see the full error message
 	resourceName,
-// @ts-expect-error TS(7031): Binding element 'resourceId' implicitly has an 'an... Remove this comment to see the full error message
 	resourceId,
-// @ts-expect-error TS(7031): Binding element 'deleteMethod' implicitly has an '... Remove this comment to see the full error message
 	deleteMethod,
 	deleteAllowed = true,
-	showCautionMessage = false,
-	deleteNotAllowedMessage = "",
-	deleteWithCautionMessage = "",
+	deleteNotAllowedMessage,
+	deleteWithCautionMessage,
+	modalRef,
+}: {
+	close: () => void,
+	resourceType: ResourceType,
+	resourceName: string,
+	resourceId: T,
+	deleteMethod: (id: T) => void,
+	deleteAllowed?: boolean,
+	deleteNotAllowedMessage?: ParseKeys,
+	deleteWithCautionMessage?: ParseKeys,
+	modalRef: React.RefObject<ModalHandle | null>
 }) => {
 	const { t } = useTranslation();
-
-	useHotkeys(
-		availableHotkeys.general.CLOSE_MODAL.sequence,
-		() => close(),
-		{ description: t(availableHotkeys.general.CLOSE_MODAL.description) ?? undefined },
-		[close],
-  	);
 
 	const handleClose = () => {
 		close();
@@ -38,76 +40,75 @@ const ConfirmModal = ({
 	};
 
 	return (
-		<>
-			<div className="modal-animation modal-overlay" />
-			<section
-				className="modal modal-animation"
-				id="confirm-modal"
-				style={{ fontSize: "14px" }}
-			>
-				<header>
-					<button
-						className="button-like-anchor fa fa-times close-modal"
-						onClick={() => handleClose()}
-					/>
-					<h2>{t("CONFIRMATIONS.ACTIONS.CONFIRMATION")}</h2>
-				</header>
+		<Modal
+			header={t("CONFIRMATIONS.ACTIONS.CONFIRMATION")}
+			classId="confirm-modal"
+			ref={modalRef}
+		>
+			{deleteAllowed ? (
+				<div>
+					{deleteWithCautionMessage && (
+						<NotificationComponent
+							notification={{
+								type: "warning",
+								message: deleteWithCautionMessage,
+								id: 0,
+							}}
+						/>
+					)}
 
-				{deleteAllowed ? (
 					<div>
-						{showCautionMessage && (
-							<div className="modal-alert warning">
-								<p>{t(deleteWithCautionMessage)}</p>
-							</div>
-						)}
-
-						<div>
-							<p>
-								<span>
-									{t("CONFIRMATIONS.METADATA.NOTICE." + resourceType)}
-								</span>
-							</p>
-							<p className="delete">{resourceName}</p>
-						</div>
-						{resourceType === "EVENT" && (
-							<p className="warning">
-								{t("CONFIRMATIONS.WARNINGS.EVENT_WILL_BE_GONE")}
-							</p>
-						)}
-						<p>{t("CONFIRMATIONS.CONTINUE_ACTION")}</p>
-
-						<div className="btn-container">
-							<button
-								className="cancel-btn close-modal"
-								onClick={() => handleClose()}
-							>
-								<i>{t("CANCEL")}</i>
-							</button>
-							<button
-								className="danger-btn"
-								onClick={() => handleConfirmation()}
-							>
-								<i>{t("CONFIRM")}</i>
-							</button>
-						</div>
+						<p>
+							<span style={{ padding: "0px 4px" }}>
+								{t(`CONFIRMATIONS.METADATA.NOTICE.${resourceType}`)}
+							</span>
+						</p>
+						<p className="delete">{resourceName}</p>
 					</div>
-				) : (
-					<div>
-						<div className="modal-alert danger">
-							<p>{t(deleteNotAllowedMessage)}</p>
-						</div>
-						<div className="btn-container">
-							<button
-								className="cancel-btn close-modal"
-								onClick={() => handleClose()}
-							>
-								<i>{t("CANCEL")}</i>
-							</button>
-						</div>
+					{resourceType === "EVENT" && (
+						<p className="warning">
+							{t("CONFIRMATIONS.WARNINGS.EVENT_WILL_BE_GONE")}
+						</p>
+					)}
+					<p>{t("CONFIRMATIONS.CONTINUE_ACTION")}</p>
+
+					<div className="btn-container">
+						<BaseButton
+							className="cancel-btn close-modal"
+							onClick={() => handleClose()}
+						>
+							<i>{t("CANCEL")}</i>
+						</BaseButton>
+						<BaseButton
+							className="danger-btn"
+							onClick={() => handleConfirmation()}
+						>
+							<i>{t("CONFIRM")}</i>
+						</BaseButton>
 					</div>
-				)}
-			</section>
-		</>
+				</div>
+			) : (
+				<div>
+					{deleteNotAllowedMessage && (
+						<NotificationComponent
+							notification={{
+								type: "error",
+								message: deleteNotAllowedMessage,
+								id: 0,
+							}}
+						/>
+					)}
+					<div className="btn-container">
+						<BaseButton
+							className="cancel-btn close-modal"
+							onClick={() => handleClose()}
+						>
+							<i>{t("CANCEL")}</i>
+						</BaseButton>
+					</div>
+				</div>
+			)}
+		</Modal>
 	);
 };
 

@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import cn from "classnames";
-import Header from "../Header";
-import NavBar from "../NavBar";
-import MainView from "../MainView";
-import Footer from "../Footer";
-import MainNav from "../shared/MainNav";
 import TimeSeriesStatistics from "../shared/TimeSeriesStatistics";
 import {
 	getStatistics,
@@ -16,49 +9,40 @@ import {
 } from "../../selectors/statisticsSelectors";
 import {
 	getOrgId,
-	getUserInformation,
 } from "../../selectors/userInfoSelectors";
-import { hasAccess } from "../../utils/utils";
 import { fetchUserInfo } from "../../slices/userInfoSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
 	fetchStatisticsPageStatistics,
 	fetchStatisticsPageStatisticsValueUpdate,
 } from "../../slices/statisticsSlice";
+import { createChartOptions } from "../../utils/statisticsUtils";
+import { NotificationComponent } from "../shared/Notifications";
+import { ParseKeys } from "i18next";
+import MainPage from "../shared/MainPage";
 
-const Statistics: React.FC = () => {
+const Statistics = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const [displayNavigation, setNavigation] = useState(false);
-
 	const organizationId = useAppSelector(state => getOrgId(state));
-	const user = useAppSelector(state => getUserInformation(state));
 	const statistics = useAppSelector(state => getStatistics(state));
 	const hasStatistics = useAppSelector(state => getHasStatistics(state));
 	const hasError = useAppSelector(state => hasStatisticsError(state));
 	const isLoadingStatistics = useAppSelector(state => isFetchingStatistics(state));
 
-	// TODO: Get rid of the wrappers when modernizing redux is done
-	const fetchStatisticsPageStatisticsValueUpdateWrapper = (organizationId: any, providerId: any, from: any, to: any, dataResolution: any, timeMode: any) => {
-		dispatch(fetchStatisticsPageStatisticsValueUpdate({organizationId, providerId, from, to, dataResolution, timeMode}))
-	}
-
+	// fetch user information for organization id, then fetch statistics
 	useEffect(() => {
-		// fetch user information for organization id, then fetch statistics
-		dispatch(fetchUserInfo()).then(() => {
-			dispatch(fetchStatisticsPageStatistics(organizationId)).then();
-		})
+		dispatch(fetchUserInfo());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const toggleNavigation = () => {
-		setNavigation(!displayNavigation);
-	};
+	useEffect(() => {
+			dispatch(fetchStatisticsPageStatistics(organizationId)).then();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [organizationId]);
 
 	/* generates file name for download-link for a statistic */
-// @ts-expect-error TS(7006): Parameter 'statsTitle' implicitly has an 'any' typ... Remove this comment to see the full error message
-	const statisticsCsvFileName = (statsTitle) => {
+	const statisticsCsvFileName = (statsTitle: string) => {
 		const sanitizedStatsTitle = statsTitle
 			.replace(/[^0-9a-z]/gi, "_")
 			.toLowerCase();
@@ -72,87 +56,80 @@ const Statistics: React.FC = () => {
 	};
 
 	return (
-                <span>
-			<Header />
-			<NavBar>
-				{/* Include Burger-button menu */}
-				<MainNav isOpen={displayNavigation} toggleMenu={toggleNavigation} />
-
-				<nav>
-					{hasAccess("ROLE_UI_STATISTICS_ORGANIZATION_VIEW", user) && (
-						<Link
-							to="/statistics/organization"
-							className={cn({ active: true })}
-							onClick={() => {}}
-						>
-							{t("STATISTICS.NAVIGATION.ORGANIZATION")}
-						</Link>
-					)}
-				</nav>
-			</NavBar>
-
-			{/* main view of this page, displays statistics */}
-			<MainView open={displayNavigation}>
-				<div className="obj statistics">
-					{/* heading */}
-					<div className="controls-container">
-						<h1>
-							{" "}
-							{t("STATISTICS.NAVIGATION.ORGANIZATION") /* Organisation */}{" "}
-						</h1>
-					</div>
-
-					{!isLoadingStatistics &&
-						(hasError || !hasStatistics ? (
-							/* error message */
-							<div className="obj">
-								<div className="modal-alert danger">
-									{t("STATISTICS.NOT_AVAILABLE")}
-								</div>
-							</div>
-						) : (
-							/* iterates over the different available statistics */
-							statistics.map((stat, key) => (
-								<div className="obj" key={key}>
-									{/* title of statistic */}
-									<header className="no-expand">{t(stat.title)}</header>
-
-									{stat.providerType === "timeSeries" ? (
-										/* visualization of statistic for time series data */
-										<div className="obj-container">
-											<TimeSeriesStatistics
-												t={t}
-												resourceId={organizationId}
-												statTitle={t(stat.title)}
-												providerId={stat.providerId}
-												fromDate={stat.from}
-												toDate={stat.to}
-												timeMode={stat.timeMode}
-												dataResolution={stat.dataResolution}
-												statDescription={stat.description}
-												onChange={fetchStatisticsPageStatisticsValueUpdateWrapper}
-												exportUrl={stat.csvUrl}
-												exportFileName={statisticsCsvFileName}
-												totalValue={stat.totalValue}
-												sourceData={stat.values}
-												chartLabels={stat.labels}
-												chartOptions={stat.options}
-											/>
-										</div>
-									) : (
-										/* unsupported type message */
-										<div className="modal-alert danger">
-											{t("STATISTICS.UNSUPPORTED_TYPE")}
-										</div>
-									)}
-								</div>
-							))
-						))}
+		<MainPage
+			navBarLinks={[
+				{
+					path: "/statistics/organization",
+					accessRole: "ROLE_UI_STATISTICS_ORGANIZATION_VIEW",
+					text: "STATISTICS.NAVIGATION.ORGANIZATION",
+				},
+			]}
+		>
+			<div className="obj statistics">
+				{/* heading */}
+				<div className="controls-container">
+					<h1>
+						{" "}
+						{t("STATISTICS.NAVIGATION.ORGANIZATION") /* Organisation */}{" "}
+					</h1>
 				</div>
-			</MainView>
-			<Footer />
-		</span>
-    );
+
+				{!isLoadingStatistics &&
+					(hasError || !hasStatistics ? (
+						/* error message */
+						<div className="obj">
+							<NotificationComponent
+								notification={{
+									type: "error",
+									message: "STATISTICS.NOT_AVAILABLE",
+									id: 0,
+								}}
+							/>
+						</div>
+					) : (
+						/* iterates over the different available statistics */
+						statistics.map((stat, key) => (
+							<div className="obj" key={key}>
+								{/* title of statistic */}
+								<header className="no-expand">{t(stat.title as ParseKeys)}</header>
+
+								{stat.providerType === "timeSeries" ? (
+									/* visualization of statistic for time series data */
+									<div className="obj-container">
+										<TimeSeriesStatistics
+											resourceId={organizationId}
+											statTitle={t(stat.title as ParseKeys)}
+											providerId={stat.providerId}
+											fromDate={stat.from}
+											toDate={stat.to}
+											timeMode={stat.timeMode}
+											dataResolution={stat.dataResolution}
+											statDescription={stat.description}
+											onChange={fetchStatisticsPageStatisticsValueUpdate}
+											exportUrl={stat.csvUrl}
+											exportFileName={statisticsCsvFileName}
+											totalValue={stat.totalValue}
+											sourceData={stat.values}
+											chartLabels={stat.labels}
+											chartOptions={createChartOptions(stat.timeMode, stat.dataResolution)}
+										/>
+									</div>
+								) : (
+									/* unsupported type message */
+									<NotificationComponent
+										notification={{
+											type: "error",
+											message: "STATISTICS.UNSUPPORTED_TYPE",
+											id: 0,
+										}}
+									/>
+								)}
+							</div>
+						))
+					))}
+			</div>
+		</MainPage>
+	);
 };
 
 export default Statistics;

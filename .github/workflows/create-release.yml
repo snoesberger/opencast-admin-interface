@@ -1,39 +1,36 @@
 on:
-  push:
-    tags:
-      - '*-*-*'
+  workflow_dispatch:
 
-name: Create release draft
+name: Create release tag
 
 jobs:
   build:
-    name: Create release from tag
+    name: Create release tag
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
         uses: actions/checkout@v4
-
-      - name: get node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          fetch-depth: 0
 
-      - name: download dependencies
-        run: npm ci
+      - name: prepare git
+        run: |
+          git config --global user.email 'cloud@opencast.org'
+          git config --global user.name 'Release Bot'
 
-      - name: build release
+      - name: tag and push
         env:
-          PUBLIC_URL: /admin-ui
-        run: npm run build
-
-      - name: create release tarball
-        working-directory: build
-        run: tar -czf "../oc-admin-ui-$(date -u +%F).tar.gz" *
-
-      - name: create new release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./oc-admin-ui-*.tar.gz
-          draft: true
-          fail_on_unmatched_files: true
-          generate_release_notes: true
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          #Translate 'develop' to 18.x or whatever is appropriate
+          if [ "develop" == "${{ github.ref_name }}" ]; then
+            #NB normally we only clone just the head ref, but fetch-depth: 0 above gets *all* the history
+            export TEMP="$((`git branch -a | grep r/ | cut -f 4 -d '/' | cut -f 1 -d '.'` + 1)).x"
+          else
+            export TEMP=${{ github.ref_name }}
+          fi
+          export TAG=${TEMP#r\/}-`date +%Y-%m-%d`
+          git tag $TAG
+          git push origin $TAG
+          sleep 2
+          gh workflow run process-release.yml -r $TAG

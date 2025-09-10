@@ -1,18 +1,18 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { renderValidDate } from "../../../utils/dateUtils";
+import { Service } from "../../../slices/serviceSlice";
+import moment from "moment";
 
 /**
  * This component renders the mean queue time cells of systems in the table view
  */
 const MeanQueueTimeCell = ({
-    row
-}: any) => {
-	const { t } = useTranslation();
+	row,
+}: {
+	row: Service
+}) => {
 
 	return (
 		<span>
-			{t("dateFormats.time.medium", { time: renderValidDate(row.meanQueueTime) })}
+			{ moment.utc(moment.duration(row.meanQueueTime * 1000).asMilliseconds()).format("HH:mm:ss") }
 		</span>
 	);
 };
