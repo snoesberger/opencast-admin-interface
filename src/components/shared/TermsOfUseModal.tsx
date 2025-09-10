@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Formik } from "formik";
 import cn from "classnames";
@@ -20,9 +20,19 @@ const TermsOfUseModal = () => {
 	useEffect(() => {
 		const checkTerms = async () => {
 			try {
-				const response = await axios.get("/admin-ng/user-settings/settings.json");
-				// @ts-expect-error TS(7006): Parameter 'result' implicitly has an 'any' type.
-				const isAgreed = response.data.results.find(result => result.key === "agreedToTerms").value === "true";
+				type FetchUserSettings = {
+					total: number,
+					offset: number,
+					limit: number,
+					results: {
+						id: number,
+						value: string,
+						key: string
+					}[]
+				};
+				const response = await axios.get<FetchUserSettings>("/admin-ng/user-settings/settings.json");
+				const agreedResult = response.data.results.find(result => result.key === "agreedToTerms");
+				const isAgreed = agreedResult?.value === "true";
 				setAgreedToTerms(isAgreed);
 			} catch (error) {
 				console.error("Error while retrieving data: ", error);
@@ -35,17 +45,17 @@ const TermsOfUseModal = () => {
 
 	// Fetch terms
 	useEffect(() => {
-		axios.get(getURL(i18n.language))
+		axios.get<string>(getURL(i18n.language))
 			.then(response => {
 				setTermsContent(response.data);
 			})
-			.catch(error => {
-				axios.get(getURL(typeof i18n.options.fallbackLng === 'string' ? i18n.options.fallbackLng : 'en-US'))
+			.catch(() => {
+				axios.get<string>(getURL(typeof i18n.options.fallbackLng === "string" ? i18n.options.fallbackLng : "en-US"))
 					.then(response => {
 						setTermsContent(response.data);
 					})
 					.catch(error => {
-						console.error('Error while fetching data:', error);
+						console.error("Error while fetching data:", error);
 						setTermsContent(t("TERMS.NOCONTENT"));
 					});
 			});
@@ -53,9 +63,8 @@ const TermsOfUseModal = () => {
 	}, [agreedToTerms]); // Listen to changes in agreedToTerms
 
 	// Set terms to user settings
-	// @ts-expect-error TS(7006): Parameter 'values' implicitly has an 'any' type.
-	const handleSubmit = async (values) => {
-		let body = new URLSearchParams();
+	const handleSubmit = async (values: {agreedToTerms: boolean}) => {
+		const body = new URLSearchParams();
 		body.append("key", "agreedToTerms");
 		body.append("value", values.agreedToTerms ? "true" : "false");
 
@@ -94,11 +103,11 @@ const TermsOfUseModal = () => {
 				</div>
 
 				<Formik
-					initialValues={{}}
+					initialValues={{ agreedToTerms: false }}
 					enableReinitialize
 					onSubmit={handleSubmit}
 				>
-					{(formik) => (<>
+					{formik => (<>
 						<div className="modal-content" style={{ display: "block" }}>
 							<div className="modal-body">
 								<div>
@@ -124,16 +133,13 @@ const TermsOfUseModal = () => {
 							<div className="pull-right">
 								<button
 									disabled={
-										// @ts-expect-error TS(2339): Property 'agreedToTerms' does not exist on type '... Remove this comment to see the full error message
 										!(formik.isValid && formik.values.agreedToTerms)
 									}
 									onClick={() => formik.handleSubmit()}
 									className={cn("submit", {
 										active:
-											// @ts-expect-error TS(2339): Property 'agreedToTerms' does not exist on type '... Remove this comment to see the full error message
 											formik.isValid && formik.values.agreedToTerms,
 										inactive: !(
-											// @ts-expect-error TS(2339): Property 'agreedToTerms' does not exist on type '... Remove this comment to see the full error message
 											formik.isValid && formik.values.agreedToTerms
 										),
 									})}
