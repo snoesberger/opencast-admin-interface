@@ -34,6 +34,10 @@ const RegistrationModal = ({
 			header={t("ADOPTER_REGISTRATION.MODAL.CAPTION")}
 			classId="registration-modal"
 			className="modal active modal-open modal-animation"
+			closeCallback={() => {
+			localStorage.setItem("adopterModalDismissed", Date.now().toString());
+  			return true;
+			}}
 			ref={modalRef}
 		>
 			<RegistrationModalContent />

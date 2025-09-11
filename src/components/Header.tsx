@@ -115,6 +115,7 @@ const Header = () => {
 			}
 		};
 
+
 		// Fetching health status information at mount
 		loadHealthStatus().then(r => console.info(r));
 		// Fetch health status every minute
@@ -130,6 +131,20 @@ const Header = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+  			if (!user) { return; }
+
+  			const isAdmin = user.isAdmin || user.isOrgAdmin;
+  			// const notLocalhost = window.location.hostname !== "localhost";
+			const notLocalhost = true;
+  			const lastDismissed = localStorage.getItem("adopterModalDismissed");
+  			const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  			const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
+
+  			if (isAdmin && notLocalhost && dismissedLongEnough) {
+  			  showRegistrationModal();
+  			}
+			}, [user]);
 	return (
 		<>
 			<header className="primary-header">
