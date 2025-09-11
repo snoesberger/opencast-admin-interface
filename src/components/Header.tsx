@@ -135,7 +135,9 @@ const Header = () => {
   			if (!user) { return; }
 
   			const isAdmin = user.isAdmin || user.isOrgAdmin;
+			// un comment the below line after the test
   			// const notLocalhost = window.location.hostname !== "localhost";
+			// for testing purposes on the local host
 			const notLocalhost = true;
   			const lastDismissed = localStorage.getItem("adopterModalDismissed");
   			const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
