@@ -34,11 +34,11 @@ import {
 	setShowActions,
 } from "../../slices/eventSlice";
 import EventDetailsModal from "./partials/modals/EventDetailsModal";
-import { showModal } from "../../selectors/eventDetailsSelectors";
 import { eventsLinks } from "./partials/EventsNavigation";
 import { Modal, ModalHandle } from "../shared/modals/Modal";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import { resetTableProperties } from "../../slices/tableSlice";
+import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
 
 /**
  * This component renders the table view of events
@@ -46,8 +46,6 @@ import { resetTableProperties } from "../../slices/tableSlice";
 const Events = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
-
-	const displayEventDetailsModal = useAppSelector(state => showModal(state));
 
 	const [displayNavigation, setNavigation] = useState(false);
 	const newEventModalRef = useRef<ModalHandle>(null);
@@ -230,9 +228,8 @@ const Events = () => {
 				</div>
 
 				{/*Include table modal*/}
-				{displayEventDetailsModal &&
 					<EventDetailsModal />
-				}
+				<SeriesDetailsModal />
 
 				{/*Include table component*/}
 				{/* <Table templateMap={eventsTemplateMap} resourceType="events" /> */}
