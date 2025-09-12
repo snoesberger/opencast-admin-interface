@@ -134,9 +134,9 @@ export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", asy
 	// If the a default template id is configured and we haven't fetched the default template
 	// yet, do that now.
 	if (response["default_template"] && !state.acls.aclDefaultTemplate) {
-		const templateId = response["default_template"];
+		const templateName = response["default_template"];
 		// fetch information about chosen template from backend
-		const template = await fetchAclTemplateById(templateId);
+		const template = await fetchAclTemplateByName(templateName);
 		// fetch user info
 		const users = await fetchUsersForTemplate(template.acl.map(role => role.role));
 
@@ -162,6 +162,19 @@ export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", asy
 // fetch all policies of an certain acl template
 export const fetchAclTemplateById = async (id: string) => {
 	const response = await axios.get<AclResult>(`/acl-manager/acl/${id}`);
+
+	const template = response.data;
+
+	const transformedResponse: AclTemplate = {
+		...template,
+		acl: transformAclTemplatesResponse(template.acl),
+	};
+
+	return transformedResponse;
+};
+
+export const fetchAclTemplateByName = async (name: string) => {
+	const response = await axios.get<AclResult>(`/admin-ng/acl/acl/${name}`);
 
 	const template = response.data;
 
