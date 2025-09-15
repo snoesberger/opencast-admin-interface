@@ -70,7 +70,7 @@ jobs:
           rm -rf $BRANCH
           mv build $BRANCH
           #Generate an index, in case anyone lands at the root of the test domain
-          echo '<html><body><ul>' > index.html
+          echo '<html><head><link rel=stylesheet type=text/css href=.github/assets/index.css /></head><body><div class="head-container"><img src=https://admin-interface.opencast.org/develop/assets/opencast-white-B3KJ3o-a.svg /></div><div class="navbar-container"></div><div class="text-container"><p>Deployment for the latest development versions of the Opencast admininterface.The branches listed here correspond to Opencast's own branches.</br><b>Please select a version.</b></p></div><ul>' > index.html
           find . -mindepth 1 -maxdepth 1 -type d \
             | grep '[0-9]*.x\|develop' \
             | sort -r \
@@ -80,6 +80,10 @@ jobs:
           git diff --staged --quiet || git commit --amend -m "Build $(date)"
         env:
           BRANCH: ${{needs.detect.outputs.branch}}
+
+      - name: update CSS and other assets
+        if: github.ref == 'refs/heads/develop'
+        run: cp -r .github/assets admin-interface-test/
 
       - name: Push updates
         run: git push origin gh-pages --force
