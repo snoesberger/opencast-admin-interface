@@ -491,15 +491,15 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 									<th className="fit">
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
-											) /* <!-- Read --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
+											) /* <!-- Write --> */
 										}
 									</th>
 									<th className="fit">
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
-											) /* <!-- Write --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
+											) /* <!-- Read --> */
 										}
 									</th>
 									{hasActions && (
