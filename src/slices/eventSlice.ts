@@ -22,7 +22,7 @@ import {
 } from "./notificationSlice";
 import { getAssetUploadOptions, getSchedulingEditedEvents, getSourceUploadOptions } from "../selectors/eventSelectors";
 import { fetchSeriesOptions } from "./seriesSlice";
-import { AppDispatch } from "../store";
+import { AppDispatch, AppThunk } from "../store";
 import { fetchAssetUploadOptions } from "../thunks/assetsThunks";
 import { TransformedAcl } from "./aclDetailsSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -344,7 +344,7 @@ export const postEditMetadata = createAppAsyncThunk("events/postEditMetadata", a
 	};
 });
 
-export const updateBulkMetadata = createAppAsyncThunk("events/updateBulkMetadata", async (params: {
+export const updateBulkMetadata = (params: {
 	metadataFields: {
 		merged: string[],
 		mergedMetadata: MetadataFieldSelected[],
@@ -352,7 +352,7 @@ export const updateBulkMetadata = createAppAsyncThunk("events/updateBulkMetadata
 		runningWorkflow?: string[],
 	},
 	values: { [key: string]: unknown }
-}, { dispatch }) => {
+}): AppThunk => dispatch => {
 	const { metadataFields, values } = params;
 
 	const formData = new URLSearchParams();
@@ -431,13 +431,13 @@ export const updateBulkMetadata = createAppAsyncThunk("events/updateBulkMetadata
 				}
 			}
 		});
-});
+};
 
-export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (params: {
+export const postNewEvent = (params: {
 	values: {
 		policies: TransformedAcl[],
 		configuration: { [key: string]: unknown },
-		deviceInputs?: string[],
+		inputs?: string[],
 		processingWorkflow: string,
 		repeatOn: string[],
 		scheduleDurationHours: string,
@@ -454,9 +454,8 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 	},
 	metadataInfo: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[],
-}, { dispatch, getState }) => {
+}): AppThunk => (dispatch, getState) => {
 	const { values, metadataInfo, extendedMetadata } = params;
-
 	// get asset upload options from redux store
 	const state = getState();
 	const uploadAssetOptions = getAssetUploadOptions(state);
@@ -544,7 +543,7 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 			metadata: {
 				start: startDate,
 				device: values.location,
-				inputs: values.deviceInputs ? values.deviceInputs.join(",") : "",
+				inputs: values.inputs ? values.inputs.join(",") : "",
 				end: endDate,
 				duration: duration.toString(),
 			},
@@ -668,10 +667,10 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 			console.error(response);
 			dispatch(addNotification({ type: "error", key: "EVENTS_NOT_CREATED" }));
 		});
-});
+};
 
 // delete event with provided id
-export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: Event["id"], { dispatch }) => {
+export const deleteEvent = (id: Event["id"]): AppThunk => dispatch => {
 	// API call for deleting an event
 	axios
 		.delete(`/admin-ng/event/${id}`)
@@ -691,9 +690,9 @@ export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: 
 				dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
 			}
 		});
-});
+};
 
-export const deleteMultipleEvent = createAppAsyncThunk("events/deleteMultipleEvent", async (events: Event[], { dispatch }) => {
+export const deleteMultipleEvent = (events: Event[]): AppThunk => dispatch => {
 	const data = [];
 
 	for (const event of events) {
@@ -714,7 +713,7 @@ export const deleteMultipleEvent = createAppAsyncThunk("events/deleteMultipleEve
 			// add error notification
 			dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
 		});
-});
+};
 
 export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", async (params: {
 	events: Event[],
@@ -801,13 +800,11 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 });
 
 // update multiple scheduled events at once
-export const updateScheduledEventsBulk = createAppAsyncThunk("events/updateScheduledEventsBulk", async (
-	values: {
-		changedEvents: string[],
-		editedEvents: EditedEvents[],
-		events: Event[],
-	},
-{ dispatch }) => {
+export const updateScheduledEventsBulk = (values: {
+	changedEvents: string[],
+	editedEvents: EditedEvents[],
+	events: Event[],
+}): AppThunk => dispatch => {
 	const formData = new FormData();
 	const update = [];
 	const timezone = moment.tz.guess();
@@ -889,7 +886,7 @@ export const updateScheduledEventsBulk = createAppAsyncThunk("events/updateSched
 			console.error(res);
 			dispatch(addNotification({ type: "error", key: "EVENTS_NOT_UPDATED_ALL" }));
 		});
-});
+};
 
 // check provided date range for conflicts
 
@@ -1060,7 +1057,7 @@ export const checkForConflicts = async (
 };
 
 // check if there are any scheduling conflicts with other events
-export const checkForSchedulingConflicts = (events: EditedEvents[]) => async (dispatch: AppDispatch) => {
+export const checkForSchedulingConflicts = (events: EditedEvents[]) => (dispatch: AppDispatch) => {
 	const formData = new FormData();
 	const update = [];
 	const timezone = moment.tz.guess();

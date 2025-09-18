@@ -138,7 +138,7 @@ const DropDown = <T, >({
 	 * Custom component for list virtualization
 	 */
 	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
-		const { options, children, maxHeight, getValue } = props;
+		const { children, maxHeight } = props;
 
 		console.log("Menu List render");
 
@@ -158,7 +158,7 @@ const DropDown = <T, >({
 	};
 
 	const loadOptions = (
-		inputValue: string,
+		_inputValue: string,
 		callback: (options: DropDownOption[]) => void,
 	) => {
 		callback(formatOptions(
@@ -209,6 +209,7 @@ const DropDown = <T, >({
 		<AsyncSelect
 			ref={selectRef}
 			{...commonProps}
+			openMenuOnFocus={false}
 			noOptionsMessage={() => t("SELECT_NO_MATCHING_RESULTS")}
 			cacheOptions
 			defaultOptions={formatOptions(

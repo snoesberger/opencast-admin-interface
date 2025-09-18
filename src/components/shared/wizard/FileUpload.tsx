@@ -7,6 +7,7 @@ import { addNotification } from "../../../slices/notificationSlice";
 import { FormikProps } from "formik";
 import { ParseKeys } from "i18next";
 import BaseButton from "../BaseButton";
+import { LuX } from "react-icons/lu";
 
 /**
  * This component renders a custom file upload button in wizards.
@@ -136,7 +137,7 @@ const FileUpload = <T extends RequiredFormProps>({
 										className="remove-file-button"
 										onClick={() => handleDelete()}
 									>
-										<div className="remove-icon" />
+										<LuX className="remove-icon remove-file-button-icon"/>
 									</BaseButton>
 								</div>
 							</div>
