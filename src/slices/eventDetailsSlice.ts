@@ -33,7 +33,7 @@ import {
 	EventDetailsPage,
 	WorkflowTabHierarchy,
 } from "../components/events/partials/modals/EventDetails";
-import { AppDispatch } from "../store";
+import { AppDispatch, AppThunk } from "../store";
 import { Ace } from "./aclSlice";
 import { setTobiraTabHierarchy, TobiraData } from "./seriesDetailsSlice";
 import { handleTobiraError } from "./shared/tobiraErrors";
@@ -1111,7 +1111,6 @@ export const saveSchedulingInfo = createAppAsyncThunk("eventDetails/saveScheduli
 	endDate: Date
 }, { dispatch, getState }) => {
 	const { eventId, values, startDate, endDate } = params;
-
 	const state = getState();
 	const oldSource = getSchedulingSource(state);
 	const captureAgents = getRecordings(state);
@@ -1642,10 +1641,10 @@ export const fetchHasActiveTransactions = createAppAsyncThunk("eventDetails/fetc
 	return hasActiveTransactions;
 });
 
-export const updateAssets = createAppAsyncThunk("eventDetails/updateAssets", async (params: {
+export const updateAssets = (params: {
 	values: { [key: string]: File },
 	eventId: Event["id"]
-}, { dispatch, getState }) => {
+}): AppThunk => (dispatch, getState) => {
 	const { values, eventId } = params;
 	// get asset upload options from redux store
 	const state = getState();
@@ -1725,7 +1724,7 @@ export const updateAssets = createAppAsyncThunk("eventDetails/updateAssets", asy
 				}),
 			);
 		});
-});
+};
 
 export const saveAccessPolicies = createAppAsyncThunk("eventDetails/saveAccessPolicies", async (
 	params: {
@@ -1815,13 +1814,20 @@ export const deleteCommentReply = createAppAsyncThunk("eventDetails/deleteCommen
 	return true;
 });
 
-export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflowConfig", async (params: {
+export const saveWorkflowConfig = (params: {
 	values: {
 		workflowDefinition: string,
 		configuration: { [key: string]: unknown } | undefined
 	},
 	eventId: Event["id"]
-}, { dispatch }) => {
+}): AppThunk => dispatch => {
+// export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflowConfig", async (params: {
+// 	values: {
+// 		workflowDefinition: string,
+// 		configuration: { [key: string]: unknown } | undefined
+// 	},
+// 	eventId: Event["id"]
+// }, { dispatch }) => {
 	const { values, eventId } = params;
 	const jsonData = {
 		id: values.workflowDefinition,
@@ -1852,7 +1858,7 @@ export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflow
 				}),
 			);
 		});
-});
+};
 
 const eventDetailsSlice = createSlice({
 	name: "eventDetails",
@@ -2520,7 +2526,7 @@ const eventDetailsSlice = createSlice({
 				state.errorStatisticsValue = action.error;
 				console.error(action.error);
 			})
-			.addCase(fetchHasActiveTransactions.rejected, (state, action) => {
+			.addCase(fetchHasActiveTransactions.rejected, (_state, action) => {
 				console.error(action.error);
 			})
 			.addCase(deleteComment.rejected, (_state, action) => {

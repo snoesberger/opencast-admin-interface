@@ -30,6 +30,7 @@ import { ParseKeys } from "i18next";
 import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { formatAclTemplatesForDropdown } from "../../../utils/dropDownUtils";
 import ModalContentTable from "./ModalContentTable";
+import { LuCircleX } from "react-icons/lu";
 
 
 /**
@@ -490,15 +491,15 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 									<th className="fit">
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
-											) /* <!-- Read --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
+											) /* <!-- Write --> */
 										}
 									</th>
 									<th className="fit">
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
-											) /* <!-- Write --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
+											) /* <!-- Read --> */
 										}
 									</th>
 									{hasActions && (
@@ -685,8 +686,10 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																			onClick={() =>
 																				arrayHelpers.remove(formik.values.policies.findIndex(p => p === policy))
 																			}
-																			className="remove"
-																		/>
+																			className="action-cell-button remove"
+																		>
+																			<LuCircleX />
+																		</ButtonLikeAnchor>
 																	)}
 																</td>
 															)}

@@ -209,6 +209,8 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Gli eventi esistenti di questa serie dovranno essere rielaborati",
 		"SERIES_ACL_LOCKED": "La modifica delle Policy di Accesso non è consentita quando le operazioni sono in esecuzione su un evento che fa parte della serie",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "La Policy di Accesso richiede almeno un ruolo con i permessi di Lettura e Scrittura.",
+		"METADATA_SAVED": "The metadata has been saved.",
+		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "Il nome non può essere vuoto",
 		"BUMPER_UPLOAD_ERROR": "Errore durante il caricamento dei media",
 		"THEME_CREATED": "Il tema è stato creato",
@@ -895,7 +897,11 @@
 						"ADDITIONAL_ACTIONS": "Azioni aggiuntive",
 						"ACTION": "Azioni",
 						"NEW": "Nuova politica",
-						"DETAILS": "Dettagli"
+						"NON_USER_ROLES": "Roles and Groups authorized for the event",
+						"USER": "User",
+						"USERS": "Users who are authorized for the event",
+						"NEW_USER": "New user",
+						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
 					},
 					"ROLES": {
 						"LABEL": "Seleziona o crea un ruolo"
@@ -982,7 +988,6 @@
 					"ACTIONS": "Azioni",
 					"DETAILS": "Dettagli",
 					"DESCRIPTION": "Descrizione",
-					"MORE_INFO": "Ulteriori informazioni",
 					"ID": "ID",
 					"TYPE": "Tipo",
 					"TITLE": "Titolo",
@@ -1022,11 +1027,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Dettagli flusso di lavoro",
-					"CONFIGURATION": "Configurazione flusso di lavoro"
+					"CONFIGURATION": "Configurazione flusso di lavoro",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Operazioni flusso di lavoro",
-					"DETAILS_LINK": "Operazioni",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Titolo",
 						"STATUS": "Stato",
@@ -1086,7 +1093,8 @@
 						"DATE": "Data",
 						"HOST": "Host di elaborazione",
 						"TYPE": "Tipo di servizio",
-						"TECHNICAL_DETAILS": "Dettagli tecnici"
+						"TECHNICAL_DETAILS": "Dettagli tecnici",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}
@@ -1208,7 +1216,10 @@
 						"ADDITIONAL_ACTIONS": "Azioni aggiuntive",
 						"ACTION": "Azioni",
 						"NEW": "Nuova politica",
-						"DETAILS": "Dettagli",
+						"NON_USER_ROLES": "Roles and Groups authorized for the series",
+						"USER": "User",
+						"USERS": "Users who are authorized for the series",
+						"NEW_USER": "New user",
 						"REPLACE_EVENT_ACLS": "Aggiorna permessi serie",
 						"REPLACE_EVENT_ACLS_HINT": "Assicurarsi che tutti gli eventi di questa serie abbiano questi permessi in vigore",
 						"LOAD_MORE_LIMIT": "policies shown.",
@@ -1467,8 +1478,11 @@
 						"ADDITIONAL_ACTIONS": "Azioni aggiuntive",
 						"ACTION": "Azioni",
 						"NEW": "Nuova politica",
-						"DETAILS": "Dettagli",
-						"DESCRIPTION": "Scegli un insieme di politiche pre-configurate o aggiungi politiche personalizzate qui sotto"
+						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
+						"DESCRIPTION": "Scegli un insieme di politiche pre-configurate o aggiungi politiche personalizzate qui sotto",
+						"USER": "User",
+						"USERS": "Users who are authorized for the access policy",
+						"NEW_USER": "New user"
 					},
 					"ROLES": {
 						"LABEL": "Seleziona un ruolo",
