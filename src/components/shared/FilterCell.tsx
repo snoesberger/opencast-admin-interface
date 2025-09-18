@@ -5,7 +5,6 @@ import { Resource } from "../../slices/tableSlice";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
 import { ReactNode } from "react";
-import BaseButton from "./BaseButton";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 
 /**
