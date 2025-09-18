@@ -1,6 +1,3 @@
-import { setSpecificEventFilter } from "../../../slices/tableFilterSlice";
-import { useNavigate } from "react-router";
-import { useAppDispatch } from "../../../store";
 import { Series } from "../../../slices/seriesSlice";
 import RedirectCell from "../../shared/RedirectCell";
 
