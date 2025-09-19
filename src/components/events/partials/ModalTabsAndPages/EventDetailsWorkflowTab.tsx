@@ -202,7 +202,11 @@ const EventDetailsWorkflowTab = ({
 														<tr key={key}>
 															<td>{item.id}</td>
 															<td>{item.title}</td>
-															<td>{item.submitter}</td>
+															<td>
+																{item.submitterName}
+																{item.submitterEmail && (<>&lt;{item.submitterEmail}&gt;</>)}
+																&nbsp;({item.submitter})
+															</td>
 															<td>
 																{t("dateFormats.dateTime.medium", {
 																	dateTime: renderValidDate(item.submitted),
