@@ -238,7 +238,7 @@ const EditableSingleSelect = (props: EditableSingleSelectProps) => {
 				? `-- ${t("SELECT_NO_OPTION_SELECTED")} --`
 				: `${t("SELECT_NO_OPTION_SELECTED")}`
 			}
-			customCSS={{ isMetadataStyle: focused ? false : true }}
+			customCSS={{ isMetadataStyle: focused ? false : true, width: "100%" }}
 			handleMenuIsOpen={(open: boolean) => setFocused(open)}
 			openMenuOnFocus
 			autoFocus={isFirstField}
