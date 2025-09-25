@@ -32,6 +32,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import { ParseKeys } from "i18next";
 import BaseButton from "../../../shared/BaseButton";
+import { Tooltip } from "../../../shared/Tooltip";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -202,7 +203,11 @@ const EventDetailsWorkflowTab = ({
 														<tr key={key}>
 															<td>{item.id}</td>
 															<td>{item.title}</td>
-															<td>{item.submitter}</td>
+															<td>
+																<Tooltip title={item.submitterName}>
+																	<span>{item.submitter}</span>
+																</Tooltip>
+															</td>
 															<td>
 																{t("dateFormats.dateTime.medium", {
 																	dateTime: renderValidDate(item.submitted),
