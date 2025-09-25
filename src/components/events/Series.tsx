@@ -28,6 +28,7 @@ import { Modal, ModalHandle } from "../shared/modals/Modal";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import { resetTableProperties } from "../../slices/tableSlice";
+import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
 
 /**
  * This component renders the table view of series
@@ -35,6 +36,7 @@ import { resetTableProperties } from "../../slices/tableSlice";
 const Series = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
+
 	const [displayNavigation, setNavigation] = useState(false);
 	const newSeriesModalRef = useRef<ModalHandle>(null);
 	const deleteModalRef = useRef<ModalHandle>(null);
@@ -150,6 +152,10 @@ const Series = () => {
 					{/* Include table view */}
 					<h4>{t("TABLE_SUMMARY", { numberOfRows: series })}</h4>
 				</div>
+
+				{/*Include table modal*/}
+				<SeriesDetailsModal />
+
 				<Table templateMap={seriesTemplateMap} />
 			</MainView>
 			<Footer />
