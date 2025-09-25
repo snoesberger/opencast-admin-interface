@@ -25,7 +25,7 @@ const SeriesTitleCell = ({
 	return (
 		<BaseButton
 			className="button-like-anchor crosslink"
-			tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"}
+			// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"} // Disabled due to performance concerns
 			onClick={() => redirectToEvents(row.id)}
 		>
 			{row.title}

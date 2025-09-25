@@ -19,7 +19,7 @@ const EventsDateCell = ({
 			filterName="startDate"
 			fetchResource={fetchEvents}
 			loadResourceIntoTable={loadEventsIntoTable}
-			tooltipText="EVENTS.EVENTS.TABLE.TOOLTIP.START"
+			// tooltipText="EVENTS.EVENTS.TABLE.TOOLTIP.START" // Disabled due to performance concerns
 		/>
 	);
 };
