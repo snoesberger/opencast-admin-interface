@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import EmbeddingCodeModal from "./modals/EmbeddingCodeModal";
 import { getUserInformation } from "../../../selectors/userInfoSelectors";
 import { hasAccess } from "../../../utils/utils";
-import SeriesDetailsModal from "./modals/SeriesDetailsModal";
 import { EventDetailsPage } from "./modals/EventDetails";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import {
@@ -11,6 +10,7 @@ import {
 	fetchSeriesDetailsMetadata,
 	fetchSeriesDetailsTheme,
 	fetchSeriesDetailsThemeNames,
+	openModal as openSeriesModal,
 } from "../../../slices/seriesDetailsSlice";
 import { Event, deleteEvent } from "../../../slices/eventSlice";
 import { Tooltip } from "../../shared/Tooltip";
@@ -18,6 +18,7 @@ import { openModal } from "../../../slices/eventDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
 import { Modal, ModalHandle } from "../../shared/modals/Modal";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { SeriesDetailsPage } from "./modals/SeriesDetails";
 
 /**
  * This component renders the action cells of events in the table view
@@ -30,7 +31,6 @@ const EventActionCell = ({
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const seriesDetailsModalRef = useRef<ModalHandle>(null);
 	const embeddingCodeModalRef = useRef<ModalHandle>(null);
 
 	const user = useAppSelector(state => getUserInformation(state));
@@ -48,7 +48,7 @@ const EventActionCell = ({
 	};
 
 	const showSeriesDetailsModal = () => {
-		seriesDetailsModalRef.current?.open();
+		dispatch(openSeriesModal(SeriesDetailsPage.Metadata, row.series ? row.series : null));
 	};
 
 	const onClickSeriesDetails = async () => {
@@ -82,14 +82,6 @@ const EventActionCell = ({
 
 	return (
 		<>
-			{!!row.series && (
-				<SeriesDetailsModal
-					seriesId={row.series.id}
-					seriesTitle={row.series.title}
-					modalRef={seriesDetailsModalRef}
-				/>
-			)}
-
 			{/* Open event details */}
 			<ButtonLikeAnchor
 				onClick={onClickEventDetails}
