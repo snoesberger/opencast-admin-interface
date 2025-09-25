@@ -70,7 +70,7 @@ const SeriesActionsCell = ({
 				onClick={() => showSeriesDetailsModal()}
 				className={"more-series"}
 				editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
-				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
+				// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 			/>
 
 			<SeriesDetailsModal
@@ -84,7 +84,7 @@ const SeriesActionsCell = ({
 				onClick={() => showDeleteConfirmation()}
 				className={"remove"}
 				editAccessRole={"ROLE_UI_SERIES_DELETE"}
-				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"}
+				// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 			/>
 
 			<ConfirmModal
