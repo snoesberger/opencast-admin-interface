@@ -78,13 +78,13 @@ const PublishCell = ({
 	return (
 		<div className="popover-wrapper">
 			{onlyEngage && (
-				<Tooltip title={t("EVENTS.EVENTS.TABLE.TOOLTIP.PLAYER")}>
+				// <Tooltip title={t("EVENTS.EVENTS.TABLE.TOOLTIP.PLAYER")}> // Disabled due to performance concerns
 					<a href={publications[0].url} rel="noreferrer" target="_blank">
 						<ButtonLikeAnchor>
 							{t("YES")}
 						</ButtonLikeAnchor>
 					</a>
-				</Tooltip>
+				// </Tooltip>
 			)}
 			{!onlyEngage && publications.length > 0 && (
 				<>

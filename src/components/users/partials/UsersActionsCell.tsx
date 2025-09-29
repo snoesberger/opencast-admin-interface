@@ -42,7 +42,7 @@ const UsersActionCell = ({
 				onClick={() => showUserDetails()}
 				className={"more"}
 				editAccessRole={"ROLE_UI_USERS_EDIT"}
-				tooltipText={"USERS.USERS.TABLE.TOOLTIP.DETAILS"}
+				// tooltipText={"USERS.USERS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 			/>
 
 			{/* user details modal */}
@@ -58,7 +58,7 @@ const UsersActionCell = ({
 			{(row.manageable || (row.provider !== "opencast" && row.provider !== "system")) &&
 				<ActionCellDelete
 					editAccessRole={"ROLE_UI_USERS_DELETE"}
-					tooltipText={"USERS.USERS.TABLE.TOOLTIP.DELETE"}
+					// tooltipText={"USERS.USERS.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 					resourceId={row.username}
 					resourceName={row.name}
 					resourceType={"USER"}
