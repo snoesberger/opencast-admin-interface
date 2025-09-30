@@ -18,7 +18,7 @@ const EventsPresentersCell = ({
 			filterItems={row.presenters.map(presenter => ({
 				filterValue: presenter,
 				children: presenter,
-				cellTooltipText: "EVENTS.EVENTS.TABLE.TOOLTIP.PRESENTER",
+				// cellTooltipText: "EVENTS.EVENTS.TABLE.TOOLTIP.PRESENTER", // Disabled due to performance concerns
 			}))}
 			fetchResource={fetchEvents}
 			loadResourceIntoTable={loadEventsIntoTable}
