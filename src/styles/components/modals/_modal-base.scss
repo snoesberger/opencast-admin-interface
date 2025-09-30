@@ -117,7 +117,7 @@
         font: inherit;
         margin: 0px;
 
-        width: auto;
+        width: 98%;
     }
     .single-value:focus{
         width: 98%;
@@ -132,7 +132,7 @@
         resize: none;
         overflow: hidden;
 
-        width: auto;
+        width: 98%;
     }
     .single-value-textarea:focus{
         resize: vertical;
@@ -329,6 +329,7 @@
                 line-height: 25px !important;
                 padding-top: 4px;
                 padding-bottom: 4px;
+                word-break: break-word;
 
                 > a {
                     float: none;
