@@ -14,7 +14,7 @@ const SeriesTitleCell = ({
 			path={"/events/events"}
 			filterName={"series"}
 			filterValue={row.id}
-			tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"}
+			// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"} // Disabled due to performance concerns
 		>
 			{row.title}
 		</RedirectCell>
