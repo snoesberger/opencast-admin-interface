@@ -69,7 +69,7 @@
     "@types/react-dom": "^19.1.7",
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^10.0.0",
-    "@vitejs/plugin-react-swc": "^3.10.2",
+    "@vitejs/plugin-react-swc": "^4.1.0",
     "eslint": "^9.32.0",
     "prop-types": "^15.8.1",
     "sass": "^1.90.0",
