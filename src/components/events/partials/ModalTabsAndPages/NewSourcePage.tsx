@@ -422,7 +422,6 @@ const Schedule = <T extends {
 									yearDropdownItemNumber={2}
 									dateFormat="P"
 									popperClassName="datepicker-custom"
-									className="datepicker-custom-input"
 									wrapperClassName="datepicker-custom-wrapper"
 									locale={currentLanguage?.dateLocale}
 									strictParsing
