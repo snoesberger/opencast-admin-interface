@@ -61,16 +61,11 @@ jobs:
           git config --global user.name "Release Bot"
           git config --global user.email "cloud@opencast.org"
 
-      - name: update CSS and other assets
-        if: github.ref == 'refs/heads/develop'
-        run: |
-          rm -rf assets
-          mv assets_temp assets
-          git add assets
-          git diff --staged --quiet || git commit --amend -m "Build $(date)"
-
       - name: Commit new version
         run: |
+          # Save the current assets from the main branch
+          mv .github/assets assets_temp
+          # Update and change to the gh-pages branch
           git fetch --unshallow origin gh-pages
           git checkout gh-pages
           # Update gh-pages
@@ -87,6 +82,14 @@ jobs:
           git diff --staged --quiet || git commit --amend -m "Build $(date)"
         env:
           BRANCH: ${{needs.detect.outputs.branch}}
+
+      - name: update CSS and other assets
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          rm -rf assets
+          mv assets_temp assets
+          git add assets
+          git diff --staged --quiet || git commit --amend -m "Build $(date)"
 
 
       - name: Push updates
