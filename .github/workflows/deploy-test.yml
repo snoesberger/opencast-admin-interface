@@ -66,7 +66,6 @@ jobs:
           NODE_ENV: development
           VITE_TEST_SERVER_AUTH: "admin:opencast"
 
-
       - name: Prepare git
         run: |
           git config --global user.name "Admin Interface Deployment Bot"
@@ -139,3 +138,27 @@ jobs:
             ](https://test.admin-interface.opencast.org/${{ steps.build-path.outputs.build }}).
 
             It might take a few minutes for it to become available.
+
+  translations:
+    name: Translations only via Crowdin
+    if: github.repository_owner == 'opencast'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+
+      - name: Get changed locale files
+        uses: dorny/paths-filter@v3
+        id: filter_locales
+        with:
+          filters: | # !(pattern) matches anything but pattern
+            locales:
+              - 'src/i18n/org/opencastproject/adminui/languages/!lang-(en_US)*.json'
+
+      - name: Check for changes in translations
+        if: steps.filter_locales.outputs.locales == true
+        uses: actions/github-script@v7
+        with:
+          script: |
+              core.setFailed('You should not alter translations outside of Crowdin.')
