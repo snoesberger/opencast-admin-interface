@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   detect:
-    if: ${{ github.event.pull_request.head.repo.full_name == 'opencast/opencast-admin-interface' }}
+    if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
       server: ${{ steps.test-server.outputs.server }}
