@@ -62,9 +62,5 @@ jobs:
         working-directory: admin-interface-test
         run: |
           git add .
-          git commit -m "Remove deployment ${PR_NUMBER} due to PR closure" || true
-
-      - name: push updates
-        working-directory: admin-interface-test
-        run: |
-          git push origin gh-pages
+          # Commit and push, or just say true since the commit fails if nothing has changed
+          (git commit -m "Remove deployment ${PR_NUMBER} due to PR closure" && git push origin gh-pages --force) || true
