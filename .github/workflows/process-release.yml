@@ -5,7 +5,7 @@ on:
       # CF: 17.x-YYYY-MM-DD
       - '*.x-*-*-*'
 
-name: Create release
+name: Process Release Tag
 jobs:
   build:
     name: Create release from tag
