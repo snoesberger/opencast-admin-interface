@@ -1,4 +1,4 @@
-name: Build & Deploy main branches
+name: Build » Deploy main branches
 
 on:
   push:
@@ -37,18 +37,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: detect
     steps:
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v4
 
-      - name: get node.js
+      - name: Get Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: download dependencies
+      - name: Run npm ci
         run: npm ci
 
-      - name: build project
+      - name: Build the app
         run: |
           npm run build
         env:
@@ -59,7 +59,7 @@ jobs:
 
       - name: Prepare git
         run: |
-          git config --global user.name "Release Bot"
+          git config --global user.name "Admin Interface Deployment Bot"
           git config --global user.email "cloud@opencast.org"
 
       - name: Commit new version

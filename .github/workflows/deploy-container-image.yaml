@@ -1,4 +1,4 @@
-name: Publish container image
+name: PRs » Publish container image
 
 on:
   push:
