@@ -1,3 +1,5 @@
+name: Release » Process release tag
+
 on:
   workflow_dispatch:
   push:
@@ -5,7 +7,6 @@ on:
       # CF: 17.x-YYYY-MM-DD
       - '*.x-*-*-*'
 
-name: Process Release Tag
 jobs:
   build:
     name: Create release from tag
@@ -20,23 +21,23 @@ jobs:
       pull-requests: write #For the PR in the upstream repo
 
     steps:
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v4
 
-      - name: get node.js
+      - name: Get Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: download dependencies
+      - name: Run npm ci
         run: npm ci
 
-      - name: build release
+      - name: Build the app
         env:
           PUBLIC_URL: /admin-ui
         run: npm run build
 
-      - name: create release tarball
+      - name: Create release tarball
         id: tarball
         working-directory: build
         env:
@@ -66,7 +67,7 @@ jobs:
             echo "branch=develop" >> $GITHUB_OUTPUT
           fi
 
-      - name: create new release
+      - name: Create new release in github
         uses: softprops/action-gh-release@v2
         with:
           files: oc-admin-ui-*.tar.gz
