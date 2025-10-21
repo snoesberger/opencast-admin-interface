@@ -61,6 +61,7 @@ type AclsState = {
 	count: number,
 	offset: number,
 	limit: number,
+	aclDefaults: { [key: string]: string }
 };
 
 // Fill columns initially with columns defined in aclsTableConfig
@@ -79,6 +80,7 @@ const initialState: AclsState = {
 	count: 0,
 	offset: 0,
 	limit: 0,
+	aclDefaults: {},
 };
 
 export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getState }) => {
@@ -113,13 +115,13 @@ export const fetchAclActions = async () => {
 };
 
 // fetch defaults for the access policy tab in the details views
-export const fetchAclDefaults = async () => {
+export const fetchAclDefaults = createAppAsyncThunk("acls/fetchAclDefaults", async () => {
 	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
 	const response = data.data;
 
 	return response;
-};
+});
 
 // fetch all policies of an certain acl template
 export const fetchAclTemplateById = async (id: string) => {
@@ -268,6 +270,11 @@ const aclsSlice = createSlice({
 				state.status = "failed";
 				state.results = [];
 				state.error = action.error;
+			})
+			.addCase(fetchAclDefaults.fulfilled, (state, action: PayloadAction<
+				AclsState["aclDefaults"]
+			>) => {
+				state.aclDefaults = action.payload;
 			});
 	},
 });
