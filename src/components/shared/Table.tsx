@@ -106,7 +106,9 @@ const Table = ({
 	});
 	useEffect(() => {
   	if (isNewEventAdded && multiSelect) {
-      forceDeselectAll();
+      		if (selectAllCheckboxRef.current?.checked) {
+			selectAllCheckboxRef.current.checked = false;
+		}
 	  }
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isNewEventAdded, multiSelect]);
