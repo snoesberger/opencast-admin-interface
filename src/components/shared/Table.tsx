@@ -106,11 +106,11 @@ const Table = ({
 	});
 	useEffect(() => {
   	if (isNewEventAdded && multiSelect) {
-      		if (selectAllCheckboxRef.current?.checked) {
+    if (selectAllCheckboxRef.current?.checked) {
 			selectAllCheckboxRef.current.checked = false;
 		}
 	  }
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+
 	}, [isNewEventAdded, multiSelect]);
 
 	// Select or deselect all rows on a page
