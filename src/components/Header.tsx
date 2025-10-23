@@ -137,15 +137,12 @@ const Header = () => {
   			if (!user) { return; }
 
   			const isAdmin = user.isAdmin || user.isOrgAdmin;
-			// un comment the below line after the test
-  			// const notLocalhost = window.location.hostname !== "localhost";
-			// for testing purposes on the local host
-			const notLocalhost = true;
+	        const isLocalhost = window.location.hostname === "localhost";
   			const lastDismissed = localStorage.getItem("adopterModalDismissed");
   			const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
   			const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
 
-  			if (isAdmin && notLocalhost && dismissedLongEnough) {
+  			if (isAdmin && !isLocalhost && dismissedLongEnough) {
   			  showRegistrationModal();
   			}
 			}, [user]);
