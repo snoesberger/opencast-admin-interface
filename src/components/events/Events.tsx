@@ -46,7 +46,7 @@ const Events = () => {
 	const editMetadataEventsModalRef = useRef<ModalHandle>(null);
 
 	const user = useAppSelector(state => getUserInformation(state));
-	const showActions = useAppSelector(state => isShowActions(state));
+	const events = useAppSelector(state => getTotalEvents(state));
 	const isFetchingAssetUploadOptions = useAppSelector(state => getIsFetchingAssetUploadOptions(state));
 
 	const location = useLocation();
@@ -116,7 +116,7 @@ const Events = () => {
 							text: "BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION",
 						},
 					]}
-					disabled={!showActions}
+					isShowActions={isShowActions}
 				/>
 			</TablePage>
 

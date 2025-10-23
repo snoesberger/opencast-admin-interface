@@ -34,8 +34,7 @@ const Series = () => {
 
 	const location = useLocation();
 
-	// const series = useAppSelector(state => getTotalSeries(state));
-	const showActions = useAppSelector(state => isShowActions(state));
+	const series = useAppSelector(state => getTotalSeries(state));
 
 	useEffect(() => {
 		// disable actions button
@@ -80,7 +79,7 @@ const Series = () => {
 							text: "BULK_ACTIONS.DELETE.SERIES.CAPTION",
 						},
 					]}
-					disabled={!showActions}
+					isShowActions={isShowActions}
 				/>
 			</TablePage>
 
