@@ -29,5 +29,5 @@ export const getActivatedColumns = (state: RootState) =>
 
 export const getSelectedRows = createSelector(
 	rowsSelectors.selectAll,
-	rows => rows.filter(row => row.selected)
+	rows => rows.filter(row => row.selected),
 );
