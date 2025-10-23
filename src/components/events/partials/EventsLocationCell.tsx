@@ -29,14 +29,18 @@ const EventsLocationCell = ({
 	};
 
 	return (
-		// Link template for location of event
-		<ButtonLikeAnchor
-			onClick={() => addFilter(row.location)}
-			className={"crosslink"}
-			// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.LOCATION"} // Disabled due to performance concerns
-		>
-			{row.location}
-		</ButtonLikeAnchor>
+		<>
+			{ row.location &&
+				// Link template for location of event
+				<ButtonLikeAnchor
+					onClick={() => addFilter(row.location)}
+					className={"crosslink"}
+					// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.LOCATION"} // Disabled due to performance concerns
+				>
+					{row.location}
+				</ButtonLikeAnchor>
+			}
+		</>
 	);
 };
 
