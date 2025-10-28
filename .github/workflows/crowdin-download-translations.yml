@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-translations:
+  download-translations:
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     steps:
