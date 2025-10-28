@@ -78,7 +78,7 @@ jobs:
     name: Create upstream PR to incorporate release
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-release-tarballs
     permissions:
       contents: write #for the release
       pull-requests: write #For the PR in the upstream repo
