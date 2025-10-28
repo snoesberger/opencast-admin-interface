@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  detect:
+  detect-repo-owner:
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
@@ -33,7 +33,7 @@ jobs:
           #Strip the r/ prefix, giving us just 17.x.  If this is main/develop this does nothing
           echo "branch=${TEMP#r\/}" >> $GITHUB_OUTPUT
 
-  main:
+  deploy-main-branches:
     runs-on: ubuntu-latest
     needs: detect
     steps:

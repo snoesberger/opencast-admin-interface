@@ -13,7 +13,7 @@ env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
-  delete_directory:
+  delete-pr-directory:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare git

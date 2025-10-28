@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  create-release-tag:
     name: Create release tag
     runs-on: ubuntu-latest
     steps:
