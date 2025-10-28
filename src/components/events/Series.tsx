@@ -44,7 +44,6 @@ const Series = () => {
 	let location = useLocation();
 
 	const series = useAppSelector(state => getTotalSeries(state));
-	const showActions = useAppSelector(state => isShowActions(state));
 
 	useEffect(() => {
 		// State variable for interrupting the load function
@@ -139,7 +138,7 @@ const Series = () => {
 									text: "BULK_ACTIONS.DELETE.SERIES.CAPTION",
 								},
 							]}
-							disabled={!showActions}
+							isShowActions={isShowActions}
 						/>
 						{/* Include filters component */}
 						<TableFilters

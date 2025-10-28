@@ -46,7 +46,7 @@ const UsersRolesCell = ({
 		return displayRoles.join(', ');
 	};
 
-	return <span>{getRoleString()}</span>;
+	return <>{getRoleString()}</>;
 };
 
 export default UsersRolesCell;
