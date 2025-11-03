@@ -104,6 +104,7 @@ export type TableState = {
 	rows: EntityState<Row, string>,
 	maxLabel: string,
 	pagination: Pagination,
+	flags?: { [key in Resource]?: { isNewEventAdded?: boolean } };
 }
 
 const rowsAdapter = createEntityAdapter<Row>();
@@ -179,6 +180,7 @@ const initialState: TableState = {
 		totalItems: 0,
 		directAccessibleNo: 3,
 	},
+    flags: {},
 };
 
 const tableSlice = createSlice({
@@ -194,6 +196,7 @@ const tableSlice = createSlice({
 			sortBy: TableState["sortBy"][Resource],
 			reverse: TableState["reverse"][Resource],
 			totalItems: TableState["pagination"]["totalItems"],
+			flags?: { isNewEventAdded?: boolean },
 		}>) {
 			state.multiSelect[action.payload.resource] = action.payload.multiSelect;
 			state.columns = action.payload.columns;
@@ -205,6 +208,18 @@ const tableSlice = createSlice({
 				...state.pagination,
 				totalItems: action.payload.totalItems,
 			};
+			if (action.payload.flags) {
+			  // Ensure state.flags exists
+			  state.flags ??= {};
+			  const resource = action.payload.resource;
+			  // Ensure flags object for this resource exists
+			  state.flags[resource] ??= {};
+			  // Merge the new flags
+			  state.flags[resource] = {
+			    ...state.flags[resource],
+			    ...action.payload.flags,
+			  };
+			}
 
 			// Entity Adapter preparations
 			const rows: Row[] = [];

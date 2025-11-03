@@ -8,7 +8,8 @@ import {
 	getTablePages,
 	getTablePagination,
 	getTableSorting,
-	getTableStatus,
+	// getTableStatus,
+	getTable,
 } from "../../selectors/tableSelectors";
 import {
 	Row,
@@ -76,6 +77,7 @@ const Table = ({
 		editTableViewModalRef.current?.close?.();
 	};
 
+
 	return (
 		<>
 			<Notifications context="above_table" />
@@ -135,12 +137,23 @@ const MultiSelect = ({ selectAllCheckboxRef }: { selectAllCheckboxRef: React.Ref
 	const dispatch = useAppDispatch();
 
 	const multiSelect = useAppSelector(state => getMultiSelect(state));
+	const table = useAppSelector(state => getTable(state));
+
+	const isNewEventAdded = table.flags?.events?.isNewEventAdded;
 
 	// Select or deselect all rows on a page
 	const onChangeAllSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selected = e.target.checked;
 		dispatch(changeAllSelected(selected));
 	};
+   	useEffect(() => {
+  	if (isNewEventAdded && multiSelect) {
+   	 if (selectAllCheckboxRef.current?.checked) {
+		selectAllCheckboxRef.current.checked = false;
+			}
+		  }
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [isNewEventAdded, multiSelect]);
 
 	return (
 		<>
@@ -218,7 +231,7 @@ const TableBody = ({ templateMap }: { templateMap: TemplateMap }) => {
 
 	const columnCount = useAppSelector(state => getTableColumns(state).length);
 	const rowCount = useAppSelector(rowsSelectors.selectTotal);
-	const status = useAppSelector(state => getTableStatus(state));
+	// const status = useAppSelector(state => getTableStatus(state));
 
 	return (
 		<>

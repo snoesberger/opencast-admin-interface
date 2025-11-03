@@ -45,6 +45,7 @@ export const loadEventsIntoTable = (): AppThunk => (dispatch, getState) => {
 	const { events, table } = getState();
 	const total = events.total;
 	const pagination = table.pagination;
+	let isNewEventAdded = false;
 	// check which events are currently selected
 	const resource = events.results.map(result => {
 		const current = table.rows.entities[result.id];
@@ -55,6 +56,7 @@ export const loadEventsIntoTable = (): AppThunk => (dispatch, getState) => {
 				selected: current.selected,
 			};
 		} else {
+			isNewEventAdded = true;
 			return {
 				...result,
 				selected: false,
@@ -73,8 +75,11 @@ export const loadEventsIntoTable = (): AppThunk => (dispatch, getState) => {
 		sortBy: table.sortBy["events"],
 		reverse: table.reverse["events"],
 		totalItems: total,
+		isNewEventAdded: isNewEventAdded,
+		flags: {
+    	isNewEventAdded,
+  		},
 	};
-
 	dispatch(loadResourceIntoTable(tableData));
 };
 
