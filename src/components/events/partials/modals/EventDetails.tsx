@@ -49,6 +49,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { NOTIFICATION_CONTEXT } from "../../../../configs/modalConfig";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
+import EventDetailsWorkflowSchedulingTab from "../ModalTabsAndPages/EventDetailsWorkflowSchedulingTab";
 
 export enum EventDetailsPage {
 	Metadata,
@@ -275,11 +276,10 @@ const EventDetails = ({
 						formikRef={formikRef}
 					/>
 				)}
-				{page === EventDetailsPage.Workflow &&
+				{page === EventDetailsPage.Workflow && !hasSchedulingProperties &&
 					((workflowTabHierarchy === "workflows" && (
 						<EventDetailsWorkflowTab
 							eventId={eventId}
-							formikRef={formikRef}
 						/>
 					)) ||
 						(workflowTabHierarchy === "workflow-details" && (
@@ -300,6 +300,12 @@ const EventDetails = ({
 								eventId={eventId}
 							/>
 						)))}
+				{page === EventDetailsPage.Workflow && hasSchedulingProperties &&
+					<EventDetailsWorkflowSchedulingTab
+						eventId={eventId}
+						formikRef={formikRef}
+					/>
+				}
 				{page === EventDetailsPage.AccessPolicy && (
 					<EventDetailsAccessPolicyTab
 						eventId={eventId}
