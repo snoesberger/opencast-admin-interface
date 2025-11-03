@@ -1,4 +1,4 @@
-name: Remove Pull Request Page
+name: PRs » Remove Pull Request Page
 
 on:
   pull_request_target:
@@ -13,15 +13,15 @@ env:
   PR_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
-  delete_directory:
+  delete-pr-directory:
     runs-on: ubuntu-latest
     steps:
-      - name: prepare git
+      - name: Prepare git
         run: |
           git config --global user.name "Admin Interface Deployment Bot"
           git config --global user.email "cloud@opencast.org"
 
-      - name: prepare GitHub SSH key
+      - name: Prepare GitHub SSH key from org level secret
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY_TEST }}
         run: |
@@ -30,16 +30,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: clone repository
+      - name: Clone test repository
         run: |
-          git clone "git@github.com:opencast/opencast-admin-interface-test.git" admin-interface-test
+          git clone -b gh-pages "git@github.com:opencast/opencast-admin-interface-test.git" admin-interface-test
 
-      - name: switch to gh-pages branch
-        working-directory: admin-interface-test
-        run: |
-          git checkout gh-pages
-
-      - name: delete build
+      - name: Delete build if present
         working-directory: admin-interface-test
         run: |
           if [ -d "${PR_NUMBER}" ]; then
@@ -49,7 +44,7 @@ jobs:
             echo "Directory ${PR_NUMBER} does not exist. Skipping deletion."
           fi
 
-      - name: clean index.html
+      - name: Clean index.html
         working-directory: admin-interface-test
         run: |
           echo '<html><body><ul>' > index.html
@@ -58,13 +53,9 @@ jobs:
             | sed 's/^\(.*\)$/<li><a href=\1>\1<\/a><\/li>/' >> index.html
           echo '</ul></body></html>' >> index.html
 
-      - name: commit new version
+      - name: Commit new version
         working-directory: admin-interface-test
         run: |
           git add .
-          git commit -m "Remove deployment ${PR_NUMBER} due to PR closure"
-
-      - name: push updates
-        working-directory: admin-interface-test
-        run: |
-          git push origin gh-pages
+          # Commit and push, or just say true since the commit fails if nothing has changed
+          (git commit -m "Remove deployment ${PR_NUMBER} due to PR closure" && git push origin gh-pages --force) || true
