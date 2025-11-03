@@ -1,4 +1,4 @@
-name: Publish Pull Request Page
+name: PRs » Publish Pull Request Page
 
 on:
   pull_request_target:
@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  detect:
-    if: ${{ github.event.pull_request.head.repo.full_name == 'opencast/opencast-admin-interface' }}
+  detect-repo-owner:
+    if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
       server: ${{ steps.test-server.outputs.server }}
@@ -36,42 +36,42 @@ jobs:
           #Strip the r/ prefix, giving us just 17.x.  If this is main/develop this does nothing
           echo "branch=${TEMP#r\/}" >> $GITHUB_OUTPUT
 
-  main:
+  deploy-pr:
     runs-on: ubuntu-latest
-    needs: detect
+    needs: detect-repo-owner
     steps:
-      - name: generate build path
+      - name: Generate build path
         run: echo "build=${{github.event.number}}/$(date +%Y-%m-%d_%H-%M-%S)/" >> $GITHUB_OUTPUT
         id: build-path
 
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v4
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
 
-      - name: get node.js
+      - name: Get Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: download dependencies
+      - name: Run npm ci
         run: npm ci
 
-      - name: build app
+      - name: Build the app
         run: |
           npm run build
         env:
-          VITE_TEST_SERVER_URL: ${{needs.detect.outputs.server}}
+          VITE_TEST_SERVER_URL: ${{needs.detect-repo-owner.outputs.server}}
           NODE_ENV: development
           VITE_TEST_SERVER_AUTH: "admin:opencast"
 
-      - name: prepare git
+      - name: Prepare git
         run: |
           git config --global user.name "Admin Interface Deployment Bot"
           git config --global user.email "cloud@opencast.org"
 
-      - name: prepare GitHub SSH key
+      - name: Prepare GitHub SSH key from org level secret
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY_TEST }}
         run: |
@@ -80,18 +80,18 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: wait for previous workflows to finish
+      - name: Wait for previous workflows to finish
         uses: softprops/turnstyle@v2
         with:
           same-branch-only: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: clone repository
+      - name: Clone repository
         run: |
           git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/opencast-admin-interface-test.git" admin-interface-test
 
-      - name: store build
+      - name: Store build in the clone
         env:
           DEPLOY_PATH: admin-interface-test/${{ steps.build-path.outputs.build }}
         run: |
@@ -108,7 +108,7 @@ jobs:
           rm -f cleanup-deployments.sh
           git add .
 
-      - name: generate index.html
+      - name: Generate index.html
         working-directory: admin-interface-test
         run: |
           echo '<html><body><ul>' > index.html
@@ -117,18 +117,18 @@ jobs:
             | sed 's/^\(.*\)$/<li><a href=\1>\1<\/a><\/li>/' >> index.html
           echo '</ul></body></html>' >> index.html
 
-      - name: commit new version
+      - name: Commit new version
         working-directory: admin-interface-test
         run: |
           git add .
           git commit --amend -m "Build ${{ steps.build-path.outputs.build }}"
 
-      - name: push updates
+      - name: Force push admin interface test branch
         working-directory: admin-interface-test
         run: |
           git push origin gh-pages --force
 
-      - name: add comment with deployment location
+      - name: Add comment with deployment location
         uses: thollander/actions-comment-pull-request@v3
         with:
           comment-tag: static-test-deployment
@@ -138,3 +138,27 @@ jobs:
             ](https://test.admin-interface.opencast.org/${{ steps.build-path.outputs.build }}).
 
             It might take a few minutes for it to become available.
+
+  check-no-modified-translations:
+    name: Translations only via Crowdin
+    if: github.repository_owner == 'opencast'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+
+      - name: Get changed locale files
+        uses: dorny/paths-filter@v3
+        id: filter_locales
+        with:
+          filters: | # !(pattern) matches anything but pattern
+            locales:
+              - 'src/i18n/org/opencastproject/adminui/languages/!lang-(en_US)*.json'
+
+      - name: Check for changes in translations
+        if: steps.filter_locales.outputs.locales == true
+        uses: actions/github-script@v7
+        with:
+          script: |
+              core.setFailed('You should not alter translations outside of Crowdin.')
