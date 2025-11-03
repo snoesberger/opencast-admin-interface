@@ -64,11 +64,11 @@ How to cut a release for Opencast via the Github UI
    ](https://github.com/opencast/opencast-admin-interface/actions/workflows/crowdin-download-translations.yml)
    to ensure all changes from Crowdin are included in the new release.
 
-2. Use the [Create release tag](https://github.com/opencast/opencast-admin-interface/actions/workflows/create-release.yml)
+2. Use the [Release » Create release tag](https://github.com/opencast/opencast-admin-interface/actions/workflows/release-cut-tag.yml)
    workflow to create a correctly named tag in the appropriate branch.  When running the workflow via the dropdown
    ensure you select the correct branch for the release!
 
-3. Wait for the [Process release](https://github.com/opencast/opencast-admin-interface/actions/workflows/process-release.yml)
+3. Wait for the [Release » Process release tag](https://github.com/opencast/opencast-admin-interface/actions/workflows/release-build.yml)
    workflow to finish
     - It will create a new [GitHub release](https://github.com/opencast/opencast-admin-interface/releases)
       - Review the release and make sure the notes are right, update them if not.
@@ -95,7 +95,7 @@ How to cut a release for Opencast manually with git
     git push upstream "$BRANCH-$DATE":"$BRANCH-$DATE"
    ```
 
-4. Wait for the [Process release](https://github.com/opencast/opencast-admin-interface/actions/workflows/process-release.yml)
+4. Wait for the [Release » Process release tag](https://github.com/opencast/opencast-admin-interface/actions/workflows/release-build.yml)
    workflow to finish
     - It will create a new [GitHub release](https://github.com/opencast/opencast-admin-interface/releases)
       - Review the release and make sure the notes are right, update them if not.
