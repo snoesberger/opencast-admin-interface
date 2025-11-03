@@ -1,24 +1,24 @@
+name: Release » Create release tag
+
 on:
   workflow_dispatch:
 
-name: Create release tag
-
 jobs:
-  build:
+  create-release-tag:
     name: Create release tag
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: prepare git
+      - name: Prepare git
         run: |
           git config --global user.email 'cloud@opencast.org'
           git config --global user.name 'Release Bot'
 
-      - name: tag and push
+      - name: Tag and push
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
