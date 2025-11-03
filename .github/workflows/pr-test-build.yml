@@ -1,4 +1,4 @@
-name: Test build
+name: Build » Test build
 
 on:
   push:
@@ -7,19 +7,19 @@ on:
   pull_request:
 
 jobs:
-  build:
+  check-npm-build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v5
 
-      - name: get node.js
+      - name: Get Node.js
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - name: download dependencies
+      - name: Run npm ci
         run: npm ci
 
-      - name: build project
+      - name: Build the app
         run: npm run build

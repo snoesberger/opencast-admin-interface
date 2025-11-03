@@ -1,4 +1,4 @@
-name: Build & Deploy main brances
+name: Build » Deploy main branches
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  detect:
+  detect-repo-owner:
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
@@ -33,32 +33,32 @@ jobs:
           #Strip the r/ prefix, giving us just 17.x.  If this is main/develop this does nothing
           echo "branch=${TEMP#r\/}" >> $GITHUB_OUTPUT
 
-  main:
+  deploy-main-branches:
     runs-on: ubuntu-latest
-    needs: detect
+    needs: detect-repo-owner
     steps:
-      - name: checkout code
+      - name: Checkout sources
         uses: actions/checkout@v5
 
-      - name: get node.js
+      - name: Get Node.js
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - name: download dependencies
+      - name: Run npm ci
         run: npm ci
 
-      - name: build project
+      - name: Build the app
         run: |
           npm run build
         env:
-          VITE_TEST_SERVER_URL: ${{needs.detect.outputs.server}}
+          VITE_TEST_SERVER_URL: ${{needs.detect-repo-owner.outputs.server}}
           NODE_ENV: development
           VITE_TEST_SERVER_AUTH: "admin:opencast"
 
       - name: Prepare git
         run: |
-          git config --global user.name "Release Bot"
+          git config --global user.name "Admin Interface Deployment Bot"
           git config --global user.email "cloud@opencast.org"
 
       - name: Commit new version
@@ -81,7 +81,7 @@ jobs:
           git add $BRANCH index.html
           git diff --staged --quiet || git commit --amend -m "Build $(date)"
         env:
-          BRANCH: ${{needs.detect.outputs.branch}}
+          BRANCH: ${{needs.detect-repo-owner.outputs.branch}}
 
       - name: update CSS and other assets
         if: github.ref == 'refs/heads/develop'
