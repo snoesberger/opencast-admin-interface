@@ -33,4 +33,4 @@ jobs:
           git tag $TAG
           git push origin $TAG
           sleep 2
-          gh workflow run process-release.yml -r $TAG
+          gh workflow run release-build.yml -r $TAG
