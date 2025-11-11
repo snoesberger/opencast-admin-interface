@@ -369,6 +369,23 @@ const Schedule = <T extends {
 }) => {
 	const { t } = useTranslation();
 	const currentLanguage = getCurrentLanguageInformation();
+	const [endTimeChosen, setEndTimeChosen] = useState(false);
+
+	// Parse start-Date strings
+	const startDateTime = new Date(
+	  `${new Date(formik.values.scheduleStartDate).toISOString().split("T")[0]}T${formik.values.scheduleStartHour}:${formik.values.scheduleStartMinute}:00`,
+	);
+
+	// Parse end datetime
+	const endDateTime = new Date(
+	  `${new Date(formik.values.scheduleEndDate).toISOString().split("T")[0]}T${formik.values.scheduleEndHour}:${formik.values.scheduleEndMinute}:00`,
+	);
+
+	const now = new Date();
+
+	// Event is in progress
+	const eventInProgress = now >= startDateTime && now <= endDateTime;
+
 
 	const renderInputDeviceOptions = () => {
 		if (formik.values.location) {
@@ -572,7 +589,7 @@ const Schedule = <T extends {
 						<SchedulingTime
 							hour={formik.values.scheduleEndHour}
 							minute={formik.values.scheduleEndMinute}
-							disabled={false}
+							disabled={endTimeChosen === true && !!eventInProgress ? true : false}
 							title={"EVENTS.EVENTS.NEW.SOURCE.DATE_TIME.END_TIME"}
 							hourPlaceholder={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.HOUR"}
 							minutePlaceholder={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.MINUTE"}
@@ -593,12 +610,14 @@ const Schedule = <T extends {
 							}}
 							callbackMinute={(value: string) => {
 								if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
+									setEndTimeChosen(true);
 									changeEndMinuteMultiple(
 										value,
 										formik.values,
 										formik.setFieldValue,
 									);
 								} else {
+									setEndTimeChosen(true);
 									changeEndMinute(
 										value,
 										formik.values,

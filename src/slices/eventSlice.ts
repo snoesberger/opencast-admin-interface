@@ -954,9 +954,9 @@ export const checkConflicts = (values: {
 			);
 			check = false;
 		}
-
+        const now = new Date();
 		// check if the event has already been started and still is in the process
-		if ((values.sourceMode === "SCHEDULE_SINGLE" || values.sourceMode === "SCHEDULE_MULTIPLE") && startDate.getHours() < new Date().getHours() && new Date().getHours() < endDate.getHours()) {
+		if ((values.sourceMode === "SCHEDULE_SINGLE" || values.sourceMode === "SCHEDULE_MULTIPLE") && startDate <= now && now <= endDate) {
           	dispatch(
 				addNotification({
 					type: "error",
