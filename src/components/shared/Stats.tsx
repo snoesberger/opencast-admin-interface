@@ -10,7 +10,7 @@ import {
 	removeTextFilter,
 } from "../../slices/tableFilterSlice";
 import { loadEventsIntoTable } from "../../thunks/tableThunks";
-import { setOffset, setPageActive } from "../../slices/tableSlice"
+import { setOffset, setPageActive } from "../../slices/tableSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
 import { ParseKeys } from "i18next";
