@@ -10,6 +10,7 @@ import {
 	removeTextFilter,
 } from "../../slices/tableFilterSlice";
 import { loadEventsIntoTable } from "../../thunks/tableThunks";
+import { setOffset, setPageActive } from "../../slices/tableSlice"
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
 import { ParseKeys } from "i18next";
@@ -39,8 +40,14 @@ const Stats = () => {
 			}
 			let filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
+<<<<<<< HEAD
 			if (!!filter) {
 				dispatch(editFilterValue({filterName: filter.name, value: filterValue, resource: "events"}));
+=======				// go to first page without reloading all events
+        			dispatch(setOffset(0));
+        			dispatch(setPageActive(0));
+				dispatch(editFilterValue({ filterName: filter.name, value: filterValue, resource: "events" }));
+>>>>>>> be73635d4b (Go to first page when changing filters via Stats)
 			}
 		});
 		await dispatch(fetchEvents());
