@@ -370,6 +370,60 @@ const Schedule = <T extends {
 }) => {
 	const { t } = useTranslation();
 	const currentLanguage = getCurrentLanguageInformation();
+	const getEndDateForSchedulingTime = () => {
+		const {
+			scheduleStartDate,
+			scheduleStartHour,
+			scheduleStartMinute,
+			scheduleEndDate,
+			scheduleEndHour,
+			scheduleEndMinute,
+			scheduleDurationHours,
+			sourceMode,
+		} = formik.values;
+
+		const durationHours = Number(scheduleDurationHours) || 0;
+
+		if (durationHours === 0) {
+			return undefined;
+		}
+
+		const startDateTime = new Date(scheduleStartDate);
+		startDateTime.setHours(
+			parseInt(scheduleStartHour, 10),
+			parseInt(scheduleStartMinute, 10),
+			0,
+			0,
+		);
+
+		let endDateTime: Date;
+
+		if (sourceMode === "SCHEDULE_MULTIPLE") {
+			endDateTime = new Date(startDateTime);
+			endDateTime.setHours(endDateTime.getHours() + durationHours);
+		} else {
+			if (!scheduleEndDate) {
+				return undefined;
+			}
+			endDateTime = new Date(scheduleEndDate);
+			endDateTime.setHours(
+				parseInt(scheduleEndHour, 10),
+				parseInt(scheduleEndMinute, 10),
+				0,
+				0,
+			);
+		}
+
+		if (
+			endDateTime.getDate() !== startDateTime.getDate() ||
+			endDateTime.getMonth() !== startDateTime.getMonth() ||
+			endDateTime.getFullYear() !== startDateTime.getFullYear()
+		) {
+			return "+1 day";
+		}
+		return undefined;
+	};
+
 
 	const renderInputDeviceOptions = () => {
 		if (formik.values.location) {
@@ -606,13 +660,7 @@ const Schedule = <T extends {
 									);
 								}
 							}}
-							date={
-								formik.values.sourceMode === "SCHEDULE_SINGLE" &&
-								(new Date(formik.values.scheduleEndDate).getDate() !==
-								new Date(formik.values.scheduleStartDate).getDate())
-								? formik.values.scheduleEndDate
-								: undefined
-							}
+							date={getEndDateForSchedulingTime()}
 						/>
 
 						<SchedulingLocation
