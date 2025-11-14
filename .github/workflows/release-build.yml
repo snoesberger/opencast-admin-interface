@@ -48,8 +48,9 @@ jobs:
           echo tag=$(git describe --tags) >> $GITHUB_OUTPUT
           while read branchname
           do
-            #branchname looks like 'develop' or 'r/17.x', the describe + cut looks like '17.x', so we prefix with r/
-            # NB: branchname == develop *should not match* anything so that we fall back to the if case below
+            LAST_BRANCH="$branchname"
+            #branchname looks like 'r/17.x', the describe + cut looks like '17.x', so we prefix with r/
+            # NB: branchname == develop is not handled here, it's handled below
             if [ "$branchname" != "r/`git describe --tags | cut -f 1 -d -`" ]; then
               continue
             fi
@@ -61,10 +62,15 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               /repos/${{ github.repository_owner }}/opencast/branches?per_page=100 | \
-            jq -r '. | map(select(.name | match("r/[0-9]*.x|develop"))) | .[].name'`
-          if [ -z "${BASE_BRANCH}" ]; then
-            echo "Base branch is develop"
-            echo "branch=develop" >> $GITHUB_OUTPUT
+            jq -r '. | map(select(.name | match("r/[0-9]*.x"))) | .[].name'`
+          #Figure out what develop branch's version should be
+          # Bash is, without a doubt, the worst possible way to do this, but here we are...
+          export DEVELOP_BRANCH=$(($(echo $LAST_BRANCH | cut -f 2 -d '/' | cut -f 1 -d '.') + 1)).x
+          #If we didn't find a match above, *and* the develop branch matches the tag
+          if [ -z "${BASE_BRANCH}" -a "$DEVELOP_BRANCH" == "`git describe --tags | cut -f 1 -d -`" ]; then
+            echo "Base branch is develop, version $DEVELOP_BRANCH"
+            # Develop is by definition (LAST_BRANCH + 1).x
+            echo "branch=$DEVELOP_BRANCH" >> $GITHUB_OUTPUT
           fi
 
       - name: Create new release in github
