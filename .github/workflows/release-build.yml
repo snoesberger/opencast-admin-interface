@@ -106,26 +106,26 @@ jobs:
 
       - name: Clone upstream repository
         run: |
-          git clone -b ${{ needs.build.outputs.branch }} "git@github.com:${{ github.repository_owner }}/opencast.git" opencast
+          git clone -b ${{ needs.build-release-tarballs.outputs.branch }} "git@github.com:${{ github.repository_owner }}/opencast.git" opencast
           cd opencast
-          git checkout -b t/admin-ui-${{ needs.build.outputs.tag }}
+          git checkout -b t/admin-ui-${{ needs.build-release-tarballs.outputs.tag }}
 
       - name: Update the admin ui pom file
         working-directory: opencast
         run: |
-          sed -i "s#<interface.sha256>.*</interface.sha256>#<interface.sha256>${{ needs.build.outputs.checksum }}</interface.sha256>#" modules/admin-ui-interface/pom.xml
-          sed -i "s#<interface.url>.*</interface.url>#<interface.url>https://github.com/${{ github.repository_owner }}/opencast-admin-interface/releases/download/${{ needs.build.outputs.tag }}/oc-admin-ui-${{ needs.build.outputs.tag }}.tar.gz</interface.url>#" modules/admin-ui-interface/pom.xml
+          sed -i "s#<interface.sha256>.*</interface.sha256>#<interface.sha256>${{ needs.build-release-tarballs.outputs.checksum }}</interface.sha256>#" modules/admin-ui-interface/pom.xml
+          sed -i "s#<interface.url>.*</interface.url>#<interface.url>https://github.com/${{ github.repository_owner }}/opencast-admin-interface/releases/download/${{ needs.build-release-tarballs.outputs.tag }}/oc-admin-ui-${{ needs.build-release-tarballs.outputs.tag }}.tar.gz</interface.url>#" modules/admin-ui-interface/pom.xml
           git add modules/admin-ui-interface/pom.xml
-          git commit -m "Updating admin ui to ${{ needs.build.outputs.tag }}"
-          git push origin t/admin-ui-${{ needs.build.outputs.tag }}
+          git commit -m "Updating admin ui to ${{ needs.build-release-tarballs.outputs.tag }}"
+          git push origin t/admin-ui-${{ needs.build-release-tarballs.outputs.tag }}
           #This token is an account wide token which allows creation of PRs and pushes.
           echo "${{ secrets.MODULE_PR_TOKEN }}" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --title "Update ${{ needs.build.outputs.branch }} Admin UI to ${{ needs.build.outputs.tag }}" \
-            --body "Updating Opencast ${{ needs.build.outputs.branch }} Admin UI module to [${{ needs.build.outputs.tag }}](https://github.com/${{ github.repository_owner }}/opencast-admin-interface/releases/tag/${{ needs.build.outputs.tag }})" \
-            --head=${{ github.repository_owner }}:t/admin-ui-${{ needs.build.outputs.tag }} \
-            --base ${{ needs.build.outputs.branch }} \
+            --title "Update ${{ needs.build-release-tarballs.outputs.branch }} Admin UI to ${{ needs.build-release-tarballs.outputs.tag }}" \
+            --body "Updating Opencast ${{ needs.build-release-tarballs.outputs.branch }} Admin UI module to [${{ needs.build-release-tarballs.outputs.tag }}](https://github.com/${{ github.repository_owner }}/opencast-admin-interface/releases/tag/${{ needs.build-release-tarballs.outputs.tag }})" \
+            --head=${{ github.repository_owner }}:t/admin-ui-${{ needs.build-release-tarballs.outputs.tag }} \
+            --base ${{ needs.build-release-tarballs.outputs.branch }} \
             -R ${{ github.repository_owner }}/opencast
             #FIXME: fine grained PATs can't apply labels
             #FIXME: classic PATs don't have the permissions because the PR isn't in an opencastproject (the user) repo
