@@ -56,7 +56,7 @@ jobs:
             fi
             echo "Base branch is $branchname"
             BASE_BRANCH="$branchname"
-            echo "branch=$branchname" >> $GITHUB_OUTPUT
+            echo "branch=$BASE_BRANCH" >> $GITHUB_OUTPUT
             break
           done <<< `gh api \
               -H "Accept: application/vnd.github+json" \
@@ -65,12 +65,12 @@ jobs:
             jq -r '. | map(select(.name | match("r/[0-9]*.x"))) | .[].name'`
           #Figure out what develop branch's version should be
           # Bash is, without a doubt, the worst possible way to do this, but here we are...
-          export DEVELOP_BRANCH=$(($(echo $LAST_BRANCH | cut -f 2 -d '/' | cut -f 1 -d '.') + 1)).x
+          export DEVELOP_VERSION=$(($(echo $LAST_BRANCH | cut -f 2 -d '/' | cut -f 1 -d '.') + 1)).x
           #If we didn't find a match above, *and* the develop branch matches the tag
-          if [ -z "${BASE_BRANCH}" -a "$DEVELOP_BRANCH" == "`git describe --tags | cut -f 1 -d -`" ]; then
-            echo "Base branch is develop, version $DEVELOP_BRANCH"
+          if [ -z "${BASE_BRANCH}" -a "$DEVELOP_VERSION" == "`git describe --tags | cut -f 1 -d -`" ]; then
+            echo "Base branch is develop, version $DEVELOP_VERSION"
             # Develop is by definition (LAST_BRANCH + 1).x
-            echo "branch=$DEVELOP_BRANCH" >> $GITHUB_OUTPUT
+            echo "branch=develop" >> $GITHUB_OUTPUT
           fi
 
       - name: Create new release in github
