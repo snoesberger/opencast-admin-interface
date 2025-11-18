@@ -153,6 +153,12 @@
 		"HOTKEY_CHEAT_SHEET": "Keyboard Shortcuts",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "The access policy has been created",
 		"ACL_NOT_SAVED": "The access policy could not be saved",
@@ -206,6 +212,7 @@
 		"CONFLICT_END_BEFORE_START": "Scheduling error: Schedule end has to be later than the start.",
 		"CONFLICT_IN_THE_PAST": "The schedule could not be updated: You cannot schedule an event to be in the past.",
 		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
+		"CONFLICT_RANGE_DAYS":"At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Rules have to contain a valid role and read or/and write right(s).",
 		"MISSING_ACL_RULES": "At least one role with Read and Write permissions is required!",
 		"SAVED_ACL_RULES": "The access rules have been saved.",
@@ -1353,6 +1360,7 @@
 				"PROVIDER": "Provider",
 				"ACTION": "Actions",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Delete user",
 					"DETAILS": "Open user details"
 				}
@@ -2155,5 +2163,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

@@ -36,7 +36,7 @@ const SchedulingTime = ({
 				{t(title)}{" "}
 				<i className="required">*</i>
 			</td>
-			<td className="editable ng-isolated-scope">
+			<td className="editable">
 				{/* drop-down for hour */}
 				<DropDown
 					value={hour}
@@ -69,16 +69,20 @@ const SchedulingTime = ({
 					disabled={disabled}
 					customCSS={{ width: 70 }}
 				/>
-
 				{/* Displays given date. Can be used to signify which date the
 				  scheduling time belong to*/}
-				{date &&
+				{date && (
 					<span style={{ marginLeft: "10px" }}>
-						{new Date(date).toLocaleDateString(
-							currentLanguage ? currentLanguage.dateLocale.code : undefined,
-						)}
+						{typeof date === "string"
+							? date // show the string as it is
+							: date instanceof Date && !isNaN(date.getDate())
+							? new Date(date).toLocaleDateString(
+									currentLanguage ? currentLanguage.dateLocale.code : undefined,
+								)
+							: null
+						}
 					</span>
-				}
+				)}
 			</td>
 		</tr>
 	);

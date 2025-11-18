@@ -437,7 +437,7 @@ export const postNewEvent = (params: {
 	values: {
 		policies: TransformedAcl[],
 		configuration: { [key: string]: unknown },
-		deviceInputs?: string[],
+		inputs?: string[],
 		processingWorkflow: string,
 		repeatOn: string[],
 		scheduleDurationHours: string,
@@ -456,7 +456,6 @@ export const postNewEvent = (params: {
 	extendedMetadata: MetadataCatalog[],
 }): AppThunk => (dispatch, getState) => {
 	const { values, metadataInfo, extendedMetadata } = params;
-
 	// get asset upload options from redux store
 	const state = getState();
 	const uploadAssetOptions = getAssetUploadOptions(state);
@@ -544,7 +543,7 @@ export const postNewEvent = (params: {
 			metadata: {
 				start: startDate,
 				device: values.location,
-				inputs: values.deviceInputs ? values.deviceInputs.join(",") : "",
+				inputs: values.inputs ? values.inputs.join(",") : "",
 				end: endDate,
 				duration: duration.toString(),
 			},
@@ -910,6 +909,20 @@ export const checkConflicts = (values: {
 		values.sourceMode === "SCHEDULE_SINGLE" ||
 		values.sourceMode === "SCHEDULE_MULTIPLE"
 	) {
+			if (values.sourceMode === "SCHEDULE_MULTIPLE") {
+				const isRepeatOnValid = validateRepeatOnInRange(values);
+				if (!isRepeatOnValid) {
+					dispatch(
+						addNotification({
+						type: "error",
+						key: "CONFLICT_RANGE_DAYS",
+						duration: -1,
+						context: NOTIFICATION_CONTEXT,
+						}),
+					);
+				return false; // Exit early if repeatOn is invalid
+			}
+		}
 		// Get timezone offset; Checks should be performed on UTC times
 		// let offset = getTimezoneOffset();
 
@@ -925,7 +938,7 @@ export const checkConflicts = (values: {
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
 		// If start date of event is smaller than today --> Event is in past
-		if (values.sourceMode === "SCHEDULE_SINGLE" && startDate < today) {
+		if ((values.sourceMode === "SCHEDULE_SINGLE" && startDate < new Date()) || (values.sourceMode === "SCHEDULE_MULTIPLE" && startDate < new Date())) {
 			dispatch(
 				addNotification({
 					type: "error",
@@ -1106,6 +1119,42 @@ export const checkForSchedulingConflicts = (events: EditedEvents[]) => (dispatch
 		});
 
 	return data;
+};
+
+export const validateRepeatOnInRange = (values: {
+	repeatOn: string[],           // e.g. ["MO", "TU"]
+	scheduleStartDate: string,    // e.g. "2025-08-11"
+	scheduleEndDate: string       // e.g. "2025-08-13"
+}) => {
+	if (!values.repeatOn || values.repeatOn.length === 0) {
+		return true;
+	}
+
+	const start = new Date(values.scheduleStartDate);
+	const end = new Date(values.scheduleEndDate);
+
+	// Map day codes to numbers: Sunday=0, Monday=1, ..., Saturday=6
+	const dayMap: Record<string, number> = {
+		SU: 0,
+		MO: 1,
+		TU: 2,
+		WE: 3,
+		TH: 4,
+		FR: 5,
+		SA: 6,
+	};
+	const repeatDays = values.repeatOn.map(day => dayMap[day]);
+	// Check if **at least one** date in the [start..end] range matches repeatOn days
+	const current = new Date(start);
+	while (current <= end) {
+		if (repeatDays.includes(current.getDay())) {
+			return true;  // Valid because this repeat day is in range
+		}
+		current.setDate(current.getDate() + 1); // next day
+	}
+
+	// If no repeat days fall within the range, return false
+	return false;
 };
 
 const eventSlice = createSlice({
