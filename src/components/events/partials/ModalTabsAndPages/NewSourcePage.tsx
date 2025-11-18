@@ -119,7 +119,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 				}
 
 				<div className="obj list-obj">
-					<header className="no-expand">
+					<header>
 						{t("EVENTS.EVENTS.NEW.SOURCE.SELECT_SOURCE")}
 					</header>
 					{/* Radio buttons for choosing source mode */}
@@ -269,7 +269,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 									formik.values.uploadAssetsTrack.map((asset, key) => (
 										<tr key={key}>
 											<td>
-												<span style={{ fontWeight: "bold" }}>
+												<span className="title">
 													{translateOverrideFallback(asset, t, "SHORT")}
 												</span>
 												<p>
@@ -292,7 +292,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 													/>
 												</div>
 											</td>
-											<td className="fit">
+											<td>
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
 													className="action-cell-button remove"
@@ -316,7 +316,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				</div>
 			</div>
 			<div className="obj list-obj">
-				<header className="no-expand">
+				<header>
 					{t("EVENTS.EVENTS.NEW.SOURCE.UPLOAD.RECORDING_METADATA")}
 				</header>
 				<div className="obj-container">
@@ -325,7 +325,8 @@ const Upload = <T extends RequiredFormPropsUpload>({
 							{/* One row for each metadata field*/}
 							{sourceMetadata.UPLOAD && sourceMetadata.UPLOAD.metadata.map((field, key) => (
 								<tr key={key}>
-									<td>
+									{/* Set fixed width to prevent date picker from opening twice */}
+									<td style={{ width: "20%" }}>
 										<span>{t(field.label as ParseKeys)}</span>
 										{field.required && <i className="required">*</i>}
 									</td>
@@ -385,6 +386,60 @@ const Schedule = <T extends {
 
 	// Event is in progress
 	const eventInProgress = now >= startDateTime && now <= endDateTime;
+
+	const getEndDateForSchedulingTime = () => {
+		const {
+			scheduleStartDate,
+			scheduleStartHour,
+			scheduleStartMinute,
+			scheduleEndDate,
+			scheduleEndHour,
+			scheduleEndMinute,
+			scheduleDurationHours,
+			sourceMode,
+		} = formik.values;
+
+		const durationHours = Number(scheduleDurationHours) || 0;
+
+		if (durationHours === 0) {
+			return undefined;
+		}
+
+		const startDateTime = new Date(scheduleStartDate);
+		startDateTime.setHours(
+			parseInt(scheduleStartHour, 10),
+			parseInt(scheduleStartMinute, 10),
+			0,
+			0,
+		);
+
+		let endDateTime: Date;
+
+		if (sourceMode === "SCHEDULE_MULTIPLE") {
+			endDateTime = new Date(startDateTime);
+			endDateTime.setHours(endDateTime.getHours() + durationHours);
+		} else {
+			if (!scheduleEndDate) {
+				return undefined;
+			}
+			endDateTime = new Date(scheduleEndDate);
+			endDateTime.setHours(
+				parseInt(scheduleEndHour, 10),
+				parseInt(scheduleEndMinute, 10),
+				0,
+				0,
+			);
+		}
+
+		if (
+			endDateTime.getDate() !== startDateTime.getDate() ||
+			endDateTime.getMonth() !== startDateTime.getMonth() ||
+			endDateTime.getFullYear() !== startDateTime.getFullYear()
+		) {
+			return "+1 day";
+		}
+		return undefined;
+	};
 
 
 	const renderInputDeviceOptions = () => {
@@ -446,8 +501,7 @@ const Schedule = <T extends {
 									yearDropdownItemNumber={2}
 									dateFormat="P"
 									popperClassName="datepicker-custom"
-									className="datepicker-custom-input"
-									portalId="root"
+									wrapperClassName="datepicker-custom-wrapper"
 									locale={currentLanguage?.dateLocale}
 									strictParsing
 								/>
@@ -478,7 +532,7 @@ const Schedule = <T extends {
 											dateFormat="P"
 											popperClassName="datepicker-custom"
 											className="datepicker-custom-input"
-											portalId="root"
+											wrapperClassName="datepicker-custom-wrapper"
 											locale={currentLanguage?.dateLocale}
 											strictParsing
 										/>
@@ -647,13 +701,7 @@ const Schedule = <T extends {
 									);
 								}
 							}}
-							date={
-								formik.values.sourceMode === "SCHEDULE_SINGLE" &&
-								(new Date(formik.values.scheduleEndDate).getDate() !==
-								new Date(formik.values.scheduleStartDate).getDate())
-								? formik.values.scheduleEndDate
-								: undefined
-							}
+							date={getEndDateForSchedulingTime()}
 						/>
 
 						<SchedulingLocation
