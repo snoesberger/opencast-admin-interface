@@ -905,7 +905,6 @@ export const checkConflicts = (values: {
 	sourceMode: string,
 }) => async (dispatch: AppDispatch) => {
 	let check = true;
-
 	// Only perform checks if source mode is SCHEDULE_SINGLE or SCHEDULE_MULTIPLE
 	if (
 		values.sourceMode === "SCHEDULE_SINGLE" ||
@@ -954,19 +953,6 @@ export const checkConflicts = (values: {
 			);
 			check = false;
 		}
-        const now = new Date();
-		// check if the event has already been started and still is in the process
-		if ((values.sourceMode === "SCHEDULE_SINGLE" || values.sourceMode === "SCHEDULE_MULTIPLE") && startDate <= now && now <= endDate) {
-          	dispatch(
-				addNotification({
-					type: "error",
-					key: "CONFLICT_STILL_DID_NOT_FINISH",
-					duration: -1,
-					context: NOTIFICATION_CONTEXT,
-				}),
-			);
-			check = false;
-		 }
 
 		// transform duration into milliseconds (needed for API request)
 		const duration =

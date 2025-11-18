@@ -12,7 +12,7 @@ import { Field } from "../../../shared/Field";
 import RenderField from "../../../shared/wizard/RenderField";
 import { getRecordings } from "../../../../selectors/recordingSelectors";
 import { sourceMetadata } from "../../../../configs/sourceConfig";
-import { weekdays } from "../../../../configs/modalConfig";
+import { weekdays, NOTIFICATION_CONTEXT } from "../../../../configs/modalConfig";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import {
 	filterDevicesForAccess,
@@ -37,7 +37,7 @@ import {
 } from "../../../../utils/dateUtils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { Recording, fetchRecordings } from "../../../../slices/recordingSlice";
-import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
+import { addNotification, removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import { parseISO } from "date-fns";
 import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import { checkConflicts, UploadAssetsTrack } from "../../../../slices/eventSlice";
@@ -369,7 +369,7 @@ const Schedule = <T extends {
 }) => {
 	const { t } = useTranslation();
 	const currentLanguage = getCurrentLanguageInformation();
-	const [endTimeChosen, setEndTimeChosen] = useState(false);
+	const dispatch = useAppDispatch();
 
 	// Parse start-Date strings
 	const startDateTime = new Date(
@@ -589,11 +589,22 @@ const Schedule = <T extends {
 						<SchedulingTime
 							hour={formik.values.scheduleEndHour}
 							minute={formik.values.scheduleEndMinute}
-							disabled={endTimeChosen === true && !!eventInProgress ? true : false}
+							disabled={false}
 							title={"EVENTS.EVENTS.NEW.SOURCE.DATE_TIME.END_TIME"}
 							hourPlaceholder={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.HOUR"}
 							minutePlaceholder={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.MINUTE"}
 							callbackHour={(value: string) => {
+							if (eventInProgress && value < formik.values.scheduleEndHour) {
+							dispatch(
+							addNotification({
+							type: "error",
+							key: "CONFLICT_END_TIME_TOO_EARLY",
+							duration: -1,
+							context: NOTIFICATION_CONTEXT,
+							}),
+							);
+							return; // Block shortening
+							}
 								if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
 									changeEndHourMultiple(
 										value,
@@ -609,15 +620,26 @@ const Schedule = <T extends {
 								}
 							}}
 							callbackMinute={(value: string) => {
+
+							if (eventInProgress && value < formik.values.scheduleEndMinute) {
+							dispatch(
+							addNotification({
+							type: "error",
+							key: "CONFLICT_END_TIME_TOO_EARLY",
+							duration: -1,
+							context: NOTIFICATION_CONTEXT,
+							}),
+							);
+							return; // Block shortening
+							}
+
 								if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
-									setEndTimeChosen(true);
 									changeEndMinuteMultiple(
 										value,
 										formik.values,
 										formik.setFieldValue,
 									);
 								} else {
-									setEndTimeChosen(true);
 									changeEndMinute(
 										value,
 										formik.values,
