@@ -41,7 +41,6 @@ const Stats = () => {
 			let filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
 			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: filterValue, resource: "events"}));
 				// go to first page without reloading all events
         		dispatch(setOffset(0));
         		dispatch(setPageActive(0));
