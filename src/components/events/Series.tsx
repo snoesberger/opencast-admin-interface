@@ -7,7 +7,7 @@ import {
 	loadSeriesIntoTable,
 } from "../../thunks/tableThunks";
 import { getTotalSeries, isShowActions } from "../../selectors/seriesSeletctor";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch } from "../../store";
 import {
 	fetchSeries,
 	fetchSeriesMetadata,
@@ -19,7 +19,9 @@ import { eventsLinks } from "./partials/EventsNavigation";
 import { Modal, ModalHandle } from "../shared/modals/Modal";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
 import TableActionDropdown from "../shared/TableActionDropdown";
+import { fetchAclDefaults } from "../../slices/aclSlice";
 import TablePage from "../shared/TablePage";
+import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
 
 /**
  * This component renders the table view of series
@@ -27,13 +29,11 @@ import TablePage from "../shared/TablePage";
 const Series = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
+
 	const newSeriesModalRef = useRef<ModalHandle>(null);
 	const deleteModalRef = useRef<ModalHandle>(null);
 
 	const location = useLocation();
-
-	// const series = useAppSelector(state => getTotalSeries(state));
-	const showActions = useAppSelector(state => isShowActions(state));
 
 	useEffect(() => {
 		// disable actions button
@@ -46,6 +46,7 @@ const Series = () => {
 			dispatch(fetchSeriesMetadata()),
 			dispatch(fetchSeriesThemes()),
 			dispatch(fetchSeriesDetailsTobiraNew("/")),
+			dispatch(fetchAclDefaults()),
 		]);
 
 		newSeriesModalRef.current?.open();
@@ -78,7 +79,7 @@ const Series = () => {
 							text: "BULK_ACTIONS.DELETE.SERIES.CAPTION",
 						},
 					]}
-					disabled={!showActions}
+					isShowActions={isShowActions}
 				/>
 			</TablePage>
 
@@ -90,6 +91,9 @@ const Series = () => {
 			>
 				<DeleteSeriesModal close={() => deleteModalRef.current?.close?.()} />
 			</Modal>
+
+			{/* Include table modal */}
+			<SeriesDetailsModal />
 		</>
 	);
 };

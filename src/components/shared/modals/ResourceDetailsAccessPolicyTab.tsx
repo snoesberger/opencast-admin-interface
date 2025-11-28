@@ -30,6 +30,7 @@ import { ParseKeys } from "i18next";
 import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { formatAclTemplatesForDropdown } from "../../../utils/dropDownUtils";
 import ModalContentTable from "./ModalContentTable";
+import { getAclDefaults } from "../../../selectors/aclSelectors";
 import { LuCircleX } from "react-icons/lu";
 
 
@@ -422,18 +423,14 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 	editAccessRole: string
 }) => {
 	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
 
 	const user = useAppSelector(state => getUserInformation(state));
-
-	const [aclDefaults, setAclDefaults] = useState<{ [key: string]: string }>();
+	const aclDefaults = useAppSelector(state => getAclDefaults(state));
 
 	useEffect(() => {
-		async function fetchData() {
-			const responseDefaults = await fetchAclDefaults();
-			setAclDefaults(responseDefaults);
-		}
-
-		fetchData();
+		dispatch(fetchAclDefaults());
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const createPolicy = (role: string, withUser: boolean): TransformedAcl => {
@@ -491,15 +488,15 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 									<th>
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
-											) /* <!-- Read --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
+											) /* <!-- Write --> */
 										}
 									</th>
 									<th>
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
-											) /* <!-- Write --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
+											) /* <!-- Read --> */
 										}
 									</th>
 									{hasActions && (
@@ -540,11 +537,6 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																		value={policy.role}
 																		text={createPolicyLabel(policy)}
 																		options={
-																			roles.length > 0
-																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
-																				: []
-																		}
-																		fetchOptions={() =>
 																			roles.length > 0
 																				? formatAclRolesForDropdown(rolesFilteredbyPolicies)
 																				: []
@@ -756,16 +748,7 @@ export const TemplateSelector = <T extends TemplateSelectorProps>({
 
 	const user = useAppSelector(state => getUserInformation(state));
 
-	const [aclDefaults, setAclDefaults] = useState<{ [key: string]: string }>();
-
-	useEffect(() => {
-		async function fetchData() {
-			const responseDefaults = await fetchAclDefaults();
-			setAclDefaults(responseDefaults);
-		}
-
-		fetchData();
-	}, []);
+	const aclDefaults = useAppSelector(state => getAclDefaults(state));
 
 	if (!hasAccess(editAccessRole, user)) {
 		return <></>;

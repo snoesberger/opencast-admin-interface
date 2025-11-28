@@ -26,11 +26,12 @@ import {
 	setShowActions,
 } from "../../slices/eventSlice";
 import EventDetailsModal from "./partials/modals/EventDetailsModal";
-import { showModal } from "../../selectors/eventDetailsSelectors";
 import { eventsLinks } from "./partials/EventsNavigation";
 import { Modal, ModalHandle } from "../shared/modals/Modal";
 import TableActionDropdown from "../shared/TableActionDropdown";
+import { fetchAclDefaults } from "../../slices/aclSlice";
 import TablePage from "../shared/TablePage";
+import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
 
 /**
  * This component renders the table view of events
@@ -39,8 +40,6 @@ const Events = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const displayEventDetailsModal = useAppSelector(state => showModal(state));
-
 	const newEventModalRef = useRef<ModalHandle>(null);
 	const startTaskModalRef = useRef<ModalHandle>(null);
 	const deleteModalRef = useRef<ModalHandle>(null);
@@ -48,7 +47,6 @@ const Events = () => {
 	const editMetadataEventsModalRef = useRef<ModalHandle>(null);
 
 	const user = useAppSelector(state => getUserInformation(state));
-	const showActions = useAppSelector(state => isShowActions(state));
 	const isFetchingAssetUploadOptions = useAppSelector(state => getIsFetchingAssetUploadOptions(state));
 
 	const location = useLocation();
@@ -63,6 +61,7 @@ const Events = () => {
 		await Promise.all([
 			dispatch(fetchEventMetadata()),
 			dispatch(fetchAssetUploadOptions()),
+			dispatch(fetchAclDefaults()),
 		]);
 
 		newEventModalRef.current?.open();
@@ -118,7 +117,7 @@ const Events = () => {
 							text: "BULK_ACTIONS.EDIT_EVENTS_METADATA.CAPTION",
 						},
 					]}
-					disabled={!showActions}
+					isShowActions={isShowActions}
 				/>
 			</TablePage>
 
@@ -156,9 +155,8 @@ const Events = () => {
 			</Modal>
 
 			{/* Include table modal */}
-			{displayEventDetailsModal &&
-				<EventDetailsModal />
-			}
+			<EventDetailsModal />
+			<SeriesDetailsModal />
 		</>
 	);
 };
