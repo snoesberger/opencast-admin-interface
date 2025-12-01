@@ -14,8 +14,6 @@ const ModalContentTable = ({
 	modalBodyChildren?: React.ReactNode
 	children: React.ReactNode
 }) => {
-
-
   return (
 		<ModalContent
 			modalContentChildren={modalContentChildren}
