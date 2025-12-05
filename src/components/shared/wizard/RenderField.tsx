@@ -228,6 +228,15 @@ const EditableSingleSelect = (props: EditableSingleSelectProps) => {
 		metadataField={metadataField}
 		text={text}
 		form={form}
+		options={
+			metadataField.collection
+				? metadataField.collection.map(item => ({
+					label: item.label ?? item.name,
+					value: item.value,
+					order: item.order,
+				}))
+				: []
+			}
 		isFirstField={isFirstField}
 		focused={focused}
 		setFocused={setFocused}
