@@ -50,9 +50,11 @@ const EventDetailsWorkflowDetails = ({
 		if (!workflowId) {
 			dispatch(fetchWorkflows(eventId)).unwrap()
 				.then(workflows => {
-					const currentWorkflow = workflows.entries[workflows.entries.length - 1];
-					dispatch(fetchWorkflowDetails({ eventId, workflowId: currentWorkflow.id }));
-					dispatch(setModalWorkflowId(currentWorkflow.id));
+					if (workflows.entries.length > 0) {
+						const currentWorkflow = workflows.entries[workflows.entries.length - 1];
+						dispatch(fetchWorkflowDetails({ eventId, workflowId: currentWorkflow.id }));
+						dispatch(setModalWorkflowId(currentWorkflow.id));
+					}
 				},
 			);
 		} else {
