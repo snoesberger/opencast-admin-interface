@@ -102,8 +102,25 @@ const RenderCheckbox = <T extends RequiredFormProps>(
 };
 
 const RenderRadio = <T extends RequiredFormProps>(
-	{ field, formik } : { field: FieldSetField, formik: FormikProps<T> }) => {
-		return <RenderField field={field} formik={formik} />;
+	{ field } : { field: FieldSetField, formik: FormikProps<T> }) => {
+
+		return (
+			<li>
+				<div role="group" className="configField">
+					{field.options?.map(option =>
+						<label key={option.value}>
+							<Field
+								type="radio"
+								className="configField"
+								name={"configuration." + field.name}
+								value={option.value}
+							/>
+							{option.label}
+						</label>,
+					)}
+				</div>
+			</li>
+		);
 };
 
 const RenderNumber = <T extends RequiredFormProps>(

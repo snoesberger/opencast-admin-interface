@@ -15,6 +15,7 @@ export type FieldSetField = {
 	defaultValue?: unknown
 	max?: number // number field
 	min?: number // number field
+	options?: { value: string, label: string }[]
 	[key: string]: unknown
 }
 
