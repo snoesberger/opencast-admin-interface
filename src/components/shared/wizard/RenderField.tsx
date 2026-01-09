@@ -354,6 +354,8 @@ const EditableSingleSelectSeries = ({
 				if (transformedData.length > 0) {
 					setLabel(transformedData[0].label);
 				}
+			} else {
+				setLabel("");
 			}
 		};
 		fetchLabelById();
