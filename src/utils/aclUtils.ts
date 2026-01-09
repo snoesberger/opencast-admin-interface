@@ -24,12 +24,6 @@ export const getAclTemplateText = (
 	}
 };
 
-export const filterRoles = (roles: Role[], policies: TransformedAcl[]) => {
-	return roles.filter(
-		role => !policies.find(policy => policy.role === role.name),
-	);
-};
-
 // Get all policies that have user information, or all policies that do not have user information
 export const policiesFiltered = (
 	policies: TransformedAcl[],
@@ -43,12 +37,10 @@ export const policiesFiltered = (
 };
 
 // Get all roles that have user information, or all policies that do not have user information
-export const rolesFilteredbyPolicies = (
-roles: Role[],
-policies: TransformedAcl[],
-byUser: boolean,
+export const rolesFiltered = (
+	roles: Role[],
+	byUser: boolean,
 ) => {
-	roles = filterRoles(roles, policies);
 	if (byUser) {
 		return roles.filter(role => role.user !== undefined);
 	} else {
