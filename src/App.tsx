@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { HashRouter, Navigate, Route, Routes } from "react-router";
 import "./App.scss";
 import Events from "./components/events/Events";
@@ -16,9 +16,13 @@ import About from "./components/About";
 import { useAppDispatch } from "./store";
 import { fetchOcVersion, fetchUserInfo } from "./slices/userInfoSlice";
 import { subscribeToAuthEvents } from "./utils/broadcastSync";
+import { useTableFilterStateValidation } from "./hooks/useTableFilterStateValidation";
 
 function App() {
 	const dispatch = useAppDispatch();
+
+	useTableFilterStateValidation();
+
 	useEffect(() => {
 		// Load information about current user on mount
 		dispatch(fetchUserInfo());
@@ -29,18 +33,16 @@ function App() {
 		subscribeToAuthEvents();
 
 		// Add event listener for back button to check if we are still logged in
-		window.addEventListener("popstate", function (event) {
+		window.addEventListener("popstate", function () {
 			dispatch(fetchUserInfo());
 		});
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<HashRouter>
 			<Routes>
-				<Route path={"/"} element={<Events />} />
-
 				<Route path={"/events/events"} element={<Events />} />
 
 				<Route path={"/events/series"} element={<Series />} />

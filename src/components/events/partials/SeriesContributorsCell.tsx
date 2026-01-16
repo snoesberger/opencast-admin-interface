@@ -1,4 +1,3 @@
-import React from "react";
 import { fetchSeries, Series } from "../../../slices/seriesSlice";
 import { loadSeriesIntoTable } from "../../../thunks/tableThunks";
 import MultiValueCell from "../../shared/MultiValueCell";
@@ -7,7 +6,7 @@ import MultiValueCell from "../../shared/MultiValueCell";
  * This component renders the contributors cells of series in the table view
  */
 const SeriesContributorsCell = ({
-	row
+	row,
 }: {
 	row: Series
 }) => {
@@ -18,7 +17,7 @@ const SeriesContributorsCell = ({
 			filterName="contributors"
 			fetchResource={fetchSeries}
 			loadResourceIntoTable={loadSeriesIntoTable}
-			tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.CONTRIBUTORS"
+			// tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.CONTRIBUTORS" // Disabled due to performance concerns
 		/>
 	);
 };

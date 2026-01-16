@@ -61,7 +61,7 @@ const TableFiltersProfiles = ({
   	);
 
 	const currentProfiles = profiles.filter(
-		(profile) => profile.resource === resource
+		profile => profile.resource === resource,
 	);
 
 	// todo: Maybe saving to storage is needed
@@ -117,7 +117,7 @@ const TableFiltersProfiles = ({
 
 		if (itemName === "name") {
 			const isDuplicated = profiles.some(
-				(profile) => profile.name === itemValue
+				profile => profile.name === itemValue,
 			);
 			if (!isDuplicated) {
 				setValidName(true);
@@ -135,7 +135,7 @@ const TableFiltersProfiles = ({
 		dispatch(loadFilterProfile(filterMap));
 
 		// No matter what, we go to page one.
-		dispatch(goToPage(0))
+		dispatch(goToPage(0));
 		// Reload resources when filters are removed
 		dispatch(loadResource());
 		dispatch(loadResourceIntoTable());
@@ -143,7 +143,7 @@ const TableFiltersProfiles = ({
 
 	return (
 		<>
-			{/*Show filter profiles dialog if settings icon in TableFilters is clicked*/}
+			{/* Show filter profiles dialog if settings icon in TableFilters is clicked*/}
 			{showFilterSettings && (
 				<div className="btn-dd filter-settings-dd df-profile-filters">
 					{/* depending on settingsMode show list of all saved profiles or the chosen profile to edit*/}
@@ -159,7 +159,7 @@ const TableFiltersProfiles = ({
 							</header>
 							<ul>
 								{currentProfiles.length === 0 ? (
-									//if no profiles saved yet
+									// if no profiles saved yet
 									<li>{t("TABLE_FILTERS.PROFILES.EMPTY")}</li>
 								) : (
 									// repeat for each profile in profiles filtered for currently shown resource (else-case)
@@ -217,25 +217,25 @@ const TableFiltersProfiles = ({
 									{t("TABLE_FILTERS.PROFILES.NAME")}{" "}
 									<i className="required">*</i>
 								</label>
-								{/*Input for name of the filter profile*/}
+								{/* Input for name of the filter profile*/}
 								<input
 									required
 									name="name"
 									type="text"
 									value={profileName}
-									onChange={(e) => handleChange(e)}
+									onChange={e => handleChange(e)}
 									placeholder={t("TABLE_FILTERS.PROFILES.NAME_PLACEHOLDER")}
 									autoFocus={true}
 								/>
 
 								<label>{t("TABLE_FILTERS.PROFILES.DESCRIPTION")}</label>
-								{/*Input for a description of the filter profile*/}
+								{/* Input for a description of the filter profile*/}
 								<textarea
 									value={profileDescription}
 									name="description"
-									onChange={(e) => handleChange(e)}
+									onChange={e => handleChange(e)}
 									placeholder={t(
-										"TABLE_FILTERS.PROFILES.DESCRIPTION_PLACEHOLDER"
+										"TABLE_FILTERS.PROFILES.DESCRIPTION_PLACEHOLDER",
 									)}
 								/>
 							</div>

@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next";
 import { Tooltip } from "./Tooltip";
 import { ParseKeys } from "i18next";
 import BaseButton from "./BaseButton";
@@ -63,4 +63,4 @@ export const SaveEditFooter: React.FC<SaveEditFooterProps> = ({
             >{t(saveButtonText)}</BaseButton>
         </div>
     </footer>;
-}
+};

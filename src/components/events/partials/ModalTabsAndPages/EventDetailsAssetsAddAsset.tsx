@@ -1,7 +1,7 @@
 import React from "react";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import Notifications from "../../../shared/Notifications";
-import { style_button_spacing } from "../../../../utils/eventDetailsUtils";
+import { styleButtonSpacing } from "../../../../utils/eventDetailsUtils";
 import { Formik, FormikProps } from "formik";
 import { translateOverrideFallback } from "../../../../utils/utils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
@@ -33,7 +33,7 @@ const EventDetailsAssetsAddAsset = ({
 	};
 
 	function saveAssets(values: { [key: string]: File }) {
-		dispatch(updateAssets({values, eventId}));
+		dispatch(updateAssets({ values, eventId }));
 	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>, formik: FormikProps<{ [key: string]: File }>, assetId: string) => {
@@ -44,7 +44,7 @@ const EventDetailsAssetsAddAsset = ({
 				formik.setFieldValue(assetId, e.target.files[0]);
 			}
 		} else {
-			console.warn("File event did not contain any files")
+			console.warn("File event did not contain any files");
 		}
 	};
 
@@ -70,9 +70,9 @@ const EventDetailsAssetsAddAsset = ({
 				<div className="obj-container">
 					<Formik
 						initialValues={initialValues}
-						onSubmit={(values) => saveAssets(values)}
+						onSubmit={values => saveAssets(values)}
 					>
-						{(formik) => (
+						{formik => (
 							<div>
 								{/* file select for upload for different types of assets */}
 								<table className="main-tbl">
@@ -96,7 +96,7 @@ const EventDetailsAssetsAddAsset = ({
 																id={asset.id}
 																className="blue-btn file-select-btn"
 																accept={asset.accept}
-																onChange={(e) =>
+																onChange={e =>
 																	handleChange(e, formik, asset.id)
 																}
 																type="file"
@@ -106,13 +106,13 @@ const EventDetailsAssetsAddAsset = ({
 																<span className="ui-helper">
 																	{formik.values[asset.id].name.substr(
 																		0,
-																		50
+																		50,
 																	)}
 																</span>
 															)}
 														</div>
 													</td>
-													{/*Button to remove asset*/}
+													{/* Button to remove asset*/}
 													<td className="fit">
 														<ButtonLikeAnchor
 															className="remove"
@@ -135,7 +135,7 @@ const EventDetailsAssetsAddAsset = ({
 								<footer>
 									<BaseButton
 										className="submit"
-										style={style_button_spacing}
+										style={styleButtonSpacing}
 										type="submit"
 										onClick={() => formik.handleSubmit()}
 									>

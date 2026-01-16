@@ -15,7 +15,13 @@ import BaseButton from "./shared/BaseButton";
 /**
  * Component that renders the nav bar
  */
-type CreateType = {
+export type NavBarLink = {
+	path: string
+	accessRole: string
+	text: ParseKeys
+}
+
+export type CreateType = {
 	accessRole: string
 	onShowModal?: () => Promise<void>
 	onHideModal?: () => void
@@ -38,11 +44,7 @@ const NavBar = ({
 	navAriaLabel?: ParseKeys
 	displayNavigation: boolean
 	setNavigation: React.Dispatch<React.SetStateAction<boolean>>
-	links: {
-		path: string
-		accessRole: string
-		text: ParseKeys
-	}[]
+	links: NavBarLink[]
 	create?: CreateType
 }) => {
 	const { t } = useTranslation();
@@ -53,13 +55,17 @@ const NavBar = ({
 	const newResourceModalRef = useRef<ModalHandle>(null);
 
 	const showNewResourceModal = async () => {
-		create && create.onShowModal && await create.onShowModal()
-		newResourceModalRef.current?.open()
+		if (create && create.onShowModal) {
+			await create.onShowModal();
+		}
+		newResourceModalRef.current?.open();
 	};
 
 	const hideNewResourceModal = () => {
-		create && create.onHideModal && create.onHideModal()
-		newResourceModalRef.current?.close?.()
+		if (create && create.onHideModal) {
+			create.onHideModal();
+		}
+		newResourceModalRef.current?.close?.();
 	};
 
 	const toggleNavigation = () => {
@@ -70,7 +76,7 @@ const NavBar = ({
 		(create && create.hotkeySequence) ?? [],
 		() => showNewResourceModal(),
 		{ description: create && create.hotkeyDescription ? t(create.hotkeyDescription) : undefined },
-		[showNewResourceModal]
+		[showNewResourceModal],
 	);
 
 	return (
@@ -97,7 +103,7 @@ const NavBar = ({
 						>
 							{t(link.text)}
 						</Link>
-					))
+					));
 				})}
 			</nav>
 

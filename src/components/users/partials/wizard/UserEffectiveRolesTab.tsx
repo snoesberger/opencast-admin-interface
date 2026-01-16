@@ -14,7 +14,7 @@ interface RequiredFormProps {
 }
 
 const UserEffectiveRolesTab = <T extends RequiredFormProps>({
-	formik
+	formik,
 }: {
 	formik: FormikProps<T>
 }) => {
@@ -30,7 +30,7 @@ const UserEffectiveRolesTab = <T extends RequiredFormProps>({
 	};
 
 	const handleChangeSearch = async (input: string) => {
-		const filtered = defaultItems.filter((item) => {
+		const filtered = defaultItems.filter(item => {
 			return item.name.toLowerCase().includes(input.toLowerCase());
 		});
 		setSearchField(input);

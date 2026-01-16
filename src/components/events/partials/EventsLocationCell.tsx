@@ -1,4 +1,3 @@
-import React from "react";
 import { getFilters } from "../../../selectors/tableFilterSelectors";
 import { editFilterValue } from "../../../slices/tableFilterSlice";
 import { loadEventsIntoTable } from "../../../thunks/tableThunks";
@@ -21,23 +20,27 @@ const EventsLocationCell = ({
 
 	// Filter with value of current cell
 	const addFilter = (location: string) => {
-		let filter = filterMap.find(({ name }) => name === "location");
-		if (!!filter) {
-			dispatch(editFilterValue({filterName: filter.name, value: location, resource: "events"}));
+		const filter = filterMap.find(({ name }) => name === "location");
+		if (filter) {
+			dispatch(editFilterValue({ filterName: filter.name, value: location, resource: "events" }));
 			dispatch(fetchEvents());
 			dispatch(loadEventsIntoTable());
 		}
 	};
 
 	return (
-		// Link template for location of event
-		<ButtonLikeAnchor
-			onClick={() => addFilter(row.location)}
-			className={"crosslink"}
-			tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.LOCATION"}
-		>
-			{row.location}
-		</ButtonLikeAnchor>
+		<>
+			{ row.location &&
+				// Link template for location of event
+				<ButtonLikeAnchor
+					onClick={() => addFilter(row.location)}
+					className={"crosslink"}
+					// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.LOCATION"} // Disabled due to performance concerns
+				>
+					{row.location}
+				</ButtonLikeAnchor>
+			}
+		</>
 	);
 };
 

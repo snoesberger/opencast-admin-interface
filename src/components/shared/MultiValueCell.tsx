@@ -23,7 +23,7 @@ const MultiValueCell = ({
 	filterName: string
 	fetchResource: AsyncThunk<any, void, any>
 	loadResourceIntoTable: () => AppThunk
-	tooltipText: ParseKeys,
+	tooltipText?: ParseKeys,
 }) => {
 	const dispatch = useAppDispatch();
 
@@ -31,11 +31,11 @@ const MultiValueCell = ({
 
 	// Filter with value of current cell
 	const addFilter = async (presenter: string) => {
-		let filter = filterMap.find(
-			({ name }) => name === filterName
+		const filter = filterMap.find(
+			({ name }) => name === filterName,
 		);
-		if (!!filter) {
-			await dispatch(editFilterValue({filterName: filter.name, value: presenter, resource}));
+		if (filter) {
+			dispatch(editFilterValue({ filterName: filter.name, value: presenter, resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());
 		}

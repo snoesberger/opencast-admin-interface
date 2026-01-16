@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Group, deleteGroup } from "../../../slices/groupSlice";
 import { fetchGroupDetails } from "../../../slices/groupDetailsSlice";
 import { ActionCellDelete } from "../../shared/ActionCellDelete";
@@ -35,14 +35,14 @@ const GroupsActionsCell = ({
 
 	return (
 		<>
-			{/*edit/show group */}
+			{/* edit/show group */}
 			<ButtonLikeAnchor
 				onClick={() => showGroupDetails()}
 				className={"more"}
 				editAccessRole={"ROLE_UI_GROUPS_EDIT"}
-				tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DETAILS"}
+				// tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 			/>
-			{/*modal displaying details about group*/}
+			{/* modal displaying details about group*/}
 			<GroupDetailsModal
 				close={hideGroupDetails}
 				groupName={row.name}
@@ -52,7 +52,7 @@ const GroupsActionsCell = ({
 			{/* delete group */}
 			<ActionCellDelete
 				editAccessRole={"ROLE_UI_GROUPS_DELETE"}
-				tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DELETE"}
+				// tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 				resourceId={row.id}
 				resourceName={row.name}
 				resourceType={"GROUP"}

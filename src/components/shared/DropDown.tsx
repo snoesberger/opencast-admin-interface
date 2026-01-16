@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	dropDownSpacingTheme,
@@ -8,8 +8,8 @@ import { GroupBase, MenuListProps, Props, SelectInstance, createFilter } from "r
 import { isJson } from "../../utils/utils";
 import { ParseKeys } from "i18next";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
-import AsyncSelect from 'react-select/async';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 
 export type DropDownOption = {
 	label: string,
@@ -35,6 +35,7 @@ const DropDown = <T, >({
 	creatable = false,
 	disabled = false,
 	menuIsOpen = undefined,
+	menuPlacement = "auto",
 	handleMenuIsOpen = undefined,
 	skipTranslate = false,
 	optionHeight = 25,
@@ -44,7 +45,7 @@ const DropDown = <T, >({
 	ref?: React.RefObject<SelectInstance<any, boolean, GroupBase<any>> | null>
 	value: T
 	text: string,
-	options: DropDownOption[],
+	options?: DropDownOption[],
 	required: boolean,
 	handleChange: (option: {value: T, label: string} | null) => void
 	placeholder: string
@@ -56,6 +57,7 @@ const DropDown = <T, >({
 	disabled?: boolean,
 	menuIsOpen?: boolean,
 	handleMenuIsOpen?: (open: boolean) => void,
+	menuPlacement?: "auto" | "top" | "bottom",
 	skipTranslate?: boolean,
 	optionHeight?: number,
 	customCSS?: {
@@ -64,13 +66,11 @@ const DropDown = <T, >({
 		optionPaddingTop?: number,
 		optionLineHeight?: string
 	},
-	fetchOptions?: () => { label: string, value: string}[]
+	fetchOptions?: (inputValue: string) => Promise<{ label: string, value: string }[]>
 }) => {
 	const { t } = useTranslation();
 
 	const selectRef = ref;
-
-	const [searchText, setSearch] = useState("");
 
 	const style = dropDownStyle(customCSS ?? {});
 
@@ -85,22 +85,17 @@ const DropDown = <T, >({
 		if (handleMenuIsOpen !== undefined) {
 			handleMenuIsOpen(open);
 		}
-	}
+	};
 
 	const formatOptions = (
 		unformattedOptions: DropDownOption[],
-		filterText: string,
 		required: boolean,
 	) => {
 		// Translate
 		// Translating is expensive, skip it if it is not required
 		if (!skipTranslate) {
-			unformattedOptions = unformattedOptions.map(option => ({...option, label: t(option.label as ParseKeys)}))
+			unformattedOptions = unformattedOptions.map(option => ({ ...option, label: t(option.label as ParseKeys) }));
 		}
-
-		// Filter
-		filterText = filterText.toLowerCase();
-		unformattedOptions = unformattedOptions.filter(option => option.label.toLowerCase().includes(filterText));
 
 		// Add "No value" option
 		if (!required) {
@@ -116,15 +111,23 @@ const DropDown = <T, >({
 		 * contains an `order` field, indicating that a custom ordering for that list
 		 * exists and the list therefore should not be ordered alphabetically.
 		 */
-		const hasCustomOrder = unformattedOptions.every((item) =>
-			isJson(item.label) && JSON.parse(item.label).order !== undefined);
+		const hasCustomOrder = unformattedOptions.every(item => {
+			if (!isJson(item.label)) {
+				return false;
+			}
+			// TODO: Handle JSON parsing errors
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			const parsed = JSON.parse(item.label);
+			return parsed && typeof parsed === "object" && "order" in parsed;
+		});
 
 		if (hasCustomOrder) {
 			// Apply custom ordering.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			unformattedOptions.sort((a, b) => JSON.parse(a.label).order - JSON.parse(b.label).order);
 		} else {
 			// Apply alphabetical ordering.
-			unformattedOptions.sort((a, b) => a.label.localeCompare(b.label))
+			unformattedOptions.sort((a, b) => a.label.localeCompare(b.label));
 		}
 
 		return unformattedOptions;
@@ -135,9 +138,9 @@ const DropDown = <T, >({
 	 * Custom component for list virtualization
 	 */
 	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
-		const { options, children, maxHeight, getValue } = props
+		const { options, children, maxHeight, getValue } = props;
 
-		console.log("Menu List render")
+		console.log("Menu List render");
 
 		return Array.isArray(children) ? (
 			<div style={{ paddingTop: 4 }}>
@@ -151,68 +154,74 @@ const DropDown = <T, >({
 					{({ index, style }: ListChildComponentProps) => <div style={{ ...style }}>{children[index]}</div>}
 				</FixedSizeList>
 			</div>
-		) : null
-	}
+		) : null;
+	};
+
+	const filterOptions = (inputValue: string) => {
+		if (options) {
+			return options.filter(option =>
+				option.label.toLowerCase().includes(inputValue.toLowerCase()),
+			);
+		}
+		return [];
+	};
+
+	const loadOptionsAsync = (inputValue: string, callback: (options: DropDownOption[]) => void) => {
+		setTimeout(async () => {
+			callback(formatOptions(
+				fetchOptions ? await fetchOptions(inputValue) : filterOptions(inputValue),
+				required,
+			));
+		}, 1000);
+	};
 
 	const loadOptions = (
 		inputValue: string,
-		callback: (options: DropDownOption[]) => void
+		callback: (options: DropDownOption[]) => void,
 	) => {
-		callback(formatOptions(
-			fetchOptions ? fetchOptions() : options,
-			searchText,
-			required,
-		));
+		callback(formatOptions(filterOptions(inputValue), required));
 	};
 
 
-  let commonProps: Props = {
+  const commonProps: Props = {
 		tabIndex: tabIndex,
-		theme: (theme) => (dropDownSpacingTheme(theme)),
+		theme: theme => (dropDownSpacingTheme(theme)),
 		styles: style,
 		defaultMenuIsOpen: defaultOpen,
 		autoFocus: autoFocus,
 		isSearchable: true,
 		value: { value: value, label: text === "" ? placeholder : text },
-		inputValue: searchText,
+		defaultOptions: options
+			? formatOptions(
+				options,
+				required,
+			)
+			: true,
+		cacheOptions: true,
+		loadOptions: fetchOptions ? loadOptionsAsync : loadOptions,
 		placeholder: placeholder,
-		onInputChange: (value: string) => setSearch(value),
-		onChange: (element) => handleChange(element as {value: T, label: string}),
+		onChange: element => handleChange(element as {value: T, label: string}),
 		menuIsOpen: menuIsOpen,
 		onMenuOpen: () => openMenu(true),
 		onMenuClose: () => openMenu(false),
 		isDisabled: disabled,
 		openMenuOnFocus: openMenuOnFocus,
+		menuPlacement: menuPlacement ?? "auto",
 
-		//@ts-expect-error: React-Select typing does not account for the typing of option it itself requires
+		// @ts-expect-error: React-Select typing does not account for the typing of option it itself requires
 		components: { MenuList },
-		filterOption: createFilter({ ignoreAccents: false }), // To improve performance on filtering
 	};
 
 	return creatable ? (
 		<AsyncCreatableSelect
 			ref={selectRef}
 			{...commonProps}
-			cacheOptions
-			defaultOptions={formatOptions(
-				options,
-				searchText,
-				required,
-			)}
-			loadOptions={loadOptions}
 		/>
 	) : (
 		<AsyncSelect
 			ref={selectRef}
 			{...commonProps}
 			noOptionsMessage={() => t("SELECT_NO_MATCHING_RESULTS")}
-			cacheOptions
-			defaultOptions={formatOptions(
-				options,
-				searchText,
-				required,
-			)}
-			loadOptions={loadOptions}
 		/>
 	);
 };

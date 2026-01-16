@@ -7,7 +7,7 @@ import MultiValueCell from "../../shared/MultiValueCell";
  * This component renders the creators cells of series in the table view
  */
 const SeriesOrganizersCell = ({
-	row
+	row,
 }: {
 	row: Series
 }) => {
@@ -18,7 +18,7 @@ const SeriesOrganizersCell = ({
 				filterName="organizers"
 				fetchResource={fetchSeries}
 				loadResourceIntoTable={loadSeriesIntoTable}
-				tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.ORGANIZER"
+				// tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.ORGANIZER" // Disabled due to performance concerns
 			/>
 		);
 };

@@ -1,12 +1,13 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EventDetails from "./EventDetails";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
-import { getModalEvent } from "../../../../selectors/eventDetailsSelectors";
+import { getModalEvent, showModal } from "../../../../selectors/eventDetailsSelectors";
 import { setModalEvent, setShowModal } from "../../../../slices/eventDetailsSlice";
 import { Modal } from "../../../shared/modals/Modal";
 import { FormikProps } from "formik";
+import { confirmUnsaved } from "../../../../utils/utils";
 
 /**
  * This component renders the modal for displaying event details
@@ -19,11 +20,8 @@ const EventDetailsModal = () => {
 	const [policyChanged, setPolicyChanged] = useState(false);
 	const formikRef = useRef<FormikProps<any>>(null);
 
+	const displayEventDetailsModal = useAppSelector(state => showModal(state));
 	const event = useAppSelector(state => getModalEvent(state))!;
-
-	const confirmUnsaved = () => {
-		return window.confirm(t("CONFIRMATIONS.WARNINGS.UNSAVED_CHANGES"));
-	};
 
 	const hideModal = () => {
 		dispatch(setModalEvent(null));
@@ -31,13 +29,13 @@ const EventDetailsModal = () => {
 	};
 
 	const close = () => {
-		let isUnsavedChanges = false
-		isUnsavedChanges = policyChanged
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
 		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
-			isUnsavedChanges = true
+			isUnsavedChanges = true;
 		}
 
-		if (!isUnsavedChanges || confirmUnsaved()) {
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
 			setPolicyChanged(false);
 			dispatch(removeNotificationWizardForm());
 			hideModal();
@@ -47,20 +45,24 @@ const EventDetailsModal = () => {
 	};
 
 	return (
-		<Modal
-			open
-			closeCallback={close}
-			header={t("EVENTS.EVENTS.DETAILS.HEADER", { name: event.title })}
-			classId="details-modal"
-		>
-			<EventDetails
-				eventId={event.id}
-				policyChanged={policyChanged}
-				setPolicyChanged={(value) => setPolicyChanged(value)}
-				formikRef={formikRef}
-			/>
-		</Modal>
+		<>
+			{displayEventDetailsModal &&
+				<Modal
+					open
+					closeCallback={close}
+					header={t("EVENTS.EVENTS.DETAILS.HEADER", { name: event.title })}
+					classId="details-modal"
+				>
+					<EventDetails
+						eventId={event.id}
+						policyChanged={policyChanged}
+						setPolicyChanged={value => setPolicyChanged(value)}
+						formikRef={formikRef}
+					/>
+				</Modal>
+			}
+		</>
 	);
-}
+};
 
 export default EventDetailsModal;

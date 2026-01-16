@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { ParseKeys } from "i18next";
@@ -31,7 +30,7 @@ const NavigationButtons = ({
 	const submitActiveClassName = {
 		active: !disabled,
 		inactive: disabled,
-	}
+	};
 
 	return (
 		<footer>
@@ -42,7 +41,9 @@ const NavigationButtons = ({
 					disabled={disabled}
 					aria-disabled={disabled}
 					onClick={() => {
-						!!nextPage && nextPage()
+						if (nextPage) {
+							nextPage();
+						}
 					}}
 					tabIndex={100}
 				>
@@ -55,7 +56,9 @@ const NavigationButtons = ({
 					disabled={disabled}
 					aria-disabled={disabled}
 					onClick={() => {
-						!!nextPage && nextPage();
+						if (nextPage) {
+							nextPage();
+						}
 					}}
 					tabIndex={100}
 				>
@@ -66,7 +69,9 @@ const NavigationButtons = ({
 				<BaseButton
 					className="cancel"
 					onClick={() => {
-						!!previousPage && previousPage()
+						if (previousPage) {
+							previousPage();
+						}
 					}}
 					tabIndex={101}
 				>

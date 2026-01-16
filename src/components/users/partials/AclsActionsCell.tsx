@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { AclResult, deleteAcl } from "../../../slices/aclSlice";
 import { useAppDispatch } from "../../../store";
 import { fetchAclDetails } from "../../../slices/aclDetailsSlice";
@@ -22,13 +22,13 @@ const AclsActionsCell = ({
 	const modalRef = useRef<ModalHandle>(null);
 
 	const hideAclDetails = () => {
-		modalRef.current?.close?.()
+		modalRef.current?.close?.();
 	};
 
 	const showAclDetails = async () => {
 		await dispatch(fetchAclDetails(row.id));
 
-		modalRef.current?.open()
+		modalRef.current?.open();
 	};
 
 	const deletingAcl = (id: number) => {
@@ -42,7 +42,7 @@ const AclsActionsCell = ({
 				onClick={showAclDetails}
 				className={"more"}
 				editAccessRole={"ROLE_UI_ACLS_EDIT"}
-				tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DETAILS"}
+				// tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
 			/>
 
 			{/* ACL details modal */}
@@ -58,7 +58,7 @@ const AclsActionsCell = ({
 			{/* delete ACL */}
 			<ActionCellDelete
 				editAccessRole={"ROLE_UI_ACLS_DELETE"}
-				tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DELETE"}
+				// tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 				resourceId={row.id}
 				resourceName={row.name}
 				resourceType={"ACL"}
