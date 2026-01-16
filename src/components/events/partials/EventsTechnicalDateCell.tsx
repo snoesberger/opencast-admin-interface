@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { fetchEvents } from "../../../slices/eventSlice";
 import { renderValidDate } from "../../../utils/dateUtils";
 import { Event } from "../../../slices/eventSlice";
-import { IconButton } from "../../shared/IconButton";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the technical date cells of events in the table view
@@ -26,7 +26,7 @@ const EventsTechnicalDateCell = ({
 	const addFilter = async (date: string) => {
 		let filter = filterMap.find(({ name }) => name === "technicalStart");
 		if (!!filter) {
-			await dispatch(editFilterValue({filterName: filter.name, value: date + "/" + date}));
+			await dispatch(editFilterValue({filterName: filter.name, value: date + "/" + date, resource: "events"}));
 			await dispatch(fetchEvents());
 			dispatch(loadEventsIntoTable());
 		}
@@ -34,13 +34,13 @@ const EventsTechnicalDateCell = ({
 
 	return (
 		// Link template for technical date of event
-		<IconButton
-			callback={() => addFilter(row.date)}
-			iconClassname={"crosslink"}
+		<ButtonLikeAnchor
+			onClick={() => addFilter(row.date)}
+			className={"crosslink"}
 			tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.START"}
 		>
 			{t("dateFormats.date.short", { date: renderValidDate(row.technical_start) })}
-		</IconButton>
+		</ButtonLikeAnchor>
 	);
 };
 

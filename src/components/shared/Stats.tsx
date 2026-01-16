@@ -13,6 +13,8 @@ import { loadEventsIntoTable } from "../../thunks/tableThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
 import { ParseKeys } from "i18next";
+import { Tooltip } from "./Tooltip";
+import BaseButton from "./BaseButton";
 
 /**
  * This component renders the status bar of the event view and filters depending on these
@@ -38,7 +40,7 @@ const Stats = () => {
 			let filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
 			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: filterValue}));
+				dispatch(editFilterValue({filterName: filter.name, value: filterValue, resource: "events"}));
 			}
 		});
 		await dispatch(fetchEvents());
@@ -66,8 +68,14 @@ const Stats = () => {
 				{/* Show one counter for each status */}
 				{stats.map((st, key) => (
 					<div className="col" key={key}>
-						<button className="stat" onClick={() => showStatsFilter(st)}>
-							<h1>{st.count}</h1>
+						<BaseButton
+							className="stat"
+							tooltipText={"DASHBOARD.BUTTON_TOOLTIP"}
+							tooltipParams={{ filterName: t(st.description as ParseKeys)}}
+							aria-label={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys)})}
+							onClick={() => showStatsFilter(st)}
+						>
+							<div>{st.count}</div>
 							{/* Show the description of the status, if defined,
 								else show name of filter and its value*/}
 							{!!st.description ? (
@@ -79,7 +87,7 @@ const Stats = () => {
 									</span>
 								))
 							)}
-						</button>
+						</BaseButton>
 					</div>
 				))}
 			</div>

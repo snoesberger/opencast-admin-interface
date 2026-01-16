@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import { ParseKeys } from "i18next";
+import BaseButton from "../../../shared/BaseButton";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -216,7 +217,7 @@ const EventDetailsWorkflowTab = ({
 																			onClick={() =>
 																				workflowAction(item.id, "STOP")
 																			}
-																			extraClassName="stop fa-fw"
+																			className="stop fa-fw"
 																			tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.STOP"
 																		>
 																			{/* STOP */}
@@ -228,7 +229,7 @@ const EventDetailsWorkflowTab = ({
 																			onClick={() =>
 																				workflowAction(item.id, "NONE")
 																			}
-																			extraClassName="fa fa-hand-stop-o fa-fw"
+																			className="fa fa-hand-stop-o fa-fw"
 																			style={{ color: "red" }}
 																			tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.ABORT"
 																		>
@@ -241,7 +242,7 @@ const EventDetailsWorkflowTab = ({
 																			onClick={() =>
 																				workflowAction(item.id, "RETRY")
 																			}
-																			extraClassName="fa fa-refresh fa-fw"
+																			className="fa fa-refresh fa-fw"
 																			tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.RETRY"
 																		>
 																			{/* Retry */}
@@ -257,7 +258,7 @@ const EventDetailsWorkflowTab = ({
 																		isRoleWorkflowDelete && (
 																			<ButtonLikeAnchor
 																				onClick={() => deleteWorkflow(item.id)}
-																				extraClassName="remove fa-fw"
+																				className="remove fa-fw"
 																				tooltipText="EVENTS.EVENTS.DETAILS.WORKFLOWS.TOOLTIP.DELETE"
 																			>
 																				{/* DELETE */}
@@ -267,7 +268,7 @@ const EventDetailsWorkflowTab = ({
 															)}
 															<td>
 																<ButtonLikeAnchor
-																	extraClassName="details-link"
+																	className="details-link"
 																	onClick={() =>
 																		openSubTab("workflow-details", item.id)
 																	}
@@ -435,23 +436,25 @@ const EventDetailsWorkflowTab = ({
 													formik.dirty && (
 														<footer style={{ padding: "0 15px" }}>
 															<div className="pull-left">
-																<button
+																<BaseButton
 																	type="reset"
 																	onClick={() => {
 																		formik.resetForm();
 																	}}
 																	disabled={!formik.isValid}
+																	aria-disabled={!formik.isValid}
 																	className={`cancel  ${
 																		!formik.isValid ? "disabled" : ""
 																	}`}
 																>
 																	{t("CANCEL") /* Cancel */}
-																</button>
+																</BaseButton>
 															</div>
 															<div className="pull-right">
-																<button
+																<BaseButton
 																	onClick={() => formik.handleSubmit()}
 																	disabled={!(formik.dirty && formik.isValid)}
+																	aria-disabled={!(formik.dirty && formik.isValid)}
 																	className={`save green  ${
 																		!(formik.dirty && formik.isValid)
 																			? "disabled"
@@ -459,7 +462,7 @@ const EventDetailsWorkflowTab = ({
 																	}`}
 																>
 																	{t("SAVE") /* Save */}
-																</button>
+																</BaseButton>
 															</div>
 														</footer>
 													)}

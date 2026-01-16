@@ -113,6 +113,7 @@ const Table = ({
 	};
 
 	const changePageSize = (size: number) => {
+		forceDeselectAll();
 		dispatch(updatePageSize(size));
 		dispatch(setOffset(0));
 		dispatch(updatePages());
@@ -330,26 +331,43 @@ const Table = ({
 				{/* Pagination and navigation trough pages */}
 				<div className="pagination">
 					<ButtonLikeAnchor
-						extraClassName={cn("prev", { disabled: !isNavigatePrevious() })}
-						onClick={() => dispatch(goToPage(pageOffset - 1))}
+						className={cn("prev", { disabled: !isNavigatePrevious() })}
+						aria-disabled={!isNavigatePrevious()}
+						onClick={() => {
+							dispatch(goToPage(pageOffset - 1));
+							forceDeselectAll();
+						}}
 					>
 						<span className="sr-only">{t("TABLE_PREVIOUS")}</span>
 					</ButtonLikeAnchor>
 					{directAccessible.map((page, key) =>
 						page.active ? (
-							<ButtonLikeAnchor key={key} extraClassName="active">
+							<ButtonLikeAnchor key={key}
+								className="active"
+								aria-label={t("TABLE_CURRENT", { pageNumber: page.label })}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						) : (
-							<ButtonLikeAnchor key={key} onClick={() => dispatch(goToPage(page.number))}>
+							<ButtonLikeAnchor key={key}
+								aria-label={t("TABLE_NUMBERED", { pageNumber: page.label })}
+								onClick={() => {
+									dispatch(goToPage(page.number));
+									forceDeselectAll();
+								}}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						)
 					)}
 
 					<ButtonLikeAnchor
-						extraClassName={cn("next", { disabled: !isNavigateNext() })}
-						onClick={() => dispatch(goToPage(pageOffset + 1))}
+						className={cn("next", { disabled: !isNavigateNext() })}
+						aria-disabled={!isNavigateNext()}
+						onClick={() => {
+							dispatch(goToPage(pageOffset + 1));
+							forceDeselectAll();
+						}}
 					>
 						<span className="sr-only">{t("TABLE_NEXT")}</span>
 					</ButtonLikeAnchor>

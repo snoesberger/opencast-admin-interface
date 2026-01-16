@@ -16,6 +16,7 @@ import {
 import ModalContent from "./modals/ModalContent";
 import { Modal, ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
+import BaseButton from "./BaseButton";
 
 /**
  * This component renders the adopter registration modal. This modal has various states.
@@ -686,15 +687,18 @@ const RegistrationModalContent = () => {
 							<div className="pull-right">
 								{/* submit of form content */}
 								{state === "summary" ?
-										<button
+										<BaseButton
 										onClick={() => formik.handleSubmit()}
 										className={cn("submit")}
 									>
 										{t(states[state].buttons.submitButtonText as ParseKeys)}
-									</button>
+									</BaseButton>
 								: state === "form" ?
-									<button
+									<BaseButton
 										disabled={
+											!(formik.isValid && formik.values.agreedToPolicy)
+										}
+										aria-disabled={
 											!(formik.isValid && formik.values.agreedToPolicy)
 										}
 										onClick={() => onClickContinue()}
@@ -707,15 +711,15 @@ const RegistrationModalContent = () => {
 										})}
 									>
 										{t(states[state].buttons.submitButtonText as ParseKeys)}
-									</button>
+									</BaseButton>
 								:
 									// continue button or confirm button (depending on state)
-									<button
+									<BaseButton
 										className="continue-registration"
 										onClick={() => onClickContinue()}
 									>
 										{t(states[state].buttons.submitButtonText as ParseKeys)}
-									</button>
+									</BaseButton>
 								}
 							</div>
 						)}
@@ -723,30 +727,30 @@ const RegistrationModalContent = () => {
 						{/* back, delete or cancel button depending on state */}
 						<div className="pull-left">
 							{states[state].buttons.back && (
-								<button
+								<BaseButton
 									className="cancel"
 // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
 									onClick={() => setState(states[state].nextState[5])}
 								>
 									{t("ADOPTER_REGISTRATION.MODAL.BACK")}
-								</button>
+								</BaseButton>
 							)}
 							{state === "form" && formik.values.registered && (
-								<button
+								<BaseButton
 									className="danger"
 									onClick={() => setState(states[state].nextState[4] as keyof typeof states)}
 								>
 									{t("WIZARD.DELETE")}
-								</button>
+								</BaseButton>
 							)}
 							{states[state].buttons.skip && (
-								<button
+								<BaseButton
 									className="cancel"
 // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
 									onClick={() => setState(states[state].nextState[2])}
 								>
 									{t("ADOPTER_REGISTRATION.MODAL.SKIP")}
-								</button>
+								</BaseButton>
 							)}
 						</div>
 					</footer>

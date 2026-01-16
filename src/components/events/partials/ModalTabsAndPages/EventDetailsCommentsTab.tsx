@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import BaseButton from "../../../shared/BaseButton";
 
 /**
  * This component manages the comment tab of the event details modal
@@ -155,7 +156,7 @@ const EventDetailsCommentsTab = ({
 									) && (
 										<ButtonLikeAnchor
 											onClick={() => deleteComment(comment)}
-											extraClassName="delete"
+											className="delete"
 										>
 											{t("EVENTS.EVENTS.DETAILS.COMMENTS.DELETE")}
 										</ButtonLikeAnchor>
@@ -168,7 +169,7 @@ const EventDetailsCommentsTab = ({
 											onClick={
 												() => replyTo(comment, key) /* enters reply mode */
 											}
-											extraClassName="reply"
+											className="reply"
 										>
 											{t("EVENTS.EVENTS.DETAILS.COMMENTS.REPLY")}
 										</ButtonLikeAnchor>
@@ -211,7 +212,7 @@ const EventDetailsCommentsTab = ({
 														onClick={() =>
 															deleteReply(comment, reply)
 														}
-														extraClassName="delete"
+														className="delete"
 													>
 														<i className="fa fa-times-circle" />
 														{t("EVENTS.EVENTS.DETAILS.COMMENTS.DELETE")}
@@ -262,8 +263,17 @@ const EventDetailsCommentsTab = ({
 								</div>
 
 								{/* submit button for comment (only active, if text has been written and a reason has been selected) */}
-								<button
+								<BaseButton
 									disabled={
+										!!(
+											!newCommentText.length ||
+											newCommentText.length <= 0 ||
+											!commentReason.length ||
+											commentReason.length <= 0 ||
+											isSavingComment
+										)
+									}
+									aria-disabled={
 										!!(
 											!newCommentText.length ||
 											newCommentText.length <= 0 ||
@@ -284,7 +294,7 @@ const EventDetailsCommentsTab = ({
 									onClick={() => saveComment(newCommentText, commentReason)}
 								>
 									{t("SUBMIT") /* Submit */}
-								</button>
+								</BaseButton>
 							</form>
 						))
 				}
@@ -333,16 +343,16 @@ const EventDetailsCommentsTab = ({
 							)}
 
 							{/* cancel button (exits reply mode) */}
-							<button className="cancel" onClick={() => exitReplyMode()}>
+							<BaseButton className="cancel" onClick={() => exitReplyMode()}>
 								{
 									t(
 										"EVENTS.EVENTS.DETAILS.COMMENTS.CANCEL_REPLY"
 									) /* Cancel */
 								}
-							</button>
+							</BaseButton>
 
 							{/* submit button for comment reply (only active, if text has been written) */}
-							<button
+							<BaseButton
 								disabled={
 									!!(
 										!commentReplyText.length ||
@@ -368,7 +378,7 @@ const EventDetailsCommentsTab = ({
 								}}
 							>
 								{t("EVENTS.EVENTS.DETAILS.COMMENTS.REPLY") /* Reply */}
-							</button>
+							</BaseButton>
 						</form>
 					)
 				}
