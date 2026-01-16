@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router";
 import { setSpecificEventFilter } from "../../../slices/tableFilterSlice";
 import { useAppDispatch } from "../../../store";
@@ -25,7 +24,7 @@ const RecordingsNameCell = ({
 	return (
 		<BaseButton
 			className="button-like-anchor crosslink"
-			tooltipText={"RECORDINGS.RECORDINGS.TABLE.TOOLTIP.NAME"}
+			// tooltipText={"RECORDINGS.RECORDINGS.TABLE.TOOLTIP.NAME"} // Disabled due to performance concerns
 			onClick={() => redirectToEvents(row.name)}
 		>
 			{row.name}

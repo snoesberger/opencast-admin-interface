@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
-import { hasAccess } from "../../../../utils/utils";
+import { confirmUnsaved, hasAccess } from "../../../../utils/utils";
 import EventDetailsCommentsTab from "../ModalTabsAndPages/EventDetailsCommentsTab";
 import EventDetailsAccessPolicyTab from "../ModalTabsAndPages/EventDetailsAccessPolicyTab";
 import EventDetailsWorkflowTab from "../ModalTabsAndPages/EventDetailsWorkflowTab";
@@ -26,6 +26,7 @@ import {
 	getModalPage,
 	getEventDetailsTobiraDataError,
 	getEventDetailsTobiraStatus,
+	getWorkflows,
 } from "../../../../selectors/eventDetailsSelectors";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import EventDetailsStatisticsTab from "../ModalTabsAndPages/EventDetailsStatisticsTab";
@@ -50,6 +51,7 @@ import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { NOTIFICATION_CONTEXT } from "../../../../configs/modalConfig";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
+import EventDetailsWorkflowSchedulingTab from "../ModalTabsAndPages/EventDetailsWorkflowSchedulingTab";
 
 export enum EventDetailsPage {
 	Metadata,
@@ -64,7 +66,7 @@ export enum EventDetailsPage {
 	Statistics,
 }
 
-export type WorkflowTabHierarchy = "entry" | "workflow-details" | "workflow-operations" | "workflow-operation-details" | "errors-and-warnings" | "workflow-error-details"
+export type WorkflowTabHierarchy = "workflows" | "workflow-details" | "workflow-operations" | "workflow-operation-details" | "errors-and-warnings" | "workflow-error-details"
 export type AssetTabHierarchy = "entry" | "add-asset" | "asset-attachments" | "attachment-details" | "asset-catalogs" | "catalog-details" | "asset-media" | "media-details" | "asset-publications" | "publication-details";
 
 /**
@@ -92,27 +94,26 @@ const EventDetails = ({
 		dispatch(fetchEventStatistics(eventId));
 		dispatch(fetchAssetUploadOptions());
 
-		dispatch(fetchHasActiveTransactions(eventId)).then((fetchTransactionResult) => {
-			const result = unwrapResult(fetchTransactionResult)
+		dispatch(fetchHasActiveTransactions(eventId)).then(fetchTransactionResult => {
+			const result = unwrapResult(fetchTransactionResult);
 			if (result.active !== undefined && result.active) {
 				dispatch(
 					addNotification({
 						type: "warning",
 						key: "ACTIVE_TRANSACTION",
 						duration: -1,
-						parameter: undefined,
 						context: NOTIFICATION_CONTEXT,
-						noDuplicates: true
-					})
-				)
+						noDuplicates: true,
+					}),
+				);
 			}
 			if (result.active !== undefined && !result.active) {
 				dispatch(
 					removeNotificationByKey({
 						key: "ACTIVE_TRANSACTION",
-						context: NOTIFICATION_CONTEXT
-					})
-				)
+						context: NOTIFICATION_CONTEXT,
+					}),
+				);
 			}
 		});
 
@@ -134,6 +135,7 @@ const EventDetails = ({
 	const captureAgents = useAppSelector(state => getRecordings(state));
 	const tobiraStatus = useAppSelector(state => getEventDetailsTobiraStatus(state));
 	const tobiraError = useAppSelector(state => getEventDetailsTobiraDataError(state));
+	const workflows = useAppSelector(state => getWorkflows(state));
 
 	const tabs: {
 		tabNameTranslation: ParseKeys,
@@ -219,8 +221,16 @@ const EventDetails = ({
 	];
 
 	const openTab = (tabNr: EventDetailsPage) => {
-		dispatch(removeNotificationWizardForm());
-		dispatch(openModalTab(tabNr, "entry", "entry"))
+		let isUnsavedChanges = false;
+		isUnsavedChanges = policyChanged;
+		if (formikRef.current && formikRef.current.dirty !== undefined && formikRef.current.dirty) {
+			isUnsavedChanges = true;
+		}
+
+		if (!isUnsavedChanges || confirmUnsaved(t)) {
+			dispatch(removeNotificationWizardForm());
+		        dispatch(openModalTab(tabNr, "workflow-details", "entry"));
+		}
 	};
 
 	return (
@@ -269,11 +279,10 @@ const EventDetails = ({
 						formikRef={formikRef}
 					/>
 				)}
-				{page === EventDetailsPage.Workflow &&
-					((workflowTabHierarchy === "entry" && (
+				{page === EventDetailsPage.Workflow && !workflows.scheduling &&
+					((workflowTabHierarchy === "workflows" && (
 						<EventDetailsWorkflowTab
 							eventId={eventId}
-							formikRef={formikRef}
 						/>
 					)) ||
 						(workflowTabHierarchy === "workflow-details" && (
@@ -289,14 +298,17 @@ const EventDetails = ({
 						(workflowTabHierarchy === "workflow-operation-details" && (
 							<EventDetailsWorkflowOperationDetails />
 						)) ||
-						(workflowTabHierarchy === "errors-and-warnings" && (
-							<EventDetailsWorkflowErrors
+						(workflowTabHierarchy === "workflow-error-details" && (
+							<EventDetailsWorkflowErrorDetails
 								eventId={eventId}
 							/>
-						)) ||
-						(workflowTabHierarchy === "workflow-error-details" && (
-							<EventDetailsWorkflowErrorDetails />
 						)))}
+				{page === EventDetailsPage.Workflow && workflows.scheduling &&
+					<EventDetailsWorkflowSchedulingTab
+						eventId={eventId}
+						formikRef={formikRef}
+					/>
+				}
 				{page === EventDetailsPage.AccessPolicy && (
 					<EventDetailsAccessPolicyTab
 						eventId={eventId}

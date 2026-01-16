@@ -25,7 +25,7 @@ const DateTimeCell = ({
 	filterName: string
 	fetchResource: AsyncThunk<any, void, any>
 	loadResourceIntoTable: () => AppThunk
-	tooltipText: ParseKeys
+	tooltipText?: ParseKeys
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
@@ -34,18 +34,18 @@ const DateTimeCell = ({
 
 	// Filter with value of current cell
 	const addFilter = async (date: string) => {
-		let filter = filterMap.find(({ name }) => name === filterName);
-		if (!!filter) {
-			let startDate = new Date(date);
+		const filter = filterMap.find(({ name }) => name === filterName);
+		if (filter) {
+			const startDate = new Date(date);
 			startDate.setHours(0);
 			startDate.setMinutes(0);
 			startDate.setSeconds(0);
-			let endDate = new Date(date);
+			const endDate = new Date(date);
 			endDate.setHours(23);
 			endDate.setMinutes(59);
 			endDate.setSeconds(59);
 
-			await dispatch(editFilterValue({filterName: filter.name, value: startDate.toISOString() + "/" + endDate.toISOString(), resource}));
+			dispatch(editFilterValue({ filterName: filter.name, value: startDate.toISOString() + "/" + endDate.toISOString(), resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());
 		}

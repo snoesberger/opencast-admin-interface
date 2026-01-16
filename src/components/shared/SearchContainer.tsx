@@ -29,14 +29,14 @@ const SearchContainer = ({
 	}
 	let inputClassName = "search";
 		if (isDisabled) {
-		inputClassName = inputClassName + " disabled"
+		inputClassName = inputClassName + " disabled";
 	}
 	if (!value) {
 		inputClassName = inputClassName + " fullwidth";
 	}
 	let buttonClassName = "clear";
 	if (isDisabled) {
-		buttonClassName = buttonClassName + " disabled"
+		buttonClassName = buttonClassName + " disabled";
 	}
 
 	return (
@@ -50,7 +50,7 @@ const SearchContainer = ({
 				type="text"
 				className={inputClassName}
 				placeholder={t("TABLE_FILTERS.PLACEHOLDER")}
-				onChange={(e) => handleChange(e.target.value)}
+				onChange={e => handleChange(e.target.value)}
 				name="textFilter"
 				value={value}
 				disabled={isDisabled}

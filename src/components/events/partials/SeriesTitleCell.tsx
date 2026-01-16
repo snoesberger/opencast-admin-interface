@@ -1,4 +1,3 @@
-import React from "react";
 import { setSpecificEventFilter } from "../../../slices/tableFilterSlice";
 import { useNavigate } from "react-router";
 import { useAppDispatch } from "../../../store";
@@ -18,14 +17,14 @@ const SeriesTitleCell = ({
 
 	const redirectToEvents = async (seriesId: string) => {
 		// set the series filter value of events to series title
-		await dispatch(setSpecificEventFilter({filter: "series", filterValue: seriesId}));
+		await dispatch(setSpecificEventFilter({ filter: "series", filterValue: seriesId }));
 		navigate("/events/events");
 	};
 
 	return (
 		<BaseButton
 			className="button-like-anchor crosslink"
-			tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"}
+			// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.SERIES"} // Disabled due to performance concerns
 			onClick={() => redirectToEvents(row.id)}
 		>
 			{row.title}

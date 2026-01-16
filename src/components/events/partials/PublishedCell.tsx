@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Event } from "../../../slices/eventSlice";
-import { Tooltip } from "../../shared/Tooltip";
 import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 import { enrichPublications } from "../../../thunks/assetsThunks";
 import { useAppDispatch } from "../../../store";
@@ -16,7 +15,7 @@ const containerPublications = React.createRef<HTMLDivElement>();
  * This component renders the published cells of events in the table view
  */
 const PublishCell = ({
-	row
+	row,
 }: {
 	row: Event
 }) => {
@@ -36,11 +35,11 @@ const PublishCell = ({
 					const resultAction = await dispatch(enrichPublications({ publications: row.publications }));
 					transformedPublications = unwrapResult(resultAction);
 				} catch (rejectedValueOrSerializedError) {
-					console.error(rejectedValueOrSerializedError)
+					console.error(rejectedValueOrSerializedError);
 				}
 				setPublications(transformedPublications);
 			}
-		}
+		};
 
 		// Reset publications. This is to immediately update the table on page switch.
 		setPublications(row.publications);
@@ -73,55 +72,57 @@ const PublishCell = ({
 	const onlyEngage = publications.length === 1
 		&& publications[0].enabled
 		&& !publications[0].hide
-		&& publications[0].id === 'engage-player';
+		&& publications[0].id === "engage-player";
 
 	return (
-		<div className="popover-wrapper">
-			{onlyEngage && (
-				<Tooltip title={t("EVENTS.EVENTS.TABLE.TOOLTIP.PLAYER")}>
-					<a href={publications[0].url} rel="noreferrer" target="_blank">
-						<ButtonLikeAnchor>
-							{t("YES")}
-						</ButtonLikeAnchor>
-					</a>
-				</Tooltip>
-			)}
-			{!onlyEngage && publications.length > 0 && (
-				<>
-					<ButtonLikeAnchor className="popover-wrapper__trigger">
-						<span onClick={() => setShowPopup(!showPopup)}>{t("YES")}</span>
-					</ButtonLikeAnchor>
-					{showPopup && (
-						<div className="js-popover popover" ref={containerPublications}>
-							<div className="popover__header" />
-							<div className="popover__content">
-								{/* Show a list item for each publication of an event that isn't hidden*/}
-								{publications.map((publication, key) =>
-									!publication.hide ? (
-										// Check if publications is enabled and choose icon according
-										publication.enabled ? (
-											<a
-												href={publication.url}
-												className="popover__list-item"
-												target="_blank"
-												rel="noreferrer"
-												key={key}
-											>
-												<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
-											</a>
-										) : (
-											<ButtonLikeAnchor key={key} className="popover__list-item">
-												<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
-											</ButtonLikeAnchor>
-										)
-									) : null
-								)}
-							</div>
-						</div>
+		<>
+			{ publications.length > 0 &&
+				<div className="popover-wrapper">
+					{onlyEngage && (
+						// <Tooltip title={t("EVENTS.EVENTS.TABLE.TOOLTIP.PLAYER")}> // Disabled due to performance concerns
+							<a className="crosslink" href={publications[0].url} rel="noreferrer" target="_blank">
+								{t("YES")}
+							</a>
+						// </Tooltip>
 					)}
-				</>
-			)}
-		</div>
+					{!onlyEngage &&
+						<>
+							<ButtonLikeAnchor className="popover-wrapper__trigger">
+								<span onClick={() => setShowPopup(!showPopup)}>{t("YES")}</span>
+							</ButtonLikeAnchor>
+							{showPopup && (
+								<div className="js-popover popover" ref={containerPublications}>
+									<div className="popover__header" />
+									<div className="popover__content">
+										{/* Show a list item for each publication of an event that isn't hidden*/}
+										{publications.map((publication, key) =>
+											!publication.hide ? (
+												// Check if publications is enabled and choose icon according
+												publication.enabled ? (
+													<a
+														href={publication.url}
+														className="popover__list-item"
+														target="_blank"
+														rel="noreferrer"
+														key={key}
+													>
+														<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
+													</a>
+												) : (
+													<ButtonLikeAnchor key={key} className="popover__list-item">
+														<span>{publication.label ? t(publication.label as ParseKeys) : t(publication.name as ParseKeys)}</span>
+													</ButtonLikeAnchor>
+												)
+											) : null,
+										)}
+									</div>
+								</div>
+							)}
+						</>
+					}
+				</div>
+			}
+		</>
 	);
 };
 

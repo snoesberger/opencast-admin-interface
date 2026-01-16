@@ -50,11 +50,11 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 
 	const tobiraData = useAppSelector(state => kind === "series"
 		? getSeriesDetailsTobiraData(state)
-		: getEventDetailsTobiraData(state)
+		: getEventDetailsTobiraData(state),
 	);
 	const error = useAppSelector(state => kind === "series"
 		? getSeriesDetailsTobiraDataError(state)
-		: getEventDetailsTobiraDataError(state)
+		: getEventDetailsTobiraDataError(state),
 	);
 
 	const i18nKey = kind === "series" ? "SERIES" : "EVENTS";
@@ -72,7 +72,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 		};
 
 		return [homepage, ...currentPage.ancestors];
-	}
+	};
 
 	const copyTobiraDirectLink = () => {
 		navigator.clipboard.writeText(directTobiraLink).then(function () {
@@ -80,7 +80,6 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 				type: "info",
 				key: "TOBIRA_COPIED_DIRECT_LINK",
 				duration: 3,
-				parameter: undefined,
 				context: NOTIFICATION_CONTEXT_TOBIRA,
 			}));
 		}, function () {
@@ -88,11 +87,10 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 				type: "error",
 				key: "TOBIRA_FAILED_COPYING_DIRECT_LINK",
 				duration: 3,
-				parameter: undefined,
 				context: NOTIFICATION_CONTEXT_TOBIRA,
 			}));
 		});
-	}
+	};
 
 	const handleSubmit = async (values: TobiraFormProps) => {
 		await dispatch(updateSeriesTobiraPath({
@@ -112,11 +110,11 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 		await dispatch(removeSeriesTobiraPath({
 			seriesId: id,
 			currentPath: hostPage.path,
-		})).then(() => dispatch(fetchSeriesDetailsTobira(id)))
-	}
+		})).then(() => dispatch(fetchSeriesDetailsTobira(id)));
+	};
 
 	const openSubTab = async (tabType: TobiraTabHierarchy, currentPage?: TobiraPage) => {
-		if (!!currentPage) {
+		if (currentPage) {
 			const breadcrumbs = getBreadcrumbs(currentPage);
 			// Breadcrumbs always include at least the homepage, so the length is at least 1.
 			const hostPage = breadcrumbs[breadcrumbs.length - 1];
@@ -193,7 +191,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 			</Formik>
 		)}
 	</>;
-}
+};
 
 type TobiraTableProps = {
 	tobiraData: TobiraData;
@@ -205,7 +203,7 @@ type TobiraTableProps = {
 const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTableProps) => {
 	const { t } = useTranslation();
 	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
-	const prefix = i18nKey === "SERIES" ? 's' : 'v';
+	const prefix = i18nKey === "SERIES" ? "s" : "v";
 
 	return <div className="obj">
 		<header>{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.PAGES`)}</header>
@@ -225,8 +223,8 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 				{tobiraData.hostPages.map(hostPage => <tr key={hostPage.path}>
 					<td>
 						<a href={tobiraData.baseURL + hostPage.path +
-							(tobiraData.id.length > 2 ? `/${prefix}/${tobiraData.id.substring(2)}` : '')}>
-							{hostPage.path !== '/' && <>
+							(tobiraData.id.length > 2 ? `/${prefix}/${tobiraData.id.substring(2)}` : "")}>
+							{hostPage.path !== "/" && <>
 								<span className="tobira-page-separator">/</span>
 								{hostPage.ancestors.map((ancestor, key) => (
 									<span key={key}>
@@ -236,10 +234,10 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 								))}
 							</>}
 							<span className="tobira-leaf-page">
-								{hostPage.path !== '/' && <span>
+								{hostPage.path !== "/" && <span>
 									{hostPage.title}
 								</span>}
-								{hostPage.path === '/' && <span>
+								{hostPage.path === "/" && <span>
 									{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.HOMEPAGE`)}
 								</span>}
 							</span>

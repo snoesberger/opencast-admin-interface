@@ -17,7 +17,7 @@ export const ActionCellDelete = <T, >({
 	deleteWithCautionMessage,
 }: {
 	editAccessRole: string
-	tooltipText: ParseKeys
+	tooltipText?: ParseKeys
 	resourceId: T
 	resourceName: string
 	resourceType: ResourceType
@@ -52,5 +52,5 @@ export const ActionCellDelete = <T, >({
 				modalRef={deleteConfirmationModalRef}
 			/>
 		</>
-	)
+	);
 };

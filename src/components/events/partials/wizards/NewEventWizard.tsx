@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import NewEventSummary from "./NewEventSummary";
 import NewAssetUploadPage from "../ModalTabsAndPages/NewAssetUploadPage";
@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "../../../../store";
 import { getOrgProperties, getUserInformation } from "../../../../selectors/userInfoSelectors";
 import { MetadataCatalog, UploadOption, postNewEvent } from "../../../../slices/eventSlice";
 import { UserInfoState } from "../../../../slices/userInfoSlice";
+import { hasAccess } from "../../../../utils/utils";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
@@ -28,7 +29,7 @@ import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper"
  * This component manages the pages of the new event wizard and the submission of values
  */
 const NewEventWizard = ({
-	close
+	close,
 }: {
 	close: () => void
 }) => {
@@ -48,10 +49,10 @@ const NewEventWizard = ({
 	}, []);
 
 	// Whether the ACL of a new event is initialized with the ACL of its series.
-	let initEventAclWithSeriesAcl = true
+	let initEventAclWithSeriesAcl = true;
 	const ADMIN_INIT_EVENT_ACL_WITH_SERIES_ACL = "admin.init.event.acl.with.series.acl";
 	if (!!orgProperties && !!orgProperties[ADMIN_INIT_EVENT_ACL_WITH_SERIES_ACL]) {
-		initEventAclWithSeriesAcl = user.org.properties[ADMIN_INIT_EVENT_ACL_WITH_SERIES_ACL] === 'true';
+		initEventAclWithSeriesAcl = user.org.properties[ADMIN_INIT_EVENT_ACL_WITH_SERIES_ACL] === "true";
 	}
 
 	const initialValues = getInitialValues(
@@ -102,16 +103,16 @@ const NewEventWizard = ({
 			{
 				translation: "EVENTS.EVENTS.NEW.ACCESS.CAPTION",
 				name: "access",
-				hidden: false,
+				hidden: !hasAccess("ROLE_UI_EVENTS_DETAILS_ACL_VIEW", user),
 			},
 			{
 				translation: "EVENTS.EVENTS.NEW.SUMMARY.CAPTION",
 				name: "summary",
 				hidden: false,
 			},
-		]
+		];
 
-		return steps.filter(step => !step.hidden)
+		return steps.filter(step => !step.hidden);
 	};
 
 	const steps = filterSteps();
@@ -128,7 +129,7 @@ const NewEventWizard = ({
 		setSnapshot(values);
 
 		// set page as completely filled out
-		let updatedPageCompleted = pageCompleted;
+		const updatedPageCompleted = pageCompleted;
 		updatedPageCompleted[page] = true;
 		setPageCompleted(updatedPageCompleted);
 
@@ -157,7 +158,7 @@ const NewEventWizard = ({
 	};
 
 	const handleSubmit = (values: typeof initialValues) => {
-		const response = dispatch(postNewEvent({values, metadataInfo: metadataFields, extendedMetadata}));
+		const response = dispatch(postNewEvent({ values, metadataInfo: metadataFields, extendedMetadata }));
 		console.info(response);
 		close();
 	};
@@ -167,10 +168,10 @@ const NewEventWizard = ({
 			<Formik
 				initialValues={snapshot}
 				validationSchema={currentValidationSchema}
-				onSubmit={(values) => handleSubmit(values)}
+				onSubmit={values => handleSubmit(values)}
 			>
 				{/* Render wizard pages depending on current value of page variable */}
-				{(formik) => {
+				{formik => {
 					// eslint-disable-next-line react-hooks/rules-of-hooks
 					useEffect(() => {
 						formik.validateForm();
@@ -186,8 +187,8 @@ const NewEventWizard = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
-								hasAccessPage
+								isValid={formik.isValid}
+								acls={formik.values.policies}
 							/>
 							<div>
 								{steps[page].name === "metadata" && (
@@ -235,7 +236,9 @@ const NewEventWizard = ({
 										nextPage={nextPage}
 										// @ts-expect-error TS(7006):
 										formik={formik}
-										editAccessRole="ROLE_UI_SERIES_DETAILS_ACL_EDIT"
+										editAccessRole="ROLE_UI_EVENTS_DETAILS_ACL_EDIT"
+										viewUsersAccessRole="ROLE_UI_EVENTS_DETAILS_ACL_USER_ROLES_VIEW"
+										viewNonUsersAccessRole="ROLE_UI_EVENTS_DETAILS_ACL_NONUSER_ROLES_VIEW"
 										initEventAclWithSeriesAcl={initEventAclWithSeriesAcl}
 									/>
 								)}
@@ -261,19 +264,19 @@ const getInitialValues = (
 	metadataFields: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[],
 	uploadSourceOptions: UploadOption[],
-	user: UserInfoState
+	user: UserInfoState,
 ) => {
 	let initialValues = initialFormValuesNewEvents;
 
 	// Transform metadata fields provided by backend (saved in redux)
-	initialValues = {...initialValues, ...getInitialMetadataFieldValues(
-		metadataFields
-	)};
+	initialValues = { ...initialValues, ...getInitialMetadataFieldValues(
+		metadataFields,
+	) };
 
 	for (const catalog of extendedMetadata) {
-		initialValues = {...initialValues, ...getInitialMetadataFieldValues(
-			catalog
-		)};
+		initialValues = { ...initialValues, ...getInitialMetadataFieldValues(
+			catalog,
+		) };
 	}
 
 	// Update start date for uploads
@@ -282,27 +285,27 @@ const getInitialValues = (
 	}
 
 	// Transform additional metadata for source (provided by constant in newEventConfig)
-	if (!!sourceMetadata.UPLOAD) {
-		sourceMetadata.UPLOAD.metadata.forEach((field) => {
+	if (sourceMetadata.UPLOAD) {
+		sourceMetadata.UPLOAD.metadata.forEach(field => {
 			initialValues[field.id] = field.value;
 		});
 	}
-	if (!!sourceMetadata.SCHEDULE_SINGLE) {
-		sourceMetadata.SCHEDULE_SINGLE.metadata.forEach((field) => {
+	if (sourceMetadata.SCHEDULE_SINGLE) {
+		sourceMetadata.SCHEDULE_SINGLE.metadata.forEach(field => {
 			initialValues[field.id] = field.value;
 		});
 	}
-	if (!!sourceMetadata.SCHEDULE_MULTIPLE) {
-		sourceMetadata.SCHEDULE_MULTIPLE.metadata.forEach((field) => {
+	if (sourceMetadata.SCHEDULE_MULTIPLE) {
+		sourceMetadata.SCHEDULE_MULTIPLE.metadata.forEach(field => {
 			initialValues[field.id] = field.value;
 		});
 	}
 
 	// Add possible files that can be uploaded in source step
-	if (!!uploadSourceOptions) {
+	if (uploadSourceOptions) {
 		initialValues.uploadAssetsTrack = [];
 		// Sort by displayOrder
-		uploadSourceOptions = uploadSourceOptions.slice().sort((a, b) => a.displayOrder - b.displayOrder)
+		uploadSourceOptions = uploadSourceOptions.slice().sort((a, b) => a.displayOrder - b.displayOrder);
 		// initial value of upload asset needs to be null, because object (file) is saved there
 		for (const option of uploadSourceOptions) {
 			initialValues.uploadAssetsTrack.push({
@@ -327,12 +330,13 @@ const getInitialValues = (
 	initialValues["scheduleEndHour"] = (defaultDate.getHours() + 1).toString();
 	initialValues["scheduleEndMinute"] = "55";
 
-	initialValues["acls"] = [
+	initialValues["policies"] = [
 		{
 			role: user.userRole,
 			read: true,
 			write: true,
 			actions: [],
+			user: user.user,
 		},
 	];
 

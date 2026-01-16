@@ -1,7 +1,7 @@
 import React, { JSX } from "react";
 import { getUserInformation } from "../../selectors/userInfoSelectors";
 import { useAppSelector } from "../../store";
-import { hasAccess } from "../../utils/utils"
+import { hasAccess } from "../../utils/utils";
 import cn from "classnames";
 import { ParseKeys, TOptions } from "i18next";
 import BaseButton from "./BaseButton";
