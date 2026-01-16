@@ -8,8 +8,8 @@ import {
 } from "../../../slices/eventDetailsSlice";
 import { EventDetailsPage } from "./modals/EventDetails";
 import { hasScheduledStatus } from "../../../utils/eventDetailsUtils";
-import { IconButton } from "../../shared/IconButton";
 import { ParseKeys } from "i18next";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
 
 /**
  * This component renders the status cells of events in the table view
@@ -42,13 +42,13 @@ const EventsStatusCell = ({
 	};
 
 	return (
-		<IconButton
-			callback={() => openStatusModal()}
-			iconClassname={"crosslink"}
+		<ButtonLikeAnchor
+			onClick={() => openStatusModal()}
+			className={"crosslink"}
 			tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.STATUS"}
 		>
 			{t(row.displayable_status as ParseKeys)}
-		</IconButton>
+		</ButtonLikeAnchor>
 	);
 };
 

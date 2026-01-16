@@ -31,6 +31,8 @@ import DropDown from "./DropDown";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
+import SearchContainer from "./SearchContainer";
+import { Resource } from "../../slices/tableSlice";
 
 /**
  * This component renders the table filters in the upper right corner of the table
@@ -42,7 +44,7 @@ const TableFilters = ({
 }: {
 	loadResource: AsyncThunk<any, void, any>,
 	loadResourceIntoTable: () => AppThunk,
-	resource: string,
+	resource: Resource,
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
@@ -91,11 +93,19 @@ const TableFilters = ({
 			setEndDate(undefined);
 		}
 
-		dispatch(editFilterValue({filterName: filter.name, value: ""}));
+		dispatch(editFilterValue({filterName: filter.name, value: "", resource}));
 
 		// Reload resources when filter is removed
 		await dispatch(loadResource());
 		dispatch(loadResourceIntoTable());
+	};
+
+	const handleSearchChange = (value: string) => {
+		handleChange("textFilter", value);
+	}
+
+	const clearSearchField = () => {
+		dispatch(removeTextFilter());
 	};
 
 	// Handle changes when an item of the component is changed
@@ -116,7 +126,7 @@ const TableFilters = ({
 		if (name === "secondFilter") {
 			let filter = filterMap.find(({ name }) => name === selectedFilter);
 			if (!!filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: value}));
+				dispatch(editFilterValue({filterName: filter.name, value: value, resource}));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				dispatch(removeSecondFilter());
@@ -195,7 +205,8 @@ const TableFilters = ({
 			if (filter) {
 				dispatch(editFilterValue({
 					filterName: filter.name,
-					value: start.toISOString() + "/" + end.toISOString()
+					value: start.toISOString() + "/" + end.toISOString(),
+					resource
 				}));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
@@ -233,16 +244,12 @@ const TableFilters = ({
 		<>
 			<div className="filters-container">
 				{/* Text filter - Search Query */}
-        <div className="search-container">
-          <input
-            type="text"
-            className="search expand"
-            placeholder={t("TABLE_FILTERS.PLACEHOLDER")}
-            onChange={(e) => handleChange("textFilter", e.target.value)}
-            name="textFilter"
-            value={textFilter}
-          />
-        </div>
+				<SearchContainer
+					value={textFilter}
+					handleChange={handleSearchChange}
+					clearSearchField={clearSearchField}
+					isExpand={true}
+				/>
 
 				{/* Selection of filters and management of filter profiles*/}
 				{/*show only if filters.filters contains filters*/}
@@ -346,12 +353,14 @@ const TableFilters = ({
 						</div>
 
 						{/* Remove icon to clear all filters */}
-						<ButtonLikeAnchor
-							onClick={removeFilters}
-							tooltipText="TABLE_FILTERS.CLEAR"
-						>
-							<i className="clear fa fa-times" />
-						</ButtonLikeAnchor>
+						{filterMap.some(e => e.value) &&
+							<ButtonLikeAnchor
+								onClick={removeFilters}
+								tooltipText="TABLE_FILTERS.CLEAR"
+							>
+								<i className="clear fa fa-times" />
+							</ButtonLikeAnchor>
+						}
 						{/* Settings icon to open filters profile dialog (save and editing filter profiles)*/}
 						<ButtonLikeAnchor
 							onClick={() => setFilterSettings(!showFilterSettings)}
@@ -448,6 +457,7 @@ const FilterSwitch = ({
 						openMenuOnFocus
 						menuIsOpen={openSecondFilterMenu}
 						handleMenuIsOpen={setOpenSecondFilterMenu}
+						skipTranslate={!filter.translatable}
 						customCSS={{ width: 200, optionPaddingTop: 5 }}
 					/>
 				</div>

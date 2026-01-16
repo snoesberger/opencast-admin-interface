@@ -228,7 +228,7 @@ const EventDetailsWorkflowDetails = ({
 												}
 											</span>
 											<ButtonLikeAnchor
-												extraClassName="details-link"
+												className="details-link"
 												onClick={() => openSubTab("workflow-operations")}
 											>
 												{
@@ -247,7 +247,7 @@ const EventDetailsWorkflowDetails = ({
 												}
 											</span>
 											<ButtonLikeAnchor
-												extraClassName="details-link"
+												className="details-link"
 												onClick={() => openSubTab("errors-and-warnings")}
 											>
 												{
@@ -323,7 +323,7 @@ const EventDetailsWorkflowDetails = ({
 													) /* Operations */
 												}
 											</span>
-											<ButtonLikeAnchor extraClassName="details-link">
+											<ButtonLikeAnchor className="details-link">
 												{
 													t(
 														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS"
@@ -339,7 +339,7 @@ const EventDetailsWorkflowDetails = ({
 													) /* Errors & Warnings */
 												}
 											</span>
-											<ButtonLikeAnchor extraClassName="details-link">
+											<ButtonLikeAnchor className="details-link">
 												{
 													t(
 														"EVENTS.EVENTS.DETAILS.WORKFLOWS.DETAILS"
