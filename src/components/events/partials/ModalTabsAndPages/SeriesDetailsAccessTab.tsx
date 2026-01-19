@@ -32,12 +32,7 @@ const SeriesDetailsAccessTab = ({
 	const policyTemplateId = useAppSelector(state => getPolicyTemplateId(state));
 
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
-
-	const overrideEnabled = (orgProperties['admin.series.acl.event.update.mode'] || 'optional').toLowerCase() === 'optional';
-
-	const orgProperties = useAppSelector(state => getOrgProperties(state));
-
-	const overrideEnabled = (orgProperties['admin.series.acl.event.update.mode'] || 'optional').toLowerCase() === 'optional';
+	const overrideEnabled = (orgProperties["admin.series.acl.event.update.mode"] || "optional").toLowerCase() === "optional";
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
