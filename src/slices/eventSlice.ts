@@ -84,6 +84,8 @@ export type Event = {
 	technical_start: string,
 	title: string,
 	workflow_state: string,
+	language: string,
+	language_translation_key: string,
 }
 
 export type MetadataField = {
