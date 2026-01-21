@@ -650,6 +650,7 @@
 				"PUBLISHED": "Published",
 				"WEEKDAY": "Weekday",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Language",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filter for this start date",
@@ -664,7 +665,8 @@
 					"COMMENTS": "View comments",
 					"PAUSED_WORKFLOW": "View paused workflow",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filter for this presenter"
+					"PRESENTER": "Filter for this presenter",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
