@@ -269,15 +269,15 @@ const getInitialValues = (
 	aclDefaultActions?: string[],
 	aclDefaultTemplate?: AclTemplate,
 ) => {
-	let initialValues = initialFormValuesNewEvents;
+	const initialValues = initialFormValuesNewEvents;
 
 	// Transform metadata fields provided by backend (saved in redux)
-	initialValues = { ...initialValues, ...getInitialMetadataFieldValues(
+	initialValues.metadata = { ...initialValues.metadata, ...getInitialMetadataFieldValues(
 		metadataFields,
 	) };
 
 	for (const catalog of extendedMetadata) {
-		initialValues = { ...initialValues, ...getInitialMetadataFieldValues(
+		initialValues.metadata = { ...initialValues.metadata, ...getInitialMetadataFieldValues(
 			catalog,
 		) };
 	}
@@ -290,17 +290,17 @@ const getInitialValues = (
 	// Transform additional metadata for source (provided by constant in newEventConfig)
 	if (sourceMetadata.UPLOAD) {
 		sourceMetadata.UPLOAD.metadata.forEach(field => {
-			initialValues[field.id] = field.value;
+			initialValues.metadata[field.id] = field.value;
 		});
 	}
 	if (sourceMetadata.SCHEDULE_SINGLE) {
 		sourceMetadata.SCHEDULE_SINGLE.metadata.forEach(field => {
-			initialValues[field.id] = field.value;
+			initialValues.metadata[field.id] = field.value;
 		});
 	}
 	if (sourceMetadata.SCHEDULE_MULTIPLE) {
 		sourceMetadata.SCHEDULE_MULTIPLE.metadata.forEach(field => {
-			initialValues[field.id] = field.value;
+			initialValues.metadata[field.id] = field.value;
 		});
 	}
 
@@ -316,11 +316,6 @@ const getInitialValues = (
 				file: undefined,
 			});
 		};
-	}
-
-	// Add all initial form values known upfront listed in newEventsConfig
-	for (const [key, value] of Object.entries(initialFormValuesNewEvents)) {
-		initialValues[key] = value;
 	}
 
 	const defaultDate = new Date();

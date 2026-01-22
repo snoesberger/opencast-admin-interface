@@ -57,13 +57,13 @@ const NewMetadataPage = ({
 														{field.type === "mixed_text" &&
 														field.collection?.length !== 0 ? (
 															<Field
-																name={catalog.flavor + "_" + field.id}
+																name={"metadata" + "." + catalog.flavor + "_" + field.id}
 																fieldInfo={field}
 																component={RenderMultiField}
 															/>
 														) : (
 															<Field
-																name={catalog.flavor + "_" + field.id}
+																name={"metadata" + "." + catalog.flavor + "_" + field.id}
 																metadataField={field}
 																isFirstField={index === 0 && key === 0}
 																component={RenderField}
