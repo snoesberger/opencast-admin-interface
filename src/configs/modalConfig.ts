@@ -34,7 +34,7 @@ export const initialFormValuesNewEvents: {
 	aclTemplate: string,
 	policies: TransformedAcl[],
 	uploadAssetsTrack?: UploadAssetsTrack[]
-	[key: string]: unknown,  // Metadata fields that are getting added later
+	metadata: { [key: string]: unknown }
 } = {
 	sourceMode: "UPLOAD",
 	scheduleStartDate: new Date().toISOString(),
@@ -52,6 +52,7 @@ export const initialFormValuesNewEvents: {
 	configuration: {},
 	aclTemplate: "",
 	policies: [],
+	metadata: {},
 };
 
 // constants for hours and minutes (used in selection for start/end time and duration)
@@ -104,7 +105,8 @@ export const initialFormValuesNewSeries: {
 
 	breadcrumbs: TobiraPage[],
 	selectedPage?: TobiraPage,
-	[key: string]: unknown,  // Metadata fields that are getting added later
+	aclTemplate?: string,
+	metadata: { [key: string]: unknown }
 } = {
 	policies: [
 		{
@@ -117,6 +119,7 @@ export const initialFormValuesNewSeries: {
 	theme: "",
 	breadcrumbs: [],
 	selectedPage: undefined,
+	metadata: {},
 };
 
 // All fields for new theme form that are fix and not depending on response of backend

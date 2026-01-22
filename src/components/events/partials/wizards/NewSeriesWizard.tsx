@@ -142,7 +142,7 @@ const NewSeriesWizard = ({
 	const handleSubmit = (
 		values:
 			{
-				[key: string]: any;
+				metadata: { [key: string]: unknown }
 				policies: TransformedAcl[];
 				theme: string;
 			},
@@ -247,7 +247,7 @@ const getInitialValues = (
 	aclDefaultActions: string[],
 	aclDefaultTemplate?: AclTemplate,
 ) => {
-	let initialValues = initialFormValuesNewSeries;
+	const initialValues = initialFormValuesNewSeries;
 
 	// Transform metadata fields provided by backend (saved in redux)
 	let metadataInitialValues = getInitialMetadataFieldValues(
@@ -260,7 +260,7 @@ const getInitialValues = (
 		) };
 	}
 
-	initialValues = { ...initialValues, ...metadataInitialValues };
+	initialValues.metadata = { ...initialValues, ...metadataInitialValues };
 
 	initialValues["policies"] = [
 		{

@@ -20,6 +20,7 @@ interface RequiredFormProps {
 	theme: string,
 	policies: TransformedAcl[],
 	selectedPage?: TobiraPage,
+	metadata: { [key: string]: unknown }
 }
 
 const NewSeriesSummary = <T extends RequiredFormProps>({
@@ -47,7 +48,7 @@ const NewSeriesSummary = <T extends RequiredFormProps>({
 						<MetadataSummaryTable
 							metadataCatalogs={[metadataSeries]}
 							// @ts-expect-error TS(7006):
-							formikValues={formik.values}
+							formikValues={formik.values.metadata}
 							header={"EVENTS.SERIES.NEW.METADATA.CAPTION"}
 						/>
 
@@ -56,8 +57,7 @@ const NewSeriesSummary = <T extends RequiredFormProps>({
 							<MetadataSummaryTable
 								metadataCatalogs={extendedMetadata}
 								// @ts-expect-error TS(7006):
-								formikValues={formik.values}
-								formikInitialValues={formik.initialValues}
+								formikValues={formik.values.metadata}
 								header={"EVENTS.SERIES.NEW.METADATA_EXTENDED.CAPTION"}
 							/>
 						) : null}

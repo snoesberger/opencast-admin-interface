@@ -39,7 +39,7 @@ interface RequiredFormProps {
 	configuration: { [key: string]: string }
 	policies: TransformedAcl[]
 	uploadAssetsTrack?: UploadAssetsTrack[]
-	[key: string]: unknown,  // Metadata fields
+	metadata: { [key: string]: unknown }
 }
 
 const NewEventSummary = <T extends RequiredFormProps>({
@@ -75,7 +75,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 			value: File,
 		}[] = [];
 		for (let i = 0; uploadAssetOptions.length > i; i++) {
-			const fieldValue = formik.values[uploadAssetOptions[i].id] as File;
+			const fieldValue = formik.values.metadata[uploadAssetOptions[i].id] as File;
 			if (fieldValue) {
 				const displayOverride = uploadAssetOptions[i].displayOverride as ParseKeys;
 				setUploadAssetsNonTrack(uploadAssetsNonTrack.concat({
@@ -104,7 +104,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 				<MetadataSummaryTable
 					metadataCatalogs={[metadataEvents]}
 					// @ts-expect-error: Metadata not correctly typed
-					formikValues={formik.values}
+					formikValues={formik.values.metadata}
 					header={"EVENTS.EVENTS.NEW.METADATA.CAPTION"}
 				/>
 
@@ -113,7 +113,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 					<MetadataSummaryTable
 						metadataCatalogs={extendedMetadata}
 						// @ts-expect-error: Metadata not correctly typed
-						formikValues={formik.values}
+						formikValues={formik.values.metadata}
 						header={"EVENTS.EVENTS.NEW.METADATA_EXTENDED.CAPTION"}
 					/>
 				)}

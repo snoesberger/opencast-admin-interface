@@ -450,7 +450,7 @@ export const postNewEvent = (params: {
 		scheduleStartMinute: string,
 		sourceMode: string,
 		uploadAssetsTrack?: UploadAssetsTrack[],
-		[key: string]: unknown,
+		metadata: { [key: string]: unknown },
 	},
 	metadataInfo: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[],
@@ -477,11 +477,11 @@ export const postNewEvent = (params: {
 	// prepare metadata provided by user
 	const metadata = prepareMetadataFieldsForPost(
 		[metadataInfo],
-		values,
+		values.metadata,
 	);
 	const extendedMetadataCatalogs = prepareMetadataFieldsForPost(
 		extendedMetadata,
-		values,
+		values.metadata,
 	);
 
 	// if source mode is UPLOAD than also put metadata fields of that in metadataFields
@@ -494,7 +494,7 @@ export const postNewEvent = (params: {
 			for (const smetadata of sourceMetadata.UPLOAD.metadata) {
 				metadata[0].fields = metadata[0].fields.concat({
 					id: smetadata.id,
-					value: values[smetadata.id],
+					value: values.metadata[smetadata.id],
 					type: smetadata.type,
 				});
 			}
@@ -542,7 +542,7 @@ export const postNewEvent = (params: {
 			type: values.sourceMode,
 			metadata: {
 				start: startDate,
-				device: values.location,
+				device: values.metadata.location,
 				inputs: values.inputs ? values.inputs.join(",") : "",
 				end: endDate,
 				duration: duration.toString(),
@@ -596,12 +596,12 @@ export const postNewEvent = (params: {
 	}
 	for (let i = 0; uploadAssetOptions.length > i; i++) {
 		if (
-			!!values[uploadAssetOptions[i].id] &&
+			!!values.metadata[uploadAssetOptions[i].id] &&
 			values.sourceMode === "UPLOAD"
 		) {
 			formData.append(
 				uploadAssetOptions[i].id + ".0",
-				values[uploadAssetOptions[i].id] as File,
+				values.metadata[uploadAssetOptions[i].id] as File,
 			);
 			assets.options = assets.options.concat(uploadAssetOptions[i]);
 		}
