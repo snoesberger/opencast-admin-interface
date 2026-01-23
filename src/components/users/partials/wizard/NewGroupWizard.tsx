@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik } from "formik";
 import { initialFormValuesNewGroup } from "../../../../configs/modalConfig";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
@@ -75,12 +75,6 @@ const NewGroupWizard: React.FC<{
 			>
 				{/* Render wizard pages depending on current value of page variable */}
 				{formik => {
-					// eslint-disable-next-line react-hooks/rules-of-hooks
-					useEffect(() => {
-						formik.validateForm();
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [page]);
-
 					return (
 						<>
 							{/* Stepper that shows each step of wizard as header */}
