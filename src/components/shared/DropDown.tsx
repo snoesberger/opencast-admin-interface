@@ -7,7 +7,7 @@ import {
 import { GroupBase, MenuListProps, Props, SelectInstance } from "react-select";
 import { isJson } from "../../utils/utils";
 import { ParseKeys } from "i18next";
-import { FixedSizeList, ListChildComponentProps } from "react-window";
+import { List, RowComponentProps } from "react-window";
 import AsyncSelect from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
@@ -140,22 +140,34 @@ const DropDown = <T, >({
 	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
 		const { children, maxHeight } = props;
 
-		console.log("Menu List render");
-
 		return Array.isArray(children) ? (
 			<div style={{ paddingTop: 4 }}>
-				<FixedSizeList
-					height={maxHeight < (children.length * itemHeight) ? maxHeight : children.length * itemHeight}
-					itemCount={children.length}
-					itemSize={itemHeight}
+				<List
+					rowComponent={MenuListRow}
+					rowCount={children.length}
+					rowHeight={itemHeight}
+					style={{
+						height: maxHeight < (children.length * itemHeight) ? maxHeight : children.length * itemHeight,
+						width: "100%",
+					}}
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					rowProps={{ names: children }}
 					overscanCount={4}
-					width="100%"
-				>
-					{({ index, style }: ListChildComponentProps) => <div style={{ ...style }}>{children[index]}</div>}
-				</FixedSizeList>
+				/>
 			</div>
 		) : null;
 	};
+
+	function MenuListRow({
+		index,
+		names,
+		style,
+	}: RowComponentProps<{
+		names: string[];
+	}>) {
+		const name = names[index];
+		return <div style={style}>{name}</div>;
+	}
 
 	const filterOptions = (inputValue: string) => {
 		if (options) {
