@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -79,12 +79,6 @@ const NewUserWizard = ({
 			>
 				{/* Render wizard tabs depending on current value of tab variable */}
 				{formik => {
-					// eslint-disable-next-line react-hooks/rules-of-hooks
-					useEffect(() => {
-						formik.validateForm();
-					// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [tab]);
-
 					return (
 						<>
 							{tab === 0 && <NewUserGeneralTab formik={formik} />}

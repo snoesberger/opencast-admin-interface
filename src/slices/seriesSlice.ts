@@ -184,7 +184,6 @@ export const fetchSeriesThemes = createAppAsyncThunk("series/fetchSeriesThemes",
 // post new series to backend
 export const postNewSeries = (params: {
 	values: {
-		[key: string]: any;
 		policies: TransformedAcl[],
 		// contributor: string[],
 		// creator: string[],
@@ -198,6 +197,7 @@ export const postNewSeries = (params: {
 		// title: string,
 		selectedPage?: TobiraPage,
 		breadcrumbs?: TobiraPage[],
+		metadata: { [key: string]: unknown }
 	},
 	metadataInfo: MetadataCatalog,
 	extendedMetadata: MetadataCatalog[]
@@ -207,11 +207,11 @@ export const postNewSeries = (params: {
 	// prepare metadata provided by user
 	const metadata = prepareMetadataFieldsForPost(
 		[metadataInfo],
-		values,
+		values.metadata,
 	);
 	const extendedMetadataCatalogs = prepareMetadataFieldsForPost(
 		extendedMetadata,
-		values,
+		values.metadata,
 	);
 
 	// metadata for post request
