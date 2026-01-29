@@ -8,6 +8,7 @@ type SaveEditFooterProps = {
     reset: () => void;
     submit: () => void;
     isValid?: boolean;
+    customSaveButtonText?: ParseKeys;
     additionalButton?: {
         label: ParseKeys,
         hint: ParseKeys,
@@ -20,9 +21,12 @@ export const SaveEditFooter: React.FC<SaveEditFooterProps> = ({
     reset,
     submit,
     isValid,
+    customSaveButtonText,
     additionalButton,
 }) => {
     const { t } = useTranslation();
+
+    const saveButtonText = customSaveButtonText || "SAVE";
 
     return <footer>
         <BaseButton
@@ -32,7 +36,7 @@ export const SaveEditFooter: React.FC<SaveEditFooterProps> = ({
             className={`save green ${
                 !isValid || !active ? "disabled" : ""
             }`}
-        >{t("SAVE")}</BaseButton>
+        >{t(saveButtonText)}</BaseButton>
         {additionalButton && (
             <Tooltip title={t(additionalButton.hint)}>
                 <BaseButton
