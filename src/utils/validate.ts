@@ -68,7 +68,10 @@ export const MetadataSchema = (catalog: MetadataCatalog) => {
 	for (const [key, value] of Object.entries(schema)) {
 		schemaKeyReplace[catalog.flavor + "_" + key] = value;
 	}
-	const validateSchema = Yup.object().shape(schemaKeyReplace);
+
+	const validateSchema = Yup.object({
+    metadata: Yup.object(schemaKeyReplace),
+  });
 
 	return validateSchema;
 };
