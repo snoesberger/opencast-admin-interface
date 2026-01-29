@@ -142,7 +142,7 @@ const NewSeriesWizard = ({
 	const handleSubmit = (
 		values:
 			{
-				[key: string]: any;
+				metadata: { [key: string]: unknown }
 				policies: TransformedAcl[];
 				theme: string;
 			},
@@ -162,12 +162,6 @@ const NewSeriesWizard = ({
 			>
 				{/* Render wizard pages depending on current value of page variable */}
 				{formik => {
-					// eslint-disable-next-line react-hooks/rules-of-hooks
-					useEffect(() => {
-						formik.validateForm().then();
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [page]);
-
 					return (
 						<>
 							{/* Stepper that shows each step of wizard as header */}
@@ -247,7 +241,7 @@ const getInitialValues = (
 	aclDefaultActions: string[],
 	aclDefaultTemplate?: AclTemplate,
 ) => {
-	let initialValues = initialFormValuesNewSeries;
+	const initialValues = initialFormValuesNewSeries;
 
 	// Transform metadata fields provided by backend (saved in redux)
 	let metadataInitialValues = getInitialMetadataFieldValues(
@@ -260,7 +254,7 @@ const getInitialValues = (
 		) };
 	}
 
-	initialValues = { ...initialValues, ...metadataInitialValues };
+	initialValues.metadata = { ...initialValues, ...metadataInitialValues };
 
 	initialValues["policies"] = [
 		{

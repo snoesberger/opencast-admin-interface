@@ -5,6 +5,9 @@ import {
 	getSeriesDetailsExtendedMetadata,
 	getStatistics,
 } from "../selectors/seriesDetailsSelectors";
+import {
+	getOrgProperties,
+} from "../selectors/userInfoSelectors";
 import { addNotification } from "./notificationSlice";
 import {
 	transformMetadataCollection,
@@ -259,12 +262,19 @@ export const updateSeriesAccess = createAppAsyncThunk("seriesDetails/updateSerie
 		id: Series["id"],
 		policies: { acl: Acl },
 		override?: boolean
-	}, { dispatch }) => {
+	}, { dispatch, getState }) => {
 	const { id, policies, override } = params;
 
 	const data = new URLSearchParams();
 
-	const overrideString = override ? String(true) : String(false);
+	// Here we should check for the "always" option as well, so that we can force override!
+	const orgProperties = getOrgProperties(getState());
+	const alwaysOverride = (orgProperties["admin.series.acl.event.update.mode"] || "optional").toLowerCase() === "always";
+
+	let overrideString = override ? String(true) : String(false);
+	if (alwaysOverride) {
+		overrideString = String(true);
+	}
 
 	data.append("acl", JSON.stringify(policies));
 	data.append("override", overrideString);

@@ -9,7 +9,7 @@ import {
 	fetchRolesWithTarget,
 } from "../../../../slices/aclSlice";
 import { FormikProps } from "formik";
-import { filterRoles, policiesFiltered, rolesFilteredbyPolicies } from "../../../../utils/aclUtils";
+import { policiesFiltered, rolesFiltered } from "../../../../utils/aclUtils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { fetchSeriesDetailsAcls } from "../../../../slices/seriesDetailsSlice";
 import { getSeriesDetailsAcl } from "../../../../selectors/seriesDetailsSelectors";
@@ -122,7 +122,7 @@ const NewAccessPage = <T extends RequiredFormProps>({
 											<AccessPolicyTable
 												isUserTable={true}
 												policiesFiltered={policiesFiltered(formik.values.policies, true)}
-												rolesFilteredbyPolicies={rolesFilteredbyPolicies(roles, formik.values.policies, true)}
+												rolesFilteredbyPolicies={rolesFiltered(roles, true)}
 												header={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.USERS"}
 												firstColumnHeader={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.USER"}
 												createLabel={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NEW_USER"}
@@ -139,7 +139,7 @@ const NewAccessPage = <T extends RequiredFormProps>({
 											<AccessPolicyTable
 												isUserTable={false}
 												policiesFiltered={policiesFiltered(formik.values.policies, false)}
-												rolesFilteredbyPolicies={rolesFilteredbyPolicies(roles, formik.values.policies, false)}
+												rolesFilteredbyPolicies={rolesFiltered(roles, false)}
 												header={"USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.NON_USER_ROLES"}
 												firstColumnHeader={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.ROLE"}
 												createLabel={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NEW"}
@@ -159,7 +159,7 @@ const NewAccessPage = <T extends RequiredFormProps>({
 										<AccessPolicyTable
 											isUserTable={false}
 											policiesFiltered={formik.values.policies}
-											rolesFilteredbyPolicies={filterRoles(roles, formik.values.policies)}
+											rolesFilteredbyPolicies={roles}
 											firstColumnHeader={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.ROLE"}
 											createLabel={"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.NEW"}
 											formik={formik}

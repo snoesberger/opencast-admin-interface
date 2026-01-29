@@ -18,7 +18,7 @@ import {
 import { getUserInformation } from "../../../selectors/userInfoSelectors";
 import { hasAccess } from "../../../utils/utils";
 import DropDown from "../DropDown";
-import { filterRoles, getAclTemplateText, handleTemplateChange, policiesFiltered, rolesFilteredbyPolicies } from "../../../utils/aclUtils";
+import { getAclTemplateText, handleTemplateChange, policiesFiltered, rolesFiltered } from "../../../utils/aclUtils";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { removeNotificationWizardForm, addNotification } from "../../../slices/notificationSlice";
 import { useTranslation } from "react-i18next";
@@ -311,7 +311,7 @@ const ResourceDetailsAccessPolicyTab = ({
 												<AccessPolicyTable
 													isUserTable={true}
 													policiesFiltered={policiesFiltered(formik.values.policies, true)}
-													rolesFilteredbyPolicies={rolesFilteredbyPolicies(roles, formik.values.policies, true)}
+													rolesFilteredbyPolicies={rolesFiltered(roles, true)}
 													header={userPolicyTableHeaderText}
 													firstColumnHeader={userPolicyTableRoleText}
 													createLabel={userPolicyTableNewText}
@@ -328,7 +328,7 @@ const ResourceDetailsAccessPolicyTab = ({
 											<AccessPolicyTable
 												isUserTable={false}
 												policiesFiltered={policiesFiltered(formik.values.policies, false)}
-												rolesFilteredbyPolicies={rolesFilteredbyPolicies(roles, formik.values.policies, false)}
+												rolesFilteredbyPolicies={rolesFiltered(roles, false)}
 												header={policyTableHeaderText}
 												firstColumnHeader={policyTableRoleText}
 												createLabel={policyTableNewText}
@@ -348,7 +348,7 @@ const ResourceDetailsAccessPolicyTab = ({
 											<AccessPolicyTable
 												isUserTable={false}
 												policiesFiltered={formik.values.policies}
-												rolesFilteredbyPolicies={filterRoles(roles, formik.values.policies)}
+												rolesFilteredbyPolicies={roles}
 												header={policyTableHeaderText}
 												firstColumnHeader={policyTableRoleText}
 												createLabel={policyTableNewText}
@@ -378,6 +378,7 @@ const ResourceDetailsAccessPolicyTab = ({
 											hint: "EVENTS.SERIES.DETAILS.ACCESS.ACCESS_POLICY.REPLACE_EVENT_ACLS_HINT",
 											onClick: () => saveAccess(formik.values, true),
 										} : undefined}
+										customSaveButtonText={withOverrideButton ? "EVENTS.SERIES.DETAILS.ACCESS.ACCESS_POLICY.SAVE_SERIES_ACL_ONLY" : undefined}
 									/>}
 								</div>
 							)}
@@ -488,15 +489,15 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 									<th>
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
-											) /* <!-- Write --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
+											) /* <!-- Read --> */
 										}
 									</th>
 									<th>
 										{
 											t(
-												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.READ",
-											) /* <!-- Read --> */
+												"EVENTS.EVENTS.DETAILS.ACCESS.ACCESS_POLICY.WRITE",
+											) /* <!-- Write --> */
 										}
 									</th>
 									{hasActions && (

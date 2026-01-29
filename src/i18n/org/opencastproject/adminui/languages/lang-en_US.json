@@ -650,6 +650,7 @@
 				"PUBLISHED": "Published",
 				"WEEKDAY": "Weekday",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Language",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filter for this start date",
@@ -664,7 +665,8 @@
 					"COMMENTS": "View comments",
 					"PAUSED_WORKFLOW": "View paused workflow",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filter for this presenter"
+					"PRESENTER": "Filter for this presenter",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -1226,12 +1228,14 @@
 						"ADDITIONAL_ACTIONS": "Additional Actions",
 						"ACTION": "Actions",
 						"NEW": "New policy",
+						"DETAILS": "Details",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
 						"USER": "User",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Update series permissions",
-						"REPLACE_EVENT_ACLS_HINT": "Ensure all events of this series have these permissions in effect",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},

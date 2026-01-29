@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Formik } from "formik";
 import GeneralPage from "./GeneralPage";
 import BumperPage from "./BumperPage";
@@ -83,12 +82,6 @@ const NewThemeWizard = ({
 			>
 				{/* Render wizard pages depending on current value of page variable */}
 				{formik => {
-					// eslint-disable-next-line react-hooks/rules-of-hooks
-					useEffect(() => {
-						formik.validateForm();
-						// eslint-disable-next-line react-hooks/exhaustive-deps
-					}, [page]);
-
 					return (
 						<>
 							{/* Stepper that shows each step of wizard as header */}
