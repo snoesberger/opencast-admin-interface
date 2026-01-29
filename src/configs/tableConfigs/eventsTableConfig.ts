@@ -86,6 +86,13 @@ export const eventsTableConfig: TableConfig = {
 			translate: false,
 			deactivated: true,
 		},
+		{
+			name: "language",
+			template: "EventsLanguageCell",
+			label: "EVENTS.EVENTS.TABLE.LANGUAGE",
+			translate: true,
+			deactivated: true,
+		},
 	],
 	caption: "EVENTS.EVENTS.TABLE.CAPTION",
 	resource: "events",
