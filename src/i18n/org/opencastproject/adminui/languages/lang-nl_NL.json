@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Tastaturgenveje",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "Adgangspolitikken er blevet oprettet",
 		"ACL_NOT_SAVED": "Adgangspolitikken kunne ikke gemmes",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Planlægningsfejl: Begivenheden er allerede afsluttet.",
 		"CONFLICT_END_BEFORE_START": "Planlægningsfejl: Sluttidspunkt skal ligge efter starttidspunkt.",
 		"CONFLICT_IN_THE_PAST": "Tidsplan kunne ikke opdateres: Begivenheder kan ikke planlægges i fortiden.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Regler skal indeholde en gyldig rolle og læse eller\/og skrive rettighed(-er).",
 		"MISSING_ACL_RULES": "Mindst én rolle med Læse- og skriverettighed kræves!",
 		"SAVED_ACL_RULES": "Adgangsreglerne er blevet gemt.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Offentliggjort",
 				"WEEKDAY": "Ugedag",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Sprog",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filtrer til denne startdato",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Vis kommentarer",
 					"PAUSED_WORKFLOW": "Vis arbejdsgange på pause",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filtrér til denne vært"
+					"PRESENTER": "Filtrér til denne vært",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Handlinger",
 						"NEW": "Nye politik",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Bruger",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Yderligere handlinger",
 						"ACTION": "Handlinger",
 						"NEW": "Ny politik",
+						"DETAILS": "Oplysninger",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Bruger",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Opdatér begivenhedsrettigheder",
-						"REPLACE_EVENT_ACLS_HINT": "Sikrer, at alle begivenhederne i denne serie har disse aktive rettighedeer",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Udbyder",
 				"ACTION": "Handlinger",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Slet bruger",
 					"DETAILS": "Åbn brugeroplysninger"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Ny politik",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Vælg et præopsat sæt af politikker eller tilføj tilpassede politikker nedenfor",
-						"USER": "User",
+						"USER": "Bruger",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Serier",
 				"NEW_EVENT": "Tilføj begivenhed",
 				"NEW_SERIES": "Tilføj serier",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Tastaturgenveje",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

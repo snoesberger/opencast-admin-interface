@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Atallos de teclado",
 		"ADOPTER_REGISTRATION": "Rexistro de afiliados"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "Política de acceso creada",
 		"ACL_NOT_SAVED": "Non se puido gardar a política de acceso",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Erro de programación: O evento xa rematou.",
 		"CONFLICT_END_BEFORE_START": "Erro de programación: O final ten que ser máis tarde que o comezo.",
 		"CONFLICT_IN_THE_PAST": "Non se puido actualizar a programación: non se pode programar un evento no pasado.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "As regras deben conter un nome de rol válido e permiso(s) de lectura e\/ou escritura.",
 		"MISSING_ACL_RULES": "Requírese, como mínimo, un rol con permisos de Lectura e Escritura!",
 		"SAVED_ACL_RULES": "Regras de acceso gardadas.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Publicado",
 				"WEEKDAY": "Día da semana",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Idioma",
 				"TOOLTIP": {
 					"ASSETS": "Abrir o detalles do recurso",
 					"START": "Filtro para esta data de inicio",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Ver comentarios",
 					"PAUSED_WORKFLOW": "Ver fluxos de traballo pausados",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filtrar por este presentador"
+					"PRESENTER": "Filtrar por este presentador",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Accións",
 						"NEW": "Nova política",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Usuario",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Accións adicionais",
 						"ACTION": "Accións",
 						"NEW": "Nova política",
+						"DETAILS": "Detalles",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Usuario",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Actualizar permisos do evento",
-						"REPLACE_EVENT_ACLS_HINT": "Asegura que todos os eventos desta serie teñen estes permisos en vigor",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Cargar máis"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Fornecedor",
 				"ACTION": "Accións",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Eliminar usuario",
 					"DETAILS": "Abrir detalles do usuario"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Nova política",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Por favor, elixa un conxunto de políticas preconfigurado ou engada políticas personalizadas a continuación",
-						"USER": "User",
+						"USER": "Usuario",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Series",
 				"NEW_EVENT": "Engadir evento",
 				"NEW_SERIES": "Engadir serie",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Atallos de teclado",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

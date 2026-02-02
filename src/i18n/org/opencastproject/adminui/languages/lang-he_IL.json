@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "מקשי קיצור במקלדת",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "מדיניות הגישה נוצרה",
 		"ACL_NOT_SAVED": "מדיניות הגישה לא יכלה להשמר",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "שגיאה בתזמון: האירוע כבר נגמר.",
 		"CONFLICT_END_BEFORE_START": "שגיאה בתזמון: תזמון הסיום חייב להיות אחרי תזמון ההתחלה.",
 		"CONFLICT_IN_THE_PAST": "לא היתה אפשרות לעדכן את לוח הזמנים: לא ניתן לתזמן אירוע בעבר.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "חוקים חייבים להכיל תפקיד חוקי ו\/או הרשאות קריאה\/כתיבה.",
 		"MISSING_ACL_RULES": "לפחות תפקיד אחד עם הרשאות קריאה וכתיבה נדרש!",
 		"SAVED_ACL_RULES": "חוקי הגישה נשמרו.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "פורסם",
 				"WEEKDAY": "יום חול",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "שפה",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "מסנן עבור תאריך ההתחלה הזה",
@@ -654,7 +662,8 @@
 					"COMMENTS": "הצגת הערות",
 					"PAUSED_WORKFLOW": "הצגת תהליכי עבודה מושהים",
 					"PLAYER": "Open player",
-					"PRESENTER": "מסנן עבור מציג זה"
+					"PRESENTER": "מסנן עבור מציג זה",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "פעולות",
 						"NEW": "מדיניות חדשה",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "משתמש",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "פעולות נוספות",
 						"ACTION": "פעולות",
 						"NEW": "מדיניות חדשה",
+						"DETAILS": "פרטים",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "משתמש",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "עדכון הרשאות אירוע",
-						"REPLACE_EVENT_ACLS_HINT": "בדיקה שכל האירועים של סדרה זו יש הרשאות אלה בתוקף",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "ספק",
 				"ACTION": "פעולות",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "מחק משתמש",
 					"DETAILS": "פתיחת פרטי משתמש"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "מדיניות חדשה",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "נא לבחור סט מדיניויות מוגדרות מראש או להוסיף מדיניות מותאמת אישית להלן",
-						"USER": "User",
+						"USER": "משתמש",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "סדרות",
 				"NEW_EVENT": "הוסף ארוע",
 				"NEW_SERIES": "הוסף סדרה",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "מקשי קיצור במקלדת",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }
