@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Tasti Rapidi",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "È stato creato il criterio di accesso",
 		"ACL_NOT_SAVED": "Il criterio di accesso non può essere salvato",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Errore di programmazione: L'evento è già terminato.",
 		"CONFLICT_END_BEFORE_START": "Errore di programmazione: La fine del programma deve essere seguente all'inizio.",
 		"CONFLICT_IN_THE_PAST": "La programmazione non può essere aggiornata: non puoi programmare un evento nel passato.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Le regole devono contenere un ruolo valido e leggere e\/o scrivere correttamente.",
 		"MISSING_ACL_RULES": "È necessario almeno un ruolo con i permessi di lettura e scrittura!",
 		"SAVED_ACL_RULES": "Le regole di accesso sono state salvate.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Pubblicato",
 				"WEEKDAY": "Giorno feriale",
 				"ADMINUI_NOTES": "Note",
+				"LANGUAGE": "Lingua",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filtro per questa data di inizio",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Visualizza commenti",
 					"PAUSED_WORKFLOW": "Mostra flusso di lavoro in pausa",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filtra per questo presentatore"
+					"PRESENTER": "Filtra per questo presentatore",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Seleziona tutti gli eventi",
 				"SELECT_EVENT": "Seleziona evento \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Azioni",
 						"NEW": "Nuova politica",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Utente",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Azioni aggiuntive",
 						"ACTION": "Azioni",
 						"NEW": "Nuova politica",
+						"DETAILS": "Dettagli",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Utente",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Aggiorna permessi serie",
-						"REPLACE_EVENT_ACLS_HINT": "Assicurarsi che tutti gli eventi di questa serie abbiano questi permessi in vigore",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Provider",
 				"ACTION": "Azioni",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Cancella utente",
 					"DETAILS": "Apri dettagli utente"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Nuova politica",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Scegli un insieme di politiche pre-configurate o aggiungi politiche personalizzate qui sotto",
-						"USER": "User",
+						"USER": "Utente",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Serie",
 				"NEW_EVENT": "Aggiungi evento",
 				"NEW_SERIES": "Aggiungi serie",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Scorciatoie da tastiera",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Impressum",
 		"PRIVACY": "Informativa sulla privacy",
 		"NOCONTENT": "Contenuto non disponibile"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Contenuto non disponibile",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

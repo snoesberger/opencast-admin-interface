@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Tastenkürzel",
 		"ADOPTER_REGISTRATION": "Adopter Registrierung"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "Die Zugriffsrichtlinie wurde erstellt",
 		"ACL_NOT_SAVED": "Die Zugriffsrichtlinie konnte nicht gespeichert werden",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Planungs-Fehler: Das Video endete bereits.",
 		"CONFLICT_END_BEFORE_START": "Planungs-Fehler: Der Endzeitpunkt des Ereignisses muss nach dem Startzeitpunkt liegen.",
 		"CONFLICT_IN_THE_PAST": "Die Planung konnte nicht aktualisiert werden: Sie können ein Video nicht in der Vergangenheit planen.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Regeln müssen eine gültige Rolle und Lese-\/Schreibrechte enthalten.",
 		"MISSING_ACL_RULES": "Es ist mindestens eine Rolle mit Lese- und Schreibberechtigungen erforderlich!",
 		"SAVED_ACL_RULES": "Die Zugriffsregeln wurden gespeichert.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Veröffentlicht",
 				"WEEKDAY": "Wochentag",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Sprache",
 				"TOOLTIP": {
 					"ASSETS": "Anlagedetails öffnen",
 					"START": "Nach diesem Startdatum filtern",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Kommentare ansehen",
 					"PAUSED_WORKFLOW": "Angehaltenen Workflow anzeigen",
 					"PLAYER": "Im Player öffnen",
-					"PRESENTER": "Nach diesem Vortragenden filtern"
+					"PRESENTER": "Nach diesem Vortragenden filtern",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Alle Aufzeichnungen auswählen",
 				"SELECT_EVENT": "Aufzeichnung „{{title}}“ auswählen"
@@ -898,7 +907,7 @@
 						"ACTION": "Aktionen",
 						"NEW": "Neue Richtlinie",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Benutzer",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Weitere Aktionen",
 						"ACTION": "Aktionen",
 						"NEW": "Neue Richtlinie",
+						"DETAILS": "Details",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Benutzer",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Zugriffsrechte der Serie aktualisieren",
-						"REPLACE_EVENT_ACLS_HINT": "Sicherstellen, dass alle Videos dieser Serie genau diese Zugriffsrechte haben",
 						"LOAD_MORE_LIMIT": "angezeigte Richtlinien.",
 						"LOAD_MORE_LINK": "Mehr laden"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Anbieter",
 				"ACTION": "Aktionen",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Benutzer löschen",
 					"DETAILS": "Nutzerdetails anzeigen"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Neue Richtlinie",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Bitte wählen Sie eine vordefinierten Richtlinie aus oder fügen Sie eine neue Richtlinie hinzu",
-						"USER": "User",
+						"USER": "Benutzer",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Serien",
 				"NEW_EVENT": "Video hinzufügen",
 				"NEW_SERIES": "Serie hinzufügen",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Tastenkürzel",
 				"CLOSE_MODAL": "Dialog schließen"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Impressum",
 		"PRIVACY": "Datenschutzerklärung",
 		"NOCONTENT": "Inhalt nicht verfügbar"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Inhalt nicht verfügbar",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

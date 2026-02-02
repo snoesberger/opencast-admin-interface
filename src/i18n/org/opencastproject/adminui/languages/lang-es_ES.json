@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Keyboard Shortcuts",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "The access policy has been created",
 		"ACL_NOT_SAVED": "The access policy could not be saved",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Scheduling error: The event has already ended.",
 		"CONFLICT_END_BEFORE_START": "Scheduling error: Schedule end has to be later than the start.",
 		"CONFLICT_IN_THE_PAST": "The schedule could not be updated: You cannot schedule an event to be in the past.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Rules have to contain a valid role and read or\/and write right(s).",
 		"MISSING_ACL_RULES": "At least one role with Read and Write permissions is required!",
 		"SAVED_ACL_RULES": "The access rules have been saved.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Published",
 				"WEEKDAY": "Weekday",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Language",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filter for this start date",
@@ -654,7 +662,8 @@
 					"COMMENTS": "View comments",
 					"PAUSED_WORKFLOW": "View paused workflow",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filter for this presenter"
+					"PRESENTER": "Filter for this presenter",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Seleccionar todos los eventos",
 				"SELECT_EVENT": "Seleccionar evento \"{{title}}\""
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Additional Actions",
 						"ACTION": "Actions",
 						"NEW": "New policy",
+						"DETAILS": "Details",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
 						"USER": "User",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Update series permissions",
-						"REPLACE_EVENT_ACLS_HINT": "Ensure all events of this series have these permissions in effect",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Provider",
 				"ACTION": "Actions",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Delete user",
 					"DETAILS": "Open user details"
 				}
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Series",
 				"NEW_EVENT": "Add event",
 				"NEW_SERIES": "Add series",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Keyboard shortcuts",
 				"CLOSE_MODAL": "Cerrar"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

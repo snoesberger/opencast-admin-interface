@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Bližnjice na tipkovnici",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "Pravilnik o dostopu je ustvarjen",
 		"ACL_NOT_SAVED": "Pravilnika o dostopu ni bilo mogoče shraniti",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Napaka urnika: dogodek se je že končal.",
 		"CONFLICT_END_BEFORE_START": "Napaka urnika: konec urnika mora biti pozneje kot začetek.",
 		"CONFLICT_IN_THE_PAST": "Posodobitev podatkov ni mogoča: dogodka ne morete načrtovati za nazaj.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Pravila morajo vsebovati veljavo vlogo ter pravice do branja in\/ali zapisovanja.",
 		"MISSING_ACL_RULES": "Potrebna je vsaj ena vloga z dovoljenji za branje in pisanje.",
 		"SAVED_ACL_RULES": "Pravila za dostop so shranjena.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Objavljeno",
 				"WEEKDAY": "Delovni dan",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Jezik",
 				"TOOLTIP": {
 					"ASSETS": "Open asset details",
 					"START": "Filter za ta začetni datum",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Poglej komentarje",
 					"PAUSED_WORKFLOW": "Poglej začasno ustavljen potek dela",
 					"PLAYER": "Open player",
-					"PRESENTER": "Filter for this presenter"
+					"PRESENTER": "Filter for this presenter",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Dejanja",
 						"NEW": "Nov pravilnik",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Uporabnik",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Dodatna dejanja",
 						"ACTION": "Dejanja",
 						"NEW": "Nov pravilnik",
+						"DETAILS": "Podrobnosti",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Uporabnik",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Update series permissions",
-						"REPLACE_EVENT_ACLS_HINT": "Ensure all events of this series have these permissions in effect",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Ponudnik",
 				"ACTION": "Dejanja",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Brisanje uporabnika",
 					"DETAILS": "Odpri podrobnosti o uporabniku"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Nov pravilnik",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Izberite vnaprej nastavljen komplet pravilnikov ali spodaj dodajte pravilnike po meri",
-						"USER": "User",
+						"USER": "Uporabnik",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Serije",
 				"NEW_EVENT": "Dodaj dogodek",
 				"NEW_SERIES": "Dodaj serijo",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Bližnjice na tipkovnici",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

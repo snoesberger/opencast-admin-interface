@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Klavye Kısayolları",
 		"ADOPTER_REGISTRATION": "Adopter Registration"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "Erişim ilkesi oluşturuldu",
 		"ACL_NOT_SAVED": "Erişim ilkesi kaydedilemedi",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Zamanlama hatası: Etkinlik zaten bitmiş durumda.",
 		"CONFLICT_END_BEFORE_START": "Zamanlama hatası: Bitiş zamanlaması başlangıçtan daha sonra olmalı.",
 		"CONFLICT_IN_THE_PAST": "Zamanlama planı güncelleştirilemedi: Bir etkinliği geçmişe planlayamazsınız.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Kuralların okuma veya\/ve yazma hakkında(haklarında) etkin bir rolü olmalı.",
 		"MISSING_ACL_RULES": "En az bir Yazma ve Okuma yetkisi gerekli!",
 		"SAVED_ACL_RULES": "Giriş kuralları kaydedildi.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Yayınlandı",
 				"WEEKDAY": "Hafta içi günü",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Dil",
 				"TOOLTIP": {
 					"ASSETS": "Detayları görüntüle",
 					"START": "Bu başlangıç tarihi için filtre",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Yorumları görüntüle",
 					"PAUSED_WORKFLOW": "Duraklatılmış iş akışını görüntüle",
 					"PLAYER": "Open player",
-					"PRESENTER": "Bu sunucu için filtre"
+					"PRESENTER": "Bu sunucu için filtre",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Select all events",
 				"SELECT_EVENT": "Select event \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Eylemler",
 						"NEW": "Yeni sözleşme",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Kullanıcı",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Ek eylemler",
 						"ACTION": "Eylemler",
 						"NEW": "Yeni sözleşme",
+						"DETAILS": "Ayrıntılar",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Kullanıcı",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Etkinlik izinlerini güncelle",
-						"REPLACE_EVENT_ACLS_HINT": "Bu dizinin tüm etkinliklerinin geçerli izinlere sahip olduğundan emin olun",
 						"LOAD_MORE_LIMIT": "policies shown.",
 						"LOAD_MORE_LINK": "Load more"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Sunucu",
 				"ACTION": "Eylemler",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Kullanıcıyı Sil",
 					"DETAILS": "Kullanıcı detaylarını aç"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Yeni sözleşme",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Lütfen önceden yapılandırılmış bir ilkeler kümesi seçim veya aşağıdaki özel ilkelerden ekleyin",
-						"USER": "User",
+						"USER": "Kullanıcı",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Seri",
 				"NEW_EVENT": "Etkinlik ekle",
 				"NEW_SERIES": "Seri ekle",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Klavye Kısayolları",
 				"CLOSE_MODAL": "Close dialog"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }

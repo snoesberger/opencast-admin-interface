@@ -151,6 +151,12 @@
 		"HOTKEY_CHEAT_SHEET": "Συντομεύσεις πληκτρολογίου",
 		"ADOPTER_REGISTRATION": "Εγγραφή adopter"
 	},
+	"EMBEDDING_CODE": {
+		"DESCRIPTION": "Generate an embed code of the desired size by clicking on the respective button",
+		"GENERATE_TOOLTIP": "Generate an embed code of size {{ size }}",
+		"EMBEDD_CODE_TEXTAREA_ARIA": "This text field holds a generated embed code for copying.",
+		"COPY_BUTTON_TOOLTIP": "Copies a generated embed code to your clipboard."
+	},
 	"NOTIFICATIONS": {
 		"ACL_ADDED": "H πολιτική πρόσβασης έχει δημιουργηθεί",
 		"ACL_NOT_SAVED": "Δεν ήταν δυνατή η αποθήκευση της πολιτικής πρόσβασης",
@@ -203,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Σφάλμα στον προγραμματισμό. Η εκδήλωση έχει ήδη λήξει.",
 		"CONFLICT_END_BEFORE_START": "Σφάλμα στον προγραμματισμό. Η προγραμματισμένη λήξη πρέπει να είναι μεταγενέστερη από την προγραμματισμένη έναρξη.",
 		"CONFLICT_IN_THE_PAST": "Ο προγραμματισμός δεν μπορεί να ενημερωθεί: δεν μπορείτε να προγραμματίσετε μια εκδήλωση στο παρελθόν.",
+		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Οι κανόνες πρέπει να περιέχουν έναν έγκυρο ρόλο και δικαίωμα(τα) ανάγνωσης ή\/και εγγραφής.",
 		"MISSING_ACL_RULES": "Απαιτείται τουλάχιστον ένας ρόλος με δικαιώματα ανάγνωσης και εγγραφής!",
 		"SAVED_ACL_RULES": "Οι κανόνες πρόσβασης έχουν αποθηκευτεί.",
@@ -640,6 +647,7 @@
 				"PUBLISHED": "Δημοσιευμένο",
 				"WEEKDAY": "Ημέρες εβδομάδας",
 				"ADMINUI_NOTES": "Notes",
+				"LANGUAGE": "Γλώσσα",
 				"TOOLTIP": {
 					"ASSETS": "Άνοιγμα λεπτομερειών αντικιεμένων",
 					"START": "Φίλτρο για αυτήν την ημερομηνία έναρξης",
@@ -654,7 +662,8 @@
 					"COMMENTS": "Δείτε σχόλια",
 					"PAUSED_WORKFLOW": "Δείτε σταματημένη εκδήλωση",
 					"PLAYER": "Open player",
-					"PRESENTER": "Φίλτρο για αυτόν τον παρουσιαστή"
+					"PRESENTER": "Φίλτρο για αυτόν τον παρουσιαστή",
+					"LANGUAGE": "Filter for this language"
 				},
 				"SELECT_ALL": "Επιλογή όλων των εκδηλώσεων",
 				"SELECT_EVENT": "Επιλογή εκδήλωσης \"{{title}}\""
@@ -898,7 +907,7 @@
 						"ACTION": "Ενέργειες",
 						"NEW": "Νέα πολιτική",
 						"NON_USER_ROLES": "Roles and Groups authorized for the event",
-						"USER": "User",
+						"USER": "Χρήστης",
 						"USERS": "Users who are authorized for the event",
 						"NEW_USER": "New user",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
@@ -1216,12 +1225,14 @@
 						"ADDITIONAL_ACTIONS": "Πρόσθετες ενέργειες",
 						"ACTION": "Ενέργειες",
 						"NEW": "Νέα πολιτική",
+						"DETAILS": "Λεπτομέρειες",
+						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
+						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
+						"SAVE_SERIES_ACL_ONLY": "Save series permission",
 						"NON_USER_ROLES": "Roles and Groups authorized for the series",
-						"USER": "User",
+						"USER": "Χρήστης",
 						"USERS": "Users who are authorized for the series",
 						"NEW_USER": "New user",
-						"REPLACE_EVENT_ACLS": "Ενημέρωση δικαιωμάτων εκδήλωσης",
-						"REPLACE_EVENT_ACLS_HINT": "Επιβεβαίωση ότι όλες οι εκδηλώσεις σε αυτή την σειρά έχουν τα ίδια δικαιώματα σε ισχύ",
 						"LOAD_MORE_LIMIT": "Εμφάνιση πολιτικών.",
 						"LOAD_MORE_LINK": "Φόρτωση περισσοτέρων"
 					},
@@ -1349,6 +1360,7 @@
 				"PROVIDER": "Πάροχος",
 				"ACTION": "Ενέργειες",
 				"TOOLTIP": {
+					"ROLES": "Filter for this role",
 					"DELETE": "Διαγραφή χρήστη",
 					"DETAILS": "Επεξεργασία λεπτομερειών χρήστη"
 				}
@@ -1480,7 +1492,7 @@
 						"NEW": "Νέα πολιτική",
 						"NON_USER_ROLES": "Roles and Groups authorized for the access policy",
 						"DESCRIPTION": "Παρακαλώ επιλέξτε ένα σύνολο προ-διαμορφωμένων πολιτικών ή να προσθέσετε τις ακόλουθες προσαρμοσμένες πολιτικές",
-						"USER": "User",
+						"USER": "Χρήστης",
 						"USERS": "Users who are authorized for the access policy",
 						"NEW_USER": "New user"
 					},
@@ -2076,6 +2088,8 @@
 				"SERIES_VIEW": "Σειρά",
 				"NEW_EVENT": "Προσθήκη εκδήλωσης",
 				"NEW_SERIES": "Προσθήκη σειράς",
+				"NEXT_PANEL": "Go to next pane",
+				"PREVIOUS_PANEL": "Go to previous pane",
 				"CHEAT_SHEET": "Συντομεύσεις πληκτρολογίου",
 				"CLOSE_MODAL": "Κλείσιμο διαλόγου"
 			}
@@ -2151,5 +2165,10 @@
 		"IMPRINT": "Imprint",
 		"PRIVACY": "Privacy statement",
 		"NOCONTENT": "Content not available"
+	},
+	"TERMS": {
+		"TITLE": "Terms of use",
+		"NOCONTENT": "Content not available",
+		"AGREE": "I have read and agree to the terms of use"
 	}
 }
