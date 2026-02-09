@@ -906,7 +906,6 @@ export const checkConflicts = (values: {
 	sourceMode: string,
 }) => async (dispatch: AppDispatch) => {
 	let check = true;
-
 	// Only perform checks if source mode is SCHEDULE_SINGLE or SCHEDULE_MULTIPLE
 	if (
 		values.sourceMode === "SCHEDULE_SINGLE" ||
@@ -938,7 +937,8 @@ export const checkConflicts = (values: {
 			0,
 			0,
 		);
-
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
 		// If start date of event is smaller than today --> Event is in past
 		if ((values.sourceMode === "SCHEDULE_SINGLE" && startDate < new Date()) || (values.sourceMode === "SCHEDULE_MULTIPLE" && startDate < new Date())) {
 			dispatch(
