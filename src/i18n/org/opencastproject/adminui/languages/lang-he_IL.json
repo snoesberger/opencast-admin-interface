@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "שגיאה בתזמון: האירוע כבר נגמר.",
 		"CONFLICT_END_BEFORE_START": "שגיאה בתזמון: תזמון הסיום חייב להיות אחרי תזמון ההתחלה.",
 		"CONFLICT_IN_THE_PAST": "לא היתה אפשרות לעדכן את לוח הזמנים: לא ניתן לתזמן אירוע בעבר.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "חוקים חייבים להכיל תפקיד חוקי ו\/או הרשאות קריאה\/כתיבה.",
 		"MISSING_ACL_RULES": "לפחות תפקיד אחד עם הרשאות קריאה וכתיבה נדרש!",

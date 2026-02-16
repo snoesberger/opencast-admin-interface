@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Σφάλμα στον προγραμματισμό. Η εκδήλωση έχει ήδη λήξει.",
 		"CONFLICT_END_BEFORE_START": "Σφάλμα στον προγραμματισμό. Η προγραμματισμένη λήξη πρέπει να είναι μεταγενέστερη από την προγραμματισμένη έναρξη.",
 		"CONFLICT_IN_THE_PAST": "Ο προγραμματισμός δεν μπορεί να ενημερωθεί: δεν μπορείτε να προγραμματίσετε μια εκδήλωση στο παρελθόν.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Οι κανόνες πρέπει να περιέχουν έναν έγκυρο ρόλο και δικαίωμα(τα) ανάγνωσης ή\/και εγγραφής.",
 		"MISSING_ACL_RULES": "Απαιτείται τουλάχιστον ένας ρόλος με δικαιώματα ανάγνωσης και εγγραφής!",

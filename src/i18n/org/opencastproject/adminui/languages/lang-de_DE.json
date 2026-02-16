@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Planungs-Fehler: Das Video endete bereits.",
 		"CONFLICT_END_BEFORE_START": "Planungs-Fehler: Der Endzeitpunkt des Ereignisses muss nach dem Startzeitpunkt liegen.",
 		"CONFLICT_IN_THE_PAST": "Die Planung konnte nicht aktualisiert werden: Sie können ein Video nicht in der Vergangenheit planen.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Regeln müssen eine gültige Rolle und Lese-\/Schreibrechte enthalten.",
 		"MISSING_ACL_RULES": "Es ist mindestens eine Rolle mit Lese- und Schreibberechtigungen erforderlich!",

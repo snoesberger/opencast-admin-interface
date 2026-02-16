@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Errore di programmazione: L'evento è già terminato.",
 		"CONFLICT_END_BEFORE_START": "Errore di programmazione: La fine del programma deve essere seguente all'inizio.",
 		"CONFLICT_IN_THE_PAST": "La programmazione non può essere aggiornata: non puoi programmare un evento nel passato.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Le regole devono contenere un ruolo valido e leggere e\/o scrivere correttamente.",
 		"MISSING_ACL_RULES": "È necessario almeno un ruolo con i permessi di lettura e scrittura!",

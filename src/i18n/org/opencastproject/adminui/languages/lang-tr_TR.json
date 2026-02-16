@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Zamanlama hatası: Etkinlik zaten bitmiş durumda.",
 		"CONFLICT_END_BEFORE_START": "Zamanlama hatası: Bitiş zamanlaması başlangıçtan daha sonra olmalı.",
 		"CONFLICT_IN_THE_PAST": "Zamanlama planı güncelleştirilemedi: Bir etkinliği geçmişe planlayamazsınız.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Kuralların okuma veya\/ve yazma hakkında(haklarında) etkin bir rolü olmalı.",
 		"MISSING_ACL_RULES": "En az bir Yazma ve Okuma yetkisi gerekli!",

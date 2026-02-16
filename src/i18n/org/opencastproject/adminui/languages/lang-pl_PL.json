@@ -209,6 +209,7 @@
 		"CONFLICT_ALREADY_ENDED": "Błąd w harmonogramie: Wydarzenie się już zakończyło.",
 		"CONFLICT_END_BEFORE_START": "Błąd w harmonogramie: Rozpoczęcie zakończenie zdarzenia zaplanowano przed jego rozpoczęciem.",
 		"CONFLICT_IN_THE_PAST": "Nie można zaktualizować harmonogramu: nie można zaplanować wydarzenia w przeszłości.",
+		"CONFLICT_END_TIME_TOO_EARLY": "This event cannot be modified because it is currently in progress.",
 		"CONFLICT_RANGE_DAYS": "At least one repeat day must be within the scheduled date range.",
 		"INVALID_ACL_RULES": "Reguły dostępu muszą zawierać poprawne role użytkownika z określonymi zasadami odczytu i\/lub zapisu.",
 		"MISSING_ACL_RULES": "Przynajmniej jedna rola, z uprawnieniem do zapisu lub odczytu jest wymagana!",
