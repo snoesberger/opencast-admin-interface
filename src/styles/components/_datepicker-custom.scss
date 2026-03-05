@@ -64,5 +64,9 @@
 
   .react-datepicker__month-read-view,
   .react-datepicker__year-read-view {
-    color: variables.$color-black,
+    color: variables.$color-white;
+    background: variables.$color-gray;
+    &:hover {
+      background: variables.$color-darkgray;
+    }
   }
