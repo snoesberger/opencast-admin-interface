@@ -217,8 +217,8 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Die vorhandenen Videos in dieser Serie müssen neu verarbeitet werden",
 		"SERIES_ACL_LOCKED": "Das Editieren von Zugriffsrichtlinien ist nicht erlaubt, solange Videos verarbeitet werden, die Teil der Serie sind",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Der Zugriffsrichtlinie erfordert mindestens eine Rolle mit Lese- und Schreibberechtigungen.",
-		"METADATA_SAVED": "The metadata has been saved.",
-		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
+		"METADATA_SAVED": "Die Metadaten wurden gespeichert.",
+		"METADATA_NOT_SAVED": "Die Metadaten wurden NICHT gespeichert!",
 		"THEME_NAME_EMPTY": "Der Name darf nicht leer sein",
 		"BUMPER_UPLOAD_ERROR": "Fehler beim Hochladen von Medien",
 		"THEME_CREATED": "Das Branding wurde erstellt",
@@ -907,10 +907,10 @@
 						"ADDITIONAL_ACTIONS": "Weitere Aktionen",
 						"ACTION": "Aktionen",
 						"NEW": "Neue Richtlinie",
-						"NON_USER_ROLES": "Roles and Groups authorized for the event",
+						"NON_USER_ROLES": "Rollen und Gruppen die für das Video berechtigt sind",
 						"USER": "Benutzer",
-						"USERS": "Users who are authorized for the event",
-						"NEW_USER": "New user",
+						"USERS": "Benutzer welche für das Video berechtigt sind",
+						"NEW_USER": "Neuer Benutzer",
 						"SANITIZATION_NOTE": "User role sanitization is enabled in your Opencast, therefore user roles are displayed alongside other roles. This does not impact role functionality in any way."
 					},
 					"ROLES": {
@@ -1039,11 +1039,11 @@
 					"TITLE": "Workflow-Details",
 					"CONFIGURATION": "Workflow Konfiguration",
 					"OPERATIONS": "Operations",
-					"CURRENT_OPERATION": "Current workflow operation"
+					"CURRENT_OPERATION": "Aktuelle Workflow Operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Workflow-Operationen",
-					"DETAILS_LINK": "All operations",
+					"DETAILS_LINK": "Alle Operationen",
 					"TABLE_HEADERS": {
 						"TITLE": "Titel",
 						"STATUS": "Status",
@@ -1104,7 +1104,7 @@
 						"HOST": "Verarbeitender Server",
 						"TYPE": "Dienst-Typ",
 						"TECHNICAL_DETAILS": "Technische Details",
-						"OPERATION": "Operation the error occured in"
+						"OPERATION": "Operation mit fehlerhaftem Ausgang"
 					}
 				}
 			}
@@ -1227,13 +1227,13 @@
 						"ACTION": "Aktionen",
 						"NEW": "Neue Richtlinie",
 						"DETAILS": "Details",
-						"REPLACE_EVENT_ACLS": "Save series and overwrite event permissions",
-						"REPLACE_EVENT_ACLS_HINT": "Save the series permissions and overwrite the permissions for all events in this series.",
-						"SAVE_SERIES_ACL_ONLY": "Save series permission",
-						"NON_USER_ROLES": "Roles and Groups authorized for the series",
+						"REPLACE_EVENT_ACLS": "Serie speichern und Event Zugriffsrechte überschreiben",
+						"REPLACE_EVENT_ACLS_HINT": "Speichert die Zugriffsrechte der Serie und überschreibt die Zugriffsrechte aller Events dieser Serie mit den Zugriffsrechten der Serie.",
+						"SAVE_SERIES_ACL_ONLY": "Serien Zugriffsrechte aktualisieren",
+						"NON_USER_ROLES": "Rollen und Gruppen die für die Serie berechtigt sind",
 						"USER": "Benutzer",
-						"USERS": "Users who are authorized for the series",
-						"NEW_USER": "New user",
+						"USERS": "Benutzer welche für die Serie berechtigt sind",
+						"NEW_USER": "Neuer Benutzer",
 						"LOAD_MORE_LIMIT": "angezeigte Richtlinien.",
 						"LOAD_MORE_LINK": "Mehr laden"
 					},
@@ -1361,7 +1361,7 @@
 				"PROVIDER": "Anbieter",
 				"ACTION": "Aktionen",
 				"TOOLTIP": {
-					"ROLES": "Filter for this role",
+					"ROLES": "Nach dieser Rolle filtern",
 					"DELETE": "Benutzer löschen",
 					"DETAILS": "Nutzerdetails anzeigen"
 				}
