@@ -75,9 +75,10 @@ const WatermarkPage = <T extends RequiredFormProps>({
 							</header>
 							<div className="obj-container padded">
 								<FileUpload
-									acceptableTypes="image/*"
+									acceptableTypes="image/gif,image/png,image/jpg,image/jpeg,image/bmp"
 									fileId="watermarkFile"
 									fileName="watermarkFileName"
+									fileUrlKey="watermarkFileUrl"
 									formik={formik}
 									buttonKey="CONFIGURATION.THEMES.DETAILS.WATERMARK.UPLOAD_BUTTON"
 									labelKey="CONFIGURATION.THEMES.DETAILS.WATERMARK.UPLOAD_LABEL"
