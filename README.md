@@ -119,3 +119,14 @@ Configuration
 The Admin UI frontend cannot be directly configured. Rather, it adapts to the
 various configurations in the Opencast backend. Fore more information, take a look
 at [Opencast's documentation](https://docs.opencast.org).
+
+
+Admin Repo History
+------------------
+
+As part of https://github.com/orgs/opencast/discussions/7277 we decided to rewrite the entire history of this
+repository.  This was done because it contained the *entire* history of Opencast into the Opencast 14 era.  All
+repository history prior to the addition of this commit should be considered rewritten history, however there should
+be no function changes.  The previous tags have been rewritten, but the releases in this GitHub repository have not.
+This means that the hash attached to a given release prior to 2026-03-26 will *not* match, however the source will
+aside from the changes we made.
