@@ -89,7 +89,7 @@ jobs:
 
       - name: Clone repository
         run: |
-          git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/opencast-admin-interface-test.git" admin-interface-test
+          git clone -b gh-pages "git@github.com:${{ github.repository_owner }}/-admin-interface-test.git" admin-interface-test
 
       - name: Store build in the clone
         env:
@@ -103,8 +103,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          wget https://raw.githubusercontent.com/${{ github.repository_owner }}/opencast-admin-interface-test/main/.github/scripts/cleanup-deployments.sh
-          bash cleanup-deployments.sh ${{ github.repository_owner }}/opencast-admin-interface
+          wget https://raw.githubusercontent.com/${{ github.repository_owner }}/admin-interface-test/main/.github/scripts/cleanup-deployments.sh
+          bash cleanup-deployments.sh ${{ github.repository_owner }}/admin-interface
           rm -f cleanup-deployments.sh
           git add .
 
