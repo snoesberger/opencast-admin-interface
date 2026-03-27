@@ -32,7 +32,7 @@ jobs:
 
       - name: Clone test repository
         run: |
-          git clone -b gh-pages "git@github.com:opencast/opencast-admin-interface-test.git" admin-interface-test
+          git clone -b gh-pages "git@github.com:opencast/admin-interface-test.git" admin-interface-test
 
       - name: Delete build if present
         working-directory: admin-interface-test
