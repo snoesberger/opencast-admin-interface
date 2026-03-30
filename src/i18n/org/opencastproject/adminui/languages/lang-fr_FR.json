@@ -524,6 +524,9 @@
 						"CAPTION": "Envoyer",
 						"RECORDING_ELEMENTS": "Éléments de l'enregistrement",
 						"RECORDING_METADATA": "Métadonnées de l'enregistrement",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "En Bas à Droite",
 					"UPLOAD": "Envoi",
 					"POSITION": "Position du filigrane et aperçu",
-					"FILEUPLOAD_DESCRIPTION": "Fichier doit avoir un canal alpha (fond transparent). Les types de fichiers acceptés sont:.PNG.GIF.SVG.WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Envoyer une image",
 					"UPLOAD_BUTTON": "Envoi"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "Etat du workflow"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Date de création "
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

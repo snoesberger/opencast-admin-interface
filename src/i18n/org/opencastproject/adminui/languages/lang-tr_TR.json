@@ -524,6 +524,9 @@
 						"CAPTION": "Yükle",
 						"RECORDING_ELEMENTS": "Ögeler kaydediliyor",
 						"RECORDING_METADATA": "Metaveri kaydediliyor",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "Sağ alt",
 					"UPLOAD": "Karşıya Yükle",
 					"POSITION": "Filigran pozisyonu ve önizleme",
-					"FILEUPLOAD_DESCRIPTION": "Dosya'nın bir alfa kanalı olmalı (şeffaf arkaplan). Kabul edilen dosya türleri: .PNG, .GIF, .SVG, .WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Görüntü yükle",
 					"UPLOAD_BUTTON": "Karşıya Yükle"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "İş akışı durumu"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Oluşturma tarihi"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

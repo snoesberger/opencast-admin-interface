@@ -524,6 +524,9 @@
 						"CAPTION": "Ανέβασμα αρχείων",
 						"RECORDING_ELEMENTS": "Στοιχεία καταγραφής",
 						"RECORDING_METADATA": "Μετά-δεδομένα εγγραφής",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "Κάτω δεξιά",
 					"UPLOAD": "Μεταφόρτωση",
 					"POSITION": "Θέση και προεπισκόπηση υδατογραφήματος",
-					"FILEUPLOAD_DESCRIPTION": "Αρχείο πρέπει να έχει ένα κανάλι άλφα (διαφανές φόντο). Αποδεκτοί τύποι αρχείων είναι:. PNG. GIF. SVG. .WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Μεταφόρτωση εικόνας",
 					"UPLOAD_BUTTON": "Μεταφόρτωση"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "Κατάσταση ροής εργασίας"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Ημερομηνία δημιουργίας"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

@@ -524,6 +524,9 @@
 						"CAPTION": "Naloži",
 						"RECORDING_ELEMENTS": "Elementi posnetka",
 						"RECORDING_METADATA": "Metapodatki posnetka",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "Spodaj desno",
 					"UPLOAD": "Naloži",
 					"POSITION": "Položaj in predogled vodnega žiga",
-					"FILEUPLOAD_DESCRIPTION": "Datoteke morajo imeti kanal alfa (prosojno ozadje). Sprejemljive vrste datotek so: .PNG, .GIF, .SVG, .WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Nalaganje slike",
 					"UPLOAD_BUTTON": "Naloži"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "Stanje poteka dela"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Datum ustvarjanja"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

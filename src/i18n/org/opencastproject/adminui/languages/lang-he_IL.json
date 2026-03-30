@@ -524,6 +524,9 @@
 						"CAPTION": "העלאה",
 						"RECORDING_ELEMENTS": "רכיבי הקלטה",
 						"RECORDING_METADATA": "הקלטת מטא נתונים",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "למטה מימין",
 					"UPLOAD": "העלאה",
 					"POSITION": "מיקום סימן מים ותצוגה מקדימה",
-					"FILEUPLOAD_DESCRIPTION": "קובץ צריך לכלול ערוץ אלפא (רקע שקוף). סוגי הקבצים האפשריים הם:. PNG. GIF. SVG. WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "העלה תמונה",
 					"UPLOAD_BUTTON": "העלאה"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "מצב תהליך עבודה"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "תאריך יצירה"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

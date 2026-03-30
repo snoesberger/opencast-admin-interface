@@ -524,6 +524,9 @@
 						"CAPTION": "Subir",
 						"RECORDING_ELEMENTS": "Elementos da gravación",
 						"RECORDING_METADATA": "Metadatos da gravación",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentation",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "Esquina inferior dereita",
 					"UPLOAD": "Subir",
 					"POSITION": "Posición e vista previa da marca de auga",
-					"FILEUPLOAD_DESCRIPTION": "O arquivo debería ter unha canle alfa (fondo transparente). Os tipos de arquivo compatibles son: .PNG, .GIF, .SVG, .WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Subir imaxe",
 					"UPLOAD_BUTTON": "Subir"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "Estado do fluxo de traballo"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Data de Creación"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {

@@ -524,6 +524,9 @@
 						"CAPTION": "Carica",
 						"RECORDING_ELEMENTS": "Registrazione elementi",
 						"RECORDING_METADATA": "Registrazione metadati",
+						"FILE_PICKER": "Upload file...",
+						"NO_FILE_PICKED": "No file chosen",
+						"ARIA_FILE_PICKER": "Upload file",
 						"SEGMENTABLE": {
 							"SHORT": "Presentazione",
 							"DETAIL": "The file contains a recording of a what is shown to an audience (Keynote, Powerpoint, etc)."
@@ -1670,7 +1673,7 @@
 					"BOTTOM_RIGHT": "In basso a destra",
 					"UPLOAD": "Carica",
 					"POSITION": "Posizione watermark e anteprima",
-					"FILEUPLOAD_DESCRIPTION": "Il file dovrebbe avere un canale alfa (sfondo trasparente). I tipi di file accettati sono: .PNG, .GIF, .SVG, .WEBP",
+					"FILEUPLOAD_DESCRIPTION": "File should have an alpha channel (transparent background). Acceptable file types are: gif, png, jp(e)g, or bmp",
 					"UPLOAD_LABEL": "Carica immagine",
 					"UPLOAD_BUTTON": "Carica"
 				},
@@ -1884,6 +1887,12 @@
 			},
 			"WORKFLOW_STATE": {
 				"LABEL": "Stato del flusso di lavoro"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"JOBS": {
@@ -1928,6 +1937,12 @@
 			},
 			"CREATION_DATE": {
 				"LABEL": "Data di creazione"
+			},
+			"READ_ACCESS": {
+				"LABEL": "Read Access"
+			},
+			"WRITE_ACCESS": {
+				"LABEL": "Write Access"
 			}
 		},
 		"SERVERS": {
