@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   detect-repo-owner:
+    name: Detect branch and appropriate server
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     outputs:
@@ -36,6 +37,7 @@ jobs:
 
 
   deploy-main-branches:
+    name: Deploy admin-interface.opencast.org
     runs-on: ubuntu-latest
     needs: detect-repo-owner
     steps:
@@ -124,7 +126,7 @@ jobs:
         run: |
           git clone -b ${{ github.ref_name }} "git@github.com:${{ github.repository_owner }}/opencast.git" opencast
           cd opencast
-          git checkout -b t/admin-$GITHUB_REF
+          git checkout -b t/admin-${{ github.ref_name }}
 
       - name: Update the admin submodule
         working-directory: opencast
@@ -135,17 +137,24 @@ jobs:
           # could end up causing the commit message, and the actual submodule hash to differ.
           git submodule update --init --remote modules/admin-ui
           git add modules/admin-ui
-          git commit -m "Updating admin-service to $GITHUB_REF"
-          git push origin t/admin-$GITHUB_REF
+          git commit -m "Updating admin-service to ${{ github.sha }}"
           # This token is an account wide token which allows creation of PRs and pushes.
           echo "${{ secrets.MODULE_PR_TOKEN }}" > token.txt
           gh auth login --with-token < token.txt
-          gh pr create \
-            --title "Update ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface to $GITHUB_REF" \
-            --body "Updating Opencast ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface module to [$GITHUB_REF](https://github.com/${{ github.repository_owner }}/admin-interface/commit/$GITHUB_REF)" \
-            --head=${{ github.repository_owner }}:t/admin-$GITHUB_REF \
-            --base ${{ github.ref_name }} \
-            -R ${{ github.repository_owner }}/opencast
-            #FIXME: fine grained PATs can't apply labels
-            #FIXME: classic PATs don't have the permissions because the PR isn't in an opencastproject (the user) repo
-            #--label admin-ui --label maintenance \
+          export CURRENT_PR=$(gh pr list -R ${{ github.repository_owner }}/opencast --head t/admin-${{ github.ref_name }} --json number --jq '.[].number')
+          if [ -n "$CURRENT_PR" ]; then
+            gh pr edit $CURRENT_PR \
+              --body "Updating Opencast ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface module to [${{ github.sha }}](https://github.com/${{ github.repository_owner }}/admin-interface/commit/${{ github.sha }})" \
+              -R ${{ github.repository_owner }}/opencast
+            git push origin t/admin-${{ github.ref_name }} --force
+          else
+            gh pr create \
+              --title "Update ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface" \
+              --body "Updating Opencast ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface module to [${{ github.sha }}](https://github.com/${{ github.repository_owner }}/admin-interface/commit/${{ github.sha }})" \
+              --head=${{ github.repository_owner }}:t/admin-${{ github.ref_name }} \
+              --base ${{ github.ref_name }} \
+              -R ${{ github.repository_owner }}/opencast
+              #FIXME: fine grained PATs can't apply labels
+              #FIXME: classic PATs don't have the permissions because the PR isn't in an opencastproject (the user) repo
+              #--label admin-ui --label maintenance \
+          fi
