@@ -135,8 +135,8 @@ jobs:
           # and we don't have a guarantee that the update triggered by commit A does not end up finding commit B
           # We are going to ignore this possibility since we almost universally want the *latest* commit, though this
           # could end up causing the commit message, and the actual submodule hash to differ.
-          git submodule update --init --remote modules/admin-ui
-          git add modules/admin-ui
+          git submodule update --init --remote modules/admin
+          git add modules/admin
           git commit -m "Updating admin-service to ${{ github.sha }}"
           # This token is an account wide token which allows creation of PRs and pushes.
           echo "${{ secrets.MODULE_PR_TOKEN }}" > token.txt
