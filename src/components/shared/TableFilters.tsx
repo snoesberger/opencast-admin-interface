@@ -9,6 +9,7 @@ import {
 	FilterData,
 	editFilterValue,
 	editTextFilter,
+	fetchFilters,
 	removeTextFilter,
 	resetFilterValues,
 } from "../../slices/tableFilterSlice";
@@ -30,6 +31,7 @@ import SearchContainer from "./SearchContainer";
 import { Resource } from "../../slices/tableSlice";
 import { HiFunnel } from "react-icons/hi2";
 import { LuSettings, LuX } from "react-icons/lu";
+import { useLocation } from "react-router";
 
 /**
  * This component renders the table filters in the upper right corner of the table
@@ -45,6 +47,7 @@ const TableFilters = ({
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
+	const location = useLocation();
 
 	const filterMap = useAppSelector(state => getFilters(state, resource));
 	const [selectedFilter, setSelectedFilter] = useState("");
@@ -62,6 +65,11 @@ const TableFilters = ({
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
 	const filter = filterMap.find(({ name }) => name === selectedFilter);
+
+	useEffect(() => {
+		dispatch(fetchFilters(resource));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.hash]);
 
 	// Remove all selected filters, no filter should be "active" anymore
 	const removeFilters = async () => {

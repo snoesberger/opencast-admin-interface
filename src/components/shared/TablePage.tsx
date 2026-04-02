@@ -1,15 +1,13 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import TableFilters from "../shared/TableFilters";
 import Table, { TemplateMap } from "../shared/Table";
 import Notifications from "../shared/Notifications";
-import { fetchFilters } from "../../slices/tableFilterSlice";
 import { CreateType, NavBarLink } from "../NavBar";
-import { AppThunk, RootState, useAppDispatch, useAppSelector } from "../../store";
-import { resetTableProperties, Resource } from "../../slices/tableSlice";
+import { AppThunk, RootState, useAppSelector } from "../../store";
+import { Resource } from "../../slices/tableSlice";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
-import { useLocation } from "react-router";
 import MainPage from "./MainPage";
 
 /**
@@ -39,42 +37,8 @@ const TablePage = ({
 	children?: ReactNode
 }) => {
 	const { t } = useTranslation();
-	const dispatch = useAppDispatch();
-
-	const location = useLocation();
 
 	const numberOfRows = useAppSelector(state => getTotalResources(state));
-
-	useEffect(() => {
-		// State variable for interrupting the load function
-		let allowLoadIntoTable = true;
-
-		// Clear table of previous data
-		dispatch(resetTableProperties());
-
-		dispatch(fetchFilters(resource));
-
-		// Load resource on mount
-		const loadResource = async () => {
-			// Fetching resources from server
-			await dispatch(fetchResource());
-
-			// Load resources into table
-			if (allowLoadIntoTable) {
-				dispatch(loadResourceIntoTable());
-			}
-		};
-		loadResource();
-
-		// Fetch resources every minute
-		const fetchResourceInterval = setInterval(loadResource, 5000);
-
-		return () => {
-			allowLoadIntoTable = false;
-			clearInterval(fetchResourceInterval);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.hash]);
 
 	return (
 		<MainPage
@@ -100,7 +64,11 @@ const TablePage = ({
 					<h4>{t("TABLE_SUMMARY", { numberOfRows })}</h4>
 				</div>
 				{/* Include table component */}
-				<Table templateMap={templateMap} />
+				<Table
+					templateMap={templateMap}
+					fetchResource={fetchResource}
+					loadResourceIntoTable={loadResourceIntoTable}
+				/>
 		</MainPage>
 	);
 };
