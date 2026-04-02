@@ -126,7 +126,7 @@ jobs:
         run: |
           git clone -b ${{ github.ref_name }} "git@github.com:${{ github.repository_owner }}/opencast.git" opencast
           cd opencast
-          git checkout -b t/admin-${{ github.ref_name }}
+          git checkout -b t/admin-${{ needs.detect-repo-owner.outputs.branch }}
 
       - name: Update the admin submodule
         working-directory: opencast
@@ -141,17 +141,17 @@ jobs:
           # This token is an account wide token which allows creation of PRs and pushes.
           echo "${{ secrets.MODULE_PR_TOKEN }}" > token.txt
           gh auth login --with-token < token.txt
-          export CURRENT_PR=$(gh pr list -R ${{ github.repository_owner }}/opencast --head t/admin-${{ github.ref_name }} --json number --jq '.[].number')
+          export CURRENT_PR=$(gh pr list -R ${{ github.repository_owner }}/opencast --head t/admin-${{ needs.detect-repo-owner.outputs.branch }} --json number --jq '.[].number')
           if [ -n "$CURRENT_PR" ]; then
             gh pr edit $CURRENT_PR \
               --body "Updating Opencast ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface module to [${{ github.sha }}](https://github.com/${{ github.repository_owner }}/admin-interface/commit/${{ github.sha }})" \
               -R ${{ github.repository_owner }}/opencast
-            git push origin t/admin-${{ github.ref_name }} --force
+            git push origin t/admin-${{ needs.detect-repo-owner.outputs.branch }} --force
           else
             gh pr create \
               --title "Update ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface" \
               --body "Updating Opencast ${{ needs.detect-repo-owner.outputs.branch }} Admin Interface module to [${{ github.sha }}](https://github.com/${{ github.repository_owner }}/admin-interface/commit/${{ github.sha }})" \
-              --head=${{ github.repository_owner }}:t/admin-${{ github.ref_name }} \
+              --head=${{ github.repository_owner }}:t/admin-${{ needs.detect-repo-owner.outputs.branch }} \
               --base ${{ github.ref_name }} \
               -R ${{ github.repository_owner }}/opencast
               #FIXME: fine grained PATs can't apply labels
