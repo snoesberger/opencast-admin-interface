@@ -26,7 +26,7 @@ jobs:
         run: git rev-parse HEAD > commit
 
       - name: Log in to the container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
