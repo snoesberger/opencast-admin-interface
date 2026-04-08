@@ -23,6 +23,7 @@ import {
 	selectRowIds,
 	selectRowById,
 	rowsSelectors,
+	resetTableProperties,
 } from "../../slices/tableSlice";
 import {
 	changeAllSelected,
@@ -35,12 +36,14 @@ import cn from "classnames";
 import EditTableViewModal from "../shared/EditTableViewModal";
 
 import Notifications from "./Notifications";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { TableColumn } from "../../configs/tableConfigs/aclsTableConfig";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
 import { LuChevronDown, LuChevronLeft, LuChevronRight, LuChevronUp } from "react-icons/lu";
+import { AsyncThunk } from "@reduxjs/toolkit";
+import { useLocation } from "react-router";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
@@ -53,14 +56,48 @@ export type TemplateMap = {
  */
 const Table = ({
 	templateMap,
+	fetchResource,
+	loadResourceIntoTable,
 }: {
 	templateMap: TemplateMap
+	fetchResource: AsyncThunk<any, void, any>,
+	loadResourceIntoTable: () => AppThunk,
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
+	const location = useLocation();
 
 	const editTableViewModalRef = useRef<ModalHandle>(null);
 	const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		// State variable for interrupting the load function
+		let allowLoadIntoTable = true;
+
+		// Clear table of previous data
+		dispatch(resetTableProperties());
+
+		// Load resource on mount
+		const loadResource = async () => {
+			// Fetching resources from server
+			await dispatch(fetchResource());
+
+			// Load resources into table
+			if (allowLoadIntoTable) {
+				dispatch(loadResourceIntoTable());
+			}
+		};
+		loadResource();
+
+		// Fetch resources every minute
+		const fetchResourceInterval = setInterval(loadResource, 5000);
+
+		return () => {
+			allowLoadIntoTable = false;
+			clearInterval(fetchResourceInterval);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.hash]);
 
 	const forceDeselectAll = () => {
 		dispatch(changeAllSelected(false));

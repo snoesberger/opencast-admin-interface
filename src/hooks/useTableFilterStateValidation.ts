@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../store";
+import store, { useAppDispatch } from "../store";
 import { resetCorruptedState } from "../slices/tableFilterSlice";
 
 /**
@@ -9,10 +9,11 @@ import { resetCorruptedState } from "../slices/tableFilterSlice";
  */
 export const useTableFilterStateValidation = () => {
 	const dispatch = useAppDispatch();
-	const tableFilters = useAppSelector(state => state.tableFilters);
 
 	useEffect(() => {
 		// Check for corrupted state and dispatch reset action if needed
+		const tableFilters = store.getState().tableFilters;
+
 		const hasCorruption =
 			!Array.isArray(tableFilters.data) ||
 			!Array.isArray(tableFilters.textFilter) ||
@@ -22,6 +23,5 @@ export const useTableFilterStateValidation = () => {
 			console.warn("Detected corrupted table filter state, resetting to defaults");
 			dispatch(resetCorruptedState());
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 };
